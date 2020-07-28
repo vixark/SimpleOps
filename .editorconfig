@@ -1,0 +1,6 @@
+﻿[*.cs]
+
+dotnet_diagnostic.CA1303.severity = none # CA1303: No pasar cadenas literal como parámetros localizados.
+dotnet_diagnostic.CS1591.severity = none # CS1591: No alertar tipos o miembros públicamente accesibles sin Summary.
+dotnet_diagnostic.CA1812.severity = none # CS1591: No alertar por clases de las que no se crea una instancia.
+dotnet_diagnostic.IDE0040.severity = none # IDE0040: No alertar por clases de las que no se crea una instancia (igual que el anterior).

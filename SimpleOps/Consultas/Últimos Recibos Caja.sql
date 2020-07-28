@@ -1,0 +1,1 @@
+﻿select * from RecibosCaja order by ID desc limit 10

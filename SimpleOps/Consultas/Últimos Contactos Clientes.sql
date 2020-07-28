@@ -1,0 +1,1 @@
+﻿select * from ContactosClientes order by FechaHoraActualización desc limit 10

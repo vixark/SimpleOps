@@ -1,0 +1,1 @@
+﻿select * from Productos order by FechaHoraActualización desc limit 10

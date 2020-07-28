@@ -1,0 +1,1 @@
+﻿select * from ReferenciasClientes order by FechaHoraActualización desc limit 10

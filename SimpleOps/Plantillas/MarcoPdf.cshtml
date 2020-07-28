@@ -1,0 +1,245 @@
+﻿@inherits SimpleOps.DocumentosGráficos.PlantillaBase<SimpleOps.DocumentosGráficos.DatosDocumento>
+
+
+@{ 
+
+    double altoPáginas;
+    int totalPáginasConCabezaYPie;
+    switch (Model.ModoDocumento) {
+        case SimpleOps.DocumentosGráficos.DatosDocumento.Modo.CuerpoContinuo:
+            altoPáginas = Model.TotalPáginas * Model.AltoHoja - Model.AltoPie - Model.AltoCabeza;
+            totalPáginasConCabezaYPie = 1;
+            break;
+        case SimpleOps.DocumentosGráficos.DatosDocumento.Modo.PáginasIndependientes:
+            altoPáginas = Model.AltoHoja;
+            totalPáginasConCabezaYPie = Model.TotalPáginas;
+            break;
+        default:
+            altoPáginas = Model.AltoHoja; // No se pueden lanzar excepciones porque no está registrado el namespace y no vale la pena hacerlo solo para este caso. Se establecen valores por defecto y se espera que se detecte el error por otros medios.
+            totalPáginasConCabezaYPie = 1;
+            break;
+    }
+
+    var selectorCssPáginas = "";
+    var empresa = Model.Empresa ?? new SimpleOps.DocumentosGráficos.DatosEmpresa();
+
+    static string APuntos(double número) => $"{número.ToString().Replace(",", ".")}px";
+
+}
+
+
+@for (int i = 1; i <= totalPáginasConCabezaYPie; i++) {
+
+    selectorCssPáginas += $".página{i}, ";
+
+    <div class="página@(i)">
+
+        <div class="cabeza fc">
+
+            <table class="tb-cabeza">
+                <tr>
+
+                    <td>
+                        <div>
+                            <img class="logo" src="@Model.LogoBase64" />
+                        </div>
+                    </td>
+
+                    <td class="tder">
+
+                        <div>
+                            <span class="t30b fc-l230">@Model.NombreDocumento @Model.CódigoDocumento</span>
+                        </div>
+
+                        <div>
+                            <span class="t14b fc-s50">Representación Gráfica</span>
+                        </div>
+
+                    </td>
+
+                </tr>
+            </table>
+
+        </div>
+
+        @if (Model.LíneaBajoCabeza) {<div class="l-cabeza"></div>}
+
+        <div class="cuerpo">
+
+            @switch (i) {
+                case 1:
+                    @CrearCuerpo(); // Si está en modo CuerpoContinuo el contenido ode este cuerpo puede ocupar varias páginas. Si está en modo PáginasIndependientes este cuerpo solo ocupará la página 1.
+                    break;
+                default:
+                    @Incluir("Página" + i, Model);
+                    break;
+            }
+
+        </div>
+
+        <div class="pie fc tctr fc-l150 t@(Model.TamañoLetraPie)b">
+
+            @(Model.ModoImpresión ? "<hr />" : "")
+
+            <div>
+                <span>@empresa.RazónSocial&nbsp;&nbsp;</span>
+                <span>@empresa.NitCompleto&nbsp;&nbsp;</span>
+                <span>@empresa.TipoContribuyenteTexto</span>
+            </div>
+
+            <div>
+                <span>Autorización de Facturación</span>
+                <span>@empresa.NúmeroAutorizaciónFacturación</span>
+                <span>del @empresa.PrimerNúmeroFacturaAutorizada al @empresa.ÚltimoNúmeroFacturaAutorizada</span>
+                <span>hasta @empresa.FinAutorizaciónFacturación?.ToShortDateString()</span>
+            </div>
+
+            <div>
+                <span>@empresa.TeléfonoPrincipal&nbsp;&nbsp;</span>
+                <span>@empresa.DirecciónUbicaciónEfectiva&nbsp;&nbsp;</span>
+                <span><a href="mailto:@(empresa.EmailVentas)" class="fc-l150">@empresa.EmailVentas</a>&nbsp;&nbsp;</span>
+                <span><a href="@empresa.SitioWeb" class="fc-l150">@empresa.SitioWeb</a></span>
+            </div>
+
+            <div>
+                <span>@empresa.MunicipioUbicaciónNombre - Colombia</span>
+            </div>
+
+        </div>
+
+    </div>
+
+}
+
+
+@{ selectorCssPáginas = selectorCssPáginas.TrimEnd().TrimEnd(','); }
+
+
+<style>
+
+
+    /* <General */
+
+    @("@page { margin: 0px; }")
+
+    body { margin: 0px; font-family: @Model.NombreFuente; color: @Model.ColorLetra; font-size: @APuntos(Model.TamañoLetra); }
+
+    @(selectorCssPáginas + " { height: " + APuntos(altoPáginas) + "; }")
+
+    hr { height: @APuntos(Model.GrosorBordes); background-color: @Model.ColorBordes; border: none; }
+
+    table td { padding: 0px; }
+
+    a { color: @(Model.ModoImpresión ? "#191919" : "#005918"); @(Model.ModoImpresión ? "text-decoration: none;" : "") } /* Usualmente es el mismo fc-s50, pero podría ser cambiado por otro si se desea. */
+
+    /* General> */
+
+
+    /* <Colores */
+
+    .fc { background-color: @(Model.ModoImpresión ? "#FFFFFF" : "#006F1F"); } /* fc: Fondo de color. */
+
+    .fgtl { background-color: #9B9B9B; color: #FFFFFF; } /* Un estilo de fondo plano gris y color de letra blanco o casi blanco adecuado para la impresión. Es equivalente al fondo color + alguna clase fc-l###, pero solo debe ser usado en ciertos elementos de poca área como el encabezado de las columnas. Se debe establecer con un condicional en cada elemento cuando sea modo impresión y establecer las clases fc y fc-l### cuando no lo sea. */
+
+    .fc-l255 { color: @(Model.ModoImpresión ? "#000000" : "white"); } /* Color luz sobre el fondo de color usado principalmente para los textos. Usualmente es blanco 255-255-255. */
+
+    .fc-l230 { color: @(Model.ModoImpresión ? "#191919" : "#E6F0E9"); } /* Se obtiene con Paint.Net el fc-l255 sobre el fc con una transparencia de 230. */
+
+    .fc-l200 { color: @(Model.ModoImpresión ? "#373737" : "#C8DFCE"); } /* Se obtiene con Paint.Net el fc-l255 sobre el fc con una transparencia de 200. */
+
+    .fc-l150 { color: @(Model.ModoImpresión ? "#696969" : "#96C3A2"); } /* Se obtiene con Paint.Net el fc-l255 sobre el fc con una transparencia de 150. */
+
+    .fc-l100 { color: @(Model.ModoImpresión ? "#9B9B9B" : "#64A776"); } /* Se obtiene con Paint.Net el fc-l255 sobre el fc con una transparencia de 100. */
+
+    .fc-l50 { color: @(Model.ModoImpresión ? "#CDCDCD" : "#328B4A"); } /* Se obtiene con Paint.Net el fc-l255 sobre el fc con una transparencia de 50. */
+
+    .fc-s255 { color: black; } /* Color sombra sobre el fondo de color. Usualmente es negro 0-0-0. */
+
+    .fc-s200 { color: @(Model.ModoImpresión ? "#373737" : "#001706"); } /* Se obtiene con Paint.Net el fc-s255 sobre el fc con una transparencia de 200. */
+
+    .fc-s150 { color: @(Model.ModoImpresión ? "#696969" : "#002D0C"); } /* Se obtiene con Paint.Net el fc-s255 sobre el fc con una transparencia de 150. */
+
+    .fc-s100 { color: @(Model.ModoImpresión ? "#9B9B9B" : "#004312"); } /* Se obtiene con Paint.Net el fc-s255 sobre el fc con una transparencia de 100. */
+
+    .fc-s50 { color: @(Model.ModoImpresión ? "#CDCDCD" : "#005918"); } /* Se obtiene con Paint.Net el fc-s255 sobre el fc con una transparencia de 50. */
+
+    .fc-s0, fc-l0 { color: @(Model.ModoImpresión ? "#FFFFFF" : "#006F1F"); } /* Es el mismo color fc pero para aplicarlo a fuentes. Se sigue la misma convención fc-s# para facilitar su recordación. */
+
+    /* Colores> */
+
+
+    /* <Tamaño Fuentes */
+
+    .t30b { font-size: 30px; font-weight: bold; }
+
+    .t24b { font-size: 24px; font-weight: bold; }
+
+    .t22b { font-size: 22px; font-weight: bold; }
+
+    .t20b { font-size: 20px; font-weight: bold; }
+
+    .t18b { font-size: 18px; font-weight: bold; }
+
+    .t18n { font-size: 18px; font-weight: normal; }
+
+    .t16b { font-size: 16px; font-weight: bold; }
+
+    .t14b { font-size: 14px; font-weight: bold; }
+
+    .t14n { font-size: 14px; font-weight: normal; }
+
+    .t12b { font-size: 12px; font-weight: bold; }
+
+    /* Tamaño Fuentes> */
+
+
+    /* <Alineaciones */
+
+    .tder { text-align: right; }
+
+    .tizq { text-align: left; }
+
+    .tctr { text-align: center; }
+
+    /* Alineaciones> */
+
+
+    /* <Cabeza */
+
+    .tb-cabeza { 
+        height: @APuntos(Model.AltoCabeza); width: @APuntos(Model.AnchoContenido); 
+        margin-right: @APuntos(Model.MargenHorizontal); margin-left: @APuntos(Model.MargenHorizontal);
+    }
+
+    .logo { height: @APuntos(Model.AltoLogo); }
+
+    .l-cabeza { 
+        height: @APuntos(Model.SeparaciónLíneaBajoCabeza - (Model.ModoImpresión ? 3 : 0 )); /* Se le restan 3 de los 10 que se agregan al pie para que las medidas sean iguales en ambos modos. */
+        border-bottom: solid @APuntos(Model.AnchoLíneaBajoCabeza - (Model.ModoImpresión ? 7 : 0 )) @(Model.ModoImpresión ? Model.ColorBordes : "#D0AB00"); /* Se le restan 7 de los 10 que se agregan al pie para que las medidas sean iguales en ambos modos. */
+    }
+
+    /* Cabeza> */
+
+
+    /* <Cuerpo */
+
+    .cuerpo { 
+        margin-right: @APuntos(Model.MargenHorizontal); margin-left: @APuntos(Model.MargenHorizontal); 
+        margin-top: @APuntos(Model.MargenVertical); margin-bottom: @APuntos(Model.MargenVertical);
+    }
+
+    /* Cuerpo> */
+
+
+    /* <Pie */
+
+    .pie { 
+        position: absolute; bottom: 0px; left: 0px; 
+        height: @APuntos(Model.AltoPie + (Model.ModoImpresión ? 10 : 0)); width: 100%; 
+        padding-top: @APuntos(Model.RellenoSuperiorPie); 
+    }
+
+    /* Pie> */
+
+
+</style>

@@ -1,0 +1,17 @@
+﻿/.vs/SimpleOps
+/SimpleOps/obj/Debug/netcoreapp3.1/3z3jddtu.sql
+/SimpleOps/bin
+/SimpleOps/obj
+/Dian/bin
+/Dian/obj
+/Dian/.vs
+*_wpftmp.csproj
+
+/Firma Electrónica/.vs
+/Firma Electrónica/eFacturacionColombia_V2.Firma/bin
+/Firma Electrónica//FirmaXadesNet45/FirmaXadesNet/bin
+/Firma Electrónica//FirmaXadesNet45/Microsoft.Xades/bin
+/Firma Electrónica//eFacturacionColombia_V2.Firma/obj
+/Firma Electrónica//FirmaXadesNet45/FirmaXadesNet/obj
+/Firma Electrónica//FirmaXadesNet45/Microsoft.Xades/obj
+/Firma Electrónica/*_wpftmp.csproj

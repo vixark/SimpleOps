@@ -1,0 +1,305 @@
+﻿<Application x:Class="SimpleOps.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"             
+             xmlns:Interfaz="clr-namespace:SimpleOps.Interfaz"
+             xmlns:Modelo="clr-namespace:SimpleOps.Modelo"
+             StartupUri="Interfaz/Ventanas/Principal.xaml"                    
+             xmlns:System="clr-namespace:System;assembly=System.Runtime" >
+
+    
+    <Application.Resources>
+        <ResourceDictionary>
+
+            
+            <!--#region Colores Tema Oscuro -->
+            
+            <SolidColorBrush x:Key="BrochaTransparente" Color="#00000000" /> <!-- 0, 0, 0, 0 Necesaria para reusarla el conversor TextoABrocha. -->
+            
+            <SolidColorBrush x:Key="BrochaFondo0" Color="#000000" /> <!-- 0, 0, 0 Negro completo. Principalmente usado para bordes sobre el fondo normal. -->       
+            <SolidColorBrush x:Key="BrochaFondo30" Color="#1E1E1E" /> <!-- 30, 30, 30 Gris muy oscuro casi negro. Fondo principal muy cómodo para los ojos. -->
+            <SolidColorBrush x:Key="BrochaFondo33" Color="#212121" /> <!-- 33, 33, 33 -->
+            <SolidColorBrush x:Key="BrochaFondo35" Color="#232323" /> <!-- 35, 35, 35 -->
+            <SolidColorBrush x:Key="BrochaFondo40" Color="#282828" /> <!-- 40, 40, 40 Cercano al color del elemento sin seleccionar en la aplicación Correo de Windows 10. -->
+            <SolidColorBrush x:Key="BrochaFondo50" Color="#323232" /> <!-- 50, 50, 50 -->
+            <SolidColorBrush x:Key="BrochaFondo60" Color="#3C3C3C" /> <!-- 60, 60, 60 -->
+            <SolidColorBrush x:Key="BrochaFondo70" Color="#464646" /> <!-- 70, 70, 70 Cercano al color del elemento seleccionado en la aplicación Correo de Windows 10 -->
+            <SolidColorBrush x:Key="BrochaFondo80" Color="#505050" /> <!-- 80, 80, 80 -->
+
+            <SolidColorBrush x:Key="BrochaFrente255" Color="#FFFFFF" /> <!-- 255, 255, 255 Blanco completo. -->
+            <SolidColorBrush x:Key="BrochaFrente220" Color="#DCDCDC" /> <!-- 220, 220, 220 Gris casi blanco apropiado para títulos. -->
+            <SolidColorBrush x:Key="BrochaFrente200" Color="#C8C8C8" /> <!-- 200, 200, 200 Gris casi blanco apropiado para textos generales. -->
+            <SolidColorBrush x:Key="BrochaFrente150" Color="#969696" /> <!-- 150, 150, 150 -->
+            <SolidColorBrush x:Key="BrochaFrente120" Color="#787878" /> <!-- 120, 120, 120 -->
+            <SolidColorBrush x:Key="BrochaFrente100" Color="#646464" /> <!-- 100, 100, 100 -->
+            <SolidColorBrush x:Key="BrochaFrente50" Color="#323232" /> <!-- 50, 50, 50 -->
+        
+            <SolidColorBrush x:Key="BrochaAcento" Color="#498205" /> <!-- 73, 130, 5 Verde de las baldosas de inicio de Windows 10. -->
+            <LinearGradientBrush x:Key="BrochaGradienteDiagonalAcento" StartPoint="0,1" EndPoint="1,0" >
+                <GradientStop Color="#417504" /> <!-- Con negro de opacidad 25. -->
+                <GradientStop Color="#498205" Offset="0.5" /> <!-- El mismo valor de BrochaAcento. -->
+                <GradientStop Color="#5A8E1D" Offset="1" /> <!-- Con blanco de opacidad 25. -->
+            </LinearGradientBrush>
+            
+            <SolidColorBrush x:Key="BrochaAcentoClaro1" Color="#5C8F1E" /> <!-- 92, 143, 30 Verde de las baldosas de inicio de Windows 10 con el mouse encima. -->
+            <LinearGradientBrush x:Key="BrochaGradienteDiagonalAcentoClaro1" StartPoint="0,1" EndPoint="1,0" >
+                <GradientStop Color="#52801B" /> <!-- Con negro de opacidad 25. -->
+                <GradientStop Color="#5C8F1E" Offset="0.5" /> <!-- El mismo valor de BrochaAcentoClaro1. -->
+                <GradientStop Color="#6B9934" Offset="1" /> <!-- Con blanco de opacidad 25. -->
+            </LinearGradientBrush>
+            
+            <SolidColorBrush x:Key="BrochaAcentoOscuro1" Color="#3D7000" /> <!-- 61, 112, 0 Verde oscuro calculado como un color de igual distancia en saturación y valor del de BrochaAcentoClaro1 al de BrochaAcento pero en dirección contraria manteniendo el matiz 87. -->
+            <LinearGradientBrush x:Key="BrochaGradienteDiagonalAcentoOscuro1" StartPoint="0,1" EndPoint="1,0" >
+                <GradientStop Color="#376500" /> <!-- Con negro de opacidad 25. -->
+                <GradientStop Color="#3D7000" Offset="0.5" /> <!-- El mismo valor de BrochaAcentoOscuro1. -->
+                <GradientStop Color="#507E19" Offset="1" /> <!-- Con blanco de opacidad 25. -->
+            </LinearGradientBrush>
+            
+            <SolidColorBrush x:Key="BrochaAcentoClaro3" Color="#A4C082" /> <!-- 164, 192, 130 Verde del borde de las baldosas de inicio de Windows 10 con mouse encima. -->
+            <LinearGradientBrush x:Key="BrochaGradienteDiagonalAcentoClaro3" StartPoint="0,1" EndPoint="1,0" >
+                <GradientStop Color="#93AD75" /> <!-- Con negro de opacidad 25. -->
+                <GradientStop Color="#A4C082" Offset="0.5" /> <!-- El mismo valor de BrochaAcentoClaro3. -->
+                <GradientStop Color="#B5CC9A" Offset="1" /> <!-- Con blanco de opacidad 50. No es 25 porque entre más blanco menos efecto tiene el blanco adicional. -->
+            </LinearGradientBrush>
+            
+            <SolidColorBrush x:Key="BrochaAcentoOscuro3" Color="#335010" /> <!-- 51, 80, 16 Verde de las baldosas de inicio de Windows 10 en segundo plano (cuando se está moviendo otra baldosa). -->
+
+            <SolidColorBrush x:Key="BrochaAcentoClaro4" Color="#CDDDBA" /> <!-- 205, 221, 186 Verde muy claro intermedio entre BrochaAcentoClaro3 y blanco. -->
+
+            <SolidColorBrush x:Key="BrochaAcentoClaro5" Color="#E5EDDC" /> <!-- 229, 237, 220 Casi blanco intermedio entre BrochaAcentoClaro4 y blanco. -->
+
+            <!-- Los nombres de estas brochas deben ser BrochaXXXX donde XXXX es un elemento de la enumeración Global.Brochas -->
+            <SolidColorBrush x:Key="BrochaÉxito" Color="#498205" /> <!-- 73, 130, 5 El verde del acento. -->
+            <SolidColorBrush x:Key="BrochaPeligro" Color="#CC0808" /> <!-- 204, 8, 8 -->
+            <SolidColorBrush x:Key="BrochaAlerta" Color="#DD9D08" /> <!-- 221, 157, 8 -->
+            <SolidColorBrush x:Key="BrochaInformación" Color="#0066CC" /> <!-- 0, 102, 204 -->
+            <SolidColorBrush x:Key="BrochaIndiferente" Color="#666666" /> <!-- 102, 102, 102 -->
+            <SolidColorBrush x:Key="BrochaÉxitoBrillante1" Color="#72B223" /> <!-- 114, 178, 35 -->
+            <SolidColorBrush x:Key="BrochaPeligroBrillante1" Color="#FF1919" /> <!-- 255, 25, 25 -->
+            <SolidColorBrush x:Key="BrochaAlertaBrillante1" Color="#FFD419" /> <!-- 255, 212, 25 -->
+            <SolidColorBrush x:Key="BrochaInformaciónBrillante1" Color="#198CFF" /> <!-- 25, 140, 255 -->
+            <SolidColorBrush x:Key="BrochaIndiferenteBrillante1" Color="#7F7F7F" /> <!-- 127, 127, 127 -->
+  
+            <!--#endregion Colores Tema Oscuro> -->
+
+            
+            <!--#region Colores Tema Claro --> <!-- Pendiente --> <!--#endregion Colores Tema Claro> -->
+
+            
+            <!--#region Conversores, Selectores y Varios -->
+
+            <Interfaz:TextoAVisibilidad x:Key="CvrTextoAVisibilidad" />
+            <Interfaz:EstadoOrdenCompraABrocha x:Key="CvrEstadoOrdenCompraABrocha" />
+            <Interfaz:TextoABrocha x:Key="CvrTextoABrocha" />
+            <Interfaz:EtiquetaYControlAVisibilidad x:Key="CvrEtiquetaYControlAVisibilidad" />
+            <Interfaz:EtiquetaAVisibilidad x:Key="CvrEtiquetaAVisibilidad" />
+            <Interfaz:PlantillaÍtemLista x:Key="StrPlantillaÍtemLista" />
+
+            <Style TargetType="Border" > <!-- Necesario para que no se generen unos pixeles oscuros entre el borde de un botón y su cuerpo cuando el mouse está encima. --> 
+                <Setter Property="SnapsToDevicePixels" Value="True" />  
+            </Style>
+
+            <System:Boolean x:Key="Verdadero" >True</System:Boolean> <!-- Para ser usado en el parámetro que se pasa a los conversores. -->
+            <System:Boolean x:Key="Falso" >False</System:Boolean>
+            
+            <!--#endregion Conversores, Selectores y Varios> -->
+            
+            
+            <!--#region Tamaños -->
+            
+            <System:Double x:Key="TamañoLetraXL" >26</System:Double>
+            <System:Double x:Key="TamañoLetraL" >22</System:Double>
+            <System:Double x:Key="TamañoLetraM" >18</System:Double>
+            <System:Double x:Key="TamañoLetraS" >14</System:Double>
+            <System:Double x:Key="TamañoLetraXS" >10</System:Double>
+
+            <System:Double x:Key="AltoBotón" >40</System:Double>
+            <CornerRadius x:Key="RadioEsquinasBotón" >3</CornerRadius>
+            <Thickness x:Key="BordeBotónMouseEncima" Left="3" Top="3" Right="3" Bottom="3" />
+            
+            <Thickness x:Key="Borde1ÍtemSeleccionado" Left="0" Top="0" Right="0" Bottom="1" />
+            <Thickness x:Key="Borde2ÍtemSeleccionado" Left="8" Top="0" Right="0" Bottom="0" />
+            <Thickness x:Key="RellenoÍtemLista" Left="10" Top="10" Right="10" Bottom="10" />
+            <GridLength x:Key="AnchoInformaciónOCEnLista" >250</GridLength>
+            <System:Double x:Key="AltoAnchoIndicadorEstadoOCEnLista" >20</System:Double>
+            <CornerRadius x:Key="RadioEsquinasIndicadorEstadoOCEnLista" >6</CornerRadius>
+            
+            <CornerRadius x:Key="RadioEsquinasCuadroTexto" >3</CornerRadius>
+            <System:Double x:Key="AltoCuadroTexto" >40</System:Double>
+            
+            <!--#endregion Tamaños> -->
+            
+
+            <!--#region Controles -->
+                     
+            <Style TargetType="{x:Type Button}" >
+                
+                <Setter Property="Background" Value="{StaticResource BrochaGradienteDiagonalAcento}" />
+                <Setter Property="Foreground" Value="{StaticResource BrochaAcentoClaro5}" />
+                <Setter Property="BorderThickness" Value="0" /> <!-- Necesario para eliminar el borde en estado normal. -->
+                <Setter Property="Height" Value="{StaticResource AltoBotón}" />
+                
+                <Setter Property="Template" >
+                    <Setter.Value>
+                        
+                        <ControlTemplate TargetType="{x:Type Button}" >
+                            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" 
+                                    BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{StaticResource RadioEsquinasBotón}" >
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                        </ControlTemplate>
+                        
+                    </Setter.Value>
+                </Setter>
+                
+                <Style.Triggers>
+                    
+                    <MultiTrigger>
+                        <MultiTrigger.Conditions>
+                            <Condition Property="IsPressed" Value="False" />
+                            <Condition Property="IsMouseOver" Value="True" />
+                        </MultiTrigger.Conditions>
+                        <Setter Property="Background" Value="{StaticResource BrochaGradienteDiagonalAcentoClaro1}" />
+                        <Setter Property="BorderBrush" Value="{StaticResource BrochaGradienteDiagonalAcentoClaro3}" />
+                        <Setter Property="BorderThickness" Value="{StaticResource BordeBotónMouseEncima}" />
+                    </MultiTrigger>
+                    
+                    <Trigger Property="IsPressed" Value="True" >
+                        <Setter Property="Background" Value="{StaticResource BrochaGradienteDiagonalAcentoOscuro1}" />
+                        <Setter Property="Foreground" Value="{StaticResource BrochaAcentoClaro4}" />
+                    </Trigger>
+                    
+                </Style.Triggers>
+                
+            </Style>
+
+            
+            <Style TargetType="{x:Type ListBox}" >
+
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="BorderBrush" Value="{StaticResource BrochaFondo0}" />
+                <Setter Property="Padding" Value="-1" />
+                <Setter Property="IsSynchronizedWithCurrentItem" Value="True" />
+                <Setter Property="Background" Value="{StaticResource BrochaFondo35}" />
+                <Setter Property="ItemTemplateSelector" Value="{StaticResource StrPlantillaÍtemLista}" />
+                <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+                
+            </Style>
+            
+            
+            <Style TargetType="{x:Type ListBoxItem}" >
+
+                <Setter Property="Background" Value="{StaticResource BrochaFondo35}" />
+                <Setter Property="Padding" Value="{StaticResource RellenoÍtemLista}" />
+
+                <Setter Property="Template" >
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ListBoxItem}" >
+                            
+                            <Border BorderThickness="{StaticResource Borde1ÍtemSeleccionado}" BorderBrush="{StaticResource BrochaFondo0}">
+                                <Border BorderThickness="{StaticResource Borde2ÍtemSeleccionado}" BorderBrush="{TemplateBinding BorderBrush}"
+                                        Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" >
+                                    <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                      SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                </Border>
+                            </Border>
+                            
+                            <ControlTemplate.Triggers>
+
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="IsMouseOver" Value="True" />
+                                        <Condition Property="IsSelected" Value="False" />
+                                    </MultiTrigger.Conditions>
+                                    <Setter Property="Background" Value="{StaticResource BrochaFondo50}" />
+                                    <Setter Property="BorderBrush" Value="{StaticResource BrochaAcentoOscuro3}" />
+                                </MultiTrigger>
+                                
+                                <Trigger Property="IsSelected" Value="True"> <!-- Se podría agregar un nuevo desencadenador que condicione <Condition Property="Selector.IsSelectionActive" Value="True o Falso" /> para establecer un colores diferentes cuando no se tiene el control en el foco. -->
+                                    <Setter Property="Background" Value="{StaticResource BrochaFondo60}" />
+                                    <Setter Property="BorderBrush" Value="{StaticResource BrochaAcento}" />
+                                </Trigger>
+          
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="IsMouseOver" Value="True" />
+                                        <Condition Property="IsSelected" Value="True" />
+                                    </MultiTrigger.Conditions>
+                                    <Setter Property="Background" Value="{StaticResource BrochaFondo70}" />
+                                    <Setter Property="BorderBrush" Value="{StaticResource BrochaAcentoClaro1}" />
+                                </MultiTrigger>              
+                            
+                            </ControlTemplate.Triggers>
+
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+
+            <Style TargetType="{x:Type Separator}" >
+                <Setter Property="Background" Value="{StaticResource BrochaFondo0}" />
+            </Style>
+
+            
+            <!--#endregion Controles> -->
+
+
+            <!--#region Plantillas -->
+
+            <DataTemplate x:Key="PlantillaOrdenCompraEnLista" >
+                <Border>
+                    <Grid>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{StaticResource AnchoInformaciónOCEnLista}"/>
+                            <ColumnDefinition Width="{Binding Source={StaticResource AltoAnchoIndicadorEstadoOCEnLista}}" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding Path=Cliente.Nombre}" Foreground="{StaticResource BrochaFrente220}" />
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding Path=Número}" FontSize="{StaticResource TamañoLetraS}" 
+                            Foreground="{StaticResource BrochaFrente150}" />
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="{Binding Path=FechaHoraCreación}" FontSize="{StaticResource TamañoLetraXS}" 
+                            Foreground="{StaticResource BrochaFrente150}" />
+
+                        <Border Grid.RowSpan="4" Grid.Column="1" CornerRadius="{StaticResource RadioEsquinasIndicadorEstadoOCEnLista}"
+                                Width="{StaticResource AltoAnchoIndicadorEstadoOCEnLista}" Height="{StaticResource AltoAnchoIndicadorEstadoOCEnLista}"  >
+                            <Border.Style>
+                                <Style TargetType="{x:Type Border}">
+
+                                    <Setter Property="Background" 
+                                            Value="{Binding Path=EstadoOrdenCompra, Converter={StaticResource CvrEstadoOrdenCompraABrocha}}" />
+                                    
+                                    <Style.Triggers>
+
+                                        <DataTrigger Value="True"
+                                                     Binding="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem}, Path=IsMouseOver}" >
+                                            <Setter Property="Background" Value="{Binding Path=EstadoOrdenCompra, 
+                                                Converter={StaticResource CvrEstadoOrdenCompraABrocha}, ConverterParameter=Brillante1}" /> <!-- Pasa como parámetro el texto Brillante1 con el que se construye el nombre de la brocha a usar cuando el mouse esté encima del ítem de la lista que lo contiene. -->
+                                        </DataTrigger>
+                                        
+                                    </Style.Triggers>
+
+                                </Style>
+                            </Border.Style>
+                        </Border>
+                        
+                    </Grid>
+                </Border>
+            </DataTemplate>
+
+            <!--#endregion Plantillas> -->
+
+            
+        </ResourceDictionary>
+    </Application.Resources>
+
+    
+</Application>

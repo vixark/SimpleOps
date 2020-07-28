@@ -1,0 +1,4666 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Datos.db Database Schema</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <style type="text/css">
+                    body { background-color: #fff; color: #000; font-family: Consolas, monospace}
+                    a:link { color: #03d; }
+                    a:visited { color: #039; }
+                    a:hover { color: #09f; }
+                    table { border-collapse: collapse; width: 100%; }
+                    table caption { color: #666; text-align: right; font-size: 65%; margin-bottom: .5ex; }
+                    table td, table th { border: solid 1px #666; border-collapse: collapse; padding: .3ex .5ex; vertical-align: top; }
+                    table tbody tr:hover { background-color: #ffc; }
+                    table thead th { text-align: left; background-color: #ccc; }
+                    table tbody th { text-align: left; white-space: nowrap; }
+                    .table { page-break-inside: avoid; }
+                    .pk { float: right; cursor: arrow; color: #999; }
+                    .type { white-space: nowrap; }
+                    .null { text-align: center; }
+                    .flag { white-space: nowrap; font-size: 70%; display: inline-block; border: solid 1px #ccc; padding: .25ex .5ex; background-color: #ddd; margin-right: 1ex; }
+                    .tocref { float: right; text-decoration: none; font-weight: normal; }
+                    .footer { text-align: center; margin-top: 1em; font-size: 80%;}
+                    li.view:before { content: "VIEW"; font-size: 70%; display: inline-block; border: solid 1px #ccc; padding: .25ex .5ex; background-color: #ddd; margin-right: 1ex; }
+                    @media print {
+                    body { font-size: .8em; }
+                    #toc, .tocref { display: none; }
+                    a:link, a:visited { color: #000; text-decoration: none; }
+                    }
+                </style>
+  </head>
+  <body>
+    <h1>Datos.db Database Schema</h1>
+    <div id="toc">
+      <ul>
+        <li class="table"><a href="#Aplicaciones">Aplicaciones</a></li>
+        <li class="table"><a href="#Bloqueos">Bloqueos</a></li>
+        <li class="table"><a href="#Campa%C3%B1as">Campañas</a></li>
+        <li class="table"><a href="#Categor%C3%ADas">Categorías</a></li>
+        <li class="table"><a href="#Clientes">Clientes</a></li>
+        <li class="table"><a href="#Cobros">Cobros</a></li>
+        <li class="table"><a href="#Compras">Compras</a></li>
+        <li class="table"><a href="#ComprobantesEgresos">ComprobantesEgresos</a></li>
+        <li class="table"><a href="#Contactos">Contactos</a></li>
+        <li class="table"><a href="#ContactosClientes">ContactosClientes</a></li>
+        <li class="table"><a href="#ContactosProveedores">ContactosProveedores</a></li>
+        <li class="table"><a href="#Cotizaciones">Cotizaciones</a></li>
+        <li class="table"><a href="#InformesPagos">InformesPagos</a></li>
+        <li class="table"><a href="#InventariosConsignaci%C3%B3n">InventariosConsignación</a></li>
+        <li class="table"><a href="#L%C3%ADneasCompras">LíneasCompras</a></li>
+        <li class="table"><a href="#L%C3%ADneasNegocio">LíneasNegocio</a></li>
+        <li class="table"><a href="#L%C3%ADneasNotasCr%C3%A9ditoCompra">LíneasNotasCréditoCompra</a></li>
+        <li class="table"><a href="#L%C3%ADneasNotasCr%C3%A9ditoVenta">LíneasNotasCréditoVenta</a></li>
+        <li class="table"><a href="#L%C3%ADneasNotasD%C3%A9bitoCompra">LíneasNotasDébitoCompra</a></li>
+        <li class="table"><a href="#L%C3%ADneasNotasD%C3%A9bitoVenta">LíneasNotasDébitoVenta</a></li>
+        <li class="table"><a href="#L%C3%ADneasOrdenesCompra">LíneasOrdenesCompra</a></li>
+        <li class="table"><a href="#L%C3%ADneasPedidos">LíneasPedidos</a></li>
+        <li class="table"><a href="#L%C3%ADneasRemisiones">LíneasRemisiones</a></li>
+        <li class="table"><a href="#L%C3%ADneasVentas">LíneasVentas</a></li>
+        <li class="table"><a href="#ListasPrecios">ListasPrecios</a></li>
+        <li class="table"><a href="#Marcas">Marcas</a></li>
+        <li class="table"><a href="#Materiales">Materiales</a></li>
+        <li class="table"><a href="#MovimientosBancarios">MovimientosBancarios</a></li>
+        <li class="table"><a href="#MovimientosEfectivo">MovimientosEfectivo</a></li>
+        <li class="table"><a href="#Municipios">Municipios</a></li>
+        <li class="table"><a href="#NotasCr%C3%A9ditoCompra">NotasCréditoCompra</a></li>
+        <li class="table"><a href="#NotasCr%C3%A9ditoVenta">NotasCréditoVenta</a></li>
+        <li class="table"><a href="#NotasD%C3%A9bitoCompra">NotasDébitoCompra</a></li>
+        <li class="table"><a href="#NotasD%C3%A9bitoVenta">NotasDébitoVenta</a></li>
+        <li class="table"><a href="#OrdenesCompra">OrdenesCompra</a></li>
+        <li class="table"><a href="#Pedidos">Pedidos</a></li>
+        <li class="table"><a href="#PreciosClientes">PreciosClientes</a></li>
+        <li class="table"><a href="#PreciosProveedores">PreciosProveedores</a></li>
+        <li class="table"><a href="#Productos">Productos</a></li>
+        <li class="table"><a href="#Proveedores">Proveedores</a></li>
+        <li class="table"><a href="#RecibosCaja">RecibosCaja</a></li>
+        <li class="table"><a href="#ReferenciasClientes">ReferenciasClientes</a></li>
+        <li class="table"><a href="#ReferenciasProveedores">ReferenciasProveedores</a></li>
+        <li class="table"><a href="#Remisiones">Remisiones</a></li>
+        <li class="table"><a href="#Roles">Roles</a></li>
+        <li class="table"><a href="#RolesUsuarios">RolesUsuarios</a></li>
+        <li class="table"><a href="#Sedes">Sedes</a></li>
+        <li class="table"><a href="#Subcategor%C3%ADas">Subcategorías</a></li>
+        <li class="table"><a href="#Usuarios">Usuarios</a></li>
+        <li class="table"><a href="#Ventas">Ventas</a></li>
+      </ul>
+    </div>
+    <div class="table">
+      <h2 id=""><a href="#toc" class="tocref">⇧</a>
+        Database Properties
+      </h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Property</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="type">Database</td>
+            <td class="type">D:\Programas\SimpleOps\Datos.db</td>
+          </tr>
+          <tr>
+            <td class="type">ServerVersion</td>
+            <td class="type">3.30.1</td>
+          </tr>
+          <tr>
+            <td class="type">DatabaseSize</td>
+            <td class="type">18,527 MB</td>
+          </tr>
+          <tr>
+            <td class="type">Created</td>
+            <td class="type">17/03/2020 3:34</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="Aplicaciones"><a href="#toc" class="tocref">⇧</a>Table Aplicaciones</h2><div style="margin-bottom:20px">El uso principal que se le da a un producto.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_Aplicaciones"></span>ID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraCreación<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Nombre<td></td><td>50</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="Bloqueos"><a href="#toc" class="tocref">⇧</a>Table Bloqueos</h2><div style="margin-bottom:20px">Entidad auxiliar que describe un bloqueo necesario para implementar control de concurrencia pesimista. Cuando se estén realizando operaciones             que lo requieran permite realizar un bloqueo a todas las entidades de un tipo o a unas puntuales (toda la tabla o algunas filas).             Aunque en realidad no es un sistema estricto de concurrencia pesimista porque la conexión a la base de datos no permanece abierta y             no se implementa a nivel de la base de datos. Es más un sistema de 'ingreso' y 'egreso' de los usuarios a la posibilidad o no de modificar             las tablas y sus filas.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_Bloqueos"></span>ID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>NombreEntidad<td></td><td>50</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>EntidadID<td>ID de la entidad que está bloqueada. Si es nulo todas las entidades están bloqueadas, es decir todas las filas. Si se necesita bloquear solo algunas filas se debe agregar una fila a la tabla Bloqueos por cada ID de entidad (fila) a bloquear.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Propiedad<td>Nombre de la propiedad que está bloqueada. Si es nula todas las propiedades están bloqueadas, es de decir todas las columnas. Si se necesita bloquear solo algunas columnas se deben agregar una fila a la tabla Bloqueos por cada propiedad de entidad (columna) a bloquear.</td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Tipo<td>Describe el tipo de bloqueo. Ninguno = -1, Lectura = 1, Modificación = 2, Inserción = 4, Eliminación = 8. Los valores son sumables, es decir, para un bloquear la eliminación e inserción pero no la lectura ni actualización, el valor es: 4 + 8 = 12. El bloqueo de lectura no es implementado, todos los usuarios tendrán siempre permisos de lectura según sus roles.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>UsuarioID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag" title="FK_Bloqueos_0_0">R:  <a href="#Usuarios">Usuarios</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>FechaHoraInicio<td>FechaHora de inicio del bloqueo. Si el bloqueo se tarda mucho en ser liberado puede ser desbloqueado por otro usuario y el usuario bloqueador perdería la posibilidad de realizar la operación.</td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="Campañas"><a href="#toc" class="tocref">⇧</a>Table Campañas</h2><div style="margin-bottom:20px">Campaña de mercadeo con la que se obtuvo el cliente.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_Campañas"></span>ID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraCreación<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Nombre<td></td><td>50</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="Categorías"><a href="#toc" class="tocref">⇧</a>Table Categorías</h2><div style="margin-bottom:20px">De producto.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_Categorías"></span>ID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraCreación<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Nombre<td></td><td>50</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="Clientes"><a href="#toc" class="tocref">⇧</a>Table Clientes</h2><div style="margin-bottom:20px">Entidad a la que se le venden productos.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_Clientes"></span>ID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraCreación<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Nombre<td>Razón social de la empresa o nombre de la persona.</td><td>100</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>NombreComercial<td></td><td>100</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>TipoEntidad<td>Desconocido = 0, Empresa = 1, Persona = 2.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>TipoContribuyente<td>Ordinario = 1, GranContribuyente = 2, Autorretenedor = 4, RetenedorIVA = 8, RégimenSimple = 16, ResponsableIVA = 32, NoResponsableIVA = 64.             Una entidad económica (cliente o proveedor) puede tener múltiples tipos de contribuyente, en estos casos se suman los valores de los tipos que             le apliquen. Por ejemplo, si es GranContribuyente = 2, Autorretenedor = 4 y ResponsableIVA = 32, se usa el valor 2 + 4 + 32 = 38.             Si la empresa usuaria de SimpleOps no es gran contribuyente ni retenedor de IVA no es necesario conocer si los clientes son responsables de             IVA o no pues la empresa usuaria nunca necesita aplicar retención de IVA y esta información solo se necesita para su cálculo.            En el caso de los proveedores si es necesario establecer si es o no responsable de IVA porque se usa esta información no aplicar IVA a sus compras.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Identificación<td>NIT (sin dígito de verificación) o cédula de ciudadanía.</td><td>20</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Teléfono<td>Principal. Usado en la factura.</td><td>30</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>TeléfonoAlternativo<td>General alternativo. Es útil para facilitar la adición de un telefono general alternativo de la entidad económica sin necesidad de crear un contacto asociado.</td><td>30</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Dirección<td>Principal. Usada en la factura.</td><td>100</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>MunicipioID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_Clientes_1_0">R:  <a href="#Municipios">Municipios</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>Saldo<td>Si es positivo es a favor de la entidad económica. Si es negativo es el valor que la entidad económica le debe a la empresa.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ReferenciaEnBanco<td>Referencia identificadora de la entidad económica en los movimientos bancarios. Nombre basado en columna 'Referencia' en bancolombia.com.</td><td>100</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>DescripciónEnBanco<td>Descripción identificadora de la entidad económica en los movimientos bancarios. Nombre basado en 'Descripción' en bancolombia.com.</td><td>100</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>DíasCrédito<td>Cero si no tiene crédito aprobado. Aplica tanto para clientes (días de crédito dado a ellos), como para proveedores (días de crédito con ellos).</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CupoCrédito<td>Cero si no tiene crédito aprobado, nulo si no tiene cupo definido, es decir tiene crédito ilimitado, por lo menos en SimpleOps. Aplica tanto para clientes (cupo de crédito dado a ellos), como para proveedores (cupo de crédito con ellos).</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ContactoFacturasID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_Clientes_2_0">R:  <a href="#Contactos">Contactos</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>ContactoCobrosID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_Clientes_3_0">R:  <a href="#Contactos">Contactos</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>TipoCliente<td>Desconocido = 0, Consumidor = 1, Distribuidor = 2, GrandesContratos = 3, Otro = 255. Desconocido solo es aceptado si se establece Global.PermitirTipoClienteDesconocido = true.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>SubtipoCliente<td>Subtipo adicional del cliente. Especialmente útil cuando TipoCliente = Otro o TipoCliente = Grandes Contratos para agrupar las razones sociales (clientes) de cada contrato.</td><td>50</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>PorcentajeRetenciónIVAPropio<td>Si es nulo se usan las reglas legales. Cero si no aplica retención de IVA.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>PorcentajeRetenciónFuentePropio<td>Si es nulo se usan las reglas legales. Cero si no aplica retención en la fuente.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>PorcentajeRetenciónICAPropio<td>Si es nulo se usa el porcentaje en opciones. Cero si no aplica retención del ICA.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>PorcentajeRetencionesExtraPropio<td>Si es nulo se usa el porcentaje en opciones. Retenciones varias que algunas empresas aplican al pago de todas sus facturas. Lo suelen hacer las públicas. Cero si no aplican.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>MínimoRetenciónIVAPropio<td>Si es nulo se usan las reglas legales. Si no, realiza retención de IVA para facturas con subtotal superior o igual a este mínimo. Puede ser cero para aplicarla a todas.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>MínimoRetenciónFuentePropio<td>Si es nulo se usan las reglas legales. Si no, realiza retención en la fuente de renta para facturas con subtotal superior o igual a este mínimo. Puede ser cero para aplicarla a todas.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>MínimoRetenciónICAPropio<td>Si es nulo se usa el mínimo en opciones. Si no, realiza retención del ICA para facturas con subtotal superior o igual a este mínimo. Puede ser cero para aplicarla a todas.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>MínimoRetencionesExtraPropio<td>Si es nulo, como no hay mínimo en opciones, se aplica a todas. Si no, realiza retenciones extra para facturas con subtotal superior o igual a este mínimo. Puede ser cero para aplicarla a todas.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>PrioridadPropia<td>Desconocida = 0, Ninguna = 1, MuyBaja = 10, Baja = 20, Media = 30, Alta = 40, MuyAlta = 50. Si es desconocida se usan las reglas en opciones. Al programar la asignación de los productos en inventario a las ordenes de compra pendientes se prefieren los clientes de mayor prioridad.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FormaEntregaPropia<td>Desconocida = 0, Virtual = 1, PuntoDeVenta = 2, Mensajería = 3, Transportadora = 4, TransportadoraInternacional = 5, Otra = 255. Si es desconocida se usan las reglas en opciones. Forma de entrega predeterminada para pedidos que cumplen con las condiciones comerciales y que no se ha recibido comunicación del cliente para hacerlo de otra forma.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>MínimoTransporteGratisPropio<td>Si es nulo se usan las reglas en opciones. El subtotal mínimo de la orden de compra para ser envíada con transporte gratis.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CopiasFacturaPropia<td>Si es nula se usa el valor en opciones. La cantidad de copias de la factura que se imprime. Legalmente puede ser cero pues la factura electrónica es legalmente suficiente.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>PorcentajeGananciaPropio<td>Si es nulo se usan las reglas en opciones. El porcentaje de ganancia que se le aplica a los costos de los productos para obtener sus precios de venta. Es útil cuando no se quieren usar las listas de precios o cuando el producto no está en ellas.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>PorcentajeIVAPropio<td>Si es nulo se usan las reglas en Global.ObtenerPorcentajeIVA(). Algunas entidades pueden estar exentas de IVA.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ObservacionesFactura<td>Se escriben en el campo observaciones de las facturas y se muestran en un cuadro de mensaje en la interfaz al hacer una factura.</td><td>500</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>RepresentanteComercialID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_Clientes_0_0">R:  <a href="#Usuarios">Usuarios</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>CampañaID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_Clientes_4_0">R:  <a href="#Campa%C3%B1as">Campañas</a>.ID</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="Cobros"><a href="#toc" class="tocref">⇧</a>Table Cobros</h2><div style="margin-bottom:20px">Registro de cobros realizados a clientes por facturas de venta vencidas.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_Cobros"></span>ID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraCreación<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ClienteID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag" title="FK_Cobros_0_0">R:  <a href="#Clientes">Clientes</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>NúmerosFacturas<td>Prefijo + número de las facuras de ventas que fueron cobradas.</td><td>1000</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Total<td>Total de las facturas cobradas.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>MáximoDíasVencimiento<td>Los días de vencimiento de la factura de venta cobrada más antigua.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Respuesta<td>Respuesta del cliente ante el cobro.</td><td>500</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Tipo<td>Desconocido = 0, Email = 1, Telefónico = 2, Personal = 3, AgenciaDeCobros = 4, Prejurídico = 5, Jurídico = 6, Otro = 255.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="Compras"><a href="#toc" class="tocref">⇧</a>Table Compras</h2><div style="margin-bottom:20px">Recepción de productos a cambio de dinero.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_Compras"></span>ID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Número<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Prefijo<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHora<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>DescuentoCondicionado<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>DescuentoComercial<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Subtotal<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>IVA<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ImpuestoConsumo<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>RetenciónFuente<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>RetenciónIVA<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>RetenciónICA<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>RetencionesExtra<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Estado<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ConsecutivoDianAnual<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ProveedorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag" title="FK_Compras_0_0">R:  <a href="#Proveedores">Proveedores</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>ComprobanteEgresoID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_Compras_2_0">R:  <a href="#ComprobantesEgresos">ComprobantesEgresos</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>PedidoID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_Compras_1_0">R:  <a href="#Pedidos">Pedidos</a>.ID</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="ComprobantesEgresos"><a href="#toc" class="tocref">⇧</a>Table ComprobantesEgresos</h2><div style="margin-bottom:20px">Comprobante de salida de dinero.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_ComprobantesEgresos"></span>ID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHora<td>Fecha y hora legal del comprobante.</td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ValorFacturas<td>El valor del comprobante que se usó para la cancelación de facturas.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Abono<td>El valor del comprobante que se usó para abonar al saldo a favor de la entidad económica. Si es negativo es el valor tomado del saldo pendiente de la entidad económica que se sumó al movimiento de dinero para cancelar las facturas.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Estado<td>Realizado = 0: Se generó el comprobante de dinero. ReportadoContabilidad = 1: Se reportó el comprobante de dinero a la contabilidad, esto por lo general implica el envío por email o impresión de un lote con la relación de los comprobantes de dinero de cierto período. Si un comprobante de dinero ya reportado es anulado esta anulación debe ser reportada nuevamente a contabilidad. Anulado = 2. AnuladoReportado = 3: Si el comprobante de dinero se anuló y además ya se reportó a contabilidad su anulación.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Lugar<td>Desconocido = 0, Banco = 1, Caja = 2.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ClienteID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_ComprobantesEgresos_1_0">R:  <a href="#Clientes">Clientes</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>ProveedorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_ComprobantesEgresos_0_0">R:  <a href="#Proveedores">Proveedores</a>.ID</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="Contactos"><a href="#toc" class="tocref">⇧</a>Table Contactos</h2><div style="margin-bottom:20px">Datos de contacto asociados a una dirección de email. No está restringido a una entidad económica porque un contacto puede ser válido para varias.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_Contactos"></span>ID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Email<td></td><td>100</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Teléfono<td>Móvil o fijo.</td><td>30</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Nombre<td></td><td>50</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>EmailActivo<td>Algunos contactos se pueden querer mantener en la base de datos así el email esté desactivado o eliminado. Es útil para evitar enviar comunicaciones a este email.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="ContactosClientes"><a href="#toc" class="tocref">⇧</a>Table ContactosClientes</h2><div style="margin-bottom:20px">Asocia los contactos a cada cliente.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_ContactosClientes_1"></span>ClienteID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_ContactosClientes_1_0">R:  <a href="#Clientes">Clientes</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_ContactosClientes_1"></span>ContactoID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_ContactosClientes_0_0">R:  <a href="#Contactos">Contactos</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ObservacionesFactura<td>Observaciones adicionales a Cliente.ObservacionesFactura que se escribirán en el campo de observaciones de la factura y se mostrarán en la interfaz al hacer una factura a la empresa de este contacto.</td><td>500</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Tipo<td>Desconocido = 0, Comprador = 1, Almacenista = 2, Tesorería = 5, JefeCompras = 10, AltoDirectivo = 15, Gerente = 20, Propietario = 25, Otro = 255.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="ContactosProveedores"><a href="#toc" class="tocref">⇧</a>Table ContactosProveedores</h2><div style="margin-bottom:20px">Asocia los contactos a cada proveedor.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_ContactosProveedores_1"></span>ProveedorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_ContactosProveedores_0_0">R:  <a href="#Proveedores">Proveedores</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_ContactosProveedores_1"></span>ContactoID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_ContactosProveedores_1_0">R:  <a href="#Contactos">Contactos</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Tipo<td>Desconocido = 0, Vendedor = 1, Despachos = 2, Tesorería = 5, JefeVentas = 10, AltoDirectivo = 15, Gerente = 20, Propietario = 25, Otro = 255.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="Cotizaciones"><a href="#toc" class="tocref">⇧</a>Table Cotizaciones</h2><div style="margin-bottom:20px">Precio dado a cliente. Se diferencia de PrecioCliente en que la tabla Cotizaciones es un registro histórico mientras que la tabla PreciosClientes tiene solo los últimos precios.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_Cotizaciones"></span>ID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraCreación<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ProductoID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag" title="FK_Cotizaciones_0_0">R:  <a href="#Productos">Productos</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>ClienteID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag" title="FK_Cotizaciones_1_0">R:  <a href="#Clientes">Clientes</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>Precio<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="InformesPagos"><a href="#toc" class="tocref">⇧</a>Table InformesPagos</h2><div style="margin-bottom:20px">De un cliente.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_InformesPagos"></span>ID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraCreación<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ClienteID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag" title="FK_InformesPagos_0_0">R:  <a href="#Clientes">Clientes</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>Valor<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraPago<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Banco<td>Otro = -2, Ninguno = -1, Desconocido = 0, Bogotá = 1, Popular = 2, ItaúCorpbanca = 6, Bancolombia = 7, Citibank = 9, GNBSudameris = 12, BBVA = 13, Occidente = 23, CajaSocial = 30, Davivienda = 39, ScotiabankColpatria = 42, Agrario = 43, AVVillas = 49, CredifinancieraProcredit = 51, Bancamía = 52, W = 53, Bancoomeva = 54, Finandina = 55, Falabella = 56, Pichincha = 57, Coopcentral = 58, SantanderDeNegocios = 59, MundoMujer = 60, Multibank = 61, Bancompartir = 62, Serfinanza = 63, Corficolombiana = 2011, InversiónBancolombia = 2037, JPMorgan = 2041, BNPParibas = 2042, CorfiGNBSudameris = 2048, CorporaciónFinancieraDavivienda = 2049, GirosYFinanzas = 4008, Tuya = 4026, GMFinancial = 4031, Coltefinanciera = 4046, Bancoldex = 4101, FinancieraDann = 4108, FinancieraPagos = 4115, Credifamilia = 4117, Crezcamos = 4118, LaHipotecaria = 4120, Juriscoop = 4121, RCI = 4122, FinancieraDeAntioquia = 32001, CooperativaFinancieraJFK = 32002, Coofinep = 32003, Cotrafa = 32004, Confiar = 32005, Daviplata = 1001551, Nequi = 1001507, FinanciamientoItau = 1001014.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>OtroNúmeroCuenta<td>Si es nulo la cuenta del movimiento bancario es la establecida en opciones para el banco del movimiento bancario.</td><td>30</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Observaciones<td></td><td>500</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="InventariosConsignación"><a href="#toc" class="tocref">⇧</a>Table InventariosConsignación</h2><div style="margin-bottom:20px">Producto propiedad de la empresa que el cliente tiene almacenado en sus instalaciones.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_InventariosConsignación_1"></span>ClienteID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_InventariosConsignación_1_0">R:  <a href="#Clientes">Clientes</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_InventariosConsignación_1"></span>ProductoID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_InventariosConsignación_0_0">R:  <a href="#Productos">Productos</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Cantidad<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CostoUnitario<td>El costo de compra por unidad y gastos asociados a su producción y obtención. Incluye costo de transporte. Si es nulo es desconocido.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Precio<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="LíneasCompras"><a href="#toc" class="tocref">⇧</a>Table LíneasCompras</h2><div style="margin-bottom:20px">Línea de producto comprado.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_LíneasCompras_1"></span>ProductoID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_LíneasCompras_0_0">R:  <a href="#Productos">Productos</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_LíneasCompras_1"></span>CompraID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_LíneasCompras_1_0">R:  <a href="#Compras">Compras</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>Cantidad<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Precio<td>Precio real del producto. No es cero si es muestra gratis.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CostoUnitario<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="LíneasNegocio"><a href="#toc" class="tocref">⇧</a>Table LíneasNegocio</h2><div style="margin-bottom:20px">De producto.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_LíneasNegocio"></span>ID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraCreación<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Nombre<td></td><td>50</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="LíneasNotasCréditoCompra"><a href="#toc" class="tocref">⇧</a>Table LíneasNotasCréditoCompra</h2><div style="margin-bottom:20px">Línea de producto devuelto de una compra.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_LíneasNotasCréditoCompra_1"></span>ProductoID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_LíneasNotasCréditoCompra_0_0">R:  <a href="#Productos">Productos</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_LíneasNotasCréditoCompra_1"></span>NotaCréditoCompraID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_LíneasNotasCréditoCompra_1_0">R:  <a href="#NotasCr%C3%A9ditoCompra">NotasCréditoCompra</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>Cantidad<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Precio<td>Precio real del producto. No es cero si es muestra gratis.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CostoUnitario<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="LíneasNotasCréditoVenta"><a href="#toc" class="tocref">⇧</a>Table LíneasNotasCréditoVenta</h2><div style="margin-bottom:20px">Línea de producto devuelto de una venta.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_LíneasNotasCréditoVenta_1"></span>ProductoID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_LíneasNotasCréditoVenta_0_0">R:  <a href="#Productos">Productos</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_LíneasNotasCréditoVenta_1"></span>NotaCréditoVentaID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_LíneasNotasCréditoVenta_1_0">R:  <a href="#NotasCr%C3%A9ditoVenta">NotasCréditoVenta</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>Cantidad<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Precio<td>Precio real del producto. No es cero si es muestra gratis.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CostoUnitario<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="LíneasNotasDébitoCompra"><a href="#toc" class="tocref">⇧</a>Table LíneasNotasDébitoCompra</h2><div style="margin-bottom:20px">Línea de cargo añadido a una compra.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_LíneasNotasDébitoCompra_1"></span>ProductoID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_LíneasNotasDébitoCompra_0_0">R:  <a href="#Productos">Productos</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_LíneasNotasDébitoCompra_1"></span>NotaDébitoCompraID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_LíneasNotasDébitoCompra_1_0">R:  <a href="#NotasD%C3%A9bitoCompra">NotasDébitoCompra</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>Cantidad<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Precio<td>Precio real del producto. No es cero si es muestra gratis.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CostoUnitario<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="LíneasNotasDébitoVenta"><a href="#toc" class="tocref">⇧</a>Table LíneasNotasDébitoVenta</h2><div style="margin-bottom:20px">Línea de cargo añadido a una venta.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_LíneasNotasDébitoVenta_1"></span>ProductoID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_LíneasNotasDébitoVenta_0_0">R:  <a href="#Productos">Productos</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_LíneasNotasDébitoVenta_1"></span>NotaDébitoVentaID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_LíneasNotasDébitoVenta_1_0">R:  <a href="#NotasD%C3%A9bitoVenta">NotasDébitoVenta</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>Cantidad<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Precio<td>Precio real del producto. No es cero si es muestra gratis.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CostoUnitario<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="LíneasOrdenesCompra"><a href="#toc" class="tocref">⇧</a>Table LíneasOrdenesCompra</h2><div style="margin-bottom:20px">Línea de una orden de compra.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_LíneasOrdenesCompra_1"></span>ProductoID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_LíneasOrdenesCompra_0_0">R:  <a href="#Productos">Productos</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_LíneasOrdenesCompra_1"></span>OrdenCompraID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_LíneasOrdenesCompra_1_0">R:  <a href="#OrdenesCompra">OrdenesCompra</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraCreación<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Precio<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Cantidad<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CantidadEntregada<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraCumplimiento<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Estado<td>Pendiente = 0, Cumplida = 1, Anulada = 2. Puede ser anulado o cumplido individualmente sin anular o cumplir la solicitud completa. No se hace autocalculada para poder mantener los datos de la solucitud al momento de la anulación.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="LíneasPedidos"><a href="#toc" class="tocref">⇧</a>Table LíneasPedidos</h2><div style="margin-bottom:20px">Línea de un pedido.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_LíneasPedidos_1"></span>ProductoID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_LíneasPedidos_0_0">R:  <a href="#Productos">Productos</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_LíneasPedidos_1"></span>PedidoID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_LíneasPedidos_1_0">R:  <a href="#Pedidos">Pedidos</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraCreación<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Precio<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Cantidad<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CantidadEntregada<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraCumplimiento<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Estado<td>Pendiente = 0, Cumplida = 1, Anulada = 2. Puede ser anulado o cumplido individualmente sin anular o cumplir la solicitud completa. No se hace autocalculada para poder mantener los datos de la solucitud al momento de la anulación.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="LíneasRemisiones"><a href="#toc" class="tocref">⇧</a>Table LíneasRemisiones</h2><div style="margin-bottom:20px">Línea de una remisión.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_LíneasRemisiones_1"></span>ProductoID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_LíneasRemisiones_1_0">R:  <a href="#Productos">Productos</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_LíneasRemisiones_1"></span>RemisiónID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_LíneasRemisiones_0_0">R:  <a href="#Remisiones">Remisiones</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>Cantidad<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Precio<td>Precio real del producto. No es cero si es muestra gratis.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CostoUnitario<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="LíneasVentas"><a href="#toc" class="tocref">⇧</a>Table LíneasVentas</h2><div style="margin-bottom:20px">Línea de una venta.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_LíneasVentas_1"></span>ProductoID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_LíneasVentas_1_0">R:  <a href="#Productos">Productos</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_LíneasVentas_1"></span>VentaID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_LíneasVentas_0_0">R:  <a href="#Ventas">Ventas</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>Cantidad<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Precio<td>Precio real del producto. No es cero si es muestra gratis.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CostoUnitario<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="ListasPrecios"><a href="#toc" class="tocref">⇧</a>Table ListasPrecios</h2><div style="margin-bottom:20px">Elemento de la tabla ListasDePrecios donde se guardan las listas de precios que maneja la empresa para sus clientes y las condiciones para acceder a ellos.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_ListasPrecios"></span>ID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ProductoID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag" title="FK_ListasPrecios_0_0">R:  <a href="#Productos">Productos</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>Valor<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Protegido<td>Permite proteger el precio para solo permitir su modificación a usuarios que tengan permiso de modificar esta columna (Protegido). En PrecioLista se podría usar para permitir algunos roles actualizar los precios de lista de los no protegidos y a otros roles también los protegidos.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>TipoCliente<td>Desconocido = 0, Consumidor = 1, Distribuidor = 2, GrandesContratos = 3, Otro = 255.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>SubtipoCliente<td></td><td>50</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>MáximoDíasCrédito<td>Si se especifica y existen dos PrecioLista con el mismo (TipoCliente, SubtipoCliente, Producto) se elegirá el que tenga el mínimo MáximoDíasCrédito que sea mayor a DíasCrédito del cliente.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>TieneRepresentanteComercial<td>Sirve para establecer precios diferenciados entre clientes que tienen representante comercial y clientes que no tienen representante comercial.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="Marcas"><a href="#toc" class="tocref">⇧</a>Table Marcas</h2><div style="margin-bottom:20px">De producto.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_Marcas"></span>ID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraCreación<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Nombre<td></td><td>50</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>EnDescripción<td>Si es verdadero se espera que la marca se agregue a la descripción del producto lo que permite su adición automática y otras funciones.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>PriorizarEnBuscador<td>Si es verdadero los productos de estas marcas tendrán prioridad en el buscador de productos sobre los otros.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="Materiales"><a href="#toc" class="tocref">⇧</a>Table Materiales</h2><div style="margin-bottom:20px">De producto.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_Materiales"></span>ID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraCreación<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Nombre<td></td><td>50</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="MovimientosBancarios"><a href="#toc" class="tocref">⇧</a>Table MovimientosBancarios</h2><div style="margin-bottom:20px">Movimiento de dinero en una cuenta bancaria.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_MovimientosBancarios"></span>ID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHora<td>Fecha y hora del movimiento. Puede no coincidir con FechaHoraCreación porque puede ser un movimiento de dinero de caja del día anterior o un movimiento de dinero cargado del banco.</td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Valor<td>Positivo si el dinero entra a las cuentas de la empresa, negativo si sale.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ReciboCajaID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_MovimientosBancarios_0_0">R:  <a href="#RecibosCaja">RecibosCaja</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>ComprobanteEgresoID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_MovimientosBancarios_2_0">R:  <a href="#ComprobantesEgresos">ComprobantesEgresos</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>Observaciones<td></td><td>500</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Estado<td>Pendiente = 0. Procesado = 1: Si al movimiento de dinero ya se le realizó el comprobante de egreso o recibo de caja correspondiente. Dividido = 2: Si el movimiento de dinero (típicamente bancario) se ha dividido en varias líneas hijas. Anulado = 3: Si el movimiento de dinero no existió, es útil en el caso de movimientos de efectivo cuando se anula un comprobante de dinero y se desea repetir realizando otra operación diferente a la inicial (abonando dinero o cancelando otras facturas).</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Banco<td>Otro = -2, Ninguno = -1, Desconocido = 0, Bogotá = 1, Popular = 2, ItaúCorpbanca = 6, Bancolombia = 7, Citibank = 9, GNBSudameris = 12, BBVA = 13, Occidente = 23, CajaSocial = 30, Davivienda = 39, ScotiabankColpatria = 42, Agrario = 43, AVVillas = 49, CredifinancieraProcredit = 51, Bancamía = 52, W = 53, Bancoomeva = 54, Finandina = 55, Falabella = 56, Pichincha = 57, Coopcentral = 58, SantanderDeNegocios = 59, MundoMujer = 60, Multibank = 61, Bancompartir = 62, Serfinanza = 63, Corficolombiana = 2011, InversiónBancolombia = 2037, JPMorgan = 2041, BNPParibas = 2042, CorfiGNBSudameris = 2048, CorporaciónFinancieraDavivienda = 2049, GirosYFinanzas = 4008, Tuya = 4026, GMFinancial = 4031, Coltefinanciera = 4046, Bancoldex = 4101, FinancieraDann = 4108, FinancieraPagos = 4115, Credifamilia = 4117, Crezcamos = 4118, LaHipotecaria = 4120, Juriscoop = 4121, RCI = 4122, FinancieraDeAntioquia = 32001, CooperativaFinancieraJFK = 32002, Coofinep = 32003, Cotrafa = 32004, Confiar = 32005, Daviplata = 1001551, Nequi = 1001507, FinanciamientoItau = 1001014.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>OtroNúmeroCuenta<td>Si es nulo la cuenta del movimiento bancario es la establecida en opciones para el banco del movimiento bancario.</td><td>30</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Sucursal<td>'Oficina' en bancolombia.com.</td><td>50</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Descripción<td>'Descripción' en bancolombia.com.</td><td>100</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Referencia<td>Referencia identificadora de la entidad económica en los movimientos bancarios. Nombre basado en columna 'Referencia' en bancolombia.com.</td><td>100</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>PadreID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_MovimientosBancarios_1_0">R:  <a href="#MovimientosBancarios">MovimientosBancarios</a>.ID</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="MovimientosEfectivo"><a href="#toc" class="tocref">⇧</a>Table MovimientosEfectivo</h2><div style="margin-bottom:20px">Movimiento de dinero en efectivo.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_MovimientosEfectivo"></span>ID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHora<td>Fecha y hora del movimiento. Puede no coincidir con FechaHoraCreación porque puede ser un movimiento de dinero de caja del día anterior o un movimiento de dinero cargado del banco.</td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Valor<td>Positivo si el dinero entra a las cuentas de la empresa, negativo si sale.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ReciboCajaID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_MovimientosEfectivo_0_0">R:  <a href="#RecibosCaja">RecibosCaja</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>ComprobanteEgresoID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_MovimientosEfectivo_1_0">R:  <a href="#ComprobantesEgresos">ComprobantesEgresos</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>Observaciones<td></td><td>500</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Estado<td>Pendiente = 0. Procesado = 1: Si al movimiento de dinero ya se le realizó el comprobante de egreso o recibo de caja correspondiente. Dividido = 2: Si el movimiento de dinero (típicamente bancario) se ha dividido en varias líneas hijas. Anulado = 3: Si el movimiento de dinero no existió, es útil en el caso de movimientos de efectivo cuando se anula un comprobante de dinero y se desea repetir realizando otra operación diferente a la inicial (abonando dinero o cancelando otras facturas).</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="Municipios"><a href="#toc" class="tocref">⇧</a>Table Municipios</h2><div style="margin-bottom:20px">Ciudad o pueblo.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_Municipios"></span>ID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraCreación<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Nombre<td></td><td>50</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Departamento<td></td><td>60</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Código<td>Código único del municipio asignado por el gobierno.</td><td>10</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>OtroPaís<td>Si es nulo se usa el país en opciones.</td><td>50</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>MensajeríaDisponible<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>PorcentajeIVAPropio<td>Si es nulo se usan las reglas en Global.ObtenerPorcentajeIVA(). 0 si es exento de IVA, por ejemplo: San Andrés y Providencia.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="NotasCréditoCompra"><a href="#toc" class="tocref">⇧</a>Table NotasCréditoCompra</h2><div style="margin-bottom:20px">Descuento al valor de una compra por devolución de productos.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_NotasCréditoCompra"></span>ID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Número<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Prefijo<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHora<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>DescuentoCondicionado<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>DescuentoComercial<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Subtotal<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>IVA<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ImpuestoConsumo<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>RetenciónFuente<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>RetenciónIVA<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>RetenciónICA<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>RetencionesExtra<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Estado<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ConsecutivoDianAnual<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ProveedorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag" title="FK_NotasCréditoCompra_0_0">R:  <a href="#Proveedores">Proveedores</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>CompraID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag" title="FK_NotasCréditoCompra_1_0">R:  <a href="#Compras">Compras</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>Razón<td>DevoluciónParcial = 1, AnulaciónFactura = 2, Descuento = 3, AjustePrecio = 4, Otra = 5.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">DEFAULT 0</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="NotasCréditoVenta"><a href="#toc" class="tocref">⇧</a>Table NotasCréditoVenta</h2><div style="margin-bottom:20px">Descuento al valor de una venta por devolución de productos.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_NotasCréditoVenta"></span>ID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Número<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Prefijo<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHora<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>DescuentoCondicionado<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>DescuentoComercial<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Subtotal<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>IVA<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ImpuestoConsumo<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>RetenciónFuente<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>RetenciónIVA<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>RetenciónICA<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>RetencionesExtra<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Estado<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ConsecutivoDianAnual<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ClienteID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag" title="FK_NotasCréditoVenta_1_0">R:  <a href="#Clientes">Clientes</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>VentaID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag" title="FK_NotasCréditoVenta_0_0">R:  <a href="#Ventas">Ventas</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>Razón<td>DevoluciónParcial = 1, AnulaciónFactura = 2, Descuento = 3, AjustePrecio = 4, Otra = 5.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">DEFAULT 0</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="NotasDébitoCompra"><a href="#toc" class="tocref">⇧</a>Table NotasDébitoCompra</h2><div style="margin-bottom:20px">Cargo al valor de una compra.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_NotasDébitoCompra"></span>ID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Número<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Prefijo<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHora<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>DescuentoCondicionado<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>DescuentoComercial<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Subtotal<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>IVA<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ImpuestoConsumo<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>RetenciónFuente<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>RetenciónIVA<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>RetenciónICA<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>RetencionesExtra<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Estado<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ConsecutivoDianAnual<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ProveedorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag" title="FK_NotasDébitoCompra_0_0">R:  <a href="#Proveedores">Proveedores</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>CompraID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag" title="FK_NotasDébitoCompra_1_0">R:  <a href="#Compras">Compras</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>Razón<td>Intereses = 1, Gastos = 2, AjustePrecio = 3, Otra = 4.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">DEFAULT 0</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="NotasDébitoVenta"><a href="#toc" class="tocref">⇧</a>Table NotasDébitoVenta</h2><div style="margin-bottom:20px">Cargo al valor de una venta.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_NotasDébitoVenta"></span>ID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Número<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Prefijo<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHora<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>DescuentoCondicionado<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>DescuentoComercial<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Subtotal<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>IVA<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ImpuestoConsumo<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>RetenciónFuente<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>RetenciónIVA<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>RetenciónICA<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>RetencionesExtra<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Estado<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ConsecutivoDianAnual<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ClienteID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag" title="FK_NotasDébitoVenta_1_0">R:  <a href="#Clientes">Clientes</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>VentaID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag" title="FK_NotasDébitoVenta_0_0">R:  <a href="#Ventas">Ventas</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>Razón<td>Intereses = 1, Gastos = 2, AjustePrecio = 3, Otra = 4.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">DEFAULT 0</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="OrdenesCompra"><a href="#toc" class="tocref">⇧</a>Table OrdenesCompra</h2><div style="margin-bottom:20px">Solicitud de producto de un cliente.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_OrdenesCompra"></span>ID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ContactoID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_OrdenesCompra_2_0">R:  <a href="#Contactos">Contactos</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>Estado<td>Pendiente = 0, Cumplida = 1, Anulada = 2.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Observaciones<td></td><td>500</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ClienteID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag" title="FK_OrdenesCompra_3_0">R:  <a href="#Clientes">Clientes</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>Número<td>Código alfanumérico identificador de la orden de compra. Único para cada cliente.</td><td>30</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>SedeID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_OrdenesCompra_0_0">R:  <a href="#Sedes">Sedes</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>EnviadaProforma<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Remisionar<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>SincronizadaWeb<td>Para implementaciones personalizadas. Determina si la información de esta orden de compra ya ha sido sincronizada con la página web.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Prioridad<td>Desconocida = 0, Ninguna = 1, MuyBaja = 10, Baja = 20, Media = 30, Alta = 40, MuyAlta = 50. Se toma de la prioridad del cliente en el momento de la creación de la orden de compra.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>InformePagoID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_OrdenesCompra_1_0">R:  <a href="#InformesPagos">InformesPagos</a>.ID</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="Pedidos"><a href="#toc" class="tocref">⇧</a>Table Pedidos</h2><div style="margin-bottom:20px">Solicitud de producto a un proveedor.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_Pedidos"></span>ID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ContactoID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_Pedidos_1_0">R:  <a href="#Contactos">Contactos</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>Estado<td>Pendiente = 0, Cumplida = 1, Anulada = 2.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Observaciones<td></td><td>500</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ProveedorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag" title="FK_Pedidos_0_0">R:  <a href="#Proveedores">Proveedores</a>.ID</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="PreciosClientes"><a href="#toc" class="tocref">⇧</a>Table PreciosClientes</h2><div style="margin-bottom:20px">Último precio de un producto para un cliente.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_PreciosClientes_1"></span>ProductoID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_PreciosClientes_0_0">R:  <a href="#Productos">Productos</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_PreciosClientes_1"></span>ClienteID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_PreciosClientes_1_0">R:  <a href="#Clientes">Clientes</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Valor<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Protegido<td>Permite proteger el precio para solo permitir su modificación a usuarios que tengan permiso de modificar esta columna (Protegido). En PrecioLista se podría usar para permitir algunos roles actualizar los precios de lista de los no protegidos y a otros roles también los protegidos.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="PreciosProveedores"><a href="#toc" class="tocref">⇧</a>Table PreciosProveedores</h2><div style="margin-bottom:20px">Último precio de un producto dado por un proveedor.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_PreciosProveedores_1"></span>ProductoID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_PreciosProveedores_1_0">R:  <a href="#Productos">Productos</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_PreciosProveedores_1"></span>ProveedorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_PreciosProveedores_0_0">R:  <a href="#Proveedores">Proveedores</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Valor<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Protegido<td>Permite proteger el precio para solo permitir su modificación a usuarios que tengan permiso de modificar esta columna (Protegido). En PrecioLista se podría usar para permitir algunos roles actualizar los precios de lista de los no protegidos y a otros roles también los protegidos.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="Productos"><a href="#toc" class="tocref">⇧</a>Table Productos</h2><div style="margin-bottom:20px">Producto o servicio que la empresa vende.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_Productos"></span>ID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraCreación<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Referencia<td></td><td>30</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Unidad<td>La unidad de venta del producto. Se escribe en campo Unidad de la factura. Desconocida = 0, Unidad = 1, Par = 2, Trío = 3, Cuarteto = 4, Quinteto = 5, MediaDocena = 6, Decena = 10,            Docena = 12, DocenaLarga = 13, Quincena = 15, Veintena = 20, DobleDocena = 24, CuartoDeCentena = 25, Treintena = 30, Cuarentena = 40,            CuatroDocenas = 48, MediaCentena = 50, OchoDecenas = 80, OchoDocenas = 96, DiezDocenas = 120, Centena = 100, Gruesa = 144,            DobleCentena = 200, VeinteDocenas = 240, TripleCentena = 300, CuatroCentenas = 400, MedioMillar = 500, Millar = 1000, DobleMillar = 2000,            TripleMillar = 3000, CuatroMillares = 4000, Miríada = 10000, Millón = 1000000, Millardo = 1000000000.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>UnidadEmpaque<td>Permite ajustar los pedidos a los proveedores para que se hagan en unidades de empaque. Desconocida = 0, Unidad = 1, Par = 2, Trío = 3, Cuarteto = 4, Quinteto = 5, MediaDocena = 6, Decena = 10,            Docena = 12, DocenaLarga = 13, Quincena = 15, Veintena = 20, DobleDocena = 24, CuartoDeCentena = 25, Treintena = 30, Cuarentena = 40,            CuatroDocenas = 48, MediaCentena = 50, OchoDecenas = 80, OchoDocenas = 96, DiezDocenas = 120, Centena = 100, Gruesa = 144,            DobleCentena = 200, VeinteDocenas = 240, TripleCentena = 300, CuatroCentenas = 400, MedioMillar = 500, Millar = 1000, DobleMillar = 2000,            TripleMillar = 3000, CuatroMillares = 4000, Miríada = 10000, Millón = 1000000, Millardo = 1000000000.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>PesoUnidadEmpaque<td>En kg. Se usa porque es unidad básica del sistema internacional.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>DimensiónUnidadEmpaque_Alto<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>DimensiónUnidadEmpaque_Ancho<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>DimensiónUnidadEmpaque_Largo<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Descripción<td></td><td>200</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Cantidad<td>Cantidad en inventario.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CantidadMínima<td>Cantidad mínima recomendada en inventario. Cuando el inventario baja de este nivel se sugiere pedirlo.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CantidadMáxima<td>Cantidad máxima recomendada en inventario. Al programar un pedido se calculan las cantidades para no superar por mucho este valor.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CantidadReservada<td>Cantidad reservada por ordenes de compra activas.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Físico<td>Si es verdadero el producto existe en el mundo físico. Si es falso no maneja inventario como en el caso de de los servicios y productos virtuales.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CostoUnitario<td>El costo de compra por unidad y gastos asociados a su producción y obtención. Incluye costo de transporte. Si es nulo es desconocido.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>SubcategoríaID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_Productos_0_0">R:  <a href="#Subcategor%C3%ADas">Subcategorías</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>LíneaNegocioID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_Productos_4_0">R:  <a href="#L%C3%ADneasNegocio">LíneasNegocio</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>MarcaID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_Productos_3_0">R:  <a href="#Marcas">Marcas</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>MaterialID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_Productos_2_0">R:  <a href="#Materiales">Materiales</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>AplicaciónID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_Productos_5_0">R:  <a href="#Aplicaciones">Aplicaciones</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>PrioridadWebPropia<td>Desconocida = 0, Ninguna = 1, MuyBaja = 10, Baja = 20, Media = 30, Alta = 40, MuyAlta = 50. Si es desconocida se usan las reglas en opciones. Para implementaciones personalizadas. Establece la prioridad de los productos que se sincronizan con el sitio web. Si la prioridad es Ninguna no se sincroniza con el sitio web.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ProveedorPreferidoID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_Productos_1_0">R:  <a href="#Proveedores">Proveedores</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>UbicaciónAlmacén<td>Texto que describe su ubicación en el almacén. Por ejemplo, A5-E3-S2 se puede usar para describir almacén 5, estantería 3 y sección 2.</td><td>30</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>PorcentajeIVAPropio<td>Si es nulo se usan las reglas en Global.ObtenerPorcentajeIVA(). Si es cero es exento de IVA.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ExcluídoIVA<td>Si es verdadero es excluído de IVA y tiene un tratamiento tributario diferente porque no suma a la base tributable. Si es falso y             PorcentajeIVAPropio = 0 (exentos) o PorcentajeIVAPropio > 0 si suma a la base tributable. Si se establece este valor en verdadero se le dará             prioridad sin importar el valor en PorcentajeIVAPropio y el porcentaje de IVA efectivo (PorcentajeIVA) será cero.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>PorcentajeImpuestoConsumoPropio<td>Si es nulo se usa el porcentaje en opciones. Si es cero es exento de cualquier tipo de impuesto al consumo porcentual.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ImpuestoConsumoUnitarioPropio<td>Si es nulo se usa el el valor en opciones. Si es cero es exento de cualquier tipo de impuesto al consumo por unidad.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>TipoImpuestoConsumoPropio<td>Si es desconocido se usa el tipo en opciones. Se usa para relacionarlo con TipoTributo que será enviado a la DIAN en la             factura electrónica. También se usa para establecer el valor de ImpuestoConsumoUnitario y PorcentajeImpuestoConsumo si el tipo            se encuentra en los diccionarios en opciones  o             .            Posibles valores: Desconocido = 0, General = 1 (Valor general que no tiene asociado una tasa automáticamente, se debe especificar por producto),             BolsasPlásticas = 2, Carbono = 3, Combustibles = 4, DepartamentalNominal = 5,             DepartamentalPorcentual = 6, SobretasaCombustibles = 7, TelefoníaCelularYDatos = 8, Otro = 255.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ProductosAsociados<td>Referencias de otros productos asociados o similares o recomendados alternativos al producto. Son agregados a la cotización cuando se agrega el producto. Además permite otras funciones en implementaciones personalizadas al sincronizar con el sitio web.</td><td>1000</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>PorcentajeAdicionalGananciaPropio<td>Si es nulo se usan las reglas en opciones. El porcentaje de ganancia que se le sumará al porcentaje de ganancia del cliente para obtener el porcentaje de ganancia total. El porcentaje de ganancia total se le aplica a los costos de los productos para obtener sus precios de venta. Es útil cuando no se quieren usar las listas de precios o cuando el producto no está en ellas.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ConceptoRetenciónPropio<td>Si es nulo se usa el  de opciones. Es el concepto de retención aplicable             a este producto según la tabla de retención en la fuente. Al establecer este concepto también se está estableciendo si el producto es un             Producto o Servicio, información que se usa en otros lugares, como en el cálculo del mínimo para la retención del IVA.            Desconocido = 0, Generales = 1, TarjetaDébitoOCrédito = 2, AgrícolasOPecuariosSinProcesamiento = 3, AgrícolasOPecuaríosConProcesamiento = 4,             CaféPergaminoOCereza = 5, CombustiblesDerivadosPetróleo = 6, ActivosFijosPersonasNaturales = 7, Vehículos = 8, BienesRaícesVivienda = 9,             BienesRaícesNoVivienda = 10, ServiciosGenerales = 11, EmolumentosEclesiásticos = 12, TransporteCarga = 13,             TransporteNacionalTerrestrePasajeros = 14, TransporteNacionalAéreoOMarítimoPasajeros = 15, ServiciosPorEmpresasTemporales = 16,             ServiciosPorEmpresasVigilanciaYAseo = 16, SaludPorIPS = 17, HotelesYRestaurantes = 18, ArrendamientoBienesMuebles = 19,             ArrendamientoBienesInmuebles = 20, OtrosIngresosTributarios = 21, HonorariosYComisiones = 22, LicenciamientoSoftware = 23, Intereses = 24,             RendimientosFinacierosRentaFija = 25, LoteríasRifasYApuestas = 26, ColocaciónIndependienteJuegosAzar = 27, ContratosConstruccionYUrbanización = 28.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="Proveedores"><a href="#toc" class="tocref">⇧</a>Table Proveedores</h2><div style="margin-bottom:20px">Entidad a la que se le compran productos.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_Proveedores"></span>ID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraCreación<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Nombre<td>Razón social de la empresa o nombre de la persona.</td><td>100</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>NombreComercial<td></td><td>100</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>TipoEntidad<td>Desconocido = 0, Empresa = 1, Persona = 2.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>TipoContribuyente<td>Ordinario = 1, GranContribuyente = 2, Autorretenedor = 4, RetenedorIVA = 8, RégimenSimple = 16, ResponsableIVA = 32, NoResponsableIVA = 64.             Una entidad económica (cliente o proveedor) puede tener múltiples tipos de contribuyente, en estos casos se suman los valores de los tipos que             le apliquen. Por ejemplo, si es GranContribuyente = 2, Autorretenedor = 4 y ResponsableIVA = 32, se usa el valor 2 + 4 + 32 = 38.             Si la empresa usuaria de SimpleOps no es gran contribuyente ni retenedor de IVA no es necesario conocer si los clientes son responsables de             IVA o no pues la empresa usuaria nunca necesita aplicar retención de IVA y esta información solo se necesita para su cálculo.            En el caso de los proveedores si es necesario establecer si es o no responsable de IVA porque se usa esta información no aplicar IVA a sus compras.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Identificación<td>NIT (sin dígito de verificación) o cédula de ciudadanía.</td><td>20</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Teléfono<td>Principal. Usado en la factura.</td><td>30</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>TeléfonoAlternativo<td>General alternativo. Es útil para facilitar la adición de un telefono general alternativo de la entidad económica sin necesidad de crear un contacto asociado.</td><td>30</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Dirección<td>Principal. Usada en la factura.</td><td>100</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>MunicipioID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_Proveedores_0_0">R:  <a href="#Municipios">Municipios</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>Saldo<td>Si es positivo es a favor de la entidad económica. Si es negativo es el valor que la entidad económica le debe a la empresa.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ReferenciaEnBanco<td>Referencia identificadora de la entidad económica en los movimientos bancarios. Nombre basado en columna 'Referencia' en bancolombia.com.</td><td>100</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>DescripciónEnBanco<td>Descripción identificadora de la entidad económica en los movimientos bancarios. Nombre basado en 'Descripción' en bancolombia.com.</td><td>100</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>DíasCrédito<td>Cero si no tiene crédito aprobado. Aplica tanto para clientes (días de crédito dado a ellos), como para proveedores (días de crédito con ellos).</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CupoCrédito<td>Cero si no tiene crédito aprobado, nulo si no tiene cupo definido, es decir tiene crédito ilimitado, por lo menos en SimpleOps. Aplica tanto para clientes (cupo de crédito dado a ellos), como para proveedores (cupo de crédito con ellos).</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>PorcentajeCostoTransporte<td>El porcentaje sobre el subtotal de la compra que típicamente representa el valor del transporte de los envíos. Si es cero el transporte es gratis o se trata de un producto o servicio virtual. Si es nulo es desconocido y se solicitará agregarlo cuando sea necesario.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>PorcentajeDescuento<td>Descuento sobre el subtotal aplicable a todas las compras.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CompraMínima<td>El subtotal de compra mínima permitida. Si es 0 es sin restricción.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>DíasEntrega<td>Los días de entrega típicos. Es necesario para calcular los inventarios máximos y mínimos. Si es nulo es desconocido y se solicitará agregarlo cuando sea necesario.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>PrioridadPropia<td>Desconocida = 0, Ninguna = 1, MuyBaja = 10, Baja = 20, Media = 30, Alta = 40, MuyAlta = 50. Si es desconocida se usan las reglas en opciones. Al realizar la programación de los pedidos se seleccionan proveedores de más alta prioridad.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Banco<td>Otro = -2, Ninguno = -1, Desconocido = 0, Bogotá = 1, Popular = 2, ItaúCorpbanca = 6, Bancolombia = 7, Citibank = 9, GNBSudameris = 12, BBVA = 13, Occidente = 23, CajaSocial = 30, Davivienda = 39, ScotiabankColpatria = 42, Agrario = 43, AVVillas = 49, CredifinancieraProcredit = 51, Bancamía = 52, W = 53, Bancoomeva = 54, Finandina = 55, Falabella = 56, Pichincha = 57, Coopcentral = 58, SantanderDeNegocios = 59, MundoMujer = 60, Multibank = 61, Bancompartir = 62, Serfinanza = 63, Corficolombiana = 2011, InversiónBancolombia = 2037, JPMorgan = 2041, BNPParibas = 2042, CorfiGNBSudameris = 2048, CorporaciónFinancieraDavivienda = 2049, GirosYFinanzas = 4008, Tuya = 4026, GMFinancial = 4031, Coltefinanciera = 4046, Bancoldex = 4101, FinancieraDann = 4108, FinancieraPagos = 4115, Credifamilia = 4117, Crezcamos = 4118, LaHipotecaria = 4120, Juriscoop = 4121, RCI = 4122, FinancieraDeAntioquia = 32001, CooperativaFinancieraJFK = 32002, Coofinep = 32003, Cotrafa = 32004, Confiar = 32005, Daviplata = 1001551, Nequi = 1001507, FinanciamientoItau = 1001014.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>TipoCuentaBancaria<td>Desconocida = 0, Ahorros = 1, Corriente = 2.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>NúmeroCuentaBancaria<td></td><td>30</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ContactoPedidosID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_Proveedores_1_0">R:  <a href="#Contactos">Contactos</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>ContactoInformesPagosID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_Proveedores_2_0">R:  <a href="#Contactos">Contactos</a>.ID</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="RecibosCaja"><a href="#toc" class="tocref">⇧</a>Table RecibosCaja</h2><div style="margin-bottom:20px">Comprobante de entrada de dinero.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_RecibosCaja"></span>ID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHora<td>Fecha y hora legal del comprobante.</td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ValorFacturas<td>El valor del comprobante que se usó para la cancelación de facturas.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Abono<td>El valor del comprobante que se usó para abonar al saldo a favor de la entidad económica. Si es negativo es el valor tomado del saldo pendiente de la entidad económica que se sumó al movimiento de dinero para cancelar las facturas.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Estado<td>Realizado = 0: Se generó el comprobante de dinero. ReportadoContabilidad = 1: Se reportó el comprobante de dinero a la contabilidad, esto por lo general implica el envío por email o impresión de un lote con la relación de los comprobantes de dinero de cierto período. Si un comprobante de dinero ya reportado es anulado esta anulación debe ser reportada nuevamente a contabilidad. Anulado = 2. AnuladoReportado = 3: Si el comprobante de dinero se anuló y además ya se reportó a contabilidad su anulación.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Lugar<td>Desconocido = 0, Banco = 1, Caja = 2.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ClienteID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_RecibosCaja_1_0">R:  <a href="#Clientes">Clientes</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>ProveedorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_RecibosCaja_0_0">R:  <a href="#Proveedores">Proveedores</a>.ID</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="ReferenciasClientes"><a href="#toc" class="tocref">⇧</a>Table ReferenciasClientes</h2><div style="margin-bottom:20px">Referencia propia del cliente asociada a un producto. Es de utilidad para realizar informes y agregarlas a las facturas o remisiones de entrega para facilidad para los clientes.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_ReferenciasClientes_1"></span>ProductoID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_ReferenciasClientes_0_0">R:  <a href="#Productos">Productos</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_ReferenciasClientes_1"></span>ClienteID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_ReferenciasClientes_1_0">R:  <a href="#Clientes">Clientes</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Valor<td></td><td>30</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="ReferenciasProveedores"><a href="#toc" class="tocref">⇧</a>Table ReferenciasProveedores</h2><div style="margin-bottom:20px">Referencia propia del proveedor asociada a un producto. Es de utilidad para realizar informes y agregarlas a los pedidos para facilidad para los proveedores.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_ReferenciasProveedores_1"></span>ProductoID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_ReferenciasProveedores_1_0">R:  <a href="#Productos">Productos</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_ReferenciasProveedores_1"></span>ProveedorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_ReferenciasProveedores_0_0">R:  <a href="#Proveedores">Proveedores</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Valor<td></td><td>30</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="Remisiones"><a href="#toc" class="tocref">⇧</a>Table Remisiones</h2><div style="margin-bottom:20px">Documento temporal de entrega de productos a clientes.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_Remisiones"></span>ID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraCreación<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ClienteID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag" title="FK_Remisiones_2_0">R:  <a href="#Clientes">Clientes</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>Subtotal<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Estado<td>Pendiente = 0: La remisión se realizó y está pendiente tomar una acción sobre ella. Facturada = 1: Los productos entregados fueron facturados. Los productos ya no están en inventario en consignación ni en el inventario interno, ya son propiedad del cliente porque los compró. Anulada = 2: La remisión se ha anulado. Es equivalente a que nunca se hubiera realizado. Los productos se han devuelto del inventario en consignación al inventario interno. Descartada = 3: Los productos entregados con esta remisión fueron regalados. Los productos ya no están en inventario en consignación del cliente ni en el inventario interno de la empresa. Legalmente las muestras gratis a clientes se deben facturar con precio cero entonces esta función principalmente debe ser usada para dar salida a productos consumidos dentro de la propia empresa, se realiza una remisión a nombre propio y se descarta.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>DetalleEntrega<td>Información de la transportadora y la guía con la que se entregó.</td><td>500</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>VentaID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_Remisiones_0_0">R:  <a href="#Ventas">Ventas</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>OrdenCompraID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_Remisiones_1_0">R:  <a href="#OrdenesCompra">OrdenesCompra</a>.ID</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="Roles"><a href="#toc" class="tocref">⇧</a>Table Roles</h2><div style="margin-bottom:20px">Conjunto de permisos que tiene un usuario.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_Roles"></span>ID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraCreación<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Nombre<td></td><td>50</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Permisos<td>Permisos de lectura, modificación, eliminación e inserción. Si es vacío no tiene ningún permiso.</td><td>10000</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="RolesUsuarios"><a href="#toc" class="tocref">⇧</a>Table RolesUsuarios</h2><div style="margin-bottom:20px">Relaciona los roles que tiene cada usuario.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_RolesUsuarios_1"></span>UsuarioID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_RolesUsuarios_0_0">R:  <a href="#Usuarios">Usuarios</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_RolesUsuarios_1"></span>RolID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_RolesUsuarios_1_0">R:  <a href="#Roles">Roles</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraCreación<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="Sedes"><a href="#toc" class="tocref">⇧</a>Table Sedes</h2><div style="margin-bottom:20px">Sucursal, oficina o bodega de un cliente.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_Sedes"></span>ID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Nombre<td>Nombre identificador. Único por cada Cliente.</td><td>50</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ClienteID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag" title="FK_Sedes_2_0">R:  <a href="#Clientes">Clientes</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>ContactoID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_Sedes_1_0">R:  <a href="#Contactos">Contactos</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>ObservacionesEnvío<td>Observaciones de envío que se escribirán en las etiquetas de envío.</td><td>500</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>MunicipioID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag" title="FK_Sedes_0_0">R:  <a href="#Municipios">Municipios</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>Dirección<td></td><td>100</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="Subcategorías"><a href="#toc" class="tocref">⇧</a>Table Subcategorías</h2><div style="margin-bottom:20px">De producto.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_Subcategorías"></span>ID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraCreación<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Nombre<td></td><td>50</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CategoríaID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_Subcategorías_0_0">R:  <a href="#Categor%C3%ADas">Categorías</a>.ID</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="Usuarios"><a href="#toc" class="tocref">⇧</a>Table Usuarios</h2><div style="margin-bottom:20px">Persona autorizada para usar SimpleOps.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_Usuarios"></span>ID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraCreación<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Nombre<td></td><td>50</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>EsRepresentanteComercial<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Email<td></td><td>100</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Teléfono<td></td><td>30</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Activo<td>Si es falso el usuario no puede iniciar la aplicación.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="Ventas"><a href="#toc" class="tocref">⇧</a>Table Ventas</h2><div style="margin-bottom:20px">Entrega de productos a cambio de dinero.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_Ventas"></span>ID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Número<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Prefijo<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHora<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>DescuentoCondicionado<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>DescuentoComercial<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Subtotal<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>IVA<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ImpuestoConsumo<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>RetenciónFuente<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>RetenciónIVA<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>RetenciónICA<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>RetencionesExtra<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Estado<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ConsecutivoDianAnual<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ClienteID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag" title="FK_Ventas_3_0">R:  <a href="#Clientes">Clientes</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>FechaPagoComisiónEnVenta<td>La fecha del pago de la comisión a la venta al representante comercial. Si es nula no se ha pagado.</td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaPagoComisiónEnPago<td>La fecha del pago de la comisión a al pago del cliente al representante comercial. Si es nula no se ha pagado.</td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>DetalleEntrega<td>Información de la transportadora y la guía con la que se entregó.</td><td>500</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>DeInventarioConsignación<td>Si es verdadero se están vendiendo productos que el cliente tiene en consignación y no del inventario del almacén propio.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ReciboCajaID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_Ventas_0_0">R:  <a href="#RecibosCaja">RecibosCaja</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>InformePagoID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_Ventas_2_0">R:  <a href="#InformesPagos">InformesPagos</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>OrdenCompraID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_Ventas_1_0">R:  <a href="#OrdenesCompra">OrdenesCompra</a>.ID</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="footer">
+                    Generated by <a href="http://SqlDbDoc.codeplex.com/">DB&gt;doc</a> and <a href="https://github.com/ErikEJ/SqlCeToolbox">SQLite/SQL Server Compact Toolbox</a> on
+                    June 15, 2020, 23:03:27</div>
+  </body>
+</html>

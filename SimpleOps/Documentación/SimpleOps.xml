@@ -1,0 +1,2636 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SimpleOps</name>
+    </assembly>
+    <members>
+        <member name="T:SimpleOps.App">
+            <summary>
+            Lógica de interacción de App.xaml.
+            </summary>
+            <summary>
+            App
+            </summary>
+        </member>
+        <member name="M:SimpleOps.App.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="M:SimpleOps.App.Main">
+            <summary>
+            Application Entry Point.
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Datos.Contexto.#ctor(SimpleOps.Global.TipoContexto)">
+            <summary>
+            Siempre se debe usar este constructor para hacer explícita la intención del contexto desde su creación.
+            El TipoContexto.Lectura se crea con la configuración .NoTracking que es equivalente a usar .AsNoTracking()
+            en todas sus consultas. El TipoContexto.Escritura es un contexto normal que admite escritura y lectura.
+            El TipoContexto.LecturaConRastreo actual igual que escritura pero se usa para hacer explícito que la intención
+            es de solo lectura pero que se necesita aplicar el rastreo (tracking) para algunas tareas específicas como
+            la necesidad de usar la caché de consultas del contexto o cuando por alguna razón el rendimiento resulta mejor
+            que con NoTracking activado, ver https://github.com/dotnet/efcore/issues/14366.
+            </summary>
+            <param name="tipoContexto"></param>
+        </member>
+        <member name="M:SimpleOps.Datos.Contexto.SolucionadorConflictos(System.Object,System.Object,System.Object,System.String,System.Int32)">
+            <summary>
+            Función que pregunta al usuario que valor desea conservar de un conflicto de concurrencia.
+            </summary>
+            <param name="valorPropuesto"></param>
+            <param name="valorBaseDatos"></param>
+            <param name="entidad"></param>
+            <param name="nombrePropiedad"></param>
+            <param name="otroUsuarioID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SimpleOps.Datos.Contexto.LeerMunicipiosDeInterés(SimpleOps.Datos.Contexto)">
+            <summary>
+            Actualización de los municipios con mensajería y de los datos de los municipios de la empresa.
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Datos.Contexto.LeerMunicipiosDeInterés">
+            <summary>
+            Función equivalente sin pasar contexto para cuando no se tenga.
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Datos.Contexto.ObtenerOrdenesCompraPendientes">
+            <summary>
+            Consulta las ordenes de compra pendientes y actualiza la FechaHoraCreación usando las líneas.
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Datos.Contexto.ObtenerPedidosPendientes">
+            <summary>
+            Consulta los pedidos pendientes y actualiza la FechaHoraCreación usando las líneas.
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Datos.Contexto.GuardarCambios">
+            <summary>
+            Siempre se debe usar este método en vez de SaveChanges porque implementa el control de concurrencia.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SimpleOps.Datos.Contexto.GuardarCambios(System.Func{System.Object,System.Object,System.Object,System.String,System.Int32,System.Object})">
+            <summary>
+            Función para guardar los cambios realizados que permite pasar una función para solucionar los conflictos de concurrencia.
+            </summary>
+            <param name="solucionadorConflictos"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SimpleOps.Datos.Contexto.ObtenerBloqueos(SimpleOps.Modelo.BloqueoVarias)">
+            <summary>
+            Obtiene la lista de todos los bloqueos actuales de cierto tipo de entidad. Se obtienen los que su ID esté contenido en bloqueoVarias.IDs.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SimpleOps.Datos.Contexto.ObtenerBloqueos(Vixark.General.Predicado{SimpleOps.Modelo.Bloqueo},Vixark.General.ConectorLógico)">
+            <summary>
+            Igual que ObtenerBloqueos(bloqueoVarias) pero usa un predicado y permite establecer un conector entre las expresiones en él.
+            </summary>
+            <param name="predicado"></param>
+            <param name="conector"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SimpleOps.Datos.Contexto.ObtenerExpresiónBloqueos(SimpleOps.Modelo.BloqueoVarias)">
+            <summary>
+            Obtiene una expresión que puede ser usada en la consulta para obtener los bloqueos de una entidad o para ser combinada con expresiones 
+            de otras entidades para obtener los bloqueos aplicables a al menos una de ellas (con operador O) y obtener el estado de bloqueo de varias 
+            entidades en una sola consulta a la base de datos.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SimpleOps.Datos.Contexto.VerificarYBloquear(SimpleOps.Modelo.BloqueoVarias,System.Boolean)">
+            <summary>
+            Bloquea las entidades de tipo bloqueoVarias.NombreEntidad e IDs en bloqueoVarias.IDs, o todas las entidades de su tipo 
+            si no se especifica bloqueoVarias.IDs, para la bloqueoVarias.Propiedad y bloqueoVarias.Tipo
+            especificados.<br/>
+            Devuelve un ResultadoBloqueo que contiene la lista de los bloqueos realizados. Si no es exitoso se devuelven los bloqueos
+            existentes.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SimpleOps.Datos.Contexto.VerificarYBloquear(System.Collections.Generic.List{SimpleOps.Modelo.BloqueoVarias},System.Boolean)">
+            <summary>
+            Igual que VerificarYBloquear(bloqueoVarias) pero actua sobre una lista de BloqueoVarias ejecutando solo dos consultas a la base de datos.
+            </summary>
+            <param name="bloqueosVarias"></param>
+            <param name="mostrarError"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SimpleOps.Datos.Contexto.CargarDatosIniciales(System.String,System.String@)">
+            <summary>
+            Carga a la base de datos los datos en archivos JSON en la carpeta <paramref name="rutaJsons"/>. Solo sirve para la carga inicial. Se deben cargar todos juntos en una sola tanda y con la base de datos vacía para asegurar que los IDs quedarán iguales que en los JSON y que las relaciones queden correctas.
+            </summary>
+            <param name="rutaJsons"></param>
+            <param name="error"></param>
+            <returns></returns>
+        </member>
+        <member name="P:SimpleOps.DocumentosGráficos.DatosDocumento.ModoDocumento">
+            <summary>
+            En el <see cref="F:SimpleOps.DocumentosGráficos.DatosDocumento.Modo.CuerpoContinuo"/> se debe pasar a 
+            <see cref="M:SimpleOps.DocumentosGráficos.DocumentosGráficos.CompilarPlantilla``1(RazorEngineCore.RazorEngine,System.String,System.Collections.Generic.IDictionary{System.String,System.String})"/> 
+            un diccionario con como mínimo un marco. El documento tendrá un encabezado, un cuerpo que podrá ocupar varias páginas y finalmente habrá un pie de 
+            página. Solo habrá un encabezado y un pie de página en todo el documento.<br/><br/>
+            En el <see cref="F:SimpleOps.DocumentosGráficos.DatosDocumento.Modo.PáginasIndependientes"/> se debe pasar al diccionario un marco y un ítem con nombre Página[Número] 
+            por cada página extra que tenga el documento, excepto la Página1 porque en esta se agrega el cuerpo. Cada página del 
+            documento tendrá su propio encabezado y pie de página.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.DocumentosGráficos.DocumentosGráficos">
+            <summary>
+            Métodos y funciones estáticas generales relacionadas con los documentos gráficos.
+            </summary>
+        </member>
+        <member name="M:SimpleOps.DocumentosGráficos.DocumentosGráficos.CompilarPlantilla``1(RazorEngineCore.RazorEngine,System.String,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Compila un objeto plantilla complejo con el que se puede generar HTML usando código Razor (cshtml) con @Model tipado y 
+            tiene soporte para incluir partes y marcos de HTML (similar a _Partial y _Layout en MVC). Ver más en <see cref="T:SimpleOps.DocumentosGráficos.PlantillaBase`1"/>
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="motorRazor"></param>
+            <param name="cuerpo"></param>
+            <param name="partes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SimpleOps.DocumentosGráficos.DocumentosGráficos.ObtenerTotalPáginas``2(``0,System.Collections.Generic.List{``1})">
+            <summary>
+            Obtiene el total de páginas para los documentos en modo <see cref="F:SimpleOps.DocumentosGráficos.DatosDocumento.Modo.CuerpoContinuo"/>.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <typeparam name="M"></typeparam>
+            <param name="datosDocumento"></param>
+            <param name="Líneas"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SimpleOps.DocumentosGráficos.PlantillaBase`1">
+            <summary>
+            Plantilla con parámetro de tipo que puede tomar cualquier clase (usualmente una clase simple como Datos[].cs) que permite escribir código Razor (cshtml) 
+            de manera tipada. En el HTML se debe usar @Model para acceder al objeto (usualmente Datos[].cs) y a sus propiedades. Permite la adición de
+            partes de HTML incluídos dentro de esta usando @Incluir("ClaveParte", Model) y permite usar marcos de HTML referenciando
+            el marco en esta con @{ ClaveMarco = "[ClavePlantillaActual]"; } y generando el cuerpo en el marco con @CrearCuerpo().
+            Ver <see cref="M:SimpleOps.Pruebas.GeneraciónPdf"/> para un ejemplo de su funcionamiento.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="P:SimpleOps.DocumentosGráficos.PlantillaBase`1.IncluirCallback">
+            <summary>
+            Función para incluir en la plantilla actual una parte de HTML usando su clave en el diccionario de partes 
+            (<see cref="M:SimpleOps.DocumentosGráficos.DocumentosGráficos.CompilarPlantilla``1(RazorEngineCore.RazorEngine,System.String,System.Collections.Generic.IDictionary{System.String,System.String})"/>). En el HTML se usa así 
+            @Incluir("[ClavePlantillaAIncluir]", Model).
+            </summary>
+        </member>
+        <member name="P:SimpleOps.DocumentosGráficos.PlantillaBase`1.CrearCuerpoCallback">
+            <summary>
+            Función para usar un marco (equivalente a _Layout.cshtml) para la plantilla actual (que funciona como cuerpo). El marco se referencia 
+            en el HTML cuerpo con su clave en el diccionario de partes (<see cref="M:SimpleOps.DocumentosGráficos.DocumentosGráficos.CompilarPlantilla``1(RazorEngineCore.RazorEngine,System.String,System.Collections.Generic.IDictionary{System.String,System.String})"/>)
+            así @{ ClaveMarco = "[ClaveMarco]"; } y en el HTML del marco se inserta el cuerpo con con @CrearCuerpo().
+            </summary>
+        </member>
+        <member name="P:SimpleOps.DocumentosGráficos.PlantillaBase`1.ClaveMarco">
+            <summary>
+            Clave en el diccionario de partes (<see cref="M:SimpleOps.DocumentosGráficos.DocumentosGráficos.CompilarPlantilla``1(RazorEngineCore.RazorEngine,System.String,System.Collections.Generic.IDictionary{System.String,System.String})"/>)
+            de la parte de HTML que servirá como marco (equivalente a _Layout.cshtml) para la plantilla actual.
+            Se establece en el HTML de la plantilla actual así @{ ClaveMarco = "[ClaveMarco]"; }. Además, en el HTML del marco se debe
+            crear el cuerpo (plantilla actual) con @CrearCuerpo().
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Global">
+            <summary>
+            Métodos, funciones y constantes estáticas de uso global para todo SimpleOps. Se diferencian de Vixark.General porque son propias del funcionamiento de SimpleOps y no de uso general compartido con otros proyectos.
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Global.CargarOpciones">
+            <summary>
+            Carga todas las opciones desde los archivos JSON. Si no existen los crea usando los valores predeterminados.
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Global.CargarOpciones``1(``0@,Vixark.General.Serialización)">
+            <summary>
+            Carga un tipo de opciones desde un archivo JSON. Si no existe lo crea usando los valores predeterminados.
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Global.IniciarVariablesGlobales">
+            <summary>
+            Inicia algunas variables que no se pueden iniciar en el cuerpo de la clase Global porque requieren unos pasos adicionales para establecer su valor.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Singleton.OpcionesEmpresa">
+            <summary>
+            Opciones, datos y configuraciones propias de la empresa usuaria de SimpleOps. Suelen iniciar nulas o en valores predeterminados muy probables. 
+            Son propiedades particulares para cada empresa usuaria de SimpleOps que son comunes a todos los usuarios en la misma empresa.
+            Su modificación está restringida por roles y se actualiza automáticamente en los otros equipos cuando se da un cambio en uno de ellos.
+            Los valores iniciales en código solo sirven para autogenerar el archivo Empresa.json cuando no exista y para evitar tener que 
+            declarar las propiedades permitiendo valores nulos.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Singleton.OpcionesEmpresa.DetallarImpuestoSiPorcentajesDiferentes">
+            <summary>
+            Al generar la representación gráfica de la factura electrónica si el porcentaje de un impuesto (IVA o INC) difiere entre las líneas de factura
+            y esta variable está en verdadero se agregará la columna del impuesto que difiera y la columna Total. Si esta variable es falso no se agregará
+            la columna del impuesto ni la de total a la factura electrónica.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Singleton.OpcionesEmpresa.MostrarUnidad">
+            <summary>
+            Si es falso se omite la unidad en la representación gráfica de los documentos y en la interfaz de la aplicación. Internamente
+            la unidad sería siempre <see cref="F:SimpleOps.Global.Unidad.Unidad"/>
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Singleton.OpcionesEmpresa.EnlaceWebADetalleProducto">
+            <summary>
+            Si se establece una dirección a una página web usando dentro de ella el texto {referencia}, se agregará un enlace a esta página 
+            en la referencia de cada producto en las representaciones gráficas de los documentos (email y pdf). Para construir la dirección
+            se reemplaza {referencia} por la referencia actual. Por ejemplo, se puede asignar 
+            https://ejemplo.com/Producto.aspx?Ref={Referencia} y cuando se venda el producto referencia UY597, se agregará un enlace en 
+            el texto de UY597 en la factura electrónica que dirigirá a https://ejemplo.com/Producto.aspx?Ref=UY597.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Singleton.OpcionesEmpresa.Nombre">
+            <summary>
+            El nombre de la empresa. Se usa el nombre comercial si no es nulo, si es nulo se usa la razón social.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Singleton.OpcionesEquipo">
+            <summary>
+            Opciones, datos y configuraciones propias del equipo donde está instalado SimpleOps. Son personalizaciones de apariencia o comportamiento que no 
+            tienen que ser comunes a todos los equipos en la misma empresa. Inician con unos valores predeterminados recomendados pero cada
+            equipo los puede cambiar sin afectar el funcionamiento en otros equipos. Un equipo puede ser usado por diferentes usuarios, aunque lo más usual es que
+            lo use solo uno. Los valores iniciales en código solo sirven para autogenerar el archivo Equipo.json cuando no exista y para evitar tener que 
+            declarar las propiedades permitiendo valores nulos.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Singleton.OpcionesGenerales">
+            <summary>
+            Opciones, datos y configuraciones generales modificables por la empresa usuaria de SimpleOps. Inician en valores predeterminados que no se tendrían 
+            que modificar para los escenarios más comunes. Suelen ser valores válidos para todas las empresas en Colombia. Son comunes a todos los usuarios de 
+            SimpleOps de la misma empresa. Si la empresa no modifica el valor de alguna propiedad (las modificadas se escriben en GeneralesPropias.json) se usará
+            el valor en Generales.json. Las Generales.json tienen la ventaja de ser actualizadas automáticamente cada año o cada que hay un cambio externo, por 
+            ejemplo en la legislación. Sus valores siempre se cargan al iniciar desde Generales.json. Los valores iniciales en código solo sirven para autogenerar 
+            el archivo Generales.json cuando no exista y para evitar tener que declarar las propiedades permitiendo valores nulos. Su modificación está 
+            restringida por roles.
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Pruebas.Habilitación">
+            <summary>
+            Se envían los documentos como pruebas de habilitación a la DIAN y automáticamente se activa la facturación electrónica para la empresa y 
+            esta ya no podrá facturar por el método tradicional. Solo se debe hacer cuando la empresa esté completamente segura que procederá a la migración
+            y seguirá facturando electrónicamente.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Integración.Integrador">
+            <summary>
+            Clase para integrar mediante comunicación por archivos planos varias funcionalidades de SimpleOps con otros programas
+            terceros incompatibles, principalmente la funcionalidad de facturación electrónica. Se deben tener abiertos ambos programas
+            a la vez y se debe disponer del código del programa tercero para realizar los cambios necesarios para la creación de los archivos 
+            de comunicación y el procesamiento de la respuesta de SimpleOps.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Integración.Integrador.ModoProcesarNuevoArchivoEnCambioPosterior">
+            <summary>
+            Si es verdadero cuando un archivo es creado registra su nombre en <see cref="P:SimpleOps.Integración.Integrador.ÚltimoArchivoCreado"/> y si el siguiente evento de cambio
+            es sobre el mismo archivo se procesa el procedimiento <see cref="M:SimpleOps.Integración.Integrador.ProcesarNuevoArchivo(System.String,System.String)"/>. Esto es necesario porque
+            en algunos casos el programa tercero genera el evento de creación de archivo y aún lo mantiene abierto porque no ha terminado
+            de escribirlo, lo que genera una excepción en File.ReadAllText porque el archivo aún está en uso. Al hacer el procesamiento en el 
+            evento de cambio se evita este error. Este modo puede tener problemas cuando se crean archivos muy frecuentemente por problemas 
+            de concurrencia que harían que se pierdan. Si se usa para creaciones esporádicas cada algunos segundos no debería presentar problemas.<br/><br/>
+            Si es falso se procesa el archivo directamente en el evento de creación.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Integración.Integrador.ÚltimoArchivoCreado">
+            <summary>
+            Debido a que en el evento Created sale error en el método ReadAllText porque es posible que aún no se ha cerrado.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Interfaz.BarraDesplazamiento">
+            <summary>
+            Barra de desplazamiento personalizada que permite el desplazamiento horizontal con la rueda del mouse y personalizar
+            la velocidad de ese desplazamiento.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Interfaz.BarraDesplazamiento.Velocidad">
+            <summary>
+            100 es la velocidad normal.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Interfaz.CuadroTexto">
+            <summary>
+            Cuadro de texto personalizado que muestra un texto indicador de su contenido cuando está vacío. 
+            </summary>
+            <summary>
+            CuadroTexto
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Interfaz.CuadroTexto.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Interfaz.EstadoOrdenCompraABrocha">
+            <summary>
+            Convierte un estado de una orden de compra a una brocha
+            con un color que lo represente.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Interfaz.EtiquetaAVisibilidad">
+            <summary>
+            Convierte un tipo de etiqueta en un valor de visibilidad que permite
+            implementar el tipo de comportamiento esperado en el control CuadroTexto.xaml según cada tipo de etiqueta.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Interfaz.EtiquetaYControlAVisibilidad">
+            <summary>
+            Convierte un tipo de etiqueta de cuadro de texto y el control generador en un valor de visibilidad que permite
+            implementar el tipo de comportamiento esperado en el control CuadroTexto.xaml según cada tipo de etiqueta.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Interfaz.TextoABrocha">
+            <summary>
+            Convierte un texto vacío o nulo a brocha transparente y cualquier otro texto a la brocha provista en parameter. 
+            Es útil para ocultar el fondo del cuadro de texto cuando no hay texto para que se vea el texto indicador que está atrás y
+            cuando tiene texto para pintarlo con la brocha provista y permitir la aplicacion de bordes redondeados.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Interfaz.TextoAVisibilidad">
+            <summary>
+            Convierte un texto vacío o nulo a Collapsed y cualquier otro texto a Visible. 
+            Es útil para ocultar controles cuando no hay texto.
+            Al pasar parameter = true (ConverterParameter={StaticResource Verdadero}) convierte un texto vacío o nulo a Visible y cualquier otro texto a Collapsed. 
+            Es útil para mostrar y ocultar en los cuadros de texto un texto indicador que describe el contenido que deben llevar. Este texto
+            indicador solo se muestra cuando el cuadro de texto está vacío.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Interfaz.EstablecedorMargen">
+            <summary>
+            Establece el margen de todos los controles hijos.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Interfaz.PlantillaÍtemLista">
+            <summary>
+            Selecciona la plantilla del ítem apropiada para una lista dependiendo del tipo de objeto que contiene.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Interfaz.Principal">
+            <summary>
+            Principal
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Interfaz.Principal.#ctor">
+            <summary>
+            Ventana principal.
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Interfaz.Principal.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Legal.Dian.Redondear(System.Decimal)">
+            <summary>
+            Redondeo del banquero requerido por la DIAN.
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SimpleOps.Legal.Dian.ObtenerClaveTécnicaAmbienteProducción">
+            <summary>
+            Solo funciona en el ambiente de producción.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SimpleOps.Legal.Dian.EsVálido(System.String,System.String,System.Int32@,System.Int32@)">
+            <summary>
+            Valida un elemento de acuerdo a las restricciones de la 'Tabla 4: Tamaños de Elementos' del archivo 'Anexo Técnico de Factura Electrónica'.
+            </summary>
+            <param name="elemento">Texto del elemento a validar puede ser un texto o un número con punto como separador decimal. En general pueden ser varios elementos separados por coma.</param>
+            <param name="restricción">De formato: (x1..y1) p (n1..m1), (x2..y2) p (n2..m2), ..., (xn..yn) p (nn..mn) donde se permiten n elementos
+            separados por coma (o un solo elemento si no hay coma), donde (xi..yi) p (ni..mi) indica un elemento de mínimo xi de largo total y 
+            máximo yi de largo total (incluyendo el punto de decimal y la parte decimal) y que es un decimal con mínimo ni posiciones decimales 
+            y máximo mi posiciones decimales. Si se omite p (...) aplica para solo textos y números enteros. Si se omiten los dos puntos, así: 
+            zi p li implica que el elemento debe ser exactamente zi de largo y tener li posiciones decimales si es un número.</param>
+            <param name="largoMáximo">Solo válido para los que no tienen decimales ni comas.</param>
+            <param name="largoMínimo">Solo válido para los que no tienen decimales ni comas.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SimpleOps.Legal.Dian.Validar(System.String,System.String,System.Boolean)">
+            <summary>
+            Revisa el elemento de texto y lo devuelve igual si cumple con la restricción. Genera una excepción si no cumple la restricción.
+            Si <paramref name="forzarCumplimiento"/> es verdadero y se trata de una restricción de largo de texto sencilla X..Y 
+            se recortan los elementos muy largos al tamaño máximo permitido y se agregan espacios al final de los elementos muy cortos
+            para llevarlos al tamaño mínimo permitido.
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Legal.Dian.Validar(System.Decimal,System.String,System.Int32)">
+            <summary>
+            Revisa el elemento decimal y lo devuelve igual si cumple con la restricción. Genera una excepción si no cumple la restricción.
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Legal.Dian.Validar(System.Int64,System.String)">
+            <summary>
+            Revisa el elemento long y lo devuelve igual si cumple con la restricción. Genera una excepción si no cumple la restricción.
+            </summary>
+            <param name="número"></param>
+            <param name="restricción"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SimpleOps.Legal.Dian.EnviarSobre(System.String,SimpleOps.Legal.Dian.Operación,System.String@,System.Xml.XmlDocument@)">
+            <summary>
+            Se conecta al servicio web de la DIAN y envía un sobre XML con el contenido de la solicitud y la firma electrónica.
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Legal.Dian.EnviarSolicitud(System.String,SimpleOps.Legal.Dian.Operación,System.String@,System.Xml.XmlDocument@)">
+            <summary>
+            Envía una solicitud al servicio de la DIAN usando un <paramref name="cuerpo"/> con el contenido del mensaje y 
+            el tipo de <paramref name="operación"/>.
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Legal.Dian.ObtenerValorDigerido(System.String,System.Security.Cryptography.X509Certificates.X509Certificate2,System.String)">
+            <summary>
+            Usa las clases de firma de xml propias de .Net para obtener el valor digerido del objeto a firmar.
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Legal.Dian.CrearYEnviarDocumentoElectrónico``1(SimpleOps.Modelo.Factura{SimpleOps.Modelo.Cliente,``0},System.String@,SimpleOps.Legal.DocumentoElectrónico{SimpleOps.Modelo.Factura{SimpleOps.Modelo.Cliente,``0},``0}@,System.Boolean)">
+            <summary>
+            Crea, valida, envía a la DIAN el documento electrónico (XML).
+            electrónico (XML) y su representación gráfica (PDF) al cliente.
+            </summary>
+            <typeparam name="M"></typeparam>
+            <param name="documentoCliente"></param>
+            <param name="mensaje"></param>
+            <param name="pruebaHabilitación"></param>
+            <param name="documentoElectrónico"></param>
+            <returns></returns>
+        </member>
+        <member name="P:SimpleOps.Legal.DocumentoElectrónico`2.Cude">
+            <summary>
+            Código Único de Documento Electrónico. Si es venta se llama CUFE.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Legal.DocumentoElectrónico`2.Ruta">
+            <summary>
+            Ruta del XML del documento electrónico firmado.
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Legal.DocumentoElectrónico`2.Crear(System.String@)">
+            <summary>
+            Devuelve verdadero si se creo exitosamente.
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Legal.DocumentoElectrónico`2.Firmar">
+            <summary>
+            Ejecuta Firmador.exe y firma el documento electrónico.
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Legal.DocumentoElectrónico`2.CrearZip">
+            <summary>
+            Útil cuando se están realizando pruebas con SoapUI.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SimpleOps.Legal.DocumentoElectrónico`2.Enviar(System.String@,System.Xml.XmlDocument@)">
+            <summary>
+            Envía el documento electrónico empaquetado en un ZIP a la DIAN.
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Legal.DocumentoElectrónico`2.EnviarPrueba(System.String@,System.Xml.XmlDocument@)">
+            <summary>
+            Envía el documento electrónico empaquetado en un ZIP a al set de pruebas de la DIAN.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Legal.LíneaDocumentoElectrónico`1">
+            <summary>
+            Clase auxiliar para pasar información de una línea de un documento electrónico entre los procedimientos en 
+            <see cref="M:SimpleOps.Legal.DocumentoElectrónico`2.Crear(System.String@)"/>. Solo usa un campo para impuesto que puede ser usado
+            para IVA o para ImpuestoConsumo.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Legal.LíneaDocumentoElectrónico`1.SubtotalReal">
+            <summary>
+            Si es muestra gratis no es cero.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Legal.XmlFirmadoConWsuID">
+            <summary>
+            Clase auxiliar específica para el espacio de nombres wsu del estándar Oasis que permite la obtención de un elemento de un xml firmado usando el wsu:id.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Legal.XmlTextWriterSinXsi">
+            <summary>
+            XmlTextWriter personalizado que omite la escritura de los atributos con nombre en AtributosAOmitir.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.Actualizable">
+            <summary>
+            Entidad que admite cambios después de creada. Se rastrea la fecha de actualización, el actualizador y el creador, pero no deja un rastro independiente de fecha de creación. Es útil para entidades que ya disponen de propiedades asociadas a su creación (como Factura) o entidades donde no es tan necesario disponer de esta información porque basta con el rastro de actualización (que se también se escribe en la creación).
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.ComprobanteDinero">
+            <summary>
+            Comprobante de movimiento de dinero: Recibo de Caja o Comprobante de Egreso.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.ComprobanteDinero.FechaHora">
+            <summary>
+            Fecha y hora legal del comprobante.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.ComprobanteDinero.ValorFacturas">
+            <summary>
+            El valor del comprobante que se usó para la cancelación de facturas.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.ComprobanteDinero.Abono">
+            <summary>
+            El valor del comprobante que se usó para abonar al saldo a favor de la entidad económica. Si es negativo es el valor tomado del saldo pendiente de la entidad económica que se sumó al movimiento de dinero para cancelar las facturas.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.ComprobanteDinero.Estado">
+            <summary>
+            Realizado = 0: Se generó el comprobante de dinero. ReportadoContabilidad = 1: Se reportó el comprobante de dinero a la contabilidad, esto por lo general implica el envío por email o impresión de un lote con la relación de los comprobantes de dinero de cierto período. Si un comprobante de dinero ya reportado es anulado esta anulación debe ser reportada nuevamente a contabilidad. Anulado = 2. AnuladoReportado = 3: Si el comprobante de dinero se anuló y además ya se reportó a contabilidad su anulación.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.ComprobanteDinero.Lugar">
+            <summary>
+            Desconocido = 0, Banco = 1, Caja = 2.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.ComprobanteDinero.Total">
+            <summary>
+            El total de dinero de la transacción. No modificable, modifica Abono ó Valor Facturas.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.EntidadEconómica">
+            <summary>
+            Cliente o Proveedor.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.EntidadEconómica.Nombre">
+            <summary>
+            Razón social de la empresa o nombre de la persona.
+            </summary>
+            <MaxLength>100</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.EntidadEconómica.NombreComercial">
+            <MaxLength>100</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.EntidadEconómica.TipoEntidad">
+            <summary>
+            Desconocido = 0, Empresa = 1, Persona = 2.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.EntidadEconómica.TipoContribuyente">
+            <summary>
+            Ordinario = 1, GranContribuyente = 2, Autorretenedor = 4, RetenedorIVA = 8, RégimenSimple = 16, ResponsableIVA = 32, NoResponsableIVA = 64. 
+            Una entidad económica (cliente o proveedor) puede tener múltiples tipos de contribuyente, en estos casos se suman los valores de los tipos que 
+            le apliquen. Por ejemplo, si es GranContribuyente = 2, Autorretenedor = 4 y ResponsableIVA = 32, se usa el valor 2 + 4 + 32 = 38. 
+            Si la empresa usuaria de SimpleOps no es gran contribuyente ni retenedor de IVA no es necesario conocer si los clientes son responsables de 
+            IVA o no pues la empresa usuaria nunca necesita aplicar retención de IVA y esta información solo se necesita para su cálculo.
+            En el caso de los proveedores si es necesario establecer si es o no responsable de IVA porque se usa esta información no aplicar IVA a sus compras.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.EntidadEconómica.Identificación">
+            <summary>
+            NIT (sin dígito de verificación) o cédula de ciudadanía.
+            </summary>
+            <MaxLength>20</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.EntidadEconómica.Teléfono">
+            <summary>
+            Principal. Usado en la factura.
+            </summary>
+            <MaxLength>30</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.EntidadEconómica.TeléfonoAlternativo">
+            <summary>
+            General alternativo. Es útil para facilitar la adición de un telefono general alternativo de la entidad económica sin necesidad de crear un contacto asociado.
+            </summary>
+            <MaxLength>30</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.EntidadEconómica.Dirección">
+            <summary>
+            Principal. Usada en la factura.
+            </summary>
+            <MaxLength>100</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.EntidadEconómica.Municipio">
+            <summary>
+            Principal. Usado en la factura.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.EntidadEconómica.Saldo">
+            <summary>
+            Si es positivo es a favor de la entidad económica. Si es negativo es el valor que la entidad económica le debe a la empresa.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.EntidadEconómica.ReferenciaEnBanco">
+            <summary>
+            Referencia identificadora de la entidad económica en los movimientos bancarios. Nombre basado en columna 'Referencia' en bancolombia.com.
+            </summary>
+            <MaxLength>100</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.EntidadEconómica.DescripciónEnBanco">
+            <summary>
+            Descripción identificadora de la entidad económica en los movimientos bancarios. Nombre basado en 'Descripción' en bancolombia.com.
+            </summary>
+            <MaxLength>100</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.EntidadEconómica.DíasCrédito">
+            <summary>
+            Cero si no tiene crédito aprobado. Aplica tanto para clientes (días de crédito dado a ellos), como para proveedores (días de crédito con ellos).
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.EntidadEconómica.CupoCrédito">
+            <summary>
+            Cero si no tiene crédito aprobado, nulo si no tiene cupo definido, es decir tiene crédito ilimitado, por lo menos en SimpleOps. Aplica tanto para clientes (cupo de crédito dado a ellos), como para proveedores (cupo de crédito con ellos).
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.EntidadEconómica.DígitoVerificaciónNit">
+            <summary>
+            Si es persona natural o si no tiene identificación devuelve nulo.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:SimpleOps.Modelo.EntidadEconómica.IdentificaciónCompleta">
+            <summary>
+            Si es empresa se incluye el número de verificación del NIT. Si es otro tipo de entidad no se agrega.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.Factura`2">
+            <summary>
+            Documento que produce un cambio de propiedad de un producto entre empresa y cliente o entre proveedor y empresa.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Factura`2.Número">
+            <summary>
+            Número de la factura que con el prefijo forman el identificador único de la factura. Si la empresa no usa prefijos este número debe ser único.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Factura`2.Prefijo">
+            <summary>
+            Opcional. Código alfanumérico antes del número de la factura.
+            </summary>
+            <MaxLength>10</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.Factura`2.FechaHora">
+            <summary>
+            Fecha y hora legal de la factura.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Factura`2.DescuentoCondicionado">
+            <summary>
+            No afecta la base gravable para el IVA ni retenciones. Es un descuento que depende que se de cierta condición para ser aplicado 
+            y hasta que no se de esa condición hay incertidumbre de su aplicación, por lo tanto los impuestos y retenciones son aplicados 
+            sin tenerlo en cuenta. Por ejemplo, se usa para los descuentos financieros aplicables solo si se paga antes de cierta fecha. 
+            Contablemente se registra como un gasto operacional financiero para el vendedor (https://puc.com.co/530535) y un ingreso no
+            operacional financiero para el comprador (https://puc.com.co/421040). En la factura electrónica se reporta como un descuento 
+            a nivel de factura siguiendo las indicaciones de la documentación de la DIAN.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Factura`2.DescuentoComercial">
+            <summary>
+            Afecta la base gravable para el IVA y retenciones. Es un descuento del que se tiene certeza que se va aplicar en el momento de
+            la facturación sin depender de ninguna condición futura, por lo tanto los impuestos y retenciones son aplicados teniéndolo en 
+            cuenta. Por ejemplo, se usa para descuentos comerciales aplicables si se compra más de cierta cantidad. Es equivalente a reducir 
+            el precio de los productos, por lo tanto se da la posibilidad de aplicarlo como un descuento comercial a pie de factura o 
+            aplicarlo como una reducción directa en los precios de los productos y en este valor usar 0. En la factura electrónica se reporta 
+            como un descuento por línea (independiente si se ha hecho por línea o como descuento comercial a pie de factura) siguiendo las 
+            indicaciones de la documentación de la DIAN.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Factura`2.Subtotal">
+            <summary>
+            No lo provee el usuario se calcula como la suma de los subtotales de todas las líneas (<see cref="T:SimpleOps.Modelo.MovimientoProducto"/>). También se conoce como valor bruto. No incluye el valor de las muestras gratis.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Factura`2.ImpuestoConsumo">
+            <summary>
+            Suma de los impuestos al consumo. Su tipo depende de los productos. Puede ser varios tipos si la factura incluye productos que tienen diferentes 
+            impuestos al consumo.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Factura`2.Estado">
+            <summary>
+            PendientePago = 0. Pagada = 1: La entidad económica ya pagó la factura. Anulada = 2: Aunque la anulación de facturas legalmente ya no es válida en Colombia se mantiene porque es un concepto ampliamente aceptado y es una abstracción útil para el usuario. La anulación equivale a aplicar una nota crédito por la totalidad de la factura.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Factura`2.ConsecutivoDianAnual">
+            <summary>
+            Número consecutivo del documento electrónico. Se reinicia automáticamente cada año. Se genera autoincrementa automáticamente para los 
+            documentos de venta y se pueden cargar desde el archivo xml para los documentos de compra.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Factura`2.Cude">
+            <summary>
+            Código único de documento electrónico.
+            </summary>
+            <MaxLength>96</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.Factura`2.Observación">
+            <summary>
+            Una observación libre sobre el documento que no se almacena en la base de datos para evitar que esta crezca de tamaño. 
+            Se usa como almacenamiento intermedio y queda escrita en la representación gráfica de la factura.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Factura`2.SubtotalBase">
+            <summary>
+            Subtotal incluyendo el descuento comercial y tomando las muestras gratis con valor cero.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Factura`2.SubtotalBaseIVA">
+            <summary>
+            Subtotal base para el cálculo del IVA, incluye el descuento comercial, suma el valor comercial de las muestras gratis y omite el subtotal de 
+            los productos excluídos de IVA.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Factura`2.SubtotalBaseIVADian">
+            <summary>
+            Subtotal base para el cálculo del IVA, incluye el descuento comercial, suma el valor comercial de las muestras gratis y omite el subtotal de 
+            los productos excluídos y exentos de IVA. Es necesario hacerlo diferenciado de SubtotalBaseIVA porque este es el valor que la DIAN solicita 
+            cuando pide el subtotal sin impuestos.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Factura`2.SubtotalBaseReal">
+            <summary>
+            Incluye el descuento comercial y suma el valor de las muestras gratis.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Factura`2.SubtotalFinal">
+            <summary>
+            Incluye el descuento comercial y el condicionado, y no tiene en cuenta el valor de las muestras. 
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Factura`2.SubtotalFinalConImpuestos">
+            <summary>
+            SubtotalFinal + IVA + Impuesto Consumo. Se calcula para registrarlo en la factura electrónica, es al que típicamente se le llama Total. 
+            Se evita usar el nombre Total para evitar crear confusión con APagar.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Factura`2.APagar">
+            <summary>
+            Valor a pagar definitivo, incluyendo todos los descuentos, impuestos y retenciones.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Factura`2.QR">
+            <summary>
+            Código QR de la factura en base 64.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Factura`2.Código">
+            <summary>
+            Código alfanumérico que incluye el prefijo y el número de la factura. Si no hay prefijo es una representación en texto del número.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Factura`2.PorcentajeMargen">
+            <summary>
+            Es nulo cuando el precio es cero o es una muestra gratis.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Factura`2.PorcentajeGanancia">
+            <summary>
+            El porcentaje aplicado al costo unitario para obtener el precio de venta. En inglés: Markup Percentage. Es nulo cuando el precio es cero o es una muestra gratis..
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Factura`2.SubtotalFinalConImpuestosTexto">
+            <summary>
+            Se usa principalmente para pasar al procedimiento de generación de representación gráfica de documentos que no tiene
+            acceso a la función ATextoDinero()
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Factura`2.IVATexto">
+            <summary>
+            Se usa principalmente para pasar al procedimiento de generación de representación gráfica de documentos que no tiene
+            acceso a la función ATextoDinero()
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Factura`2.ImpuestoConsumoTexto">
+            <summary>
+            Se usa principalmente para pasar al procedimiento de generación de representación gráfica de documentos que no tiene
+            acceso a la función ATextoDinero()
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Factura`2.SubtotalBaseTexto">
+            <summary>
+            Se usa principalmente para pasar al procedimiento de generación de representación gráfica de documentos que no tiene
+            acceso a la función ATextoDinero()
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Factura`2.DescuentoCondicionadoTexto">
+            <summary>
+            Se usa principalmente para pasar al procedimiento de generación de representación gráfica de documentos que no tiene
+            acceso a la función ATextoDinero()
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Modelo.Factura`2.ObtenerRetención``1(System.Func{``0,SimpleOps.Modelo.ReglasImpuesto},System.Func{`1,``0},System.Func{`1,System.Decimal})">
+            <summary>
+            <para>Obtiene el valor de una retención de cualquier tipo usando las líneas de la factura actual, la función 
+            (<paramref name="obtenerPropiedad"/>) para obtener la propiedad que será usada para clasificar cada producto en grupos de productos 
+            con el mismo valor y una función <paramref name="obtenerReglas"/> para obtener las <see cref="T:SimpleOps.Modelo.ReglasImpuesto"/> aplicables para cada 
+            valor de  enumeración de tipo <typeparamref name="C"/>. Si <paramref name="obtenerPropiedad"/> es nula significa que la retención se aplica 
+            sin distinción de cualquier clasificación en el producto, en estos casos se puede especificar <see cref="T:System.Object"/> como parámetro de 
+            tipo para <typeparamref name="C"/>.</para>
+            <para>Por ejemplo para una <see cref="T:SimpleOps.Modelo.Venta"/>, se puede provee la función <paramref name="obtenerPropiedad"/> que 
+            devuelva la propiedad <see cref="P:SimpleOps.Modelo.Producto.ConceptoRetención"/> de cada producto y la función <paramref name="obtenerReglas"/> que 
+            tome como parámetro un <see cref="T:SimpleOps.Global.ConceptoRetención"/>. Se calcula formando grupos de productos que tengan el mismo valor de 
+            <see cref="P:SimpleOps.Modelo.Producto.ConceptoRetención"/>. Para cada grupo se calcula el subtotal y se obtienen las <see cref="T:SimpleOps.Modelo.ReglasImpuesto"/>. 
+            El subtotal de cada grupo se compara con el <see cref="P:SimpleOps.Modelo.ReglasImpuesto.Mínimo"/> y si es mayor se aplica el 
+            <see cref="P:SimpleOps.Modelo.ReglasImpuesto.Porcentaje"/> para obtener el valor de la retención.</para>
+            <para>De manera predeterminada se usa como base para el cálculo <see cref="P:SimpleOps.Modelo.MovimientoProducto.SubtotalBase"/>, pero si se desea
+            usar una base diferente, por ejemplo en el caso de la retención de IVA, esta base/propiedad se puede pasar en 
+            <paramref name="obtenerOtraBase"/>.</para>
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Modelo.Factura`2.CalcularTodo(SimpleOps.Datos.Contexto,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            <para>Calcula todos los totales, impuestos y retenciones de la factura. Devuelve verdadero si el cálculo fue exitoso. Si se pasa <paramref name="cargarLíneas"/>, <paramref name="cargarEntidadEconómica"/> o <paramref name="cargarProductos"/> en verdadero 
+            se debe pasar un <paramref name="ctx"/> no nulo.</para>
+            <para>Si se pasa <paramref name="cargarLíneas"/> en verdadero
+            y <see cref="P:SimpleOps.Modelo.Factura`2.Líneas"/> está vacío se consultará la base de datos para intentar llenarlos. Si se pasa 
+            <paramref name="cargarLíneas"/> en falso y <see cref="P:SimpleOps.Modelo.Factura`2.Líneas"/> está vacío, no se calculará nada.</para>
+            <para>Si se pasa <paramref name="cargarEntidadEconómica"/> en verdadero
+            y <see cref="P:SimpleOps.Modelo.Factura`2.EntidadEconómica"/> es nula se consultará la base de datos para intentar llenarla. Si se pasa 
+            <paramref name="cargarEntidadEconómica"/> en falso y <see cref="P:SimpleOps.Modelo.Factura`2.EntidadEconómica"/> es nula, no se calculará nada.</para>
+            <para>Si se pasa <paramref name="cargarProductos"/> en verdadero
+            y algún Factura{E, M}.Líneas.Producto es nulo se consultará la base de datos para intentar llenarlo. Si se pasa 
+            <paramref name="cargarProductos"/> en falso y algún Factura{E, M}.Líneas.Producto es nulo, no se calculará nada.</para>
+            <para>La posibilidad de cargar las propiedades faltantes en esta función se provee por flexibilidad, pero puede 
+            generar una disminución importante del rendimiento. Siempre es preferible disponer previamente de la <see cref="T:SimpleOps.Modelo.Factura`2"/> con sus propiedades 
+            de navegación completas: <see cref="P:SimpleOps.Modelo.Factura`2.Líneas"/>, <see cref="P:SimpleOps.Modelo.Factura`2.EntidadEconómica"/> y todos los 
+            Factura{E, M}.Líneas.Producto.</para>
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Modelo.Factura`2.ObtenerReglasRetenciónFuente(System.Nullable{System.Double},System.Nullable{System.Decimal},SimpleOps.Global.TipoEntidad,SimpleOps.Global.ConceptoRetención,SimpleOps.Global.TipoContribuyente)">
+            <summary>
+            <b>En Compra:</b> Cuando por la compra de un producto la empresa (agente retención) paga a un proveedor (sujeto pasivo) le retiene un porcentaje del valor dependiendo
+            del <paramref name="tipoEntidadVendedor"/> y del <paramref name="tipoContribuyenteVendedor"/> del proveedor y del tipo de producto 
+            (<paramref name="concepto"/>).<br/>
+            <b>En Venta:</b> Cuando por la venta de un producto la empresa (sujeto pasivo) recibe el pago de un cliente (agente retención), este le retiene un porcentaje del valor 
+            dependiendo del <paramref name="tipoEntidadVendedor"/> y del <paramref name="tipoContribuyenteVendedor"/> de la empresa y del tipo de 
+            producto (<paramref name="concepto"/>).
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Modelo.Factura`2.VerificarDatosEntidad">
+            <summary>
+            Es necesario implementarlo y llamarlo en cada constructor de cada clase que se derive de <see cref="T:SimpleOps.Modelo.Factura`2"/> para verificar la necesidad de datos
+            en las entidades para la generación de la factura.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:SimpleOps.Modelo.LíneaSolicitudProducto">
+            <summary>
+            Línea de Ordenes de Compra (Clientes) o Pedidos (Proveedores).
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.LíneaSolicitudProducto.Estado">
+            <summary>
+            Pendiente = 0, Cumplida = 1, Anulada = 2. Puede ser anulado o cumplido individualmente sin anular o cumplir la solicitud completa. No se hace autocalculada para poder mantener los datos de la solucitud al momento de la anulación.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.LíneaSolicitudProducto.Cumplido">
+            <summary>
+            Si fue cumplido con la cantidad requerida y en una fecha específica.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.LíneaSolicitudProducto.Pendiente">
+            <summary>
+            Si aún está pendiente de entrega. No está pendiente si fue anulado o si fue cumplido.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.MovimientoDinero">
+            <summary>
+            Bancario o Efectivo.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.MovimientoDinero.FechaHora">
+            <summary>
+            Fecha y hora del movimiento. Puede no coincidir con FechaHoraCreación porque puede ser un movimiento de dinero de caja del día anterior o un movimiento de dinero cargado del banco.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.MovimientoDinero.Valor">
+            <summary>
+            Positivo si el dinero entra a las cuentas de la empresa, negativo si sale.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.MovimientoDinero.Observaciones">
+            <MaxLength>500</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.MovimientoDinero.Estado">
+            <summary>
+            Pendiente = 0. Procesado = 1: Si al movimiento de dinero ya se le realizó el comprobante de egreso o recibo de caja correspondiente. Dividido = 2: Si el movimiento de dinero (típicamente bancario) se ha dividido en varias líneas hijas. Anulado = 3: Si el movimiento de dinero no existió, es útil en el caso de movimientos de efectivo cuando se anula un comprobante de dinero y se desea repetir realizando otra operación diferente a la inicial (abonando dinero o cancelando otras facturas).
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.MovimientoProducto">
+            <summary>
+            Una línea de una <see cref="T:SimpleOps.Modelo.Factura`2"/> (incluye notas) o de una <see cref="T:SimpleOps.Modelo.Remisión"/>.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.MovimientoProducto.Precio">
+            <summary>
+            Precio real del producto. No es cero si es muestra gratis.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.MovimientoProducto.PorcentajeDescuentoComercial">
+            <summary>
+            Se usa cuando se ha aplicado un descuento comercial general sobre toda la factura. En estos casos se afecta la base tributable 
+            (<see cref="P:SimpleOps.Modelo.MovimientoProducto.SubtotalBase"/>) y como los impuestos se deben calcular para cada producto, se calcula el <see cref="P:SimpleOps.Modelo.MovimientoProducto.PrecioBase"/>
+            con el que se calcularán los subtotales e impuestos. En caso que se quiera establecer un descuento comercial individual para 
+            cada producto, se permite hacerlo mediante la interfaz, pero se afecta directamente el valor de <see cref="P:SimpleOps.Modelo.MovimientoProducto.Precio"/>.<br/>
+            Esta convención se establece para ahorrar espacio en la base de datos al no tener que almacenar el porcentaje de descuento 
+            en todos los movimientos, pero permitiendo calcular el precio efectivo de un producto en todos los casos.<br/>
+            Su valor se establece en <see cref="M:SimpleOps.Modelo.Factura`2.CalcularTodo(SimpleOps.Datos.Contexto,System.Boolean,System.Boolean,System.Boolean,System.Boolean)"/>. No se almacena en la base de datos, 
+            se ignora en <see cref="M:SimpleOps.Datos.Contexto.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)"/>.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.MovimientoProducto.PorcentajeDescuentoCondicionado">
+            <summary>
+            Se usa para calcular el <see cref="P:SimpleOps.Modelo.MovimientoProducto.PrecioFinal"/> para obtener <see cref="P:SimpleOps.Modelo.MovimientoProducto.Margen"/>, <see cref="P:SimpleOps.Modelo.MovimientoProducto.PorcentajeMargen"/> y 
+            <see cref="P:SimpleOps.Modelo.MovimientoProducto.PorcentajeGanancia"/>. Su valor se establece en <see cref="M:SimpleOps.Modelo.Factura`2.CalcularTodo(SimpleOps.Datos.Contexto,System.Boolean,System.Boolean,System.Boolean,System.Boolean)"/>. No se almacena en la
+            base de datos, se ignora en <see cref="M:SimpleOps.Datos.Contexto.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)"/>.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.MovimientoProducto.MuestraGratis">
+            <summary>
+            No se almacena en la base de datos, se ignora en <see cref="M:SimpleOps.Datos.Contexto.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)"/>.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.MovimientoProducto.PrecioBaseReal">
+            <summary>
+            El precio efectivo que se usa para el cálculo del <see cref="P:SimpleOps.Modelo.MovimientoProducto.SubtotalBase"/> (base tributable) después de descontar el porcentaje 
+            de descuento comercial. Su valor no es cero si es muestra gratis.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.MovimientoProducto.PrecioBase">
+            <summary>
+            El precio efectivo que se usa para el cálculo del <see cref="P:SimpleOps.Modelo.MovimientoProducto.SubtotalBase"/> (base tributable) después de descontar el porcentaje 
+            de descuento comercial. Su valor es cero si es muestra gratis.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.MovimientoProducto.PrecioBaseTexto">
+            <summary>
+            Se usa principalmente para pasar al procedimiento de generación de representación gráfica de documentos que no tiene
+            acceso a la función ATextoDinero()
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.MovimientoProducto.PrecioFinal">
+            <summary>
+            El precio efectivo al que se está vendiendo el producto después de descontar los porcentajes de descuento comercial y condicionado.
+            Permite calcular <see cref="P:SimpleOps.Modelo.MovimientoProducto.Margen"/>, <see cref="P:SimpleOps.Modelo.MovimientoProducto.PorcentajeMargen"/> y <see cref="P:SimpleOps.Modelo.MovimientoProducto.PorcentajeGanancia"/>.
+            Su valor es cero si es muestra gratis.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.MovimientoProducto.SubtotalBaseReal">
+            <summary>
+            <see cref="P:SimpleOps.Modelo.MovimientoProducto.PrecioBaseReal"/> * <see cref="P:SimpleOps.Modelo.MovimientoProducto.Cantidad"/>. Su valor no es cero si es muestra gratis.
+            Para el cálculo se usa el precio que se le daría al cliente si no fuera una muestra gratis.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.MovimientoProducto.Subtotal">
+            <summary>
+            Subtotal directo del producto. No tiene en cuenta ningún descuento. Su valor es cero si es muestra gratis.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.MovimientoProducto.SubtotalBase">
+            <summary>
+            <see cref="P:SimpleOps.Modelo.MovimientoProducto.PrecioBase"/> * <see cref="P:SimpleOps.Modelo.MovimientoProducto.Cantidad"/>. También llamado base tributable. Incluye el descuento comercial. 
+            Si es una muestra gratis es cero.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.MovimientoProducto.SubtotalBaseTexto">
+            <summary>
+            Se usa principalmente para pasar al procedimiento de generación de representación gráfica de documentos que no tiene
+            acceso a la función ATextoDinero()
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.MovimientoProducto.SubtotalBaseConImpuestosTexto">
+            <summary>
+            Se le puede llamar el total de la línea. Se usa principalmente para pasar al procedimiento de generación de representación gráfica 
+            de documentos que no tiene acceso a la función ATextoDinero()
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.MovimientoProducto.SubtotalBaseIVA">
+            <summary>
+            Incluye el valor de los productos que sean muestras gratis sin valor comercial pero no incluye los excluídos de IVA.
+            Se incluye para ser consistente con la definición de productos excluídos de IVA que son los su valor no suma a la base tributable.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.MovimientoProducto.SubtotalBaseIVADian">
+            <summary>
+            Incluye el valor de los productos que sean muestras gratis sin valor comercial pero no incluye los excluídos y exentos de IVA.
+            Es necesario porque este es el valor que realmente solicita la DIAN cuando pide el subtotal sin impuestos en la factura electrónica.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.MovimientoProducto.SubtotalFinal">
+            <summary>
+            Incluye el descuento comercial y condicionado. Si es una muestra gratis es cero.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.MovimientoProducto.DescuentoComercial">
+            <summary>
+            Valor del descuento comercial.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.MovimientoProducto.PorcentajeMargen">
+            <summary>
+            Es nulo cuando el precio es cero o es una muestra gratis.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.MovimientoProducto.PorcentajeGanancia">
+            <summary>
+            El porcentaje aplicado al costo unitario para obtener el precio de venta. En inglés: Markup Percentage. Es nulo cuando el precio es cero 
+            o es una muestra gratis.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.MovimientoProducto.PorcentajeEfectivoImpuestoConsumo">
+            <summary>
+            Se usa principalmente para determinar si en una factura se aplican diferentes porcentajes de impuesto al consumo y por lo tanto se 
+            debe considerar mostrar la columna de impuesto en consumo en la representación gráfica de la factura.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.MovimientoProducto.ImpuestoConsumoTexto">
+            <summary>
+            Se usa principalmente para pasar al procedimiento de generación de representación gráfica de documentos que no tiene
+            acceso a la función ATextoDinero()
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.MovimientoProducto.IVA">
+            <summary>
+            Valor del IVA.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.MovimientoProducto.PorcentajeEfectivoIVA">
+            <summary>
+            Se usa principalmente para determinar si en una factura se aplican diferentes porcentajes de impuesto al consumo y por lo tanto se 
+            debe considerar mostrar la columna de impuesto en consumo en la representación gráfica de la factura.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.MovimientoProducto.IVATexto">
+            <summary>
+            Se usa principalmente para pasar al procedimiento de generación de representación gráfica de documentos que no tiene
+            acceso a la función ATextoDinero()
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.Precio">
+            <summary>
+            PrecioCliente o PrecioProveedor.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Precio.Protegido">
+            <summary>
+            Permite proteger el precio para solo permitir su modificación a usuarios que tengan permiso de modificar esta columna (Protegido). En PrecioLista se podría usar para permitir algunos roles actualizar los precios de lista de los no protegidos y a otros roles también los protegidos.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.Rastreable">
+            <summary>
+            Entidad que admite cambios después de creada. Se hace rastreo completo del creador, actualizador, fecha de creación y fecha de actualización. Es útil para entidades que sus datos cambian frecuentemente y que se necesita disponer de la información del creador y la fecha de creación.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.ReferenciaEntidadEconómica">
+            <summary>
+            Referencia propia de la entidad económica (cliente o proveedor) asociada a un producto.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.ReferenciaEntidadEconómica.Valor">
+            <MaxLength>30</MaxLength>
+        </member>
+        <member name="T:SimpleOps.Modelo.Registro">
+            <summary>
+            Entidad que representa un registro histórico. Estas entidades solo se crean no se actualizan, por lo tanto no tienen propiedades para rastrear la fecha de su actualización ni su actualizador. Tienen ID como clave única y no tienen restricciones adicionales sobre las otras columnas.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.SolicitudProducto">
+            <summary>
+            Orden de Compra (Clientes) o Pedido (Proveedores).
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.SolicitudProducto.Estado">
+            <summary>
+            Pendiente = 0, Cumplida = 1, Anulada = 2.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.SolicitudProducto.Observaciones">
+            <MaxLength>500</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.SolicitudProducto.FechaHoraCreación">
+            <summary>
+            No se almacena en la base de datos porque es información redundante con LíneaSolicitudProducto.FechaHoraCreación y evitar incrementar el 
+            tamaño de la base de datos innecesariamente. Se puede escribir cuando se necesite desde la menor FechaHoraCreación de sus LíneaSolicitudProducto.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.ControlInserciónAttribute">
+            <summary>
+            Determina como se controlan los conflictos de concurrencia en la creación de nuevas entidades (inserciones de filas). 
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.ControlInserciónAttribute.Tipo">
+            <summary>
+            <b>Ninguno:</b> Se aplica a entidades que pueden ser creadas por usuarios diferentes incluso teniendo igual todas sus propiedades. 
+            No tienen claves adicionales. Por ejemplo, <see cref="T:SimpleOps.Modelo.Cobro"/> o <see cref="T:SimpleOps.Modelo.Cotización"/>. Las inserciones se pueden realizar 
+            concurrentemente sin generar ningún conflicto o excepción.<br/>
+            <b>Optimista:</b> Se aplica a entidades que requieren controles adicionales sobre sus datos para impedir duplicados. Estas entidades 
+            pueden o no tener un ID autocalculado (no se tiene en cuenta en el control de concurrencia de inserción), pero deben tener
+            una clave o grupo de claves con restricción de unicidad. Por ejemplo, no deben existir dos <see cref="T:SimpleOps.Modelo.PrecioCliente"/> con el mismo ProductoID y 
+            ClienteID. Esto se restringe a nivel de la base de datos con la creación de la clave ProductoID-ClienteID, pero también se hace 
+            explícito con este atributo para que al guardar se controle el caso de clave ya existente y se proceda con la resolución de conflicto 
+            de inserción con ayuda del usuario. Si no se hace explícito se produce una excepción.<br/>
+            <b>Pesimista:</b> Se aplica a entidades que requieren llevar un estricto número consecutivo diferente del ID (Por ejemplo, <see cref="T:SimpleOps.Modelo.Venta"/>), 
+            entidades donde el ID es relacionado en otras tablas en la misma transacción (Por ejemplo, <see cref="T:SimpleOps.Modelo.Pedido"/>) y/o 
+            entidades donde su creación (adición de fila) genera múltiples cambios en la base de datos que no se pueden producir doblemente por 
+            usuarios diferentes (Por ejemplo, <see cref="T:SimpleOps.Modelo.LíneaRemisión"/>). Al iniciar una transacción de inserción se activa un bloqueo en la 
+            tabla y tablas relacionadas para impedir inserciones y/o cambios de otros usuarios. Si se detecta un conflicto de inserción al 
+            segundo usuario se le impide realizar la acción hasta que el bloqueo sea liberado. Este tipo de control se implementa 
+            con lógica personalizada para cada caso.<br/>
+            <b>NoPermitido:</b> No se permite la inserción de filas por ningún usuario.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.BloqueoVarias">
+            <summary>
+            Clase auxiliar que sirve como intermediaria cuando se necesita hacer el mismo bloqueo para varias entidades del mismo tipo.
+            El ID heredado no tiene significado en esta clase.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.DirecciónCompleta">
+            <summary>
+            Incluye el municipio y la dirección. No se usa en las propiedades que se escriben en la base de datos pero si en propiedades de solo lectura.
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Modelo.DirecciónCompleta.CrearDirecciónCompleta(SimpleOps.Modelo.Municipio,System.String)">
+            <summary>
+            Si no se dispone del municipio o de la dirección no se puede crear la dirección completa y esta será nula.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Permiso.Tipo">
+            <summary>
+            Ninguno = -1, Lectura = 1, Modificación = 2, Inserción = 4, Eliminación = 8. Los valores son sumables, es decir, para un permiso de Lectura, Modificación y Eliminación pero no de Inserción, el valor es: 1 + 2 + 8 = 11.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Permiso.Tabla">
+            <summary>
+            Puede ser Todas para aplicar permisos iniciales.
+            </summary>
+            <MaxLength>50</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.Permiso.Columnas">
+            <summary>
+            Si es nulo el permiso aplica para toda la tabla. Si no es nulo el permiso aplica para estas columnas.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.ReglasImpuesto.Mínimo">
+            <summary>
+            Si la suma de los <see cref="P:SimpleOps.Modelo.MovimientoProducto.SubtotalBase"/> es mayor a este mínimo, se aplica la retención.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.ReglasImpuesto.Porcentaje">
+            <summary>
+            Guardado como fracción. Puede ser un porcentaje con respecto a cualquier base, como SubtotalBase o IVA, porque la base se puede proveer 
+            a <see cref="M:SimpleOps.Modelo.Factura`2.ObtenerRetención``1(System.Func{``0,SimpleOps.Modelo.ReglasImpuesto},System.Func{`1,``0},System.Func{`1,System.Decimal})"/>
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.Aplicación">
+            <summary>
+            El uso principal que se le da a un producto.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Aplicación.Nombre">
+            <MaxLength>50</MaxLength>
+        </member>
+        <member name="T:SimpleOps.Modelo.Bloqueo">
+            <summary>
+            Entidad auxiliar que describe un bloqueo necesario para implementar control de concurrencia pesimista. Cuando se estén realizando operaciones 
+            que lo requieran permite realizar un bloqueo a todas las entidades de un tipo o a unas puntuales (toda la tabla o algunas filas). 
+            Aunque en realidad no es un sistema estricto de concurrencia pesimista porque la conexión a la base de datos no permanece abierta y 
+            no se implementa a nivel de la base de datos. Es más un sistema de 'ingreso' y 'egreso' de los usuarios a la posibilidad o no de modificar 
+            las tablas y sus filas.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Bloqueo.NombreEntidad">
+            <MaxLength>50</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.Bloqueo.EntidadID">
+            <summary>
+            ID de la entidad que está bloqueada. Si es nulo todas las entidades están bloqueadas, es decir todas las filas. Si se necesita bloquear solo algunas filas se debe agregar una fila a la tabla Bloqueos por cada ID de entidad (fila) a bloquear.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Bloqueo.Propiedad">
+            <summary>
+            Nombre de la propiedad que está bloqueada. Si es nula todas las propiedades están bloqueadas, es de decir todas las columnas. Si se necesita bloquear solo algunas columnas se deben agregar una fila a la tabla Bloqueos por cada propiedad de entidad (columna) a bloquear.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Bloqueo.Tipo">
+            <summary>
+            Describe el tipo de bloqueo. Ninguno = -1, Lectura = 1, Modificación = 2, Inserción = 4, Eliminación = 8. Los valores son sumables, es decir, para un bloquear la eliminación e inserción pero no la lectura ni actualización, el valor es: 4 + 8 = 12. El bloqueo de lectura no es implementado, todos los usuarios tendrán siempre permisos de lectura según sus roles.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Bloqueo.Usuario">
+            <summary>
+            Usuario generador del bloqueo.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Bloqueo.FechaHoraInicio">
+            <summary>
+            FechaHora de inicio del bloqueo. Si el bloqueo se tarda mucho en ser liberado puede ser desbloqueado por otro usuario y el usuario bloqueador perdería la posibilidad de realizar la operación.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.Campaña">
+            <summary>
+            Campaña de mercadeo con la que se obtuvo el cliente.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Campaña.Nombre">
+            <MaxLength>50</MaxLength>
+        </member>
+        <member name="T:SimpleOps.Modelo.Categoría">
+            <summary>
+            De producto.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Categoría.Nombre">
+            <MaxLength>50</MaxLength>
+        </member>
+        <member name="T:SimpleOps.Modelo.Cliente">
+            <summary>
+            Entidad a la que se le venden productos.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Cliente.ContactoFacturas">
+            <summary>
+            Al que se enviarán las facturas electrónicas.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Cliente.ContactoCobros">
+            <summary>
+            Al que se enviarán las comunicaciones de cobros y estados de cuenta.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Cliente.TipoCliente">
+            <summary>
+            Desconocido = 0, Consumidor = 1, Distribuidor = 2, GrandesContratos = 3, Otro = 255. Desconocido solo es aceptado si se establece Global.PermitirTipoClienteDesconocido = true.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Cliente.SubtipoCliente">
+            <summary>
+            Subtipo adicional del cliente. Especialmente útil cuando TipoCliente = Otro o TipoCliente = Grandes Contratos para agrupar las razones sociales (clientes) de cada contrato.
+            </summary>
+            <MaxLength>50</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.Cliente.PorcentajeRetenciónIVAPropio">
+            <summary>
+            Si es nulo se usan las reglas legales. Cero si no aplica retención de IVA.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Cliente.PorcentajeRetenciónFuentePropio">
+            <summary>
+            Si es nulo se usan las reglas legales. Cero si no aplica retención en la fuente.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Cliente.PorcentajeRetenciónICAPropio">
+            <summary>
+            Si es nulo se usa el porcentaje en opciones. Cero si no aplica retención del ICA.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Cliente.PorcentajeRetencionesExtraPropio">
+            <summary>
+            Si es nulo se usa el porcentaje en opciones. Retenciones varias que algunas empresas aplican al pago de todas sus facturas. Lo suelen hacer las públicas. Cero si no aplican. 
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Cliente.MínimoRetenciónIVAPropio">
+            <summary>
+            Si es nulo se usan las reglas legales. Si no, realiza retención de IVA para facturas con subtotal superior o igual a este mínimo. Puede ser cero para aplicarla a todas.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Cliente.MínimoRetenciónFuentePropio">
+            <summary>
+            Si es nulo se usan las reglas legales. Si no, realiza retención en la fuente de renta para facturas con subtotal superior o igual a este mínimo. Puede ser cero para aplicarla a todas.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Cliente.MínimoRetenciónICAPropio">
+            <summary>
+            Si es nulo se usa el mínimo en opciones. Si no, realiza retención del ICA para facturas con subtotal superior o igual a este mínimo. Puede ser cero para aplicarla a todas.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Cliente.MínimoRetencionesExtraPropio">
+            <summary>
+            Si es nulo, como no hay mínimo en opciones, se aplica a todas. Si no, realiza retenciones extra para facturas con subtotal superior o igual a este mínimo. Puede ser cero para aplicarla a todas.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Cliente.PrioridadPropia">
+            <summary>
+            Desconocida = 0, Ninguna = 1, MuyBaja = 10, Baja = 20, Media = 30, Alta = 40, MuyAlta = 50. Si es desconocida se usan las reglas en opciones. Al programar la asignación de los productos en inventario a las ordenes de compra pendientes se prefieren los clientes de mayor prioridad.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Cliente.FormaEntregaPropia">
+            <summary>
+            Desconocida = 0, Virtual = 1, PuntoDeVenta = 2, Mensajería = 3, Transportadora = 4, TransportadoraInternacional = 5, Otra = 255. Si es desconocida se usan las reglas en opciones. Forma de entrega predeterminada para pedidos que cumplen con las condiciones comerciales y que no se ha recibido comunicación del cliente para hacerlo de otra forma.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Cliente.MínimoTransporteGratisPropio">
+            <summary>
+            Si es nulo se usan las reglas en opciones. El subtotal mínimo de la orden de compra para ser envíada con transporte gratis.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Cliente.CopiasFacturaPropia">
+            <summary>
+            Si es nula se usa el valor en opciones. La cantidad de copias de la factura que se imprime. Legalmente puede ser cero pues la factura electrónica es legalmente suficiente.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Cliente.PorcentajeGananciaPropio">
+            <summary>
+            Si es nulo se usan las reglas en opciones. El porcentaje de ganancia que se le aplica a los costos de los productos para obtener sus precios de venta. Es útil cuando no se quieren usar las listas de precios o cuando el producto no está en ellas.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Cliente.PorcentajeIVAPropio">
+            <summary>
+            Si es nulo se usan las reglas en Global.ObtenerPorcentajeIVA(). Algunas entidades pueden estar exentas de IVA.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Cliente.ObservacionesFactura">
+            <summary>
+            Se escriben en el campo observaciones de las facturas y se muestran en un cuadro de mensaje en la interfaz al hacer una factura.
+            </summary>
+            <MaxLength>500</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.Cliente.Campaña">
+            <summary>
+            Campaña de ventas que generó el primer contacto o recontacto efectivo con el cliente.
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Modelo.Cliente.VerificarDatosVenta(SimpleOps.Modelo.Cliente)">
+            <summary>
+            Cumple una función de segunda verificación que la venta no se genere con datos incorrectos porque en la 
+            interfaz de usuario se hace el control principal.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.Cobro">
+            <summary>
+            Registro de cobros realizados a clientes por facturas de venta vencidas.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Cobro.NúmerosFacturas">
+            <summary>
+            Prefijo + número de las facuras de ventas que fueron cobradas.
+            </summary>
+            <MaxLength>1000</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.Cobro.Total">
+            <summary>
+            Total de las facturas cobradas.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Cobro.MáximoDíasVencimiento">
+            <summary>
+            Los días de vencimiento de la factura de venta cobrada más antigua.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Cobro.Respuesta">
+            <summary>
+            Respuesta del cliente ante el cobro.
+            </summary>
+            <MaxLength>500</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.Cobro.Tipo">
+            <summary>
+            Desconocido = 0, Email = 1, Telefónico = 2, Personal = 3, AgenciaDeCobros = 4, Prejurídico = 5, Jurídico = 6, Otro = 255.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.Compra">
+            <summary>
+            Recepción de productos a cambio de dinero.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.ComprobanteEgreso">
+            <summary>
+            Comprobante de salida de dinero.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.Contacto">
+            <summary>
+            Datos de contacto asociados a una dirección de email. No está restringido a una entidad económica porque un contacto puede ser válido para varias.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Contacto.Email">
+            <MaxLength>100</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.Contacto.Teléfono">
+            <summary>
+            Móvil o fijo.
+            </summary>
+            <MaxLength>30</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.Contacto.Nombre">
+            <MaxLength>50</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.Contacto.EmailActivo">
+            <summary>
+            Algunos contactos se pueden querer mantener en la base de datos así el email esté desactivado o eliminado. Es útil para evitar enviar comunicaciones a este email.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.ContactoCliente">
+            <summary>
+            Asocia los contactos a cada cliente.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.ContactoCliente.ObservacionesFactura">
+            <summary>
+            Observaciones adicionales a Cliente.ObservacionesFactura que se escribirán en el campo de observaciones de la factura y se mostrarán en la interfaz al hacer una factura a la empresa de este contacto.
+            </summary>
+            <MaxLength>500</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.ContactoCliente.Tipo">
+            <summary>
+            Desconocido = 0, Comprador = 1, Almacenista = 2, Tesorería = 5, JefeCompras = 10, AltoDirectivo = 15, Gerente = 20, Propietario = 25, Otro = 255.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.ContactoProveedor">
+            <summary>
+            Asocia los contactos a cada proveedor.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.ContactoProveedor.Tipo">
+            <summary>
+            Desconocido = 0, Vendedor = 1, Despachos = 2, Tesorería = 5, JefeVentas = 10, AltoDirectivo = 15, Gerente = 20, Propietario = 25, Otro = 255.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.Cotización">
+            <summary>
+            Precio dado a cliente. Se diferencia de PrecioCliente en que la tabla Cotizaciones es un registro histórico mientras que la tabla PreciosClientes tiene solo los últimos precios.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.InformePago">
+            <summary>
+            De un cliente.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.InformePago.Banco">
+            <summary>
+            Otro = -2, Ninguno = -1, Desconocido = 0, Bogotá = 1, Popular = 2, ItaúCorpbanca = 6, Bancolombia = 7, Citibank = 9, GNBSudameris = 12, BBVA = 13, Occidente = 23, CajaSocial = 30, Davivienda = 39, ScotiabankColpatria = 42, Agrario = 43, AVVillas = 49, CredifinancieraProcredit = 51, Bancamía = 52, W = 53, Bancoomeva = 54, Finandina = 55, Falabella = 56, Pichincha = 57, Coopcentral = 58, SantanderDeNegocios = 59, MundoMujer = 60, Multibank = 61, Bancompartir = 62, Serfinanza = 63, Corficolombiana = 2011, InversiónBancolombia = 2037, JPMorgan = 2041, BNPParibas = 2042, CorfiGNBSudameris = 2048, CorporaciónFinancieraDavivienda = 2049, GirosYFinanzas = 4008, Tuya = 4026, GMFinancial = 4031, Coltefinanciera = 4046, Bancoldex = 4101, FinancieraDann = 4108, FinancieraPagos = 4115, Credifamilia = 4117, Crezcamos = 4118, LaHipotecaria = 4120, Juriscoop = 4121, RCI = 4122, FinancieraDeAntioquia = 32001, CooperativaFinancieraJFK = 32002, Coofinep = 32003, Cotrafa = 32004, Confiar = 32005, Daviplata = 1001551, Nequi = 1001507, FinanciamientoItau = 1001014.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.InformePago.OtroNúmeroCuenta">
+            <summary>
+            Si es nulo la cuenta del movimiento bancario es la establecida en opciones para el banco del movimiento bancario. 
+            </summary>
+            <MaxLength>30</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.InformePago.Observaciones">
+            <MaxLength>500</MaxLength>
+        </member>
+        <member name="T:SimpleOps.Modelo.InventarioConsignación">
+            <summary>
+            Producto propiedad de la empresa que el cliente tiene almacenado en sus instalaciones.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.InventarioConsignación.CostoUnitario">
+            <summary>
+            El costo de compra por unidad y gastos asociados a su producción y obtención. Incluye costo de transporte. Si es nulo es desconocido.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.InventarioConsignación.CostoTotal">
+            <summary>
+            El costo de compra y gastos asociados a su producción y obtención de la cantidad total en inventario en consignación. Incluye costo de transporte.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.InventarioConsignación.VentaPendiente">
+            <summary>
+            El subtotal de la venta que está pendiente asociada a este producto en consignación.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.LíneaCompra">
+            <summary>
+            Línea de producto comprado.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.LíneaNegocio">
+            <summary>
+            De producto.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.LíneaNegocio.Nombre">
+            <MaxLength>50</MaxLength>
+        </member>
+        <member name="T:SimpleOps.Modelo.LíneaNotaCréditoCompra">
+            <summary>
+            Línea de producto devuelto de una compra.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.LíneaNotaCréditoVenta">
+            <summary>
+            Línea de producto devuelto de una venta.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.LíneaNotaDébitoCompra">
+            <summary>
+            Línea de cargo añadido a una compra.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.LíneaNotaDébitoVenta">
+            <summary>
+            Línea de cargo añadido a una venta.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.LíneaOrdenCompra">
+            <summary>
+            Línea de una orden de compra.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.LíneaPedido">
+            <summary>
+            Línea de un pedido.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.LíneaRemisión">
+            <summary>
+            Línea de una remisión.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.LíneaVenta">
+            <summary>
+            Línea de una venta.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.Marca">
+            <summary>
+            De producto.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Marca.Nombre">
+            <MaxLength>50</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.Marca.EnDescripción">
+            <summary>
+            Si es verdadero se espera que la marca se agregue a la descripción del producto lo que permite su adición automática y otras funciones.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Marca.PriorizarEnBuscador">
+            <summary>
+            Si es verdadero los productos de estas marcas tendrán prioridad en el buscador de productos sobre los otros.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.Material">
+            <summary>
+            De producto.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Material.Nombre">
+            <MaxLength>50</MaxLength>
+        </member>
+        <member name="T:SimpleOps.Modelo.MovimientoBancario">
+            <summary>
+            Movimiento de dinero en una cuenta bancaria.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.MovimientoBancario.Banco">
+            <summary>
+            Otro = -2, Ninguno = -1, Desconocido = 0, Bogotá = 1, Popular = 2, ItaúCorpbanca = 6, Bancolombia = 7, Citibank = 9, GNBSudameris = 12, BBVA = 13, Occidente = 23, CajaSocial = 30, Davivienda = 39, ScotiabankColpatria = 42, Agrario = 43, AVVillas = 49, CredifinancieraProcredit = 51, Bancamía = 52, W = 53, Bancoomeva = 54, Finandina = 55, Falabella = 56, Pichincha = 57, Coopcentral = 58, SantanderDeNegocios = 59, MundoMujer = 60, Multibank = 61, Bancompartir = 62, Serfinanza = 63, Corficolombiana = 2011, InversiónBancolombia = 2037, JPMorgan = 2041, BNPParibas = 2042, CorfiGNBSudameris = 2048, CorporaciónFinancieraDavivienda = 2049, GirosYFinanzas = 4008, Tuya = 4026, GMFinancial = 4031, Coltefinanciera = 4046, Bancoldex = 4101, FinancieraDann = 4108, FinancieraPagos = 4115, Credifamilia = 4117, Crezcamos = 4118, LaHipotecaria = 4120, Juriscoop = 4121, RCI = 4122, FinancieraDeAntioquia = 32001, CooperativaFinancieraJFK = 32002, Coofinep = 32003, Cotrafa = 32004, Confiar = 32005, Daviplata = 1001551, Nequi = 1001507, FinanciamientoItau = 1001014.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.MovimientoBancario.OtroNúmeroCuenta">
+            <summary>
+            Si es nulo la cuenta del movimiento bancario es la establecida en opciones para el banco del movimiento bancario. 
+            </summary>
+            <MaxLength>30</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.MovimientoBancario.Sucursal">
+            <summary>
+            'Oficina' en bancolombia.com.
+            </summary>
+            <MaxLength>50</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.MovimientoBancario.Descripción">
+            <summary>
+            'Descripción' en bancolombia.com.
+            </summary>
+            <MaxLength>100</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.MovimientoBancario.Referencia">
+            <summary>
+            Referencia identificadora de la entidad económica en los movimientos bancarios. Nombre basado en columna 'Referencia' en bancolombia.com.
+            </summary>
+            <MaxLength>100</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.MovimientoBancario.Padre">
+            <summary>
+            Si no es nulo se trata de una línea hija derivada de la línea padre aquí indicada. En ocasiones es necesario dividir un movimiento bancario en varias líneas hijas (con valores que suman el total del movimiento padre) para poder realizar los recibos de caja o comprobantes de egreso correspondientes. Por ejemplo es útil cuando se requieren hacer dos comprobantes de egreso para el pago de una deuda para distinguir entre abono e intereses.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.MovimientoEfectivo">
+            <summary>
+            Movimiento de dinero en efectivo.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.Municipio">
+            <summary>
+            Ciudad o pueblo.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Municipio.Nombre">
+            <MaxLength>50</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.Municipio.Departamento">
+            <MaxLength>60</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.Municipio.Código">
+            <summary>
+            Código único del municipio asignado por el gobierno.
+            </summary>
+            <MaxLength>10</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.Municipio.OtroPaís">
+            <summary>
+            Si es nulo se usa el país en opciones.
+            </summary>
+            <MaxLength>50</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.Municipio.PorcentajeIVAPropio">
+            <summary>
+            Si es nulo se usan las reglas en Global.ObtenerPorcentajeIVA(). 0 si es exento de IVA, por ejemplo: San Andrés y Providencia.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.NotaCréditoCompra">
+            <summary>
+            Descuento al valor de una compra por devolución de productos.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.NotaCréditoCompra.Razón">
+            <summary>
+            DevoluciónParcial = 1, AnulaciónFactura = 2, Descuento = 3, AjustePrecio = 4, Otra = 5.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.NotaCréditoVenta">
+            <summary>
+            Descuento al valor de una venta por devolución de productos.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.NotaCréditoVenta.Razón">
+            <summary>
+            DevoluciónParcial = 1, AnulaciónFactura = 2, Descuento = 3, AjustePrecio = 4, Otra = 5.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.NotaDébitoCompra">
+            <summary>
+            Cargo al valor de una compra.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.NotaDébitoCompra.Razón">
+            <summary>
+            Intereses = 1, Gastos = 2, AjustePrecio = 3, Otra = 4.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.NotaDébitoVenta">
+            <summary>
+            Cargo al valor de una venta.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.NotaDébitoVenta.Razón">
+            <summary>
+            Intereses = 1, Gastos = 2, AjustePrecio = 3, Otra = 4.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.OrdenCompra">
+            <summary>
+            Solicitud de producto de un cliente.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.OrdenCompra.Número">
+            <summary>
+            Código alfanumérico identificador de la orden de compra. Único para cada cliente.
+            </summary>
+            <MaxLength>30</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.OrdenCompra.SincronizadaWeb">
+            <summary>
+            Para implementaciones personalizadas. Determina si la información de esta orden de compra ya ha sido sincronizada con la página web.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.OrdenCompra.Prioridad">
+            <summary>
+            Desconocida = 0, Ninguna = 1, MuyBaja = 10, Baja = 20, Media = 30, Alta = 40, MuyAlta = 50. Se toma de la prioridad del cliente en el momento de la creación de la orden de compra.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.OrdenCompra.InformePago">
+            <summary>
+            Si es nulo el pago aún no ha sido confirmado.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.Pedido">
+            <summary>
+            Solicitud de producto a un proveedor.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.PrecioCliente">
+            <summary>
+            Último precio de un producto para un cliente.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.PrecioLista">
+            <summary>
+            Elemento de la tabla ListasDePrecios donde se guardan las listas de precios que maneja la empresa para sus clientes y las condiciones para acceder a ellos.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.PrecioLista.TipoCliente">
+            <summary>
+            Desconocido = 0, Consumidor = 1, Distribuidor = 2, GrandesContratos = 3, Otro = 255.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.PrecioLista.SubtipoCliente">
+            <MaxLength>50</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.PrecioLista.MáximoDíasCrédito">
+            <summary>
+            Si se especifica y existen dos PrecioLista con el mismo (TipoCliente, SubtipoCliente, Producto) se elegirá el que tenga el mínimo MáximoDíasCrédito que sea mayor a DíasCrédito del cliente.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.PrecioLista.TieneRepresentanteComercial">
+            <summary>
+            Sirve para establecer precios diferenciados entre clientes que tienen representante comercial y clientes que no tienen representante comercial.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.PrecioProveedor">
+            <summary>
+            Último precio de un producto dado por un proveedor.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.Producto">
+            <summary>
+            Producto o servicio que la empresa vende.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.Referencia">
+            <MaxLength>30</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.Unidad">
+            <summary>
+            La unidad de venta del producto. Se escribe en campo Unidad de la factura. Desconocida = 0, Unidad = 1, Par = 2, Trío = 3, Cuarteto = 4, Quinteto = 5, MediaDocena = 6, Decena = 10,
+            Docena = 12, DocenaLarga = 13, Quincena = 15, Veintena = 20, DobleDocena = 24, CuartoDeCentena = 25, Treintena = 30, Cuarentena = 40,
+            CuatroDocenas = 48, MediaCentena = 50, OchoDecenas = 80, OchoDocenas = 96, DiezDocenas = 120, Centena = 100, Gruesa = 144,
+            DobleCentena = 200, VeinteDocenas = 240, TripleCentena = 300, CuatroCentenas = 400, MedioMillar = 500, Millar = 1000, DobleMillar = 2000,
+            TripleMillar = 3000, CuatroMillares = 4000, Miríada = 10000, Millón = 1000000, Millardo = 1000000000.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.UnidadEmpaque">
+            <summary>
+            Permite ajustar los pedidos a los proveedores para que se hagan en unidades de empaque. Desconocida = 0, Unidad = 1, Par = 2, Trío = 3, Cuarteto = 4, Quinteto = 5, MediaDocena = 6, Decena = 10,
+            Docena = 12, DocenaLarga = 13, Quincena = 15, Veintena = 20, DobleDocena = 24, CuartoDeCentena = 25, Treintena = 30, Cuarentena = 40,
+            CuatroDocenas = 48, MediaCentena = 50, OchoDecenas = 80, OchoDocenas = 96, DiezDocenas = 120, Centena = 100, Gruesa = 144,
+            DobleCentena = 200, VeinteDocenas = 240, TripleCentena = 300, CuatroCentenas = 400, MedioMillar = 500, Millar = 1000, DobleMillar = 2000,
+            TripleMillar = 3000, CuatroMillares = 4000, Miríada = 10000, Millón = 1000000, Millardo = 1000000000.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.PesoUnidadEmpaque">
+            <summary>
+            En kg. Se usa porque es unidad básica del sistema internacional.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.DimensiónUnidadEmpaque">
+            <summary>
+            En m x m x m. Se usa m porque es unidad básica del sistema internacional.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.Descripción">
+            <MaxLength>200</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.Cantidad">
+            <summary>
+            Cantidad en inventario.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.CantidadMínima">
+            <summary>
+            Cantidad mínima recomendada en inventario. Cuando el inventario baja de este nivel se sugiere pedirlo.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.CantidadMáxima">
+            <summary>
+            Cantidad máxima recomendada en inventario. Al programar un pedido se calculan las cantidades para no superar por mucho este valor.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.CantidadReservada">
+            <summary>
+            Cantidad reservada por ordenes de compra activas.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.Físico">
+            <summary>
+            Si es verdadero el producto existe en el mundo físico. Si es falso no maneja inventario como en el caso de de los servicios y productos virtuales.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.CostoUnitario">
+            <summary>
+            El costo de compra por unidad y gastos asociados a su producción y obtención. Incluye costo de transporte. Si es nulo es desconocido.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.Subcategoría">
+            <summary>
+            Un tipo personalizado para clasificarlo.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.LíneaNegocio">
+            <summary>
+            La línea de negocio a la que pertenece.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.Material">
+            <summary>
+            Material principal del que está hecho.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.Aplicación">
+            <summary>
+            El uso principal que se le da.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.PrioridadWebPropia">
+            <summary>
+            Desconocida = 0, Ninguna = 1, MuyBaja = 10, Baja = 20, Media = 30, Alta = 40, MuyAlta = 50. Si es desconocida se usan las reglas en opciones. Para implementaciones personalizadas. Establece la prioridad de los productos que se sincronizan con el sitio web. Si la prioridad es Ninguna no se sincroniza con el sitio web.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.ProveedorPreferido">
+            <summary>
+            El proveedor, que independiente de cualquier otra regla, será el que se use en la programación de sus pedidos.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.UbicaciónAlmacén">
+            <summary>
+            Texto que describe su ubicación en el almacén. Por ejemplo, A5-E3-S2 se puede usar para describir almacén 5, estantería 3 y sección 2.
+            </summary>
+            <MaxLength>30</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.PorcentajeIVAPropio">
+            <summary>
+            Si es nulo se usan las reglas en Global.ObtenerPorcentajeIVA(). Si es cero es exento de IVA.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.ExcluídoIVA">
+            <summary>
+            Si es verdadero es excluído de IVA y tiene un tratamiento tributario diferente porque no suma a la base tributable. Si es falso y 
+            PorcentajeIVAPropio = 0 (exentos) o PorcentajeIVAPropio > 0 si suma a la base tributable. Si se establece este valor en verdadero se le dará 
+            prioridad sin importar el valor en PorcentajeIVAPropio y el porcentaje de IVA efectivo (PorcentajeIVA) será cero.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.PorcentajeImpuestoConsumoPropio">
+            <summary>
+            Si es nulo se usa el porcentaje en opciones. Si es cero es exento de cualquier tipo de impuesto al consumo porcentual.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.ImpuestoConsumoUnitarioPropio">
+            <summary>
+            Si es nulo se usa el el valor en opciones. Si es cero es exento de cualquier tipo de impuesto al consumo por unidad.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.TipoImpuestoConsumoPropio">
+            <summary>
+            Si es desconocido se usa el tipo en opciones. Se usa para relacionarlo con TipoTributo que será enviado a la DIAN en la 
+            factura electrónica. También se usa para establecer el valor de ImpuestoConsumoUnitario y PorcentajeImpuestoConsumo si el tipo
+            se encuentra en los diccionarios en opciones <see cref="P:SimpleOps.Singleton.OpcionesGenerales.PorcentajesImpuestosConsumo"/> o 
+            <see cref="P:SimpleOps.Singleton.OpcionesGenerales.ValoresUnitariosImpuestosConsumo" />.
+            Posibles valores: Desconocido = 0, General = 1 (Valor general que no tiene asociado una tasa automáticamente, se debe especificar por producto), 
+            BolsasPlásticas = 2, Carbono = 3, Combustibles = 4, DepartamentalNominal = 5, 
+            DepartamentalPorcentual = 6, SobretasaCombustibles = 7, TelefoníaCelularYDatos = 8, Otro = 255.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.ProductosAsociados">
+            <summary>
+            Referencias de otros productos asociados o similares o recomendados alternativos al producto. Son agregados a la cotización cuando se agrega el producto. Además permite otras funciones en implementaciones personalizadas al sincronizar con el sitio web.
+            </summary>
+            <MaxLength>1000</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.PorcentajeAdicionalGananciaPropio">
+            <summary>
+            Si es nulo se usan las reglas en opciones. El porcentaje de ganancia que se le sumará al porcentaje de ganancia del cliente para obtener el porcentaje de ganancia total. El porcentaje de ganancia total se le aplica a los costos de los productos para obtener sus precios de venta. Es útil cuando no se quieren usar las listas de precios o cuando el producto no está en ellas.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.ConceptoRetenciónPropio">
+            <summary>
+            <para>Si es nulo se usa el <see cref="P:SimpleOps.Singleton.OpcionesEmpresa.ConceptoRetenciónPredeterminado"/> de opciones. Es el concepto de retención aplicable 
+            a este producto según la tabla de retención en la fuente. Al establecer este concepto también se está estableciendo si el producto es un 
+            Producto o Servicio, información que se usa en otros lugares, como en el cálculo del mínimo para la retención del IVA.</para>
+            Desconocido = 0, Generales = 1, TarjetaDébitoOCrédito = 2, AgrícolasOPecuariosSinProcesamiento = 3, AgrícolasOPecuaríosConProcesamiento = 4, 
+            CaféPergaminoOCereza = 5, CombustiblesDerivadosPetróleo = 6, ActivosFijosPersonasNaturales = 7, Vehículos = 8, BienesRaícesVivienda = 9, 
+            BienesRaícesNoVivienda = 10, ServiciosGenerales = 11, EmolumentosEclesiásticos = 12, TransporteCarga = 13, 
+            TransporteNacionalTerrestrePasajeros = 14, TransporteNacionalAéreoOMarítimoPasajeros = 15, ServiciosPorEmpresasTemporales = 16, 
+            ServiciosPorEmpresasVigilanciaYAseo = 16, SaludPorIPS = 17, HotelesYRestaurantes = 18, ArrendamientoBienesMuebles = 19, 
+            ArrendamientoBienesInmuebles = 20, OtrosIngresosTributarios = 21, HonorariosYComisiones = 22, LicenciamientoSoftware = 23, Intereses = 24, 
+            RendimientosFinacierosRentaFija = 25, LoteríasRifasYApuestas = 26, ColocaciónIndependienteJuegosAzar = 27, ContratosConstruccionYUrbanización = 28.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.CantidadDisponible">
+            <summary>
+            Cantidad disponible en inventario para ordenes de compra nuevas.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.CostoTotal">
+            <summary>
+            El costo de compra y gastos asociados a su producción y obtención de la cantidad total en inventario. Incluye costo de transporte.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.VolumenUnidadEmpaque">
+            <summary>
+            En m3. Se usa porque es unidad básica del sistema internacional.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.UnidadTexto">
+            <summary>
+            Se usa principalmente para pasar al procedimiento de generación de representación gráfica de documentos que no tiene
+            acceso a la función ATextoDinero()
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.Proveedor">
+            <summary>
+            Entidad a la que se le compran productos.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Proveedor.PorcentajeCostoTransporte">
+            <summary>
+            El porcentaje sobre el subtotal de la compra que típicamente representa el valor del transporte de los envíos. Si es cero el transporte es gratis o se trata de un producto o servicio virtual. Si es nulo es desconocido y se solicitará agregarlo cuando sea necesario.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Proveedor.PorcentajeDescuento">
+            <summary>
+            Descuento sobre el subtotal aplicable a todas las compras. 
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Proveedor.CompraMínima">
+            <summary>
+            El subtotal de compra mínima permitida. Si es 0 es sin restricción.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Proveedor.DíasEntrega">
+            <summary>
+            Los días de entrega típicos. Es necesario para calcular los inventarios máximos y mínimos. Si es nulo es desconocido y se solicitará agregarlo cuando sea necesario.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Proveedor.PrioridadPropia">
+            <summary>
+            Desconocida = 0, Ninguna = 1, MuyBaja = 10, Baja = 20, Media = 30, Alta = 40, MuyAlta = 50. Si es desconocida se usan las reglas en opciones. Al realizar la programación de los pedidos se seleccionan proveedores de más alta prioridad.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Proveedor.Banco">
+            <summary>
+            Otro = -2, Ninguno = -1, Desconocido = 0, Bogotá = 1, Popular = 2, ItaúCorpbanca = 6, Bancolombia = 7, Citibank = 9, GNBSudameris = 12, BBVA = 13, Occidente = 23, CajaSocial = 30, Davivienda = 39, ScotiabankColpatria = 42, Agrario = 43, AVVillas = 49, CredifinancieraProcredit = 51, Bancamía = 52, W = 53, Bancoomeva = 54, Finandina = 55, Falabella = 56, Pichincha = 57, Coopcentral = 58, SantanderDeNegocios = 59, MundoMujer = 60, Multibank = 61, Bancompartir = 62, Serfinanza = 63, Corficolombiana = 2011, InversiónBancolombia = 2037, JPMorgan = 2041, BNPParibas = 2042, CorfiGNBSudameris = 2048, CorporaciónFinancieraDavivienda = 2049, GirosYFinanzas = 4008, Tuya = 4026, GMFinancial = 4031, Coltefinanciera = 4046, Bancoldex = 4101, FinancieraDann = 4108, FinancieraPagos = 4115, Credifamilia = 4117, Crezcamos = 4118, LaHipotecaria = 4120, Juriscoop = 4121, RCI = 4122, FinancieraDeAntioquia = 32001, CooperativaFinancieraJFK = 32002, Coofinep = 32003, Cotrafa = 32004, Confiar = 32005, Daviplata = 1001551, Nequi = 1001507, FinanciamientoItau = 1001014.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Proveedor.TipoCuentaBancaria">
+            <summary>
+            Desconocida = 0, Ahorros = 1, Corriente = 2.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Proveedor.NúmeroCuentaBancaria">
+            <MaxLength>30</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.Proveedor.ContactoPedidos">
+            <summary>
+            Al que se enviarán los pedidos.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Proveedor.ContactoInformesPagos">
+            <summary>
+            Al que se enviarán los informes de los pagos realizados.
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Modelo.Proveedor.VerificarDatosCompra(SimpleOps.Modelo.Proveedor)">
+            <summary>
+            Cumple una función de segunda verificación que la compra no se genere con datos incorrectos porque en la 
+            interfaz de usuario se hace el control principal.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.ReciboCaja">
+            <summary>
+            Comprobante de entrada de dinero.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.ReferenciaCliente">
+            <summary>
+            Referencia propia del cliente asociada a un producto. Es de utilidad para realizar informes y agregarlas a las facturas o remisiones de entrega para facilidad para los clientes.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.ReferenciaProveedor">
+            <summary>
+            Referencia propia del proveedor asociada a un producto. Es de utilidad para realizar informes y agregarlas a los pedidos para facilidad para los proveedores.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.Remisión">
+            <summary>
+            Documento temporal de entrega de productos a clientes. 
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Remisión.Estado">
+            <summary>
+            Pendiente = 0: La remisión se realizó y está pendiente tomar una acción sobre ella. Facturada = 1: Los productos entregados fueron facturados. Los productos ya no están en inventario en consignación ni en el inventario interno, ya son propiedad del cliente porque los compró. Anulada = 2: La remisión se ha anulado. Es equivalente a que nunca se hubiera realizado. Los productos se han devuelto del inventario en consignación al inventario interno. Descartada = 3: Los productos entregados con esta remisión fueron regalados. Los productos ya no están en inventario en consignación del cliente ni en el inventario interno de la empresa. Legalmente las muestras gratis a clientes se deben facturar con precio cero entonces esta función principalmente debe ser usada para dar salida a productos consumidos dentro de la propia empresa, se realiza una remisión a nombre propio y se descarta.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Remisión.DetalleEntrega">
+            <summary>
+            Información de la transportadora y la guía con la que se entregó. 
+            </summary>
+            <MaxLength>500</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.Remisión.Venta">
+            <summary>
+            La venta que facturó la remisión. Si aún no se ha facturado es nula.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.Rol">
+            <summary>
+            Conjunto de permisos que tiene un usuario.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Rol.Nombre">
+            <MaxLength>50</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.Rol.Permisos">
+            <summary>
+            Permisos de lectura, modificación, eliminación e inserción. Si es vacío no tiene ningún permiso.
+            </summary>
+            <MaxLength>10000</MaxLength>
+        </member>
+        <member name="T:SimpleOps.Modelo.RolUsuario">
+            <summary>
+            Relaciona los roles que tiene cada usuario.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.Sede">
+            <summary>
+            Sucursal, oficina o bodega de un cliente.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Sede.Nombre">
+            <summary>
+            Nombre identificador. Único por cada Cliente.
+            </summary>
+            <MaxLength>50</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.Sede.Contacto">
+            <summary>
+            Si se asocia la sede a un contacto se le podrá notificar el progreso del envío.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Sede.ObservacionesEnvío">
+            <summary>
+            Observaciones de envío que se escribirán en las etiquetas de envío.
+            </summary>
+            <MaxLength>500</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.Sede.Dirección">
+            <MaxLength>100</MaxLength>
+        </member>
+        <member name="T:SimpleOps.Modelo.Subcategoría">
+            <summary>
+            De producto.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Subcategoría.Nombre">
+            <MaxLength>50</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.Subcategoría.Categoría">
+            <summary>
+            Categorización personalizada más amplia que la subcategoría. Cada producto tiene una subcategoría y varias subcategorías pueden pertenecer a la misma categoría. Puede ser nula si no se desea ampliar más esta categorización y basta con la subcategoría.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.Usuario">
+            <summary>
+            Persona autorizada para usar SimpleOps.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Usuario.Nombre">
+            <MaxLength>50</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.Usuario.Email">
+            <MaxLength>100</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.Usuario.Teléfono">
+            <MaxLength>30</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.Usuario.Activo">
+            <summary>
+            Si es falso el usuario no puede iniciar la aplicación.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.Venta">
+            <summary>
+            Entrega de productos a cambio de dinero.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Venta.FechaPagoComisiónEnVenta">
+            <summary>
+            La fecha del pago de la comisión a la venta al representante comercial. Si es nula no se ha pagado.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Venta.FechaPagoComisiónEnPago">
+            <summary>
+            La fecha del pago de la comisión a al pago del cliente al representante comercial. Si es nula no se ha pagado.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Venta.DetalleEntrega">
+            <summary>
+            Información de la transportadora y la guía con la que se entregó.
+            </summary>
+            <MaxLength>500</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.Venta.DeInventarioConsignación">
+            <summary>
+            Si es verdadero se están vendiendo productos que el cliente tiene en consignación y no del inventario del almacén propio.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Venta.DirecciónCompletaEntrega">
+            <summary>
+            Si no se dispone de una orden de compra con una sede de entrega la entrega se hace en la dirección del cliente.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.ITieneLíneas`1">
+            <summary>
+            Interface genérica aplicable a todos los documentos que generen movimiento de productos. Admite un parámetro de tipo <typeparamref name="M"/> 
+            que puede ser cualquier clase hija de <see cref="T:SimpleOps.Modelo.MovimientoProducto"/> como <see cref="T:SimpleOps.Modelo.LíneaVenta"/>, <see cref="T:SimpleOps.Modelo.LíneaVenta"/>, 
+            <see cref="T:SimpleOps.Modelo.LíneaNotaCréditoVenta"/>, <see cref="T:SimpleOps.Modelo.LíneaNotaCréditoCompra"/>, <see cref="T:SimpleOps.Modelo.LíneaNotaDébitoVenta"/>, <see cref="T:SimpleOps.Modelo.LíneaNotaDébitoCompra"/> o 
+            <see cref="T:SimpleOps.Modelo.LíneaRemisión"/>. Aunque la mayoría de la funcionalidad que esta interface podría proveer la cubre la clase abstracta <see cref="T:SimpleOps.Modelo.Factura`2"/>, 
+            se mantiene para permitir la escritura métodos o funciones compartidas que también incluyan las facturas y las remisiones.
+            </summary>
+        </member>
+        <member name="T:Vixark.FábricaConvertidorDiccionarioClaveEnumeración">
+            <summary>
+            Clase auxiliar que permite serializar a JSON diccionarios con claves enumeraciones.
+            </summary>
+        </member>
+        <member name="T:Vixark.General">
+            <summary>
+            Métodos, funciones y constantes estáticas de uso general y funcionalidad genérica para cualquier proyecto. Se diferencian de Global porque no son 
+            propias del funcionamiento de SimpleOps y podrían ser usadas en otros proyectos.
+            </summary>
+        </member>
+        <member name="F:Vixark.General.DobleLínea">
+            <summary>
+            Doble Environment.NewLine. Útil para separar parrafos bloques de texto.
+            </summary>
+        </member>
+        <member name="F:Vixark.General.NuevaLínea">
+            <summary>
+            Un Environment.NewLine. Solo se usa para no tener que importar System.Enviroment cada vez que se vaya a usar sino que baste con importar General. 
+            </summary>
+        </member>
+        <member name="M:Vixark.General.AhoraUtc(System.Int32)">
+            <summary>
+            Una hora de tipo UTC continua pero ajustada una cantidad de horas constante para acercarlo a la hora local del equipo. 
+            En algunas ocasiones, como países con horarios de verano o con múltiples zonas horarias, puede no coincidir con la hora 
+            local del equipo pero se usa porque tiene dos ventajas: Es útil para almacenamiento en la base de datos pues permite 
+            garantizar que acciones realizadas después siempre queden con fecha posterior a las realizadas antes y en el caso de 
+            países sin horario de verano ni zonas horarias se puede usar directamente como hora del equipo. En los otros casos se 
+            puede ajustar posteriormente para obtener la hora real.
+            </summary>
+            <param name="horasAjuste">La cantidad de horas constante que se ajusta UtcNow.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Vixark.General.IniciarVariablesGenerales">
+            <summary>
+            Inicia algunas variables que no se pueden iniciar en el cuerpo de la clase Vixark porque requieren unos pasos adicionales para establecer su valor.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ObtenerXml(System.Net.HttpWebResponse)">
+            <summary>
+            Obtiene un documento XML de una <paramref name="respuesta"/> web.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ObtenerRutaCarpeta(System.String,System.String,System.Boolean)">
+            <summary>
+            Obtiene la ruta de una carpeta y provee la opción de crearla si no existe.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ObtenerRutaCambiandoExtensión(System.String,System.String)">
+            <summary>
+            Devuelve una ruta del archivo con extensión diferente. La <paramref name="nuevaExtensión"/> se pasa sin el punto.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ObtenerRutaAgregandoTexto(System.String,System.String)">
+            <summary>
+            Devuelve una ruta del archivo manteniendo la extensión pero agregando un  <paramref name="textoAdicional"/> al nombre del archivo.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.AbrirArchivo(System.String)">
+            <summary>
+            Abre un archivo en Windows.
+            </summary>
+            <param name="rutaArchivo"></param>
+        </member>
+        <member name="M:Vixark.General.IntentarBorrar(System.String)">
+            <summary>
+            Borra un archivo sin generar excepciones. Devuelve verdadero si fue borrado y falso si no se pudo borrar. Útil en los casos
+            que se quiere borrar un archivo pero si por alguna razón este está bloqueado y no se puede borrar se puede dejar sin borrar.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.CopiarArchivo(System.String,System.String)">
+            <summary>
+            Copia un archivo sin generar excepciones y de una manera más clara y encapsulada que la función Move de .Net.
+            </summary>
+            <param name="rutaArchivo"></param>
+            <param name="rutaCarpetaDestino"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Vixark.General.ObtenerBytesZip(System.String)">
+            <summary>
+            Obtiene un vector de bytes con la información de un archivo ZIP obtenido del empaquetado del archivo en <paramref name="ruta"/>. 
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Vixark.General.CrearZip(System.String,System.String)">
+            <summary>
+            Crea un archivo ZIP con el archivo en <paramref name="ruta"/>. Si no se especifica una <paramref name="rutaZip"/> se usa el mismo nombre
+            del archivo reemplazando la extensión por .zip.
+            </summary>
+            <param name="ruta"></param>
+            <param name="rutaZip"></param>
+        </member>
+        <member name="M:Vixark.General.ObtenerPalabraNúmeroYGénero(System.String,System.String)">
+            <summary>
+            Obtiene la palabra correcta según el género y número del sustantivo. Se provee la palabra masculina en singular.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.AFechaYYMMDD(System.String)">
+            <summary>
+            Función muy rápida para convertir un texto en una fecha de formato yyMMdd. Se ejecuta en el 10% del tiempo de ParseExact(). Mejorado usando https://cc.davelozinski.com/c-sharp/fastest-way-to-convert-a-string-to-an-int y https://stackoverflow.com/questions/15702123/faster-alternative-to-datetime-parseexact/59979819#59979819.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.AFechaYYMMDDHHMMSSF(System.String)">
+            <summary>
+            Función muy rápida para convertir un texto en una fecha de formato yyMMddhhmmssf. Se ejecuta en el 15% del tiempo de ParseExact(). Mejorado usando https://cc.davelozinski.com/c-sharp/fastest-way-to-convert-a-string-to-an-int y https://stackoverflow.com/questions/15702123/faster-alternative-to-datetime-parseexact/59979819#59979819.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.AFechaYYMMDDNulable(System.String)">
+            <summary>
+            Igual AFechaYYMMDD() pero para textos que pueden ser nulos. Es 50% más lenta.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ATextoYYMMDD(System.DateTime)">
+            <summary>
+            Función muy rápida para convertir una fecha en un texto de formato yyMMdd. Se ejecuta en el 40% del tiempo de ToString("yyMMdd"). 
+            Tarda 4 veces más que la función inversa AFechaYYMMDD, pero es aceptable por ser un método usado principalmente en escritura la cual es una 
+            acción menos frecuente. Mejorado usando https://stackoverflow.com/questions/1176276/how-do-i-improve-the-performance-of-code-using-datetime-tostring/59980493#59980493.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ATextoYYMMDDHHMMSSF(System.DateTime)">
+            <summary>
+            Función muy rápida para convertir una fecha en un texto de formato yyMMddhhmmssf. Se ejecuta en el 30% del tiempo de ToString("yyMMddhhmmssf"). 
+            Tarda 3 veces más que la función inversa AFechaYYMMDDHHMMSSF, pero es aceptable por ser un método usado principalmente en escritura la cual es 
+            una acción menos frecuente. Mejorado usando https://stackoverflow.com/questions/1176276/how-do-i-improve-the-performance-of-code-using-datetime-tostring/59980493#59980493.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ATextoYYMMDDNulable(System.Nullable{System.DateTime})">
+            <summary>
+            Función igual a ATextoYYMMDD pero para fechasHoras que pueden ser nulas. Es 10% más lenta.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.AEntero(System.String)">
+            <summary>
+            Función muy rápida de conversión de texto a entero. No realiza verificaciones de errores, ni control de nulidad para máximizar la velocidad.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.AEntero(System.Char)">
+            <summary>
+            Función muy rápida de conversión de texto a entero. No realiza verificaciones de errores.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ATexto``1(System.Collections.Generic.List{``0},Vixark.General.ConectorCoordinante)">
+            <summary>
+            Devuelve la representación de una lista en un texto separado por comas y un <paramref name="conector"/> entre el penúltimo y último elemento.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.Serializar``1(``0)">
+            <summary>
+            Encapsulación de rápido acceso de JsonSerializer.Serialize(). Necesario para pasarlo a Contexto.OnModelCreating > HasConversion porque 
+            el método original tiene parámetros opcionales y por esto no es aceptado en HasConversion.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.Deserializar``1(System.String)">
+            <summary>
+            Encapsulación de rápido acceso de JsonSerializer.Deserialize(). Necesario para pasarlo a Contexto.OnModelCreating > HasConversion porque el 
+            método original tiene parámetros opcionales y por esto no es aceptado en HasConversion.
+            Función para clases. Para estructuras usar <see cref="M:Vixark.General.DeserializarEstructura``1(System.String)"/>.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.DeserializarEstructura``1(System.String)">
+            <summary>
+            Encapsulación de rápido acceso de JsonSerializer.Deserialize().
+            Función para estructuras. Para clases usar <see cref="M:Vixark.General.Deserializar``1(System.String)"/>.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.Serializar``1(``0,Vixark.General.Serialización)">
+            <summary>
+            Serialización que permite establecer uno o varios tipos de <paramref name="serialización"/> enlazándolos con el operador |.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.Deserializar``1(System.String,Vixark.General.Serialización)">
+            <summary>
+            Deserializalización que permite establecer uno o varios tipos de <paramref name="serialización"/> enlazándolos con el operador |.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ConvertidorJSON``1">
+            <summary>
+            Convierte un objeto a su representación serializada en JSON y viceversa. Es útil para pasarlo al método HasConversion de una propiedad de tipo especial (como List) en OnModelCreating de un contexto y poder almacenar el objeto en la base de datos.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ComparadorJSON``1">
+            <summary>
+            Establece la forma de comparar un objeto usando su representación en JSON. Es útil para pasarlo al método Metadata.SetValueComparer de una 
+            propiedad de tipo especial (como List) en OnModelCreating de un contexto. Si no se establece el comparador no se guardaran los cambios 
+            realizados en la base de datos.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.EmpiezaPor(System.String,System.String,System.Boolean)">
+            <summary>
+            Encapsulación de rápido acceso de StartsWith() usando StringComparison.Ordinal. Es útil para omitir la advertencia CA1307 sin saturar el código.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.Contiene(System.String,System.String,System.Boolean)">
+            <summary>
+            Encapsulación de rápido acceso de Contains() usando StringComparison.Ordinal. Es útil para omitir la advertencia CA1307 sin saturar el código.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.NoContiene(System.String,System.String,System.Boolean)">
+            <summary>
+            Encapsulación de rápido acceso de la negación de Contains() usando StringComparison.Ordinal. Es útil para omitir la advertencia CA1307 sin saturar el código y para facilitar la lectura.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.Reemplazar(System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            Encapsulación de rápido de Replace() usando StringComparison.Ordinal. Es útil para omitir la advertencia CA1307 sin saturar el código.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ATexto(System.DateTime,System.String)">
+            <summary>
+            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 sin saturar el código.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ATexto(System.Nullable{System.DateTime},System.String)">
+            <summary>
+            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 sin saturar el código.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.AFecha(System.String,System.String)">
+            <summary>
+            Encapsulación de acceso rápido para convertir un <paramref name="texto"/> en una fecha dado un <paramref name="formato"/>.
+            </summary>
+            <param name="texto"></param>
+            <param name="formato"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Vixark.General.AEnumeración``1(System.String)">
+            <summary>
+            Encapsulación de acceso rápido para convertir un texto en una enumeración.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="texto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Vixark.General.ATexto(System.Int32)">
+            <summary>
+            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 sin saturar el código.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ATexto(System.Nullable{System.Int32})">
+            <summary>
+            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 sin saturar el código.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ATexto(System.Int32,System.String)">
+            <summary>
+            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 sin saturar el código.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ATexto(System.Decimal)">
+            <summary>
+            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 sin saturar el código.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ATexto(System.Decimal,System.String)">
+            <summary>
+            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 sin saturar el código.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ATexto(System.Int64)">
+            <summary>
+            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 sin saturar el código.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ATexto(System.Char)">
+            <summary>
+            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 sin saturar el código.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.AMinúscula(System.String)">
+            <summary>
+            Encapsulación de rápido acceso de ToLowerInvariant(). Es útil para omitir la advertencia CA1308 sin saturar el código.
+            No se puede crear un método con el mismo nombre para string (sin ?) porque el compilador no lo permite. Si se necesitara 
+            se podría hacer otro método con otro nombre. Una solución fácil es usar este método con un string y poner ! después de () 
+            para informarle al compilador que se asegura que el resultado no será nulo.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ADecimal(System.String)">
+            <summary>
+            Usa Convert.ToDecimal que permite mantener las posiciones decimales del texto en el decimal, así estas sean 00. Por ejemplo, convierte "158.0100" en 158.0100.
+            </summary>
+            <param name="texto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Vixark.General.ATextoDinero(System.Object)">
+            <summary>
+            Si el objeto es decimal usa ATextoDinero. Si no lo es usa el ToString propio del objeto.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.Falso(System.String@,System.String)">
+            <summary>
+            Una función auxiliar útil para los métodos que requieren devolver un valor booleano que representa si fueron exitosos o no y además establecer 
+            un <paramref name="texto"/> de respuesta en la variable <paramref name="mensaje"/>.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.AValor``1(``0,System.Nullable{System.Int32})">
+            <summary>
+            Obtiene el valor de una enumeración en texto.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ATexto``1(``0)">
+            <summary>
+            Obtiene el valor del atributo Display del valor de la enumeración. Es útil para usar un texto personalizado para cada elemento en una enumeración.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ObtenerEnumeraciónDeTexto``1(System.String)">
+            <summary>
+            Obtiene la enumeración desde un texto que se encuentra en el atributo Display.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="texto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Vixark.General.EstáEn``1(``0,``0[])">
+            <summary>
+            Un método auxiliar útil para usar en las expresiones switch para evaluar coincidir múltiples valores fácilmente. 
+            Ver https://stackoverflow.com/a/61774164/8330412.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="valor"></param>
+            <param name="valores"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Vixark.General.CargarLista``2(Microsoft.EntityFrameworkCore.DbContext,``0,System.Linq.Expressions.Expression{System.Func{``0,System.Collections.Generic.IEnumerable{``1}}})">
+            <summary>
+            <para>Método de fácil uso para cargar los datos de una lista que es propiedad de navegación de una <paramref name="entidad"/>.</para> 
+            <para>Esta función es útil cuando, dependiendo del flujo de la ejecución, en algunas ocasiones se necesitará la lista y en otras no. 
+            O cuando ya se dispone de la entidad de una consulta anterior. Aunque en este caso el beneficio es menor 
+            cuando se necesitan para solo lectura, pues la duración de CargarLista es casi igual a la de una consulta de la entidad con 
+            AsNoTracking + Include.</para>
+            <para>Cuando se necesita obtener la entidad y su lista para solo lectura la mejor opción en rendimiento es usar AsNoTracking 
+            + Include (Alrededor del 40% del tiempo de consulta de entidad + CargarLista). Si se necesitan hacer cambios sobre 
+            las entidades aún sigue siendo mejor opción usar Include (Alrededor del 80% del tiempo de consulta de entidad + CargarLista).</para>
+            <para>Nota: Los rendimientos son aproximados. Para consultas donde se requiere mucho rendimiento se recomienda hacer las pruebas para
+            elegir la mejor opción.</para>
+            </summary>
+            <typeparam name="E">Tipo de la entidad.</typeparam>
+            <typeparam name="L">Tipo de la entidad en la lista/propiedad.</typeparam>
+            <param name="ctx"></param>
+            <param name="entidad">Entidad a la que se le cargarán los datos de la lista.</param>
+            <param name="obtenerLista">Función de obtención de la lista (propiedad).</param>
+        </member>
+        <member name="M:Vixark.General.CargarLista``2(Microsoft.EntityFrameworkCore.DbContext,``0,System.Linq.Expressions.Expression{System.Func{``0,System.Collections.Generic.IEnumerable{``1}}},System.Linq.Expressions.Expression{System.Func{``1,System.Boolean}})">
+            <summary>
+            Igual que CargarLista(entidad, obtenerLista) pero agrega el parámetro <paramref name="obtenerFiltro"/> que permite
+            filtrar los datos que se deseen cargar.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ContarElementos``2(Microsoft.EntityFrameworkCore.DbContext,``0,System.Linq.Expressions.Expression{System.Func{``0,System.Collections.Generic.IEnumerable{``1}}})">
+            <summary>
+            <para>Método de fácil uso para contar los elementos de una lista que es propiedad de navegación de una <paramref name="entidad"/> 
+            sin necesidad de cargarlos. Es útil en los mismos casos que aplica CargarLista(entidad, obtenerLista) en los que adicionalmente 
+            solo se necesita la cantidad de elementos. ContarLista se tarda 80% del tiempo de CargarLista.</para>
+            <para>Nota: Los rendimientos son aproximados. Para consultas donde se requiere mucho rendimiento se recomienda hacer las pruebas para
+            elegir la mejor opción.</para>
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ContarLista``2(Microsoft.EntityFrameworkCore.DbContext,``0,System.Linq.Expressions.Expression{System.Func{``0,System.Collections.Generic.IEnumerable{``1}}},System.Linq.Expressions.Expression{System.Func{``1,System.Boolean}})">
+            <summary>
+            Igual que ContarLista(entidad, obtenerLista) pero agrega el parámetro <paramref name="obtenerFiltro"/> que permite
+            filtrar los datos que se deseen contar.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.CargarPropiedad``2(Microsoft.EntityFrameworkCore.DbContext,``0,System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+            <summary>
+            <para>Método de fácil uso para cargar los datos de una propiedad de navegación de una <paramref name="entidad"/>.</para> 
+            <para>Esta función es útil cuando, dependiendo del flujo de la ejecución, en algunas ocasiones se necesitará la propiedad
+            y en otras no. O cuando ya se dispone de la entidad de una consulta anterior. Aunque si se necesita para solo lectura
+            el beneficio puede ser más en facilidad de uso y mantenimiento que de rendimiento porque la duración de CargarPropiedad 
+            puede llegar a ser 30% mayor que la de una consulta de la entidad con AsNoTracking + Include. En caso que ya se disponga 
+            de la entidad y se necesite la propiedad para modificar si mejora considerablemente el rendimiento usar CargarPropiedad 
+            porque se puede tardar 60% del tiempo de la consulta de entidad usando Include.</para>
+            <para>Cuando se necesita obtener la entidad y su propiedad para solo lectura la mejor opción en rendimiento es usar AsNoTracking 
+            + Include (39% del tiempo de consulta de entidad + CargarPropiedad). Si se necesitan hacer cambios sobre las entidades aún sigue siendo mejor 
+            opción usar Include (90% del tiempo de consulta de entidad + CargarPropiedad).</para>
+            <para>Nota: Los rendimientos son aproximados. Para consultas donde se requiere mucho rendimiento se recomienda hacer las pruebas para
+            elegir la mejor opción.</para>
+            </summary>
+            <typeparam name="E">Tipo de la entidad.</typeparam>
+            <typeparam name="F">Tipo de la propiedad.</typeparam>
+            <param name="ctx"></param>
+            <param name="entidad">Entidad a la que se le cargará la propiedad de navegación.</param>
+            <param name="obtenerPropiedad">Función de obtención de propiedad.</param>
+        </member>
+        <member name="M:Vixark.General.ATexto``1(``0,System.Nullable{System.Int32})">
+            <summary>
+            Obtiene la representación en texto de una entidad que puede ser vacía y que se provee un identificador para usarlo cuando sea vacía.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ObtenerExpresión``1(Vixark.General.Predicado{``0},Vixark.General.ConectorLógico)">
+            <summary>
+            Obtiene una expresión que permite usar el conector lógico O entre las expresiones del <paramref name="predicado"/>. 
+            Para que funcione correctamente este predicado debe tener por lo menos 2 expresiones individuales. Si solo tiene 1 
+            se devuelve esa expresión sin cambios.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="predicado"></param>
+            <param name="conector"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Vixark.General.Where``1(System.Linq.IQueryable{``0},Vixark.General.Predicado{``0},Vixark.General.ConectorLógico)">
+            <summary>
+            Versión personalizada del Where que permite hacer la consulta usando un predicado personalizado que puede incluir el operador lógico O
+            entre sus expresiones individuales.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="consulta"></param>
+            <param name="predicado"></param>
+            <param name="conector"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Vixark.General.ModificadorExpresión">
+            <summary>
+            Clase necesaria para ObtenerExpresión().
+            </summary>
+        </member>
+        <member name="T:Vixark.General.Predicado`1">
+            <summary>
+            Predicado personalizado que facilita la adición de nuevas expresiones a la lista con el método Agregar.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:Vixark.General.UsarConvertidorGlobal``2(Microsoft.EntityFrameworkCore.ModelBuilder,Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter)">
+            <summary>
+            Aplica una conversión intermedia para todas las propiedades de tipo <typeparamref name="T"/> a <typeparamref name="B"/> de todas las entidades.
+            Si no existe una conversión predeterminada se puede pasar un <paramref name="convertidor"/>. Los valores de las 
+            propiedades se guardan en la base de datos usando el tipo <typeparamref name="B"/>. En el modelo las propiedades se siguen usando 
+            con el tipo <typeparamref name="T"/>.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.Agregar``2(System.Collections.Generic.Dictionary{``0,``1},``0,``1,System.Boolean)">
+            <summary>
+            Agrega a un diccionario de manera limpia, se crea el diccionario si es nulo y se actualiza el valor si ya existe en la clave. 
+            Para que funcione correctamente la creación si es nulo se debe llamar asignándolo a si mismo así diccionario = diccionario.Agregar(clave, valor).
+            </summary>
+        </member>
+        <member name="M:Vixark.General.AgregarSumando``1(System.Collections.Generic.Dictionary{``0,System.Decimal},``0,System.Decimal)">
+            <summary>
+            Agrega a un diccionario de manera limpia, se crea el diccionario si es nulo y se suma el valor si ya existe en la clave. Para poder que 
+            funcione correctamente la creación si está nulo se debe llamar asignándolo a si mismo así dicc = dicc.AgregarSumando(clave, valor).
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ObtenerValorObjeto``2(System.Collections.Generic.Dictionary{``0,``1},``0)">
+            <summary>
+            Obtiene el valor asociado a la clave o devuelve nulo si no lo encuentra. Aplicable cuando <typeparamref name="V"/> es un 
+            objeto/clase. Si se necesita la misma función para valores/estructuras se debe usar <see cref="M:Vixark.General.ObtenerValor``2(System.Collections.Generic.Dictionary{``0,``1},``0)"/>.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ObtenerValor``2(System.Collections.Generic.Dictionary{``0,``1},``0)">
+            <summary>
+            Obtiene el valor asociado a la clave o devuelve nulo si no lo encuentra. Aplicable cuando <typeparamref name="V"/> es un 
+            valor/estructura. Si se necesita la misma función para objetos/clases se debe usar <see cref="M:Vixark.General.ObtenerValorObjeto``2(System.Collections.Generic.Dictionary{``0,``1},``0)"/>.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.SiNulo``1(System.Nullable{``0}@,System.Func{System.Boolean})">
+            <summary>
+            <para>Función genérica que ayuda a implementar una caché en propiedades que su cálculo sea costoso.
+            Permite automáticamente realizar el cálculo en el primer acceso a la propiedad y mientras el objeto exista
+            se puede acceder al valor de la propiedad sin realizar nuevamente el cálculo. Esta propiedad es un híbrido entre una propiedad
+            de solo lectura autocalculada, que se calcula siempre que se accede, y una propiedad normal, que solo almacena el valor.</para>
+            <para>Esta función se debe llamar en el Get de una propiedad que use campo de respaldo (no autoimplementada), así:</para>
+            <para>
+            private decimal? _Propiedad;<br/> public decimal Propiedad { get => SiNulo(ref _Propiedad, () => CálculoDeNombrePropiedad()); 
+            set => _APagar = value; }
+            </para>
+            <para>La función calcular devuelve verdadero si el cálculo es 
+            exitoso, esto se usa para devolver el valor por defecto si no se pudo calcular en el momento.
+            Si se necesita la misma función para objetos/clases se debe usar <see cref="M:Vixark.General.SiNulo``1(``0@,System.Func{System.Boolean})"/>.</para>
+            </summary>
+        </member>
+        <member name="M:Vixark.General.SiNulo``1(``0@,System.Func{System.Boolean})">
+            <summary>
+            Igual que <see cref="M:Vixark.General.SiNulo``1(System.Nullable{``0}@,System.Func{System.Boolean})"/> pero para objetos/clases.
+            En este caso si es posible que existan valores nulos para la propiedad cuando el cálculo
+            de esta no se pudo realizar. Mientras no se pueda realizar el cálculo lo intentará
+            cada vez que se acceda la propiedad.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.CopiarA``1(System.Object,``0@)">
+            <summary>
+            Copia las propiedades aplicables de <paramref name="objetoOrigen"/> a <paramref name="objetoDestino"/>. 
+            Se puede usar para copiar propiedades entre objetos del mismo tipo y entre objetos de tipos heredados entre si.
+            Devuelve verdadero si alguna de las propiedades fue cambiada, si no devuelve falso.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.CopiarA(System.Object,System.Object)">
+            <summary>
+            Versión de CopiarA usando objects en los casos que no se puede usar la versión genérica porque el objetoDestino es de solo lectura y 
+            no se puede pasar con ref.
+            </summary>
+        </member>
+    </members>
+</doc>

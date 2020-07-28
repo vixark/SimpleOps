@@ -1,0 +1,144 @@
+﻿@inherits SimpleOps.DocumentosGráficos.PlantillaBase<SimpleOps.DocumentosGráficos.IConLíneasProductos>
+
+
+@{
+
+    var anchoTotal = Model.Columnas.AnchoTotal;
+    var anchoConsumo = Model.Columnas.AnchoConsumo;
+    var anchoIVA = Model.Columnas.AnchoIVA;
+    var anchoSubtotal = Model.Columnas.AnchoSubtotal;
+    var anchoCantidad = Model.Columnas.AnchoCantidad;
+    var anchoPrecio = Model.Columnas.AnchoPrecio;
+    var anchoUnidad = Model.Columnas.AnchoUnidad;
+    var radioFilaNombresColumnas = Model.Columnas.RadioFilaNombresColumnas;
+    var anchoReferencia = Model.Columnas.AnchoReferencia;
+    var anchoDescripción = Model.Columnas.AnchoDescripción;
+    var margenColumnasExtremos = Model.Columnas.MargenColumnasExtremos;
+    var margenDerechoReferencia = Model.Columnas.MargenDerechoReferencia;
+    var rellenoVerticalLíneas = Model.Columnas.RellenoVerticalLíneas;
+    var margenInferiorNombreColumnas = Model.Columnas.MargenInferiorNombres;
+    
+    static string APuntos(double número) => $"{número.ToString().Replace(",", ".")}px";
+
+    static string InsertarEspacio(string referencia) => referencia.Length > 20 ? referencia.Insert(10, " ").Insert(20, " ") :
+               (referencia.Length > 10 ? referencia.Insert(10, " ") : referencia); // Debido a que la regla CSS word-break: break-all; no funciona para iText se debe preparar la referencia con un espacio en el medio si esta es muy larga. Así el iText la separa correctamente en varias líneas.
+
+    var selectorÚltimaColumna = "";
+    if (anchoTotal > 0) {
+        selectorÚltimaColumna = ".total, .total-tít";
+    } else if (anchoConsumo > 0) {
+        selectorÚltimaColumna = ".consumo, .consumo-tít";
+    } else if (anchoIVA > 0) {
+        selectorÚltimaColumna = ".iva, .iva-tít";
+    } else if (anchoSubtotal > 0) {
+        selectorÚltimaColumna = ".subtotal, .subtotal-tít";
+    } else {
+        selectorÚltimaColumna = ".precio, .precio-tít";
+    }
+
+}
+
+
+<table class="@(Model.ModoImpresión ? "fgtl" : "fc fc-l230") t16b ncolumnas"> @* Es necesario hacerla como una tabla aparte porque si se hace como una fila dentro de la otra tabla el relleno del color no funciona muy bien. En algunas ocasiones se alcanza a diferenciar una pequeña línea de separación entre las celdas. *@
+    <tr>
+
+        <td class="ref-tít">Referencia</td>
+        <td class="desc-tít">Descripción</td>
+        @if (anchoCantidad > 0) { <td class="cant-tít">Cantidad</td> }
+        @if (anchoUnidad > 0) { <td class="uni-tít">Unidad</td> }
+        @if (anchoPrecio > 0) { <td class="precio-tít">Precio</td> }
+        @if (anchoSubtotal > 0) { <td class="subtotal-tít">Subtotal</td> }
+        @if (anchoIVA > 0) { <td class="iva-tít">IVA</td> }
+        @if (anchoConsumo > 0) { <td class="consumo-tít">Consumo</td> }
+        @if (anchoTotal > 0) { <td class="total-tít">Total</td> }
+
+    </tr>
+</table>
+
+
+<table class="lista-tb">
+
+    @foreach (var línea in Model.Líneas) {
+
+        <tr>
+
+            <td class="ref">
+
+                @if (Model.Columnas.EnlaceWebADetalleProducto != null) {
+
+                    <a href="@Model.Columnas.EnlaceWebADetalleProducto.Replace("{referencia}", línea.ProductoReferencia)">
+                        @(InsertarEspacio(línea.ProductoReferencia))
+                    </a>
+
+                } else {
+                    @(InsertarEspacio(línea.ProductoReferencia))
+                }
+
+            </td>
+            <td class="desc">@línea.ProductoDescripción</td>
+            @if (anchoCantidad > 0) { <td class="cant">@línea.Cantidad</td> }
+            @if (anchoUnidad > 0) { <td class="uni">@línea.ProductoUnidadTexto</td> }
+            @if (anchoPrecio > 0) { <td class="precio">@línea.PrecioBaseTexto</td> }
+            @if (anchoSubtotal > 0) { <td class="subtotal">@línea.SubtotalBaseTexto</td> }
+            @if (anchoIVA > 0) { <td class="iva">@línea.IVATexto</td> }
+            @if (anchoConsumo > 0) { <td class="consumo">@línea.ImpuestoConsumoTexto</td> }
+            @if (anchoTotal > 0) { <td class="total">@línea.SubtotalBaseConImpuestosTexto</td> }
+
+        </tr>
+
+    }
+
+</table>
+
+
+<style>
+
+
+    /* <Generales */
+
+    .ncolumnas { border-radius: @APuntos(radioFilaNombresColumnas); width: 100%; margin-bottom: @APuntos(margenInferiorNombreColumnas); }
+
+    .ncolumnas td { padding-top: @APuntos(rellenoVerticalLíneas); padding-bottom: @APuntos(rellenoVerticalLíneas); }
+
+    .lista-tb { width: 100%; }
+
+    .lista-tb td { page-break-inside: avoid; padding-top: @APuntos(rellenoVerticalLíneas); padding-bottom: @APuntos(rellenoVerticalLíneas); } /* page-break-inside es necesario para que no se divida la descripción o referencia de la línea en dos páginas diferentes. */
+
+    /* Generales> */
+
+
+    /* <Anchos y Márgenes Columnas */
+
+    .ref, .ref-tít { width: @APuntos(anchoReferencia); padding-left: @APuntos(margenColumnasExtremos); padding-right: @APuntos(margenDerechoReferencia); }
+
+    .desc, .desc-tít { width: @APuntos(anchoDescripción); }
+
+    .cant, .cant-tít { width: @APuntos(anchoCantidad); }
+
+    .uni, .uni-tít { width: @APuntos(anchoUnidad); }
+
+    .precio, .precio-tít { width: @APuntos(anchoPrecio); }
+
+    .subtotal, .subtotal-tít { width: @APuntos(anchoSubtotal); }
+
+    .iva, .iva-tít { width: @APuntos(anchoIVA); }
+
+    .consumo, .consumo-tít { width: @APuntos(anchoConsumo); }
+
+    .total, .total-tít { width: @APuntos(anchoTotal); }
+
+    @selectorÚltimaColumna { padding-right: @APuntos(margenColumnasExtremos); }
+
+    /* Anchos y Márgenes Columnas> */
+
+
+    /* <Alineaciones Textos */
+
+    .desc-tít, .cant-tít, .uni-tít, .cant, .uni { text-align: center; }
+
+    .precio-tít, .subtotal-tít, .iva-tít, .consumo-tít, .total-tít, .precio, .subtotal, .iva, .consumo, .total { text-align: right; }
+
+    /* Alineaciones Textos> */
+
+
+</style>

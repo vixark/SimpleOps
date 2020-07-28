@@ -1,0 +1,1 @@
+﻿select * from Usuarios order by FechaHoraActualización desc limit 10

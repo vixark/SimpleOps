@@ -1,0 +1,1 @@
+﻿select * from ComprobantesEgresos order by ID desc limit 10

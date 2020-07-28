@@ -1,0 +1,1 @@
+﻿select * from PreciosClientes order by FechaHoraActualización desc limit 10

@@ -1,0 +1,26 @@
+
+						LICENCIA
+
+El software se provee tal cual, sin garantía de ningún tipo.
+El autor no será responsable de inconvenientes que pueda generar.
+
+Sin cargos, se otorga el derecho para usar, modificar, fusionar,
+copiar, distribuir, y/o vender copias de este software.
+
+Con el fin de reconocer la autoría, mantener una copia de esta
+licencia en cualquier distribución de este software.
+
+
+	2019 (c) Miguel Huertas <contacto@miguel-huertas.net>
+	
+	
+**************************************************************************************************************************************
+
+Autorización Adicional del Autor:
+"Respecto a la licencia o créditos; puedes usar binarios y colocar los 
+créditos correspondientes."
+
+**************************************************************************************************************************************
+
+Página Proyecto: https://github.com/miguelhuertas/eFacturacionColombia_V2.Firma
+	

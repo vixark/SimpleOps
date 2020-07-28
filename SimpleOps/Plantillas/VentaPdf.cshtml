@@ -1,0 +1,234 @@
+﻿@inherits SimpleOps.DocumentosGráficos.PlantillaBase<SimpleOps.DocumentosGráficos.DatosVenta>
+
+
+@{
+
+    ClaveMarco = "Marco";
+    var anchoCliente = 500;
+    var anchoFechas = Model.AnchoContenido - Model.MargenContenidos - anchoCliente;
+    var diferenciaAnchoFechaYVencimiento = 25;
+
+    static string APuntos(double número) => $"{número.ToString().Replace(",", ".")}px";
+
+    static string InsertarEspacios(string? cude) => cude == null ? "" : cude.Insert(45, " "); // Debido a que la regla CSS word-break: break-all; no funciona para iText se debe preparar el CUDE con un espacio en el medio. Así el iText lo separa correctamente en 2 líneas. El índice se eligió para lograr que cada línea del mismo largo incluyendo el título "CUDE: ".
+
+}
+
+
+<table class="infosup">
+    <tr>
+
+        <td class="cliente-td">
+
+            <div class="cliente-cn">
+                <span class="t18b cliente-tít">Cliente</span>
+                <div class="cliente-nom">@Model.ClienteNombre</div>
+                <div>@Model.ClienteDirección @Model.ClienteMunicipioNombre</div>
+                <div>@Model.ClienteIdentificaciónCompleta</div>
+                <div>@Model.ClienteTeléfono</div>
+                <div>@Model.ClienteContactoFacturasEmail</div>
+            </div>
+
+        </td>
+
+        <td class="infosup-relleno" />
+
+        <td class="fechas-td">
+            <table class="tctr fechas-tb">
+
+                <tr>
+
+                    <td class="fechas-relleno" />
+
+                    <td class="fecha-td">
+                        <div class="fecha-cn">
+                            <span class="t18b fecha-tít">Fecha</span>
+                            <div class="fecha-val">@Model.FechaHora?.ToShortDateString()</div>
+                        </div>
+                    </td>
+
+                    <td class="venc-td">
+                        <div class="tctr venc-cn">
+                            <span class="t18b venc-tít">Vencimiento</span>
+                            <div class="venc-val">@Model.FechaVencimiento?.ToShortDateString()</div>
+                        </div>
+                    </td>
+
+                </tr>
+
+                <tr>
+                    <td class="oc-td" colspan="3">
+                        <div class="oc-cn-cn">
+                            <div class="oc-cn">
+                                <span class="t18b oc-tít">Orden de Compra</span>
+                                <div class="oc-val">@Model.OrdenCompraNúmero</div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
+            </table>
+        </td>
+
+    </tr>
+</table>
+
+
+<div class="lista-cn"> 
+    @Incluir("Lista", Model)
+</div>
+
+
+<div class="infoinf" style="page-break-inside: avoid;">
+
+    <hr style="margin-top: 50px;" />
+    
+    <table style="margin-top: 20px;">
+        <tr>
+
+            <td style="width: 440px; vertical-align: top">
+
+                <table>
+
+                    <tr>
+                        <td style="vertical-align: top">
+                            <div style="width: 350px">
+                                <div class="t18b">Observación:</div>
+                                <div>@Model.Observación</div>
+                            </div>
+                        </td>
+                        <td style="width: 85px">
+                            <img src="@Model.QR" height="85" width="85" /> @* 85 garantiza un tamaño de 2cm x 2cm en la hoja impresa que es lo que obliga la DIAN. *@
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="2"> 
+                            <span><span class="t18b">CUFE:</span> <span style="font-size: 9.5px">@Model.Cude</span></span>
+                        </td>
+                    </tr>
+
+                </table>
+
+            </td>
+            
+            <td>
+                <img src="@Model.CertificadoBase64" height="130" style="margin-right: 15px; margin-left: 15px; margin-top: 7px;" />
+            </td>
+
+            <td style="vertical-align: top"> 
+
+                <table class="tder" style="margin-right: 0px; width: 184px;">
+
+                    <tr>
+                        <td style="height: 26px">
+                            <span style="margin-right: 15px;" class="t18b">Subtotal:</span>
+                        </td>
+                        <td>
+                            <span>@Model.SubtotalBaseTexto</span>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="height: 26px">
+                            <span style="margin-right: 15px;" class="t18b">IVA:</span>
+                        </td>
+                        <td>
+                            <span>@Model.IVATexto</span>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="height: 26px"> 
+                            <span style="margin-right: 15px;" class="t18b">Consumo:</span>
+                        </td>
+                        <td>
+                            <span>@Model.ImpuestoConsumoTexto</span>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="height: 26px">
+                            <span style="margin-right: 15px;" class="t18b">Descuento:</span>
+                        </td>
+                        <td>
+                            <span>@Model.DescuentoCondicionadoTexto</span>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="height: 26px">
+                            <span style="margin-right: 15px; margin-top: 15px;" class="t18b">Total:</span>
+                        </td>
+                        <td>
+                            <span>@Model.SubtotalFinalConImpuestosTexto</span>
+                        </td>
+                    </tr>
+
+                    @*<tr>
+                        <td>
+                            <span style="margin-right: 15px;" class="t18b">A Pagar:</span>
+                        </td>
+                        <td>
+                            <span>99 999 000</span>
+                        </td>
+                    </tr>*@
+
+                </table>
+
+            </td>
+
+        </tr>
+    </table>
+   
+</div>
+
+
+<style>
+
+
+    /* <Información Superior */
+
+    .cliente-cn, .oc-cn, .fecha-cn, .venc-cn { position: relative; bottom: 13px; }
+
+    .cliente-cn { left: 15px; } /* El título de cliente va alineado a la izquierda entonces se debe separar un poco de la curva. */
+
+    .cliente-tít, .fecha-tít, .venc-tít, .oc-tít { background-color: white; padding-right: 10px; padding-left: 10px; }
+
+    .cliente-nom { margin-top: 7px; }
+
+    .fecha-val, .venc-val, .oc-val { margin-top: 13px; } /* Las fechas y oc se deben separar más del título porque deben quedar centradas en la celda mientras que los datos del cliente deben quedar lo más cercano posible pues estos son los que determinan el alto de toda la sección de información superior. */
+
+    .fechas-td, .cliente-td { border: @APuntos(Model.GrosorBordes) solid @Model.ColorBordes; border-radius: 15px; }
+
+    .cliente-td { width: @APuntos(anchoCliente); }
+
+    .fechas-td { padding-right: 1px; padding-left: -1px;  vertical-align: top; width: @APuntos(anchoFechas); } /* 1px y -1px son un pequeño ajuste para que el borde de orden de compra se ajuste un poco por encima del borde del cuadro fechas. */
+
+    .fechas-relleno { width: 8px; } /* Se usa para evitar que la fecha quede muy a la izquierda. */
+
+    .fechas-tb { width: @APuntos(anchoFechas); }
+
+    .venc-td { width: @APuntos(anchoFechas / 2 + diferenciaAnchoFechaYVencimiento); vertical-align: top; }
+
+    .fecha-td { width: @APuntos(anchoFechas / 2 - diferenciaAnchoFechaYVencimiento); vertical-align: top; height: 65px; }
+
+    .oc-cn-cn { border-top: @APuntos(Model.GrosorBordes) solid @Model.ColorBordes; } /* Elemento auxiliar necesario porque iText tiene un error que oculta el oc-tít detrás del borde de oc-td si se le pusiera a este. Se intentó con z-index y tampoco funciona. */
+
+    .infosup-relleno { width: @APuntos(Model.MargenContenidos); }
+
+    .infosup, .lista-cn { width: @APuntos(Model.AnchoContenido); margin-bottom: @APuntos(Model.MargenContenidos); }
+
+    .fechas-tb { border-collapse: collapse; } /* Necesario para que el borde del título orden de compra quede ajustado al cuadro de fechas. */
+
+    /* Información Superior> */
+
+
+    /* <Información Inferior */
+
+    .infoinf { margin-bottom: @APuntos(Model.MargenContenidos); }
+
+    /* Información Inferior> */
+
+
+</style>
