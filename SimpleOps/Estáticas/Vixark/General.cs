@@ -33,7 +33,7 @@ namespace Vixark {
 
     /// <summary>
     /// Métodos, funciones y constantes estáticas de uso general y funcionalidad genérica para cualquier proyecto. Se diferencian de Global porque no son 
-    /// propias del funcionamiento de SimpleOps y podrían ser usadas en otros proyectos.
+    /// propias del funcionamiento de SimpleOps y pueden ser usadas en otros proyectos.
     /// </summary>
     static class General {
 
