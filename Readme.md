@@ -8,7 +8,7 @@ Aplicación de información y gestión (ERP) para pequeñas empresas, trabajador
 Desarrollado con las últimas tecnologías: C# 8, .Net Core 3.1, WPF, SQLite 3.30 y Entity Framework Core 3.1.
 <br/>
 <br/>
-<a href="http://simpleops.net">SimpleOps.net<a>
+<a href="http://simpleops.net">SimpleOps.net<a> (Pendiente)
 
 <h3>Reconocimientos</h3>
 <b>Librería Firma Electrónica:</b> <a href="https://github.com/miguelhuertas/eFacturacionColombia_V2.Firma">eFacturacionColombia_V2.Firma</a> por <a href="https://github.com/miguelhuertas">Miguel Huertas</a>.
