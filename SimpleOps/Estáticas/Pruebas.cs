@@ -397,12 +397,12 @@ namespace SimpleOps {
                 {"Marco", @"<M Encab. @CrearCuerpo() CUFE: @Model.Cude PieP. @Incluir(""Firma"", Model) M>"},
                 {"Lista", @"@{ ClaveMarco = ""MarcoLista""; } <L  1. 2. 3. 4 L>"},
                 {"MarcoLista", "<ML Cliente: <h2>@Model.ClienteNombre</h2> @CrearCuerpo() ML>"},
-                {"Firma", @"<F Atentamente, David F>"},
+                {"Firma", @"<F Atentamente, Vixark F>"},
             };
             var plantillaCompilada = CompilarPlantilla<DatosVenta>(motorRazor, cuerpo, partes);
             var html = plantillaCompilada.ObtenerHtml(new DatosVenta() { Cude = "AFJ451MN", CódigoDocumento = "123", ClienteNombre = "Ópticas", 
                 Observación = "" });
-            if (html != "<M Encab.  <C <h1>123</h1> <ML Cliente: <h2>Ópticas</h2>  <L  1. 2. 3. 4 L> ML> C> CUFE: AFJ451MN PieP. <F Atentamente, David F> M>") 
+            if (html != "<M Encab.  <C <h1>123</h1> <ML Cliente: <h2>Ópticas</h2>  <L  1. 2. 3. 4 L> ML> C> CUFE: AFJ451MN PieP. <F Atentamente, Vixark F> M>") 
                 MostrarError("Falló la generación del HTML para la generación del PDF.");
             // Prueba del Motor de Razor para la Generación de HTML>
 
