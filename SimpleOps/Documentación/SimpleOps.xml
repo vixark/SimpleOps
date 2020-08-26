@@ -2150,7 +2150,7 @@
         <member name="T:Vixark.General">
             <summary>
             Métodos, funciones y constantes estáticas de uso general y funcionalidad genérica para cualquier proyecto. Se diferencian de Global porque no son 
-            propias del funcionamiento de SimpleOps y podrían ser usadas en otros proyectos.
+            propias del funcionamiento de SimpleOps y pueden ser usadas en otros proyectos.
             </summary>
         </member>
         <member name="F:Vixark.General.DobleLínea">
@@ -2630,6 +2630,36 @@
             <summary>
             Versión de CopiarA usando objects en los casos que no se puede usar la versión genérica porque el objetoDestino es de solo lectura y 
             no se puede pasar con ref.
+            </summary>
+        </member>
+        <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
+            <summary>
+            GeneratedInternalTypeHelper
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateInstance(System.Type,System.Globalization.CultureInfo)">
+            <summary>
+            CreateInstance
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.GetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            GetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.SetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            SetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateDelegate(System.Type,System.Object,System.String)">
+            <summary>
+            CreateDelegate
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.AddEventHandler(System.Reflection.EventInfo,System.Object,System.Delegate)">
+            <summary>
+            AddEventHandler
             </summary>
         </member>
     </members>

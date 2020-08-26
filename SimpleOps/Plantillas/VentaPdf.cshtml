@@ -93,8 +93,12 @@
                     <tr>
                         <td style="vertical-align: top">
                             <div style="width: 350px">
-                                <div class="t18b">Observación:</div>
-                                <div>@Model.Observación</div>
+
+                                @if (!string.IsNullOrEmpty(Model.Observación)) {
+                                    <div class="t18b">Observación:</div>
+                                    <div>@Model.Observación</div>
+                                }
+
                             </div>
                         </td>
                         <td style="width: 85px">
@@ -140,7 +144,7 @@
 
                     <tr>
                         <td style="height: 26px"> 
-                            <span style="margin-right: 15px;" class="t18b">Consumo:</span>
+                            <span style="margin-right: 15px;" class="t18b">INC:</span>
                         </td>
                         <td>
                             <span>@Model.ImpuestoConsumoTexto</span>

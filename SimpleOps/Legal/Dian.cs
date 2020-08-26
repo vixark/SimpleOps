@@ -132,7 +132,7 @@ namespace SimpleOps.Legal {
 
 
         public static Dictionary<TipoContribuyente, string> CódigosTiposContribuyentes = new Dictionary<TipoContribuyente, string> { // Tomados de la tabla 13.2.6.1. del 'Anexo técnico de factura electrónica de venta validación previa.pdf' de la DIAN.
-            {TipoContribuyente.Ordinario, "ZZ" }, // Código aplicable para el elemento FAJ26.
+            {TipoContribuyente.Ordinario, "O-99" }, // Código aplicable para el elemento FAJ26. En Ago 2020 se cambió por O-99 porque en el entorno de pruebas estaba sacando error con el anterior que era ZZ.
             {TipoContribuyente.GranContribuyente, "O-13" }, // Código aplicable para el elemento FAJ26.
             {TipoContribuyente.Autorretenedor, "O-15" }, // Código aplicable para el elemento FAJ26.
             {TipoContribuyente.RetenedorIVA, "O-23" }, // Código aplicable para el elemento FAJ26.

@@ -36,13 +36,13 @@ namespace SimpleOps {
 
         public static bool HabilitarRastreoDeDatosSensibles = false; // Si se establece en verdadero en la ventana 'Inmediato' se podrá ver el detalle de las acciones ejecutados en la base de datos, incluyendo los datos. Si se deja en falso EF Core reemplazará los datos por textos de reemplazo. En producción siempre debe estar en falso.
 
-        public static bool ModoDesarrolloPlantillasDocumentos = false; // En modo desarrollo se usa en verdadero para permitir que los cambios que se hagan a los archivos cshtml en SimpleOps/Plantillas sean copiados a la ruta de la aplicación y para habilitar algunas líneas de código que facilitan el desarrollo de estas plantillas. En producción se deben usar directamente los archivos en la ruta de la aplicación porque no se tienen los de desarrollo.
+        public static bool ModoDesarrolloPlantillasDocumentos = true; // En modo desarrollo se usa en verdadero para permitir que los cambios que se hagan a los archivos cshtml en SimpleOps/Plantillas sean copiados a la ruta de la aplicación y para habilitar algunas líneas de código que facilitan el desarrollo de estas plantillas. En producción se deben usar directamente los archivos en la ruta de la aplicación porque no se tienen los de desarrollo.
 
-        public static bool HabilitarPruebasUnitarias = false; // Se usa verdadero cuando se quieran realizar las pruebas al iniciar la aplicación.
+        public static bool HabilitarPruebasUnitarias = true; // Se usa verdadero cuando se quieran realizar las pruebas al iniciar la aplicación.
 
-        public static bool ModoIntegraciónFacturaElectrónica = true; // Modo especial para integrar solo la funcionalidad de facturación electrónica a aplicaciones no compatibles con .Net Core 3.1.
+        public static bool ModoIntegraciónFacturaElectrónica = false; // Modo especial para integrar solo la funcionalidad de facturación electrónica a aplicaciones no compatibles con .Net Core 3.1.
 
-        public static string RutaDesarrollo = @"E:\Dropbox\Desarrollos\SimpleOps\Código\SimpleOps\SimpleOps"; // Se usa para que al iniciar en modo de desarrollo copie los archivos cshtml en Plantillas a 'CarpetaPlantillas' en la ruta de la aplicación.
+        public static string RutaDesarrollo = @"D:\Nubes\Dropbox\Desarrollos\SimpleOps\Código\SimpleOps\SimpleOps"; // Se usa para que al iniciar en modo de desarrollo copie los archivos cshtml en Plantillas a 'CarpetaPlantillas' en la ruta de la aplicación. En el computador de desarrollo en casa está en D:\Nubes\Dropbox\Desarrollos\SimpleOps\Código\SimpleOps\SimpleOps. En el computador de desarrollo de la empresa está en E:\Dropbox\Desarrollos\SimpleOps\Código\SimpleOps\SimpleOps.
 
         public const string NombreAplicación = "SimpleOps";
 
@@ -55,6 +55,8 @@ namespace SimpleOps {
         public const string NombreBaseDatosSQLite = "Datos";
 
         public const string CarpetaLibrerías = "Librerías";
+
+        public const string CarpetaDatos = "Datos";
 
         public const string CarpetaOpciones = "Opciones";
 
@@ -330,9 +332,9 @@ namespace SimpleOps {
 
         public static string HoyNombresArchivos => AhoraUtcAjustado.ATexto(FormatoNúmeroMesDía);
 
-        public static string RutaBaseDatosSQLite => Path.Combine(Equipo.RutaAplicación, ArchivoBaseDatosSQLite);
+        public static string RutaBaseDatosSQLite => Path.Combine(Path.Combine(Equipo.RutaAplicación, CarpetaDatos), ArchivoBaseDatosSQLite);
 
-        public static string RutaBaseDatosVacíaSQLite => Path.Combine(Equipo.RutaAplicación, ArchivoBaseDatosVacíaSQLite);
+        public static string RutaBaseDatosVacíaSQLite => Path.Combine(Path.Combine(Equipo.RutaAplicación, CarpetaDatos), ArchivoBaseDatosVacíaSQLite);
 
         public static string RutaFirmador => Path.Combine(Path.Combine(Equipo.RutaAplicación, CarpetaLibrerías), "Firmador.exe");
 

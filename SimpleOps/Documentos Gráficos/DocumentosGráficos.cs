@@ -174,7 +174,7 @@ namespace SimpleOps.DocumentosGráficos {
                 + acolchadoLínea + 12 + datosDocumento.MargenContenidos; // Suma el alto de la fila de nombres de columnas y 12 puntos extra que tiene el elemento lista-tb comparado con al suma directa del alto de sus filas tr.
 
             var altoInferior = datosDocumento switch {
-                DatosVenta _ => 221 * factorTamañoLetra + datosDocumento.MargenVertical, // Pendiente cambiar valor cuando se finalice la parte inferior. Suma el margen vertical que le corresponde al div cuerpo.
+                DatosVenta _ => 221 * factorTamañoLetra + datosDocumento.MargenVertical, // Suma el margen vertical que le corresponde al div cuerpo.
                 DatosCotización _ => throw new NotImplementedException(),
                 _ => throw new Exception(CasoNoConsiderado(typeof(T).Name))
             };
