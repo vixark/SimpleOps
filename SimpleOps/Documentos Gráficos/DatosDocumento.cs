@@ -75,6 +75,8 @@ namespace SimpleOps.DocumentosGráficos {
 
         public int AltoHoja { get; set; } = 1056; // 96 * 11. Tomado de https://stackoverflow.com/a/40032997/8330412.
 
+        public int AnchoObservación { get; set; } = 350; // 350 para facturas, notas crédito y facturas proforma.
+
         public int MargenHorizontal { get; set; } = 25;
 
         public int MargenVertical { get; set; } = 30; // Este valor puede causar que la cantidad de páginas difiera, pero esto solo se da en casos de muchas páginas y un margenCuerpo alto. Por ejemplo para un documento de 500 páginas se puede llevar este margen hasta 70 y se mantienen las 500 páginas, no es algo que pueda afectar en el uso más común.

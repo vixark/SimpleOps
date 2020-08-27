@@ -7,17 +7,23 @@
     int totalPáginasConCabezaYPie;
     switch (Model.ModoDocumento) {
         case SimpleOps.DocumentosGráficos.DatosDocumento.Modo.CuerpoContinuo:
-            altoPáginas = Model.TotalPáginas * Model.AltoHoja - Model.AltoPie - Model.AltoCabeza;
+
+            altoPáginas = Model.TotalPáginas * Model.AltoHoja - Model.AltoPie - Model.AltoCabeza; // El altoPáginas podría causar que se genere una página adicional a las esperadas si existe un quiebre de página que genera un espacio adicional considerablemente grande, por ejemplo, si una descripción es muy larga y esto causa que esta termine en la segunda página se genera un espacio en la primera página que causa que esta fórmula no funcione y genere una página adicional. Esto en términos generales no representa mayor problema.
             totalPáginasConCabezaYPie = 1;
             break;
+
         case SimpleOps.DocumentosGráficos.DatosDocumento.Modo.PáginasIndependientes:
+
             altoPáginas = Model.AltoHoja;
             totalPáginasConCabezaYPie = Model.TotalPáginas;
             break;
+
         default:
+
             altoPáginas = Model.AltoHoja; // No se pueden lanzar excepciones porque no está registrado el namespace y no vale la pena hacerlo solo para este caso. Se establecen valores por defecto y se espera que se detecte el error por otros medios.
             totalPáginasConCabezaYPie = 1;
             break;
+
     }
 
     var selectorCssPáginas = "";
@@ -68,7 +74,7 @@
 
             @switch (i) {
                 case 1:
-                    @CrearCuerpo(); // Si está en modo CuerpoContinuo el contenido ode este cuerpo puede ocupar varias páginas. Si está en modo PáginasIndependientes este cuerpo solo ocupará la página 1.
+                    @CrearCuerpo(); // Si está en modo CuerpoContinuo el contenido de este cuerpo puede ocupar varias páginas. Si está en modo PáginasIndependientes este cuerpo solo ocupará la página 1.
                     break;
                 default:
                     @Incluir("Página" + i, Model);
@@ -189,6 +195,8 @@
     .t14n { font-size: 14px; font-weight: normal; }
 
     .t12b { font-size: 12px; font-weight: bold; }
+
+    .t9-5n { font-size: 9.5px; }
 
     /* Tamaño Fuentes> */
 

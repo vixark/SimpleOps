@@ -82,7 +82,7 @@ namespace SimpleOps.DocumentosGráficos {
             if (ModoDesarrolloPlantillasDocumentos) {
 
                 if (creado) AbrirArchivo(rutaPdf);
-                SuspenderEjecuciónEnModoDesarrollo();
+                SuspenderEjecuciónEnModoDesarrollo(); // Al estar detenida la ejecución en este punto se pueden editar los archivos de plantillas .cshtml, guardar el archivo de la plantilla, cerrar el último PDF creado si está abierto y reanudar ejecución para generar un nuevo PDF con los cambios realizados.
                 goto otraVez;
 
             }
@@ -173,8 +173,11 @@ namespace SimpleOps.DocumentosGráficos {
             altoLista += datosDocumento.Columnas.MargenInferiorNombres + ObtenerTamañoTexto("Referencia", fuente, int.MaxValue).Height
                 + acolchadoLínea + 12 + datosDocumento.MargenContenidos; // Suma el alto de la fila de nombres de columnas y 12 puntos extra que tiene el elemento lista-tb comparado con al suma directa del alto de sus filas tr.
 
+            var altoObservación = ObtenerTamañoTexto(datosDocumento.Observación, fuente, datosDocumento.AnchoObservación).Height;
+            var extraAltoPorObservación = altoObservación < 58 * factorTamañoLetra ? 0 : altoObservación - 58 * factorTamañoLetra; // Si el alto de la observación es 57 (3 líneas), cabe sin problemas. Si es mayor empieza a aumentar el alto la sección inferior. 
+
             var altoInferior = datosDocumento switch {
-                DatosVenta _ => 221 * factorTamañoLetra + datosDocumento.MargenVertical, // Suma el margen vertical que le corresponde al div cuerpo.
+                DatosVenta _ => 222 * factorTamañoLetra + datosDocumento.MargenVertical + extraAltoPorObservación, // 222 = alto de infoinf + margen superior de infoinf-línea. Además, suma el margen vertical que le corresponde al div cuerpo.
                 DatosCotización _ => throw new NotImplementedException(),
                 _ => throw new Exception(CasoNoConsiderado(typeof(T).Name))
             };

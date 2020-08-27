@@ -10,7 +10,13 @@
 
     static string APuntos(double número) => $"{número.ToString().Replace(",", ".")}px";
 
-    static string InsertarEspacios(string? cude) => cude == null ? "" : cude.Insert(45, " "); // Debido a que la regla CSS word-break: break-all; no funciona para iText se debe preparar el CUDE con un espacio en el medio. Así el iText lo separa correctamente en 2 líneas. El índice se eligió para lograr que cada línea del mismo largo incluyendo el título "CUDE: ".
+    var tieneIVA = !(string.IsNullOrEmpty(Model.IVATexto) || Model.IVATexto == "0");
+    var tieneImpuestoConsumo = !(string.IsNullOrEmpty(Model.ImpuestoConsumoTexto) || Model.ImpuestoConsumoTexto == "0");
+    var tieneDescuento = !(string.IsNullOrEmpty(Model.DescuentoCondicionadoTexto) || Model.DescuentoCondicionadoTexto == "0");
+    var mostrarIVA = tieneIVA || !tieneImpuestoConsumo; // Se muestra siempre el IVA excepto cuando no tenga IVA y si tenga impuesto al consumo.
+    var mostrarImpuestoConsumo = tieneImpuestoConsumo;
+    var mostrarDescuento = !(!tieneDescuento && mostrarIVA && mostrarImpuestoConsumo); // Se muestra siempre el descuento excepto cuando no tiene descuento y además se está mostrando el IVA y el impuesto de consumo. Esto asegura que casi siempre se muestra el descuento = 0. Es una decisión por simple estética del diseño de la sección de totales, no se ve bien cuando solo hay 3 elementos en esta sección.  
+    var cantidadTotales = 2 + (mostrarIVA ? 1 : 0) + (mostrarDescuento ? 1 : 0) + (mostrarImpuestoConsumo ? 1 : 0);
 
 }
 
@@ -79,20 +85,21 @@
 </div>
 
 
-<div class="infoinf" style="page-break-inside: avoid;">
+<div class="infoinf" >
 
-    <hr style="margin-top: 50px;" />
+    <hr class="infoinf-línea" />
     
-    <table style="margin-top: 20px;">
+    <table class="infoinf-tb" >
         <tr>
 
-            <td style="width: 440px; vertical-align: top">
+            <td class="obs-y-cufe" >
 
                 <table>
 
                     <tr>
-                        <td style="vertical-align: top">
-                            <div style="width: 350px">
+
+                        <td class="observación-td" >
+                            <div class="observación-cn" >
 
                                 @if (!string.IsNullOrEmpty(Model.Observación)) {
                                     <div class="t18b">Observación:</div>
@@ -101,14 +108,16 @@
 
                             </div>
                         </td>
-                        <td style="width: 85px">
-                            <img src="@Model.QR" height="85" width="85" /> @* 85 garantiza un tamaño de 2cm x 2cm en la hoja impresa que es lo que obliga la DIAN. *@
+
+                        <td class="qr-td" >
+                            <img src="@Model.QR" class="qr-img" />
                         </td>
+
                     </tr>
 
                     <tr>
-                        <td colspan="2"> 
-                            <span><span class="t18b">CUFE:</span> <span style="font-size: 9.5px">@Model.Cude</span></span>
+                        <td colspan="2" > 
+                            <span><span class="t18b" >CUFE:</span> <span class="t9-5n" >@Model.Cude</span></span>
                         </td>
                     </tr>
 
@@ -117,66 +126,69 @@
             </td>
             
             <td>
-                <img src="@Model.CertificadoBase64" height="130" style="margin-right: 15px; margin-left: 15px; margin-top: 7px;" />
+                <img src="@Model.CertificadoBase64" class="certificado-img" />
             </td>
 
-            <td style="vertical-align: top"> 
+            <td class="totales-td" > 
 
-                <table class="tder" style="margin-right: 0px; width: 184px;">
+                <table class="tder totales-tb">
 
                     <tr>
-                        <td style="height: 26px">
-                            <span style="margin-right: 15px;" class="t18b">Subtotal:</span>
+                        <td class="nombretotal-td">
+                            <span class="t18b nombretotal">Subtotal:</span>
                         </td>
                         <td>
                             <span>@Model.SubtotalBaseTexto</span>
                         </td>
                     </tr>
 
-                    <tr>
-                        <td style="height: 26px">
-                            <span style="margin-right: 15px;" class="t18b">IVA:</span>
-                        </td>
-                        <td>
-                            <span>@Model.IVATexto</span>
-                        </td>
-                    </tr>
+                    @if (mostrarIVA) {
+
+                        <tr>
+                            <td class="nombretotal-td">
+                                <span class="t18b nombretotal">IVA:</span>
+                            </td>
+                            <td>
+                                <span>@Model.IVATexto</span>
+                            </td>
+                        </tr>
+
+                    }
+
+                    @if (mostrarImpuestoConsumo) {
+
+                        <tr>
+                            <td class="nombretotal-td">
+                                <span class="t18b nombretotal">INC:</span>
+                            </td>
+                            <td>
+                                <span>@Model.ImpuestoConsumoTexto</span>
+                            </td>
+                        </tr>
+
+                    }
+
+                    @if (mostrarDescuento) {
+
+                        <tr>
+                            <td class="nombretotal-td">
+                                <span class="t18b nombretotal">Descuento:</span>
+                            </td>
+                            <td>
+                                <span>@Model.DescuentoCondicionadoTexto</span>
+                            </td>
+                        </tr>
+
+                    }
 
                     <tr>
-                        <td style="height: 26px"> 
-                            <span style="margin-right: 15px;" class="t18b">INC:</span>
-                        </td>
-                        <td>
-                            <span>@Model.ImpuestoConsumoTexto</span>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td style="height: 26px">
-                            <span style="margin-right: 15px;" class="t18b">Descuento:</span>
-                        </td>
-                        <td>
-                            <span>@Model.DescuentoCondicionadoTexto</span>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td style="height: 26px">
-                            <span style="margin-right: 15px; margin-top: 15px;" class="t18b">Total:</span>
+                        <td class="nombretotal-td">
+                            <span class="t18b nombretotal">Total:</span>
                         </td>
                         <td>
                             <span>@Model.SubtotalFinalConImpuestosTexto</span>
                         </td>
                     </tr>
-
-                    @*<tr>
-                        <td>
-                            <span style="margin-right: 15px;" class="t18b">A Pagar:</span>
-                        </td>
-                        <td>
-                            <span>99 999 000</span>
-                        </td>
-                    </tr>*@
 
                 </table>
 
@@ -230,7 +242,31 @@
 
     /* <Información Inferior */
 
-    .infoinf { margin-bottom: @APuntos(Model.MargenContenidos); }
+    .infoinf { margin-bottom: @APuntos(Model.MargenContenidos); page-break-inside: avoid; }
+
+    .infoinf-línea { margin-top: 50px; }
+
+    .infoinf-tb { margin-top: 20px; }
+
+    .obs-y-cufe { width: 440px; vertical-align: top; }
+
+    .observación-td { vertical-align: top; }
+
+    .observación-cn { width: @APuntos(Model.AnchoObservación); }
+
+    .qr-td { width: 85px; }
+
+    .qr-img { width: 85px; height: 85px; } /* 85 garantiza un tamaño de 2cm x 2cm en la hoja impresa que es lo que obliga la DIAN. */
+
+    .certificado-img { margin-right: 15px; margin-left: 15px; margin-top: 7px; height: 130px; }
+
+    .totales-td { vertical-align: top; }
+
+    .totales-tb { margin-right: 0px; width: 184px; }
+
+    .nombretotal-td { height: @(cantidadTotales switch { 2 => "34px", 3 => "34px", 4 => "34px", 5 => "26px", 6 => "22px", _ => "22px" } ); } /* Preferiblemente no se deberían usar 3 elementos en totales porque si se quisieran espaciar verticalmente se verían muy separados entre sí y si se quisieran usar con una separación normal quedarían con un espacio en blanco abajo. Se debe procurar mantener subtotal, algún impuesto (IVA o INC), descuento y total. */
+
+    .nombretotal { margin-right: 15px; }
 
     /* Información Inferior> */
 
