@@ -22,13 +22,15 @@ namespace SimpleOps.DocumentosGráficos {
 
         #region Propiedades Documento
 
-        public string NombreDocumento { get; set; } = null!; // El nombre que va en el encabezado de la página. Nunca es vacío porque asigna en el constructor de cada documento heredado. Se usa el nombre redundante []Documento para darle más claridad cuando se escriba en la plantilla cshtml. 
+        public string NombreDocumento { get; set; } = null!; // El nombre que va en el encabezado de la página. Nunca es vacío porque asigna en el constructor de cada documento heredado. Se usa el nombre redundante []Documento para darle más claridad cuando se escriba en la plantilla CSHTML. 
+
+        public string PrefijoNombreArchivo { get; set; } = ""; // Algunos documentos usan un prefijo adicional al nombre de archivo autogenerado con el código para evitar colisiones con otros almacenados en la misma carpeta, por ejemplo se usa NC para las notas crédito de ventas y texto vacío para las ventas.
 
         public string? LogoBase64 { get; set; } // El logo principal del documento. Se debe pasar como Base64 porque el iText no soporta imagenes que estén relacionadas en el atributo src con rutas locales que contengan espacios en su nombre.
 
         public string? CertificadoBase64 { get; set; } // El logo del certificado de la empresa. Se debe pasar como Base64 porque el iText no soporta imagenes que estén relacionadas en el atributo src con rutas locales que contengan espacios en su nombre.
 
-        public string? CódigoDocumento { get; set; } // El número o código (cuando el número lleva prefijo) del documento. Puede ser nulo para documentos sin código. Se usa el nombre redundante []Documento para darle más claridad cuando se escriba en la plantilla cshtml. 
+        public string? CódigoDocumento { get; set; } // El número o código (cuando el número lleva prefijo) del documento. Puede ser nulo para documentos sin código. Se usa el nombre redundante []Documento para darle más claridad cuando se escriba en la plantilla CSHTML. 
 
         public string? Observación { get; set; }
 

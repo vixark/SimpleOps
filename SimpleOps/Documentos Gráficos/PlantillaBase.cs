@@ -11,7 +11,7 @@ namespace SimpleOps.DocumentosGráficos {
 
 
     /// <summary>
-    /// Plantilla con parámetro de tipo que puede tomar cualquier clase (usualmente una clase simple como Datos[].cs) que permite escribir código Razor (cshtml) 
+    /// Plantilla con parámetro de tipo que puede tomar cualquier clase (usualmente una clase simple como Datos[].cs) que permite escribir código Razor (CSHTML) 
     /// de manera tipada. En el HTML se debe usar @Model para acceder al objeto (usualmente Datos[].cs) y a sus propiedades. Permite la adición de
     /// partes de HTML incluídos dentro de esta usando @Incluir("ClaveParte", Model) y permite usar marcos de HTML referenciando
     /// el marco en esta con @{ ClaveMarco = "[ClavePlantillaActual]"; } y generando el cuerpo en el marco con @CrearCuerpo().

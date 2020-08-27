@@ -257,8 +257,8 @@ namespace SimpleOps.Legal {
 
         public static string ObtenerCódigoTipoOperación(Venta? venta, NotaCréditoVenta? notaCrédito, NotaDébitoVenta? notaDébito, Venta? ventaNota) 
             => venta != null ? CódigoFacturaEstándar :
-                   (notaCrédito != null ? (ventaNota != null ? CódigoNotaCréditoConFactura : CódigoNotaCréditoSinFactura) :
-                        (notaDébito != null ? (ventaNota != null ? CódigoNotaDébitoConFactura : CódigoNotaDébitoSinFactura) : 
+                   (notaCrédito != null ? (ventaNota != null && ventaNota.Cude != null ? CódigoNotaCréditoConFactura : CódigoNotaCréditoSinFactura) :
+                        (notaDébito != null ? (ventaNota != null && ventaNota.Cude != null ? CódigoNotaDébitoConFactura : CódigoNotaDébitoSinFactura) : 
                             throw new Exception("Todos los documentos son nulos")));
 
 

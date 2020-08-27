@@ -13,8 +13,7 @@ using System.Linq;
 using System.Text;
 using static Vixark.General;
 using static SimpleOps.Global;
-
-
+using AutoMapper;
 
 namespace SimpleOps.DocumentosGráficos {
 
@@ -30,7 +29,7 @@ namespace SimpleOps.DocumentosGráficos {
 
 
         /// <summary>
-        /// Compila un objeto plantilla complejo con el que se puede generar HTML usando código Razor (cshtml) con @Model tipado y 
+        /// Compila un objeto plantilla complejo con el que se puede generar HTML usando código Razor (CSHTML) con @Model tipado y 
         /// tiene soporte para incluir partes y marcos de HTML (similar a _Partial y _Layout en MVC). Ver más en <see cref="PlantillaBase{T}"/>
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -47,12 +46,13 @@ namespace SimpleOps.DocumentosGráficos {
         } // Compilar>
 
 
-        public static bool CrearPdf(Venta venta, DocumentoElectrónico<Factura<Cliente, LíneaVenta>, LíneaVenta>? ventaElectrónica, out string rutaPdf) { // Una vez compilada la plantilla la primera vez este procedimiento es relativamente rápido en alrededor de 200ms, de estos, 150ms son en la generación del html que se podrían reducir si se almacenaran los archivos cshtml en memoria o directamente la plantilla compilada según https://github.com/adoconnection/RazorEngineCore/wiki/@Include-and-@Layout, pero por el momento se prefiere evitar esto para no complicar más el procedimiento y facilitar hacer cambios a los archivos cshtml y que se hagan efectivos sin necesidad de reiniciar la aplicación.
+        public static bool CrearPdf<D, M>(D documento, DocumentoElectrónico<Factura<Cliente, M>, M>? documentoElectrónico, out string rutaPdf) 
+            where D : Factura<Cliente, M> where M : MovimientoProducto { // Una vez compilada la plantilla la primera vez este procedimiento es relativamente rápido en alrededor de 200ms, 150ms de estos son en la generación del HTML que se podrían reducir si se almacenaran los archivos CSHTML en memoria o directamente la plantilla compilada según https://github.com/adoconnection/RazorEngineCore/wiki/@Include-and-@Layout, pero por el momento se prefiere evitar esto para no complicar más el procedimiento y facilitar hacer cambios a los archivos CSHTML al permitir que estos cambios se hagan efectivos sin necesidad de reiniciar la aplicación.
 
             otraVez:
             var creado = false;
             rutaPdf = "";
-            if (ventaElectrónica == null) return false;
+            if (documentoElectrónico == null) return false;
             var motorRazor = new RazorEngine();    
             PlantillaCompilada<DatosVenta>? plantillaCompilada = null;
 
@@ -74,15 +74,15 @@ namespace SimpleOps.DocumentosGráficos {
 
             if (plantillaCompilada != null) {
 
-                creado = CrearPdf(venta, ventaElectrónica, plantillaCompilada, modoImpresión: false, out rutaPdf);
-                if (Empresa.GenerarPDFsAdicionalesImpresión) CrearPdf(venta, ventaElectrónica, plantillaCompilada, modoImpresión: true, out _);
+                creado = CrearPdf(documento, documentoElectrónico, plantillaCompilada, modoImpresión: false, out rutaPdf);
+                if (Empresa.GenerarPDFsAdicionalesImpresión) CrearPdf(documento, documentoElectrónico, plantillaCompilada, modoImpresión: true, out _);
 
             }
 
             if (ModoDesarrolloPlantillasDocumentos) {
 
                 if (creado) AbrirArchivo(rutaPdf);
-                SuspenderEjecuciónEnModoDesarrollo(); // Al estar detenida la ejecución en este punto se pueden editar los archivos de plantillas .cshtml, guardar el archivo de la plantilla, cerrar el último PDF creado si está abierto y reanudar ejecución para generar un nuevo PDF con los cambios realizados.
+                SuspenderEjecuciónEnModoDesarrollo(); // Al estar detenida la ejecución en este punto se pueden editar los archivos de plantillas CSHTML, guardar el archivo de la plantilla, cerrar el último PDF creado si está abierto y reanudar ejecución para generar un nuevo PDF con los cambios realizados.
                 goto otraVez;
 
             }
@@ -92,18 +92,24 @@ namespace SimpleOps.DocumentosGráficos {
         } // CrearPdf>
 
 
-        public static bool CrearPdf(Venta venta, DocumentoElectrónico<Factura<Cliente, LíneaVenta>, LíneaVenta> ventaElectrónica,
-            PlantillaCompilada<DatosVenta> plantillaCompilada, bool modoImpresión, out string rutaPdf) {
+        public static bool CrearPdf<D, M>(D documento, DocumentoElectrónico<Factura<Cliente, M>, M> documentoElectrónico, 
+            PlantillaCompilada<DatosVenta> plantillaCompilada, bool modoImpresión, out string rutaPdf) 
+            where D : Factura<Cliente, M> where M : MovimientoProducto {
 
             rutaPdf = "";
-            var datosVenta = venta.ObtenerDatosVenta(modoImpresión);
-            var html = plantillaCompilada.ObtenerHtml(datosVenta);
+            var datos = documento switch { 
+                Venta v => v.ObtenerDatos(modoImpresión), 
+                NotaCréditoVenta ncv => ncv.ObtenerDatos(modoImpresión),
+                _ => throw new Exception(CasoNoConsiderado(typeof(D).Name))
+            };
+            var html = plantillaCompilada.ObtenerHtml(datos);
             if (ModoDesarrolloPlantillasDocumentos)
-                File.WriteAllText(Path.Combine(ventaElectrónica.RutaDocumentosElectrónicosHoy, $"{venta.Código}.html"), html);
+                File.WriteAllText(Path.Combine(documentoElectrónico.RutaDocumentosElectrónicosHoy, $"{documento.Código}.html"), html);
 
             try {
 
-                rutaPdf = Path.Combine(ventaElectrónica.RutaDocumentosElectrónicosHoy, $"{venta.Código}{(modoImpresión ? "-I" : "")}.pdf");
+                rutaPdf = Path.Combine(documentoElectrónico.RutaDocumentosElectrónicosHoy, 
+                    $"{datos.PrefijoNombreArchivo}{documento.Código}{(modoImpresión ? "-I" : "")}.pdf");
                 using var escritorPdf = new PdfWriter(rutaPdf);
                 using var pdf = new PdfDocument(escritorPdf);
                 pdf.SetDefaultPageSize(iText.Kernel.Geom.PageSize.LETTER);
@@ -118,6 +124,28 @@ namespace SimpleOps.DocumentosGráficos {
             }
 
         } // CrearPdf>
+
+
+        /// <summary>
+        /// Procedimiento común para las ventas y las notas crédito de ventas que termina de completar el objeto de datos después de ser mapeado.
+        /// </summary>
+        /// <typeparam name="M"></typeparam>
+        /// <param name="modoImpresión"></param>
+        /// <param name="datosNotaCréditoVenta"></param>
+        /// <param name="líneas"></param>
+        public static void CompletarDatosVenta<M>(bool modoImpresión, DatosVenta datosNotaCréditoVenta, List<M> líneas) where M : MovimientoProducto {
+
+            var mapeadorEmpresa = new Mapper(ConfiguraciónMapeadorEmpresa);
+            datosNotaCréditoVenta.Empresa = mapeadorEmpresa.Map<DatosEmpresa>(Empresa);
+            datosNotaCréditoVenta.Columnas = ObtenerOpcionesColumnas(datosNotaCréditoVenta, líneas);
+            datosNotaCréditoVenta.LogoBase64 = ObtenerBase64(Path.Combine(ObtenerRutaCarpetaImagenesPlantillas(),
+                modoImpresión ? NombreArchivoLogoEmpresaImpresión : NombreArchivoLogoEmpresa), paraHtml: true);
+            datosNotaCréditoVenta.CertificadoBase64 = ObtenerBase64(Path.Combine(ObtenerRutaCarpetaImagenesPlantillas(),
+                modoImpresión ? NombreArchivoCertificadoEmpresaImpresión : NombreArchivoCertificadoEmpresa), paraHtml: true);
+            datosNotaCréditoVenta.TotalPáginas = ObtenerTotalPáginas(datosNotaCréditoVenta, líneas);
+            datosNotaCréditoVenta.ModoImpresión = modoImpresión;
+
+        } // CompletarDatosVenta>
 
 
         public static OpcionesColumnas ObtenerOpcionesColumnas<T, M>(T datosDocumento, List<M> Líneas) 

@@ -106,29 +106,17 @@ namespace SimpleOps.Integración {
                     var mapeador = new Mapper(ConfiguraciónMapeadorVentaIntegraciónInverso);
                     var venta = mapeador.Map<Venta>(datosVenta);
                     venta.Líneas.ForEach(lv => lv.Venta = venta); // Necesario porque después de ser leídas por el Automapper no quedan automáticamente enlazadas.
-                    if (venta.Cliente?.Municipio?.CódigoDepartamento == CódigoDepartamentoNulo) throw new Exception("El departamento es incorrecto.");
+                    ValidarCliente(venta.Cliente);
+                    ProcesarDocumentoCliente(venta, ruta, "factura");
 
-                    if (CrearYEnviarDocumentoElectrónico(venta, out string? mensaje,
-                        out DocumentoElectrónico<Factura<Cliente, LíneaVenta>, LíneaVenta>? ventaElectrónica, pruebaHabilitación: false)) {
+                } else if (documentoIntegración == DocumentoIntegración.NotaCrédito) {
 
-                        var rutaVentaElectrónica = ventaElectrónica?.Ruta;
-                        if (!File.Exists(rutaVentaElectrónica))
-                            throw new Exception($"No se pudo encontrar el archivo XML de la venta electrónica {rutaVentaElectrónica}.");
-
-                        if (venta != null && CrearPdf(venta, ventaElectrónica, out string rutaPdf)) {
-
-                            if (!File.Exists(rutaPdf))
-                                throw new Exception($"No se pudo encontrar el PDF con la representación gráfica de la venta electrónica {rutaPdf}.");
-
-                            File.WriteAllText(ObtenerRutaCambiandoExtensión(ruta, "ok"), $"{rutaVentaElectrónica}{NuevaLínea}{rutaPdf}");
-
-                        } else {
-                            throw new Exception($"No se pudo crear el PDF con la representación gráfica de la venta electrónica {rutaVentaElectrónica}.");
-                        }
-
-                    } else {
-                        throw new Exception(mensaje);
-                    }
+                    var datosNotaCrédito = Deserializar<DatosVenta>(File.ReadAllText(ruta), Serialización.EnumeraciónEnTexto);
+                    var mapeador = new Mapper(ConfiguraciónMapeadorNotaCréditoVentaIntegraciónInverso);
+                    var notaCréditoVenta = mapeador.Map<NotaCréditoVenta>(datosNotaCrédito);
+                    notaCréditoVenta.Líneas.ForEach(lv => lv.NotaCréditoVenta = notaCréditoVenta); // Necesario porque después de ser leídas por el Automapper no quedan automáticamente enlazadas.
+                    ValidarCliente(notaCréditoVenta.Cliente);
+                    ProcesarDocumentoCliente(notaCréditoVenta, ruta, "nota crédito");
 
                 } else {
                     throw new Exception(CasoNoConsiderado(documentoIntegración));
@@ -151,6 +139,37 @@ namespace SimpleOps.Integración {
             }
 
         } // ProcesarNuevoArchivo>
+
+
+        public static void ProcesarDocumentoCliente<M>(Factura<Cliente, M> documentoCliente, string ruta, string nombre) where M : MovimientoProducto {
+
+            if (CrearYEnviarDocumentoElectrónico(documentoCliente, out string? mensaje,
+                out DocumentoElectrónico<Factura<Cliente, M>, M>? documentoElectrónico, pruebaHabilitación: false)) {
+
+                var rutaDocumento = documentoElectrónico?.Ruta;
+                if (!File.Exists(rutaDocumento)) throw new Exception($"No se pudo encontrar el archivo XML de la {nombre} electrónica {rutaDocumento}.");
+
+                if (documentoCliente != null && CrearPdf(documentoCliente, documentoElectrónico, out string rutaPdf)) {
+
+                    if (!File.Exists(rutaPdf)) 
+                        throw new Exception($"No se pudo encontrar el PDF con la representación gráfica de la {nombre} electrónica {rutaPdf}.");
+
+                    File.WriteAllText(ObtenerRutaCambiandoExtensión(ruta, "ok"), $"{rutaDocumento}{NuevaLínea}{rutaPdf}");
+
+                } else {
+                    throw new Exception($"No se pudo crear el PDF con la representación gráfica de la {nombre} electrónica {rutaDocumento}.");
+                }
+
+            } else {
+                throw new Exception(mensaje);
+            }
+
+        } // ProcesarDocumentoCliente>
+
+
+        public static void ValidarCliente(Cliente? cliente) {
+            if (cliente?.Municipio?.CódigoDepartamento == CódigoDepartamentoNulo) throw new Exception("El departamento es incorrecto.");
+        } // ValidarCliente>
 
 
         #endregion Métodos y Funciones>

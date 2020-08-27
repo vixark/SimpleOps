@@ -66,7 +66,7 @@ namespace SimpleOps.Interfaz {
 
             if (ModoDesarrolloPlantillasDocumentos) {
 
-                LblAlerta.Content += $"Está habilitado el reemplazo de plantillas cshtml. Esta función se debe desactivar en producción.{NuevaLínea}";
+                LblAlerta.Content += $"Está habilitado el reemplazo de plantillas CSHTML. Esta función se debe desactivar en producción.{NuevaLínea}";
                 foreach (var plantilla in ObtenerValores<PlantillaDocumento>()) {
                     var rutaDesarrollo = ObtenerRutaPlantilla(plantilla);
                     if (File.Exists(rutaDesarrollo)) File.Copy(rutaDesarrollo, ObtenerRutaPlantilla(plantilla, forzarRutaAplicación: true), overwrite: true);
@@ -105,7 +105,7 @@ namespace SimpleOps.Interfaz {
             // LeerBaseDatosCompleta();
             if (HabilitarPruebasUnitarias) {
                 DocumentosElectrónicos();
-                // IntegraciónAplicacionesTerceros(); Esta prueba se usa cuando se quiere simular el comportamiento de un programa tercero que genera archivos de comunicación .json con SimpleOps para el modo de integración de facturación electrónica. Si ya se dispone de un programa tercero generando correctamente los archivos no es necesario activar esta línea.
+                // IntegraciónAplicacionesTerceros(); // Esta prueba se usa cuando se quiere simular el comportamiento de un programa tercero que genera archivos de comunicación .json con SimpleOps para el modo de integración de facturación electrónica. Si ya se dispone de un programa tercero generando correctamente los archivos no es necesario activar esta línea.
             }
 
         } // Principal>

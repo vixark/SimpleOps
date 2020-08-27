@@ -79,7 +79,7 @@ namespace SimpleOps.Singleton {
 
         public float RelaciónFuentesPdfPantalla { get; set; } = 0.59375F; // 0,59375 = 9.5 / 16 para pantallas grandes con 125% de zoom en Windows. 0.740625 = 11.85 / 16 para pantallas medianas con zoom 100% en Windows. Es un factor de conversión aproximado entre el tamaño de la fuente en puntos de HTML y el tamaño de la letra usando medidas la librería System.Drawing. Es necesario para poder calcular el alto de la lista de productos y la cantidad de páginas de los documentos gráficos.
 
-        public string RutaIntegración { get; set; } = @"D:\Programas\Programa Tercero\Integración SimpleOps";
+        public string RutaIntegración { get; set; } = @"D:\Programas\SimpleOps\Programa Tercero\Integración SimpleOps"; // Carpeta dentro de un programa tercero usada para almacenar archivos de comunicación entre SimpleOps y este programa tercero.
 
 
         public string? _ClaveCertificado;

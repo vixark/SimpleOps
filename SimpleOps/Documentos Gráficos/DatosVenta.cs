@@ -10,7 +10,7 @@ namespace SimpleOps.DocumentosGráficos {
 
 
 
-    public class DatosVenta : DatosDocumento, IConLíneasProductos {
+    public class DatosVenta : DatosDocumento, IConLíneasProductos { // Común para ventas y para notas crédito de ventas.
 
 
         #region Propiedades
@@ -39,14 +39,13 @@ namespace SimpleOps.DocumentosGráficos {
 
         public string? DescuentoCondicionadoTexto { get; set; } // Puede ser nulo para las facturas proforma.
 
+        public string? RazónNotaCréditoTexto { get; set; } // Puede ser nulo para facturas proforma y para facturas de venta. Solo aplica para las notas crédito de venta.
+
+        public string? NombreCude { get; set; } // Puede ser nulo para las facturas proforma.
+
+        public string? CódigoVenta { get; set; } // Puede ser nulo para las facturas proforma y para ventas.
+
         #endregion Propiedades>
-
-
-        #region Constructores
-
-        public DatosVenta() => (NombreDocumento) = ("Factura");
-
-        #endregion Constructores>
 
 
     } // DatosVenta>

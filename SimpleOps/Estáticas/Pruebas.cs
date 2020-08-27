@@ -308,7 +308,17 @@ namespace SimpleOps {
             Empresa.PróximoNúmeroDocumentoElectrónicoPruebas++;
             GuardarOpciones(Empresa);
             VentaSimple(out _, número, 10, 5500, "Empresa Ensayo", "900900900", "Calle 29 47 45", "2889896", 
-                false, out Venta? _, out DocumentoElectrónico<Factura<Cliente, LíneaVenta>, LíneaVenta>? _, pruebaIntegración: true);
+                false, out Venta? venta, out DocumentoElectrónico<Factura<Cliente, LíneaVenta>, LíneaVenta>? _, pruebaIntegración: true);
+
+            if (venta != null) {
+
+                número = Empresa.PróximoNúmeroDocumentoElectrónicoPruebas; // Se almacena en esta variable temporal y después se guardan las opciones para evitar posibles problemas de concurrencia.
+                Empresa.PróximoNúmeroDocumentoElectrónicoPruebas++;
+                GuardarOpciones(Empresa);
+                NotaCréditoEjemploXml(out _, número, pruebaHabilitación: false, venta, out NotaCréditoVenta? _,
+                    out DocumentoElectrónico<Factura<Cliente, LíneaNotaCréditoVenta>, LíneaNotaCréditoVenta>? _, pruebaIntegración: true);
+
+            }
 
         } // IntegraciónAplicacionesTerceros>
 
@@ -469,11 +479,18 @@ namespace SimpleOps {
 
             if (venta != null) {
 
-                if (NotaCréditoEjemploXml(out string? mensajeNotaCrédito, Empresa.PróximoNúmeroDocumentoElectrónicoPruebas, pruebaHabilitación, venta)) {
+                if (NotaCréditoEjemploXml(out string? mensajeNotaCrédito, Empresa.PróximoNúmeroDocumentoElectrónicoPruebas, pruebaHabilitación, venta, 
+                    out NotaCréditoVenta? notaCrédito,
+                    out DocumentoElectrónico<Factura<Cliente, LíneaNotaCréditoVenta>, LíneaNotaCréditoVenta>? notaCréditoElectrónica)) {
 
                     Empresa.PróximoNúmeroDocumentoElectrónicoPruebas++;
                     GuardarOpciones(Empresa);
-                    MostrarInformación("¡Éxito del envío de la nota crédito electrónica a la DIAN!", "Éxito"); 
+                    MostrarInformación("¡Éxito del envío de la nota crédito electrónica a la DIAN!", "Éxito");
+                    if (notaCrédito != null && CrearPdf(notaCrédito, notaCréditoElectrónica, out _)) {
+                        // Si se creó la representación gráfica exitosamente, se puede enviar el email al cliente.
+                    } else {
+                        MostrarError("No se pudo crear la representación gráfica de la nota crédito electrónica.");
+                    }
 
                 } else {
                     MostrarError(mensajeNotaCrédito, "Error en Nota Crédito Electrónica"); 
@@ -877,9 +894,9 @@ namespace SimpleOps {
 
             if (pruebaIntegración) {
 
-                var datosVenta = venta.ObtenerDatosVentaIntegración();
+                var datos = venta.ObtenerDatosIntegración();
                 File.WriteAllText(Path.Combine(Equipo.RutaIntegración, $"{DocumentoIntegración.Venta.ATexto()}{AhoraNombresArchivos}.json"), 
-                    Serializar(datosVenta, Serialización.EnumeraciónEnTexto));
+                    Serializar(datos, Serialización.EnumeraciónEnTexto));
                 mensaje = "";
                 return true;
 
@@ -890,12 +907,16 @@ namespace SimpleOps {
         } // VentaSimple>
 
 
-        public static bool NotaCréditoEjemploXml(out string? mensaje, int númeroNotaCrédito, bool pruebaHabilitación, Venta venta) {
+        public static bool NotaCréditoEjemploXml(out string? mensaje, int númeroNotaCrédito, bool pruebaHabilitación, Venta venta,
+            out NotaCréditoVenta? notaCrédito, 
+            out DocumentoElectrónico<Factura<Cliente, LíneaNotaCréditoVenta>, LíneaNotaCréditoVenta>? notaCréditoElectrónica, bool pruebaIntegración = false) {
 
+            notaCréditoElectrónica = null;
+            notaCrédito = null;
             if (Empresa.PrimerNúmeroFacturaAutorizada == null) return Falso(out mensaje, "No se esperaba Empresa.PrimerNúmeroFacturaAutorizada nulo.");
             if (venta.Cliente == null) return Falso(out mensaje, "No se esperaba que el cliente de la venta fuera nulo.");
 
-            var notaCrédito = new NotaCréditoVenta(venta.Cliente, venta) {
+            notaCrédito = new NotaCréditoVenta(venta.Cliente, venta) {
                 FechaHora = AhoraUtcAjustado, Número = númeroNotaCrédito, ConsecutivoDianAnual = 50 + númeroNotaCrédito, 
                 Razón = RazónNotaCrédito.DevoluciónParcial, Observación = "Devolución por mala calidad."
             };
@@ -903,7 +924,17 @@ namespace SimpleOps {
                 new LíneaNotaCréditoVenta(new Producto("AOHV84-225") { Descripción = "Articulo 1 Prueba" }, notaCrédito, 1, 12600.06M, 10000),
             };
 
-            return CrearYEnviarDocumentoElectrónico(notaCrédito, out mensaje, out _, pruebaHabilitación);
+            if (pruebaIntegración) {
+
+                var datos = notaCrédito.ObtenerDatosIntegración();
+                File.WriteAllText(Path.Combine(Equipo.RutaIntegración, $"{DocumentoIntegración.NotaCrédito.ATexto()}{AhoraNombresArchivos}.json"),
+                    Serializar(datos, Serialización.EnumeraciónEnTexto));
+                mensaje = "";
+                return true;
+
+            } else {
+                return CrearYEnviarDocumentoElectrónico(notaCrédito, out mensaje, out notaCréditoElectrónica, pruebaHabilitación);
+            }
 
         } // NotaCréditoEjemploXml>
 

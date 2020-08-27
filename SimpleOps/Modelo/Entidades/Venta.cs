@@ -128,31 +128,24 @@ namespace SimpleOps.Modelo {
         } // ObtenerAnticipo>
 
 
-        public DatosVenta ObtenerDatosVenta(bool modoImpresión) {
+        public DatosVenta ObtenerDatos(bool modoImpresión) {
 
             var mapeador = new Mapper(ConfiguraciónMapeadorVenta);
-            var datosVenta = mapeador.Map<DatosVenta>(this);
-            var mapeadorEmpresa = new Mapper(ConfiguraciónMapeadorEmpresa);
-            datosVenta.Empresa = mapeadorEmpresa.Map<DatosEmpresa>(Empresa);
-            datosVenta.Columnas = ObtenerOpcionesColumnas(datosVenta, Líneas);
-            datosVenta.LogoBase64 = ObtenerBase64(Path.Combine(ObtenerRutaCarpetaImagenesPlantillas(),
-                modoImpresión ? NombreArchivoLogoEmpresaImpresión : NombreArchivoLogoEmpresa), paraHtml: true);
-            datosVenta.CertificadoBase64 = ObtenerBase64(Path.Combine(ObtenerRutaCarpetaImagenesPlantillas(), 
-                modoImpresión ? NombreArchivoCertificadoEmpresaImpresión : NombreArchivoCertificadoEmpresa), paraHtml: true);
-            datosVenta.TotalPáginas = ObtenerTotalPáginas(datosVenta, Líneas);
-            datosVenta.ModoImpresión = modoImpresión;
-            return datosVenta;
-            
-        } // ObtenerDatosVenta>
+            var datos = mapeador.Map<DatosVenta>(this);
+            datos.NombreDocumento = "Factura";
+            CompletarDatosVenta(modoImpresión, datos, Líneas);
+            return datos;
+
+        } // ObtenerDatos>
 
 
-        public Integración.DatosVenta ObtenerDatosVentaIntegración() {
+        public Integración.DatosVenta ObtenerDatosIntegración() {
 
             var mapeador = new Mapper(ConfiguraciónMapeadorVentaIntegración);
-            var datosVenta = mapeador.Map<Integración.DatosVenta>(this);
-            return datosVenta;
+            var datos = mapeador.Map<Integración.DatosVenta>(this);
+            return datos;
 
-        } // ObtenerDatosVentaIntegración>
+        } // ObtenerDatosIntegración>
 
 
         #endregion Métodos y Funciones>

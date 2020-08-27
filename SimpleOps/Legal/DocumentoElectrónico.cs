@@ -568,7 +568,7 @@ namespace SimpleOps.Legal {
 
             }
 
-            if (ventaNota != null) { // Si la ventaNota es nula el CustomizationID será 22 o 32 y por lo tanto la DIAN no obliga a tener este elemento.
+            if (ventaNota != null && ventaNota.Cude != null) { // Si la ventaNota es nula o no se tiene el CUDE el CustomizationID será 22 o 32 y por lo tanto la DIAN no obliga a tener este elemento. Se permite que no se tenga en cuenta una ventaNota que no tenga CUDE porque se puede dar el caso de integración con programas terceros que no lleven el registro del CUFE de la factura electrónica en su base de datos, pero si se quiere permitir que se pase un número de factura para escribirlo en la nota crédito. Estas notas créditos quedarían enlazadas a la factura únicamente en la representación gráfica y no en el XML.
 
                 document.BillingReference = new BillingReferenceType[] {
                     new BillingReferenceType {

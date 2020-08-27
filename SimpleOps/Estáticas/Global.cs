@@ -36,13 +36,13 @@ namespace SimpleOps {
 
         public static bool HabilitarRastreoDeDatosSensibles = false; // Si se establece en verdadero en la ventana 'Inmediato' se podrá ver el detalle de las acciones ejecutados en la base de datos, incluyendo los datos. Si se deja en falso EF Core reemplazará los datos por textos de reemplazo. En producción siempre debe estar en falso.
 
-        public static bool ModoDesarrolloPlantillasDocumentos = true; // En modo desarrollo se usa en verdadero para permitir que los cambios que se hagan a los archivos cshtml en SimpleOps/Plantillas sean copiados a la ruta de la aplicación y para habilitar algunas líneas de código que facilitan el desarrollo de estas plantillas. En producción se deben usar directamente los archivos en la ruta de la aplicación porque no se tienen los de desarrollo.
+        public static bool ModoDesarrolloPlantillasDocumentos = false; // En modo desarrollo se usa en verdadero para permitir que los cambios que se hagan a los archivos CSHTML en SimpleOps/Plantillas sean copiados a la ruta de la aplicación y para habilitar algunas líneas de código que facilitan el desarrollo de estas plantillas. En producción se deben usar directamente los archivos en la ruta de la aplicación porque no se tienen los de desarrollo.
 
         public static bool HabilitarPruebasUnitarias = true; // Se usa verdadero cuando se quieran realizar las pruebas al iniciar la aplicación.
 
-        public static bool ModoIntegraciónFacturaElectrónica = false; // Modo especial para integrar solo la funcionalidad de facturación electrónica a aplicaciones no compatibles con .Net Core 3.1.
+        public static bool ModoIntegraciónFacturaElectrónica = true; // Modo especial para integrar solo la funcionalidad de facturación electrónica a aplicaciones no compatibles con .Net Core 3.1.
 
-        public static string RutaDesarrollo = @"D:\Nubes\Dropbox\Desarrollos\SimpleOps\Código\SimpleOps\SimpleOps"; // Se usa para que al iniciar en modo de desarrollo copie los archivos cshtml en Plantillas a 'CarpetaPlantillas' en la ruta de la aplicación. En el computador de desarrollo en casa está en D:\Nubes\Dropbox\Desarrollos\SimpleOps\Código\SimpleOps\SimpleOps. En el computador de desarrollo de la empresa está en E:\Dropbox\Desarrollos\SimpleOps\Código\SimpleOps\SimpleOps.
+        public static string RutaDesarrollo = @"D:\Nubes\Dropbox\Desarrollos\SimpleOps\Código\SimpleOps\SimpleOps"; // Se usa para que al iniciar en modo de desarrollo copie los archivos CSHTML en Plantillas a 'CarpetaPlantillas' en la ruta de la aplicación. En el computador de desarrollo en casa está en D:\Nubes\Dropbox\Desarrollos\SimpleOps\Código\SimpleOps\SimpleOps. En el computador de desarrollo de la empresa está en E:\Dropbox\Desarrollos\SimpleOps\Código\SimpleOps\SimpleOps.
 
         public const string NombreAplicación = "SimpleOps";
 
@@ -121,6 +121,24 @@ namespace SimpleOps {
             = new MapperConfiguration(c => {
                 c.CreateMap<LíneaVenta, Integración.DatosLíneaProducto>().ReverseMap();
                 c.CreateMap<Venta, Integración.DatosVenta>().ReverseMap();
+            });
+
+        public static MapperConfiguration ConfiguraciónMapeadorNotaCréditoVenta // Se crean mapeadores propios para las notas crédito para evitar complejizar con objetos genéricos estos objetos de AutoMapper.
+            = new MapperConfiguration(c => {
+                c.CreateMap<LíneaNotaCréditoVenta, DatosLíneaProducto>();
+                c.CreateMap<NotaCréditoVenta, DatosVenta>().ForMember(vg => vg.CódigoDocumento, mce => mce.MapFrom(v => v.Código));
+            });
+
+        public static MapperConfiguration ConfiguraciónMapeadorNotaCréditoVentaIntegración
+            = new MapperConfiguration(c => {
+                c.CreateMap<LíneaNotaCréditoVenta, Integración.DatosLíneaProducto>();
+                c.CreateMap<NotaCréditoVenta, Integración.DatosVenta>();
+            });
+
+        public static MapperConfiguration ConfiguraciónMapeadorNotaCréditoVentaIntegraciónInverso
+            = new MapperConfiguration(c => {
+                c.CreateMap<LíneaNotaCréditoVenta, Integración.DatosLíneaProducto>().ReverseMap();
+                c.CreateMap<NotaCréditoVenta, Integración.DatosVenta>().ReverseMap();
             });
 
         public static MapperConfiguration ConfiguraciónMapeadorEmpresa = new MapperConfiguration(c => c.CreateMap<OpcionesEmpresa, DatosEmpresa>());
@@ -301,7 +319,10 @@ namespace SimpleOps {
 
         public enum TipoReglaDian { Rechazo, Notificación }
 
-        public enum RazónNotaCrédito { DevoluciónParcial = 1, AnulaciónFactura = 2, Descuento = 3, AjustePrecio = 4, Otra = 5 } // Tomados del numeral 13.2.4. de la documentación de la DIAN para la facturación electrónica. AjustePrecio se supondrá que es para corrección de errores (hacia abajo) en el precio de algún producto y Descuento para descuentos acordados.
+        public enum RazónNotaCrédito { // Tomados del numeral 13.2.4. de la documentación de la DIAN para la facturación electrónica. AjustePrecio se supondrá que es para corrección de errores (hacia abajo) en el precio de algún producto y Descuento para descuentos acordados.
+            [Display(Name = "Devolución Parcial")] DevoluciónParcial = 1, [Display(Name = "Anulación Factura")] AnulaciónFactura = 2, 
+            [Display(Name = "Descuento")] Descuento = 3, [Display(Name = "Ajuste Precio")] AjustePrecio = 4, [Display(Name = "Otra")] Otra = 5 
+        }
 
         public enum RazónNotaDébito { Intereses = 1, Gastos = 2, AjustePrecio = 3, Otra = 4 } // Tomados del numeral 13.2.5. de la documentación de la DIAN para la facturación electrónica.
 

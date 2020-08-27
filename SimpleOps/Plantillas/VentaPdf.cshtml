@@ -55,8 +55,15 @@
 
                     <td class="venc-td">
                         <div class="tctr venc-cn">
-                            <span class="t18b venc-tít">Vencimiento</span>
-                            <div class="venc-val">@Model.FechaVencimiento?.ToShortDateString()</div>
+
+                            @if (Model.NombreDocumento == "Factura") {
+                                <span class="t18b venc-tít">Vencimiento</span>
+                                <div class="venc-val">@Model.FechaVencimiento?.ToShortDateString()</div>
+                            } else if (Model.NombreDocumento == "Nota Crédito") {
+                                <span class="t18b venc-tít">Razón</span>
+                                <div class="venc-val">@Model.RazónNotaCréditoTexto</div>
+                            }
+
                         </div>
                     </td>
 
@@ -66,8 +73,15 @@
                     <td class="oc-td" colspan="3">
                         <div class="oc-cn-cn">
                             <div class="oc-cn">
-                                <span class="t18b oc-tít">Orden de Compra</span>
-                                <div class="oc-val">@Model.OrdenCompraNúmero</div>
+
+                                @if (Model.NombreDocumento == "Factura") {
+                                    <span class="t18b oc-tít">Orden de Compra</span>
+                                    <div class="oc-val">@Model.OrdenCompraNúmero</div>
+                                } else if (Model.NombreDocumento == "Nota Crédito") {
+                                    <span class="t18b oc-tít">Número Factura</span>
+                                    <div class="oc-val">@Model.CódigoVenta</div>
+                                }
+
                             </div>
                         </div>
                     </td>
@@ -117,7 +131,7 @@
 
                     <tr>
                         <td colspan="2" > 
-                            <span><span class="t18b" >CUFE:</span> <span class="t9-5n" >@Model.Cude</span></span>
+                            <span><span class="t18b" >@Model.NombreCude:</span> <span class="t9-5n" >@Model.Cude</span></span>
                         </td>
                     </tr>
 

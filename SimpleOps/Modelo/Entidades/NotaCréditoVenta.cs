@@ -4,6 +4,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using static Vixark.General;
 using static SimpleOps.Global;
+using SimpleOps.DocumentosGráficos;
+using AutoMapper;
+using System.IO;
+using static SimpleOps.DocumentosGráficos.DocumentosGráficos;
 
 
 
@@ -39,6 +43,21 @@ namespace SimpleOps.Modelo {
         #endregion Propiedades>
 
 
+        #region Propiedades Autocalculadas
+
+        /// <summary>
+        /// Se usa principalmente para pasar al procedimiento de generación de representación gráfica de documentos.
+        /// </summary>
+        public string RazónNotaCréditoTexto => Razón.ATexto();
+
+        /// <summary>
+        /// Se usa principalmente para pasar al procedimiento de generación de representación gráfica de documentos.
+        /// </summary>
+        public string CódigoVenta => Venta?.Código!; // Se asegura que nunca será nulo porque Venta nunca lo será.
+
+        #endregion Propiedades Autocalculadas>
+
+
         #region Constructores
 
         private NotaCréditoVenta() { } // Solo para que EF Core no saque error.
@@ -60,6 +79,28 @@ namespace SimpleOps.Modelo {
         public override decimal ObtenerAnticipo() => 0;
 
         public override string? ObtenerClaveParaCude() => Empresa.PinAplicación;
+
+
+        public DatosVenta ObtenerDatos(bool modoImpresión) {
+
+            var mapeador = new Mapper(ConfiguraciónMapeadorNotaCréditoVenta);
+            var datos = mapeador.Map<DatosVenta>(this);
+            datos.NombreDocumento = "Nota Crédito";
+            datos.PrefijoNombreArchivo = "NC";
+            CompletarDatosVenta(modoImpresión, datos, Líneas);
+            return datos;
+
+        } // ObtenerDatos>
+
+
+        public Integración.DatosVenta ObtenerDatosIntegración() {
+
+            var mapeador = new Mapper(ConfiguraciónMapeadorNotaCréditoVentaIntegración);
+            var datos = mapeador.Map<Integración.DatosVenta>(this);
+            return datos;
+
+        } // ObtenerDatosIntegración>
+
 
         #endregion Métodos y Funciones>
 
