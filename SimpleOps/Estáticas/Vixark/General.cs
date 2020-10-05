@@ -833,9 +833,9 @@ namespace Vixark {
                 ConectorCoordinante.Ni => "ni",
                 _ => throw new Exception(CasoNoConsiderado(conector))
             };
-            cTexto.Append(" ");
+            cTexto.Append(' ');
             cTexto.Append(textoConector);
-            cTexto.Append(" ");
+            cTexto.Append(' ');
             cTexto.Append(lista[^1]);
 
             return cTexto.ToString();

@@ -144,9 +144,9 @@ namespace SimpleOps.Datos {
         } // Contexto>
 
 
-        private Contexto() { } // Necesario para la migración de EF Core. No debería ser usado en ninguna parte del código. Activar solo para la migración y volver a desactivar.
+        private Contexto() { } // Necesario para la migración de EF Core. No debería ser usado en ninguna parte del código. Poner public solo para la migración y después volver a poner private.
 
-        #endregion
+        #endregion Constructores>
 
 
         #region Métodos

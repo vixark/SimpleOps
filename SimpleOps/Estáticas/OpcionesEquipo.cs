@@ -65,7 +65,7 @@ namespace SimpleOps.Singleton {
 
         #region Rutas
 
-        public string RutaAplicación { get; set; } = @"D:\Programas\SimpleOps"; // En el computador de producción está en D:\Programas Ejecutables\SimpleOps. En el computador de desarrollo en casa está en D:\Programas\SimpleOps. En el computador de desarrollo de la empresa está en E:\SimpleOps. Esta ruta debe ser la misma que está almacenada en '[RutaAplicación]\Opciones\Equipo.json', se necesita escribir aquí principalmente para poder ubicar estos archivos de opciones.
+        public string RutaAplicación { get; set; } = @"D:\Programas\SimpleOps"; // En el computador de producción está en D:\Programas\SimpleOps. En el computador de desarrollo en casa está en D:\Programas\SimpleOps. En el computador de desarrollo de la empresa está en E:\SimpleOps. Esta ruta debe ser la misma que está almacenada en '[RutaAplicación]\Opciones\Equipo.json', se necesita escribir aquí principalmente para poder ubicar estos archivos de opciones.
 
         #endregion Rutas>
 
