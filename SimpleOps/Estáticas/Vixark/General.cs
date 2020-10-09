@@ -23,7 +23,10 @@ using System.Windows;
 using System.Diagnostics;
 using System.Drawing;
 using QRCoder;
-// No puede llevar referencias a otras clases de SimpleOps.
+using System.Configuration;
+using Microsoft.Data.SqlClient;
+using System.Data;
+// No puede llevar referencias a otras clases del proyecto en el que se está usando.
 
 
 
@@ -351,16 +354,16 @@ namespace Vixark {
             };
 
         public static readonly Dictionary<string, string> PalabrasFemeninas = new Dictionary<string, string> { // La clave es en masculino y el valor en femenino, se usa para cambiar los textos de acuerdo al género y número. Al no ser muchas las palabras que lo requieren se usa un diccionario.
-            { "del", "de la" }, { "el", "la" }, { "está", "está" }, { "bloqueado", "bloqueada" } 
-        }; 
+            { "del", "de la" }, { "el", "la" }, { "está", "está" }, { "bloqueado", "bloqueada" }
+        };
 
         public static readonly Dictionary<string, string> PalabrasPluralesFemeninas = new Dictionary<string, string> { // La clave es en masculino y el valor en femenino plural, se usa para cambiar los textos de acuerdo al género y número. Al no ser muchas las palabras que lo requieren se usa un diccionario.
-            { "del", "de las" }, { "el", "las" }, { "está", "están" }, { "bloqueado", "bloqueadas" } 
+            { "del", "de las" }, { "el", "las" }, { "está", "están" }, { "bloqueado", "bloqueadas" }
         };
 
         public static readonly Dictionary<string, string> PalabrasPluralesMasculinas = new Dictionary<string, string> { // La clave es en masculino y el valor en masculino plural, se usa para cambiar los textos de acuerdo al género y número. Al no ser muchas las palabras que lo requieren se usa un diccionario.
-            { "del", "de los" }, { "el", "los" }, { "está", "están" }, { "bloqueado", "bloqueados" } 
-        }; 
+            { "del", "de los" }, { "el", "los" }, { "está", "están" }, { "bloqueado", "bloqueados" }
+        };
 
         public static NumberFormatInfo FormatoPesosColombianos = null!;  // Se inicia en IniciarVariablesGenerales.
 
@@ -386,7 +389,7 @@ namespace Vixark {
 
         public static string CasoNoConsiderado(string? valor) => $"No se ha considerado el caso para el valor {valor ?? "nulo"}.";
 
-        public static string CasoNoConsiderado<T>(T enumeración) where T : struct, Enum 
+        public static string CasoNoConsiderado<T>(T enumeración) where T : struct, Enum
             => $"No se ha considerado el valor {enumeración} para la enumeración {enumeración.GetType()}.";
 
         #endregion Textos y Excepciones>
@@ -448,7 +451,7 @@ namespace Vixark {
         /// <summary>
         /// Devuelve una ruta del archivo con extensión diferente. La <paramref name="nuevaExtensión"/> se pasa sin el punto.
         /// </summary>
-        public static string ObtenerRutaCambiandoExtensión(string ruta, string nuevaExtensión) 
+        public static string ObtenerRutaCambiandoExtensión(string ruta, string nuevaExtensión)
             => $"{Path.Combine(Path.GetDirectoryName(ruta)!, Path.GetFileNameWithoutExtension(ruta))}.{nuevaExtensión}";
 
         /// <summary>
@@ -511,7 +514,7 @@ namespace Vixark {
             using var FileCheck = File.OpenRead(rutaArchivo);
             #pragma warning disable CA5351 // No usar algoritmos criptográficos dañados. Es aceptable porque solo es para identificar el archivo.
             using var md5 = new MD5CryptoServiceProvider();
-            #pragma warning restore CA5351 
+            #pragma warning restore CA5351
             var md5Hash = md5.ComputeHash(FileCheck);
             return BitConverter.ToString(md5Hash).Reemplazar("-", "").AMinúscula()!;
 
@@ -592,7 +595,7 @@ namespace Vixark {
             using var generadorQR = new QRCodeGenerator();
             var datosQR = generadorQR.CreateQrCode(texto, QRCodeGenerator.ECCLevel.L);
             using var base64QR = new Base64QRCode(datosQR);
-            return (paraHtml ? "data:image/png;base64," : "") + base64QR.GetGraphic(3); 
+            return (paraHtml ? "data:image/png;base64," : "") + base64QR.GetGraphic(3);
 
         } // ObtenerCódigoQRBase64>
 
@@ -610,7 +613,7 @@ namespace Vixark {
 
             if (sustantivo == null) return null;
 
-            if (ClasificaciónSustantivos.ContainsKey(sustantivo) && PalabrasFemeninas.ContainsKey(palabraMasculina) 
+            if (ClasificaciónSustantivos.ContainsKey(sustantivo) && PalabrasFemeninas.ContainsKey(palabraMasculina)
                 && PalabrasPluralesFemeninas.ContainsKey(palabraMasculina) && PalabrasPluralesMasculinas.ContainsKey(palabraMasculina)) {
 
                 var género = ClasificaciónSustantivos[sustantivo].Item1;
@@ -642,7 +645,7 @@ namespace Vixark {
                             default:
                                 throw new Exception(CasoNoConsiderado(número));
                         }
-                        
+
                     default:
                         throw new Exception(CasoNoConsiderado(género));
                 }
@@ -655,7 +658,7 @@ namespace Vixark {
         } // ObtenerPalabraNúmeroYGénero>
 
 
-        public static string ExtraerConPatrón(string valor, string patrón, int grupo, out int coincidencias, bool errorEnNoCoincidenciaDePatrón = true, 
+        public static string ExtraerConPatrón(string valor, string patrón, int grupo, out int coincidencias, bool errorEnNoCoincidenciaDePatrón = true,
             bool devolverValorSiNoHayCoincidencia = false) {
 
             coincidencias = 0;
@@ -672,7 +675,7 @@ namespace Vixark {
                         valor = coincidenciasObj.Groups[grupo].Value;
                     } else {
 
-                        if (errorEnNoCoincidenciaDePatrón) 
+                        if (errorEnNoCoincidenciaDePatrón)
                             throw new Exception("Expresión regular sin coincidencias. Alternativas de solución: Arreglar expresión regular, propagar error o ignorar " +
                                 " con errorEnNoCoincidenciaDePatrón = false.");
                         if (!devolverValorSiNoHayCoincidencia) valor = "";
@@ -712,7 +715,7 @@ namespace Vixark {
         /// <summary>
         /// Igual AFechaYYMMDD() pero para textos que pueden ser nulos. Es 50% más lenta.
         /// </summary>
-        public static DateTime? AFechaYYMMDDNulable(this string? s) => s == null ? (DateTime?)null 
+        public static DateTime? AFechaYYMMDDNulable(this string? s) => s == null ? (DateTime?)null
             : new DateTime((s[0] - '0') * 10 + s[1] - '0' + 2000, (s[2] - '0') * 10 + s[3] - '0', (s[4] - '0') * 10 + s[5] - '0');
 
 
@@ -887,7 +890,7 @@ namespace Vixark {
         /// método original tiene parámetros opcionales y por esto no es aceptado en HasConversion.
         /// Función para clases. Para estructuras usar <see cref="DeserializarEstructura{T}(string)"/>.
         /// </summary>
-        public static T? Deserializar<T>(string json) where T : class => string.IsNullOrEmpty(json) ? default : JsonSerializer.Deserialize<T>(json);
+        public static T? Deserializar<T>(string? json) where T : class => string.IsNullOrEmpty(json) ? default : JsonSerializer.Deserialize<T>(json);
 
         /// <summary>
         /// Encapsulación de rápido acceso de JsonSerializer.Deserialize().
@@ -898,13 +901,13 @@ namespace Vixark {
         /// <summary>
         /// Serialización que permite establecer uno o varios tipos de <paramref name="serialización"/> enlazándolos con el operador |.
         /// </summary>
-        public static string Serializar<T>(T objeto, Serialización serialización) 
+        public static string Serializar<T>(T objeto, Serialización serialización)
             => JsonSerializer.Serialize(objeto, ObtenerOpcionesSerialización(serialización));
 
         /// <summary>
         /// Deserializalización que permite establecer uno o varios tipos de <paramref name="serialización"/> enlazándolos con el operador |.
         /// </summary>
-        public static T? Deserializar<T>(string json, Serialización serialización) where T : class  // Se implementa solo para clases porque es el escenario más común. Si se necesitara para estructuras habría que duplicar la función.
+        public static T? Deserializar<T>(string json, Serialización serialización) where T : class // Se implementa solo para clases porque es el escenario más común. Si se necesitara para estructuras habría que duplicar la función.
             => (string.IsNullOrEmpty(json)) ? default : JsonSerializer.Deserialize<T>(json, ObtenerOpcionesSerialización(serialización));
 
         /// <summary>
@@ -919,7 +922,7 @@ namespace Vixark {
         /// realizados en la base de datos.
         /// </summary>
         public static ValueComparer ComparadorJSON<T>() where T : class => new ValueComparer<T>( // La restricción de clase es para poder usar el método Deserializar que exige esta restricción. En términos generales no debe ser problema porque el caso más común de serializaciónes de clases. Si fuera necesario implementarlo para estructuras habría que duplicar el código. No se declara con tipo T? porque no es el tipo que espera EF Core.
-                (o1, o2) => Serializar(o1) == Serializar(o2),  o => o == null ? 0 : Serializar(o).GetHashCode(StringComparison.InvariantCulture), 
+                (o1, o2) => Serializar(o1) == Serializar(o2), o => o == null ? 0 : Serializar(o).GetHashCode(StringComparison.InvariantCulture),
                 o => Deserializar<T>(Serializar(o))!); // // Se permitirá que los objetos tipo T sean nulos así esto impida la verificación de nulidad. Esto no es problema porque esta función solo es usada internamente por EF Core. Es suficiente para las necesidades actuales aunque es desaconsejado crear comparadores genéricos usando JSON: https://stackoverflow.com/questions/38411221/compare-two-objects-using-serialization-c-sharp. Tomado de https://stackoverflow.com/questions/44829824/how-to-store-json-in-an-entity-field-with-ef-core/59185869#59185869 y https://stackoverflow.com/questions/53050419/json-serialization-value-conversion-not-tracking-changes-with-ef-core/53051419#53051419.
 
         #endregion Serialización JSON>
@@ -930,8 +933,14 @@ namespace Vixark {
         /// <summary>
         /// Encapsulación de rápido acceso de StartsWith() usando StringComparison.Ordinal. Es útil para omitir la advertencia CA1307 sin saturar el código.
         /// </summary>
-        public static bool EmpiezaPor(this string? texto, string textoInicio, bool ignorarCapitalización = true) 
+        public static bool EmpiezaPor(this string? texto, string textoInicio, bool ignorarCapitalización = true)
             => texto != null && texto.StartsWith(textoInicio, ignorarCapitalización ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
+
+        /// <summary>
+        /// Encapsulación de rápido acceso de EndsWith() usando StringComparison.Ordinal. Es útil para omitir la advertencia CA1307 sin saturar el código.
+        /// </summary>
+        public static bool FinalizaCon(this string? texto, string textoFin, bool ignorarCapitalización = true)
+            => texto != null && texto.EndsWith(textoFin, ignorarCapitalización ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
 
         /// <summary>
         /// Encapsulación de rápido acceso de Contains() usando StringComparison.Ordinal. Es útil para omitir la advertencia CA1307 sin saturar el código.
@@ -959,7 +968,7 @@ namespace Vixark {
         /// <summary>
         /// Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 sin saturar el código.
         /// </summary>
-        public static string? ATexto(this DateTime? fechaHora, string formato) 
+        public static string? ATexto(this DateTime? fechaHora, string formato)
             => fechaHora == null ? null : ((DateTime)fechaHora).ToString(formato, CultureInfo.InvariantCulture);
 
         /// <summary>
@@ -970,6 +979,12 @@ namespace Vixark {
         /// <returns></returns>
         public static DateTime? AFecha(this string? texto, string formato)
             => texto == null ? (DateTime?)null : DateTime.ParseExact(texto, formato, CultureInfo.InvariantCulture);
+
+        /// <summary>
+        /// Encapsulación de rápido acceso de IndexOf() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 sin saturar el código.
+        /// </summary>
+        public static int ÍndiceDe(this string texto, string textoAEncontrar, int índiceInicial)
+            => texto.IndexOf(textoAEncontrar, índiceInicial, StringComparison.Ordinal);
 
         /// <summary>
         /// Encapsulación de acceso rápido para convertir un texto en una enumeración.
@@ -1015,14 +1030,29 @@ namespace Vixark {
         public static string ATexto(this char carácter) => carácter.ToString(CultureInfo.InvariantCulture);
 
         /// <summary>
+        /// Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 sin saturar el código.
+        /// </summary>
+        public static string ATexto(this double número) => número.ToString(CultureInfo.InvariantCulture);
+
+        /// <summary>
+        /// Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 sin saturar el código.
+        /// </summary>
+        public static string ATexto(this double número, string formato) => número.ToString(formato, CultureInfo.InvariantCulture);
+
+        /// <summary>
+        /// Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 sin saturar el código.
+        /// </summary>
+        public static string ATexto(this TimeSpan intervalo, string formato) => intervalo.ToString(formato, CultureInfo.InvariantCulture);
+
+        /// <summary>
         /// Encapsulación de rápido acceso de ToLowerInvariant(). Es útil para omitir la advertencia CA1308 sin saturar el código.
         /// No se puede crear un método con el mismo nombre para string (sin ?) porque el compilador no lo permite. Si se necesitara 
         /// se podría hacer otro método con otro nombre. Una solución fácil es usar este método con un string y poner ! después de () 
         /// para informarle al compilador que se asegura que el resultado no será nulo.
         /// </summary>
-        #pragma warning disable CA1308 // Normalizar las cadenas en mayúsculas
+#pragma warning disable CA1308 // Normalizar las cadenas en mayúsculas
         public static string? AMinúscula(this string? texto) => texto?.ToLowerInvariant();
-        #pragma warning restore CA1308 // Normalizar las cadenas en mayúsculas
+#pragma warning restore CA1308 // Normalizar las cadenas en mayúsculas
 
         public static string ATexto(this bool booleano) => booleano ? "true" : "false";
 
@@ -1030,7 +1060,7 @@ namespace Vixark {
 
         public static string ATexto(this byte[] bytes) => BitConverter.ToString(bytes).AMinúscula()!; // Se asegura que nunca es nulo porque así el vector sea vacío devuelve una cadena vacía no nula.
 
-        public static string ATextoDinero(this decimal número, bool agregarMoneda = true) 
+        public static string ATextoDinero(this decimal número, bool agregarMoneda = true)
             => $"{número.ToString("#,0", FormatoPesosColombianos)}{(agregarMoneda ? " $" : "")}";
 
         /// <summary>
@@ -1130,7 +1160,7 @@ namespace Vixark {
             var tipo = enumeración.GetType();
             var textoDirecto = enumeración.ToString();
 
-            string obtenerTexto(string textoDirecto) 
+            string obtenerTexto(string textoDirecto)
                 => tipo.GetMember(textoDirecto).Where(x => x.MemberType == MemberTypes.Field && ((FieldInfo)x).FieldType == tipo)
                        .First().GetCustomAttribute<DisplayAttribute>()?.Name ?? textoDirecto;
 
@@ -1208,12 +1238,12 @@ namespace Vixark {
         /// Igual que CargarLista(entidad, obtenerLista) pero agrega el parámetro <paramref name="obtenerFiltro"/> que permite
         /// filtrar los datos que se deseen cargar.
         /// </summary>
-        public static bool CargarLista<E, L>(this DbContext ctx, E entidad, Expression<Func<E, IEnumerable<L>>> obtenerLista, 
+        public static bool CargarLista<E, L>(this DbContext ctx, E entidad, Expression<Func<E, IEnumerable<L>>> obtenerLista,
             Expression<Func<L, bool>> obtenerFiltro) where E : class where L : class {
 
             ctx.Entry(entidad).Collection(obtenerLista).Query().Where(obtenerFiltro).Load();
             return true; // Solo se usa para para poder usar este método fácilmente en expresiones de switch.
-            
+
         } // CargarLista>
 
 
@@ -1224,7 +1254,7 @@ namespace Vixark {
         /// <para>Nota: Los rendimientos son aproximados. Para consultas donde se requiere mucho rendimiento se recomienda hacer las pruebas para
         /// elegir la mejor opción.</para>
         /// </summary>
-        public static int ContarElementos<E, L>(this DbContext ctx, E entidad, Expression<Func<E, IEnumerable<L>>> obtenerLista) 
+        public static int ContarElementos<E, L>(this DbContext ctx, E entidad, Expression<Func<E, IEnumerable<L>>> obtenerLista)
             where E : class where L : class => ctx.Entry(entidad).Collection(obtenerLista).Query().Count();
 
 
@@ -1232,8 +1262,8 @@ namespace Vixark {
         /// Igual que ContarLista(entidad, obtenerLista) pero agrega el parámetro <paramref name="obtenerFiltro"/> que permite
         /// filtrar los datos que se deseen contar.
         /// </summary>
-        public static int ContarLista<E, L>(this DbContext ctx, E entidad, Expression<Func<E, IEnumerable<L>>> obtenerLista, 
-            Expression<Func<L, bool>> obtenerFiltro) where E : class where L : class 
+        public static int ContarLista<E, L>(this DbContext ctx, E entidad, Expression<Func<E, IEnumerable<L>>> obtenerLista,
+            Expression<Func<L, bool>> obtenerFiltro) where E : class where L : class
             => ctx.Entry(entidad).Collection(obtenerLista).Query().Where(obtenerFiltro).Count();
 
 
@@ -1256,7 +1286,7 @@ namespace Vixark {
         /// <param name="ctx"></param>
         /// <param name="entidad">Entidad a la que se le cargará la propiedad de navegación.</param>
         /// <param name="obtenerPropiedad">Función de obtención de propiedad.</param>
-        public static bool CargarPropiedad<E, F>(this DbContext ctx, E entidad, Expression<Func<E, F?>> obtenerPropiedad) 
+        public static bool CargarPropiedad<E, F>(this DbContext ctx, E entidad, Expression<Func<E, F?>> obtenerPropiedad)
             where E : class where F : class {
 
             ctx.Entry(entidad).Reference(obtenerPropiedad).Load();
@@ -1431,15 +1461,110 @@ namespace Vixark {
         #endregion Entity Framework>
 
 
+        #region SQL
+
+        /// <summary>
+        /// Inserta masivamente una lista de entidades en una tabla (<paramref name="nombreTabla"/>) de una base de datos SQL con conexión 
+        /// <paramref name="textoConexión"/>.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="nombreTabla"></param>
+        /// <param name="lista"></param>
+        /// <param name="error"></param>
+        /// <param name="columnasAOmitir"></param>
+        /// <returns></returns>
+        public static bool InsertarEnBaseDeDatosSQL<T>(List<T> lista, string nombreTabla, string textoConexión, out string error,
+            List<string>? columnasAOmitir = null) {
+
+            if (lista.Count == 0) { error = ""; return true; }
+            var éxito = true;
+
+            using var tabla = lista.ATabla(nombreTabla, columnasAOmitir);
+            using var conexión = new SqlConnection(textoConexión);
+            conexión.Open();
+            using var insertadorMasivo = new SqlBulkCopy(conexión) { DestinationTableName = tabla.TableName };
+            foreach (DataColumn? col in tabla.Columns) {
+                if (col != null) insertadorMasivo.ColumnMappings.Add(col.ColumnName, col.ColumnName);
+            }
+
+            try {
+
+                insertadorMasivo.WriteToServer(tabla);
+                error = "";
+
+            #pragma warning disable CA1031 // No capture tipos de excepción generales. Se acepta porque aún no está completamente controlada la excepción.
+            } catch (Exception ex) {
+            #pragma warning restore CA1031
+
+                error = ex.Message;
+                SuspenderEjecuciónEnModoDesarrollo();
+                éxito = false; // Un posible error es que las descripciones sean más largas de lo que soportan las columnas. Es preferible que saque error acá porque es algo que se debe controlar.
+
+            }
+
+            return éxito;
+
+        } // InsertarEnBaseDeDatosSQL>
+
+
+        /// <summary>
+        /// Convierte una lista de un objeto a una tabla con el valor de sus propiedades. Necesaria para la función InsertarEnBaseDeDatosSQL().
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="lista"></param>
+        /// <param name="nombreTabla"></param>
+        /// <param name="columnasAOmitir"></param>
+        /// <returns></returns>
+        public static DataTable ATabla<T>(this IList<T> lista, string nombreTabla, List<string>? columnasAOmitir) { // De https://stackoverflow.com/questions/564366/convert-generic-list-enumerable-to-datatable.
+
+            var tabla = new DataTable(nombreTabla);
+            var propiedades = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            var tiposPropiedadesVálidos = new List<string> { "String", "Estado", "Int32", "Decimal", "FuentePrecio", "TipoPágina", "Byte", "DateTime", "Boolean" };
+            var índiceColumnasAñadidas = new List<int>();
+            if (columnasAOmitir == null) columnasAOmitir = new List<string>();
+
+            var i = 0;
+            foreach (var propiedad in propiedades) {
+
+                if (tiposPropiedadesVálidos.Contains(propiedad.PropertyType.Name) && !columnasAOmitir.Contains(propiedad.PropertyType.Name)
+                    && !Attribute.IsDefined(propiedad, typeof(System.ComponentModel.DataAnnotations.Schema.NotMappedAttribute))) {
+
+                    tabla.Columns.Add(propiedad.Name, propiedad.PropertyType);
+                    índiceColumnasAñadidas.Add(i);
+
+                }
+                i++;
+
+            }
+
+            var valores = new object[índiceColumnasAñadidas.Count];
+            foreach (var elemento in lista) {
+
+                var j = 0;
+                foreach (var índiceColumnaAñadida in índiceColumnasAñadidas) {
+                    if (elemento != null) valores[j] = propiedades[índiceColumnaAñadida].GetValue(elemento)!;
+                    j++;
+                }
+                tabla.Rows.Add(valores);
+
+            }
+            return tabla;
+
+        } // ATabla>
+
+
+        #endregion SQL>
+
+
         #region Genéricos
 
         /// <summary>
         /// Agrega a un diccionario de manera limpia, se crea el diccionario si es nulo y se actualiza el valor si ya existe en la clave. 
         /// Para que funcione correctamente la creación si es nulo se debe llamar asignándolo a si mismo así diccionario = diccionario.Agregar(clave, valor).
         /// </summary>
-        public static Dictionary<K, V> Agregar<K, V>(this Dictionary<K, V>? diccionario, K clave, V valor, bool sobreescribir = true) where K: notnull {
+        public static Dictionary<K, V> Agregar<K, V>(this Dictionary<K, V>? diccionario, K clave, V valor, bool sobreescribir = true) where K : notnull {
 
-            diccionario ??= new Dictionary<K, V>(); 
+            diccionario ??= new Dictionary<K, V>();
             if (diccionario.ContainsKey(clave)) {
 
                 if (sobreescribir) {
@@ -1464,7 +1589,7 @@ namespace Vixark {
 
             diccionario ??= new Dictionary<K, decimal>();
             if (diccionario.ContainsKey(clave)) {
-                diccionario[clave] += valor; 
+                diccionario[clave] += valor;
             } else {
                 diccionario.Add(clave, valor);
             }
@@ -1540,7 +1665,7 @@ namespace Vixark {
         /// de esta no se pudo realizar. Mientras no se pueda realizar el cálculo lo intentará
         /// cada vez que se acceda la propiedad.
         /// </summary>
-        public static T? SiNulo<T>(ref T? valor, Func<bool> calcular) where T : class { 
+        public static T? SiNulo<T>(ref T? valor, Func<bool> calcular) where T : class {
 
             if (valor == null) {
 
@@ -1651,12 +1776,12 @@ namespace Vixark {
         #endregion Criptografía>
 
 
-        #region Diálogos
+        #region Interfaz
 
         public static MessageBoxResult MostrarDiálogo(string? mensaje, string? título, MessageBoxButton botones = MessageBoxButton.OK,
             MessageBoxImage imagen = MessageBoxImage.None) => MessageBox.Show(mensaje, título, botones, imagen); // Este debe ser el único MessageBox.Show en todo el código.
 
-        public static MessageBoxResult MostrarError(string? mensaje, string? título = "Error") 
+        public static MessageBoxResult MostrarError(string? mensaje, string? título = "Error")
             => MostrarDiálogo(mensaje, título, MessageBoxButton.OK, MessageBoxImage.Error);
 
         public static MessageBoxResult MostrarInformación(string? mensaje, string? título = "Información")
@@ -1665,7 +1790,7 @@ namespace Vixark {
         public static MessageBoxResult MostrarAlerta(string? mensaje, string? título = "Alerta")
             => MostrarDiálogo(mensaje, título, MessageBoxButton.OK, MessageBoxImage.Warning);
 
-        #endregion Diálogos>
+        #endregion Interfaz>
 
 
         #region Depuración
@@ -1674,7 +1799,7 @@ namespace Vixark {
         public static void SuspenderEjecuciónEnModoDesarrollo() {
 
             #if DEBUG
-                Debugger.Break();
+            Debugger.Break();
             #endif
 
         } // SuspenderEjecuciónEnModoDesarrollo>
