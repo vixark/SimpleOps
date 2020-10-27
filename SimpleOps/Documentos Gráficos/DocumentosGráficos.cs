@@ -74,8 +74,10 @@ namespace SimpleOps.DocumentosGráficos {
 
             if (plantillaCompilada != null) {
 
-                creado = CrearPdf(documento, documentoElectrónico, plantillaCompilada, modoImpresión: false, out rutaPdf);
-                if (Empresa.GenerarPDFsAdicionalesImpresión) CrearPdf(documento, documentoElectrónico, plantillaCompilada, modoImpresión: true, out _);
+                creado = CrearPdf(documento, documentoElectrónico, plantillaCompilada, 
+                    opcionesDocumento: new OpcionesDocumento() { ModoImpresión = false }, out rutaPdf);
+                if (Empresa.GenerarPDFsAdicionalesImpresión) CrearPdf(documento, documentoElectrónico, plantillaCompilada, 
+                    opcionesDocumento: new OpcionesDocumento() { ModoImpresión = true }, out _);
 
             }
 
@@ -93,13 +95,14 @@ namespace SimpleOps.DocumentosGráficos {
 
 
         public static bool CrearPdf<D, M>(D documento, DocumentoElectrónico<Factura<Cliente, M>, M> documentoElectrónico, 
-            PlantillaCompilada<DatosVenta> plantillaCompilada, bool modoImpresión, out string rutaPdf) 
+            PlantillaCompilada<DatosVenta> plantillaCompilada, OpcionesDocumento opcionesDocumento, out string rutaPdf) 
             where D : Factura<Cliente, M> where M : MovimientoProducto {
 
             rutaPdf = "";
+            opcionesDocumento.MostrarInformaciónAdicional = documento.MostrarInformaciónAdicional;
             var datos = documento switch { 
-                Venta v => v.ObtenerDatos(modoImpresión), 
-                NotaCréditoVenta ncv => ncv.ObtenerDatos(modoImpresión),
+                Venta v => v.ObtenerDatos(opcionesDocumento), 
+                NotaCréditoVenta ncv => ncv.ObtenerDatos(opcionesDocumento),
                 _ => throw new Exception(CasoNoConsiderado(typeof(D).Name))
             };
             var html = plantillaCompilada.ObtenerHtml(datos);
@@ -109,7 +112,7 @@ namespace SimpleOps.DocumentosGráficos {
             try {
 
                 rutaPdf = Path.Combine(documentoElectrónico.RutaDocumentosElectrónicosHoy, 
-                    $"{datos.PrefijoNombreArchivo}{documento.Código}{(modoImpresión ? "-I" : "")}.pdf");
+                    $"{datos.PrefijoNombreArchivo}{documento.Código}{(opcionesDocumento.ModoImpresión ? "-I" : "")}.pdf");
                 using var escritorPdf = new PdfWriter(rutaPdf);
                 using var pdf = new PdfDocument(escritorPdf);
                 pdf.SetDefaultPageSize(iText.Kernel.Geom.PageSize.LETTER);
@@ -130,20 +133,22 @@ namespace SimpleOps.DocumentosGráficos {
         /// Procedimiento común para las ventas y las notas crédito de ventas que termina de completar el objeto de datos después de ser mapeado.
         /// </summary>
         /// <typeparam name="M"></typeparam>
-        /// <param name="modoImpresión"></param>
-        /// <param name="datosNotaCréditoVenta"></param>
+        /// <param name="opcionesDocumento"></param>
+        /// <param name="datosVenta"></param>
         /// <param name="líneas"></param>
-        public static void CompletarDatosVenta<M>(bool modoImpresión, DatosVenta datosNotaCréditoVenta, List<M> líneas) where M : MovimientoProducto {
+        public static void CompletarDatosVenta<M>(OpcionesDocumento opcionesDocumento, DatosVenta datosVenta, List<M> líneas) 
+            where M : MovimientoProducto {
 
             var mapeadorEmpresa = new Mapper(ConfiguraciónMapeadorEmpresa);
-            datosNotaCréditoVenta.Empresa = mapeadorEmpresa.Map<DatosEmpresa>(Empresa);
-            datosNotaCréditoVenta.Columnas = ObtenerOpcionesColumnas(datosNotaCréditoVenta, líneas);
-            datosNotaCréditoVenta.LogoBase64 = ObtenerBase64(Path.Combine(ObtenerRutaCarpetaImagenesPlantillas(),
-                modoImpresión ? NombreArchivoLogoEmpresaImpresión : NombreArchivoLogoEmpresa), paraHtml: true);
-            datosNotaCréditoVenta.CertificadoBase64 = ObtenerBase64(Path.Combine(ObtenerRutaCarpetaImagenesPlantillas(),
-                modoImpresión ? NombreArchivoCertificadoEmpresaImpresión : NombreArchivoCertificadoEmpresa), paraHtml: true);
-            datosNotaCréditoVenta.TotalPáginas = ObtenerTotalPáginas(datosNotaCréditoVenta, líneas);
-            datosNotaCréditoVenta.ModoImpresión = modoImpresión;
+            datosVenta.Empresa = mapeadorEmpresa.Map<DatosEmpresa>(Empresa);
+            datosVenta.Columnas = ObtenerOpcionesColumnas(datosVenta, líneas);
+            datosVenta.LogoBase64 = ObtenerBase64(Path.Combine(ObtenerRutaCarpetaImagenesPlantillas(),
+                opcionesDocumento.ModoImpresión ? NombreArchivoLogoEmpresaImpresión : NombreArchivoLogoEmpresa), paraHtml: true);
+            datosVenta.CertificadoBase64 = ObtenerBase64(Path.Combine(ObtenerRutaCarpetaImagenesPlantillas(),
+                opcionesDocumento.ModoImpresión ? NombreArchivoCertificadoEmpresaImpresión : NombreArchivoCertificadoEmpresa), paraHtml: true);
+            datosVenta.TotalPáginas = ObtenerTotalPáginas(datosVenta, líneas);
+            datosVenta.ModoImpresión = opcionesDocumento.ModoImpresión;
+            datosVenta.MostrarInformaciónAdicional = opcionesDocumento.MostrarInformaciónAdicional;
 
         } // CompletarDatosVenta>
 

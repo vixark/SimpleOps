@@ -128,12 +128,12 @@ namespace SimpleOps.Modelo {
         } // ObtenerAnticipo>
 
 
-        public DatosVenta ObtenerDatos(bool modoImpresión) {
+        public DatosVenta ObtenerDatos(OpcionesDocumento opcionesDocumento) {
 
             var mapeador = new Mapper(ConfiguraciónMapeadorVenta);
             var datos = mapeador.Map<DatosVenta>(this);
             datos.NombreDocumento = "Factura";
-            CompletarDatosVenta(modoImpresión, datos, Líneas);
+            CompletarDatosVenta(opcionesDocumento, datos, Líneas);
             return datos;
 
         } // ObtenerDatos>

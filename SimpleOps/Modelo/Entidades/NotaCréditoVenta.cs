@@ -81,13 +81,13 @@ namespace SimpleOps.Modelo {
         public override string? ObtenerClaveParaCude() => Empresa.PinAplicación;
 
 
-        public DatosVenta ObtenerDatos(bool modoImpresión) {
+        public DatosVenta ObtenerDatos(OpcionesDocumento opcionesDocumento) {
 
             var mapeador = new Mapper(ConfiguraciónMapeadorNotaCréditoVenta);
             var datos = mapeador.Map<DatosVenta>(this);
             datos.NombreDocumento = "Nota Crédito";
             datos.PrefijoNombreArchivo = "NC";
-            CompletarDatosVenta(modoImpresión, datos, Líneas);
+            CompletarDatosVenta(opcionesDocumento, datos, Líneas);
             return datos;
 
         } // ObtenerDatos>

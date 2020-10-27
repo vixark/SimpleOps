@@ -20,6 +20,8 @@ namespace SimpleOps.Integración {
 
         public string? Observación { get; set; }
 
+        public bool MostrarInformaciónAdicional { get; set; }
+
         public DateTime? FechaHora { get; set; } // Puede ser nulo para documentos que no la requieren como fichas técnicas.
 
         public int? ConsecutivoDianAnual { get; set; }

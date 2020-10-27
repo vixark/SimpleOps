@@ -896,7 +896,8 @@ namespace Vixark {
         /// Encapsulación de rápido acceso de JsonSerializer.Deserialize().
         /// Función para estructuras. Para clases usar <see cref="Deserializar{T}(string)"/>.
         /// </summary>
-        public static T? DeserializarEstructura<T>(string json) where T : struct => string.IsNullOrEmpty(json) ? default : JsonSerializer.Deserialize<T>(json);
+        public static T? DeserializarEstructura<T>(string json) where T : struct 
+            => string.IsNullOrEmpty(json) ? default : JsonSerializer.Deserialize<T>(json);
 
         /// <summary>
         /// Serialización que permite establecer uno o varios tipos de <paramref name="serialización"/> enlazándolos con el operador |.

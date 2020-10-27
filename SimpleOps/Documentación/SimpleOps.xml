@@ -153,13 +153,13 @@
             <param name="partes"></param>
             <returns></returns>
         </member>
-        <member name="M:SimpleOps.DocumentosGráficos.DocumentosGráficos.CompletarDatosVenta``1(System.Boolean,SimpleOps.DocumentosGráficos.DatosVenta,System.Collections.Generic.List{``0})">
+        <member name="M:SimpleOps.DocumentosGráficos.DocumentosGráficos.CompletarDatosVenta``1(SimpleOps.DocumentosGráficos.OpcionesDocumento,SimpleOps.DocumentosGráficos.DatosVenta,System.Collections.Generic.List{``0})">
             <summary>
             Procedimiento común para las ventas y las notas crédito de ventas que termina de completar el objeto de datos después de ser mapeado.
             </summary>
             <typeparam name="M"></typeparam>
-            <param name="modoImpresión"></param>
-            <param name="datosNotaCréditoVenta"></param>
+            <param name="opcionesDocumento"></param>
+            <param name="datosVenta"></param>
             <param name="líneas"></param>
         </member>
         <member name="M:SimpleOps.DocumentosGráficos.DocumentosGráficos.ObtenerTotalPáginas``2(``0,System.Collections.Generic.List{``1})">
@@ -736,8 +736,14 @@
         </member>
         <member name="P:SimpleOps.Modelo.Factura`2.Observación">
             <summary>
-            Una observación libre sobre el documento que no se almacena en la base de datos para evitar que esta crezca de tamaño. 
+            Una observación libre sobre el documento que no se almacena en la base de datos para evitar crezca de tamaño innecesariamente. 
             Se usa como almacenamiento intermedio y queda escrita en la representación gráfica de la factura.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Factura`2.MostrarInformaciónAdicional">
+            <summary>
+            No se almacena en la base de datos para evitar que crezca de tamaño innecesariamente. Se usa para mostrar información adicional legal que no 
+            se muestra siempre (para evitar saturar el diseño) para algunos algunos clientes que requieren que la tenga.
             </summary>
         </member>
         <member name="P:SimpleOps.Modelo.Factura`2.SubtotalBase">
@@ -2353,6 +2359,11 @@
             Encapsulación de rápido acceso de StartsWith() usando StringComparison.Ordinal. Es útil para omitir la advertencia CA1307 sin saturar el código.
             </summary>
         </member>
+        <member name="M:Vixark.General.FinalizaCon(System.String,System.String,System.Boolean)">
+            <summary>
+            Encapsulación de rápido acceso de EndsWith() usando StringComparison.Ordinal. Es útil para omitir la advertencia CA1307 sin saturar el código.
+            </summary>
+        </member>
         <member name="M:Vixark.General.Contiene(System.String,System.String,System.Boolean)">
             <summary>
             Encapsulación de rápido acceso de Contains() usando StringComparison.Ordinal. Es útil para omitir la advertencia CA1307 sin saturar el código.
@@ -2385,6 +2396,11 @@
             <param name="texto"></param>
             <param name="formato"></param>
             <returns></returns>
+        </member>
+        <member name="M:Vixark.General.ÍndiceDe(System.String,System.String,System.Int32)">
+            <summary>
+            Encapsulación de rápido acceso de IndexOf() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 sin saturar el código.
+            </summary>
         </member>
         <member name="M:Vixark.General.AEnumeración``1(System.String)">
             <summary>
@@ -2425,6 +2441,21 @@
             </summary>
         </member>
         <member name="M:Vixark.General.ATexto(System.Char)">
+            <summary>
+            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 sin saturar el código.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ATexto(System.Double)">
+            <summary>
+            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 sin saturar el código.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ATexto(System.Double,System.String)">
+            <summary>
+            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 sin saturar el código.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ATexto(System.TimeSpan,System.String)">
             <summary>
             Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 sin saturar el código.
             </summary>
@@ -2589,6 +2620,28 @@
             propiedades se guardan en la base de datos usando el tipo <typeparamref name="B"/>. En el modelo las propiedades se siguen usando 
             con el tipo <typeparamref name="T"/>.
             </summary>
+        </member>
+        <member name="M:Vixark.General.InsertarEnBaseDeDatosSQL``1(System.Collections.Generic.List{``0},System.String,System.String,System.String@,System.Collections.Generic.List{System.String})">
+            <summary>
+            Inserta masivamente una lista de entidades en una tabla (<paramref name="nombreTabla"/>) de una base de datos SQL con conexión 
+            <paramref name="textoConexión"/>.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="nombreTabla"></param>
+            <param name="lista"></param>
+            <param name="error"></param>
+            <param name="columnasAOmitir"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Vixark.General.ATabla``1(System.Collections.Generic.IList{``0},System.String,System.Collections.Generic.List{System.String})">
+            <summary>
+            Convierte una lista de un objeto a una tabla con el valor de sus propiedades. Necesaria para la función InsertarEnBaseDeDatosSQL().
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="lista"></param>
+            <param name="nombreTabla"></param>
+            <param name="columnasAOmitir"></param>
+            <returns></returns>
         </member>
         <member name="M:Vixark.General.Agregar``2(System.Collections.Generic.Dictionary{``0,``1},``0,``1,System.Boolean)">
             <summary>

@@ -4,3 +4,4 @@ dotnet_diagnostic.CA1303.severity = none # CA1303: No pasar cadenas literal como
 dotnet_diagnostic.CS1591.severity = none # CS1591: No alertar tipos o miembros públicamente accesibles sin Summary.
 dotnet_diagnostic.CA1812.severity = none # CS1591: No alertar por clases de las que no se crea una instancia.
 dotnet_diagnostic.IDE0040.severity = none # IDE0040: No alertar por clases de las que no se crea una instancia (igual que el anterior).
+dotnet_diagnostic.CA1805.severity = none # CA1805: No iniciar variables con sus valores prederminados. Prefiero hacerlo para más claridad al ver la declaración y no tener pensar cuál es el valor predeterminado al estar revisando el código.

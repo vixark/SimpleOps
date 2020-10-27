@@ -113,6 +113,8 @@ namespace SimpleOps.DocumentosGráficos {
 
         public bool ModoImpresión { get; set; } = false; // Un modo de diseño optimizado para la impresión que disminuye el uso de fondos de color.
 
+        public bool MostrarInformaciónAdicional { get; set; } = false; // Permite la adición de una sección extra que no es visible en el modo normal. Sirve para agregar una sección de manera temporal o de manera selectiva según el destinatario del documento. El uso más común es la adición de información adicional legal a las facturas requerida por algunos clientes.
+
         #endregion Propiedades Diseño>
 
 

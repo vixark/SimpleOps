@@ -115,11 +115,18 @@ namespace SimpleOps.Modelo {
         public string? Cude { get; set; } // Puede ser nulo para permitir la migración de ventas anteriores a la implementación de la factura electrónica y para compras a proveedores que aún no tengan implementada la factura electrónica.
 
         /// <summary>
-        /// Una observación libre sobre el documento que no se almacena en la base de datos para evitar que esta crezca de tamaño. 
+        /// Una observación libre sobre el documento que no se almacena en la base de datos para evitar crezca de tamaño innecesariamente. 
         /// Se usa como almacenamiento intermedio y queda escrita en la representación gráfica de la factura.
         /// </summary>
         [NotMapped]
         public string? Observación { get; set; }
+
+        /// <summary>
+        /// No se almacena en la base de datos para evitar que crezca de tamaño innecesariamente. Se usa para mostrar información adicional legal que no 
+        /// se muestra siempre (para evitar saturar el diseño) para algunos algunos clientes que requieren que la tenga.
+        /// </summary>
+        [NotMapped]
+        public bool MostrarInformaciónAdicional { get; set; } = false;
 
         #endregion Propiedades>
 
