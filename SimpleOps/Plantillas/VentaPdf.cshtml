@@ -216,7 +216,7 @@
 @if (Model.MostrarInformaciónAdicional) {
 
     <div class="infoextra t14n" style="height: 20px; margin-top: -20px;"> @* Información solo necesaria para clientes que son estrictos al pie de la letra con los requerimientos de la DIAN. Se establece un tamaño y margen manual para que la adición de este elemento no afecte el resto de los cálculos de tamaños del documento. *@
-        <span class="t14b">Nombre Documento:</span> Representación Gráfica de Factura Electrónica de Venta
+        <span class="t14b">Nombre Documento:</span> Representación Gráfica de @Model.NombreDocumento Electrónica de Venta
         <span class="t14b">Fecha y Hora de Emisión:</span> @Model.FechaHora?.ToShortDateString() @Model.FechaHora?.ToShortTimeString()
     </div>
 
