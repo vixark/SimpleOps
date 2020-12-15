@@ -477,6 +477,7 @@ namespace SimpleOps.Legal {
                     respuestaXml = ObtenerXml(respuesta);
                     if (respuestaXml == null) return Falso(out mensaje, $"No se esperaba respuestaXml nulo.{DobleLínea}{excepciónWeb.Message}");
                     mensajeRespuesta = respuestaXml.DocumentElement?["s:Body"]?["s:Fault"]?["s:Code"]?["s:Subcode"]?["s:Value"]?.InnerText;
+                    if (mensajeRespuesta == null) mensajeRespuesta = respuestaXml.DocumentElement?["s:Body"]?["s:Fault"]?["s:Reason"].InnerText; // Aplica para el mensaje "Certificado aún no se encuentra vigente.".
 
                 } else {
                     mensajeRespuesta = ""; // En otros casos hasta que no se verifique que no devuelvan XML se asumirá que no lo hacen.
@@ -490,6 +491,7 @@ namespace SimpleOps.Legal {
                     "a:InternalServiceFault" => Falso(out mensaje, $"Error interno de servicio del servidor de la DIAN. Puede suceder cuando se especifica " +
                                                                    $"una operación diferente en el XML y en el encabezado de la solicitud POST.{DobleLínea}" + 
                                                                    $"{excepciónWeb.Message}{DobleLínea}Estado: {respuesta.StatusCode}."),
+                    "Certificado aún no se encuentra vigente." => Falso(out mensaje, $"El certificado de facturación electrónica aún no se encuentra vigente."),
                     _ => Falso(out mensaje, $"Sucedió un error desconocido en el servidor de la DIAN.{DobleLínea}{excepciónWeb.Message}{DobleLínea}" +
                                             $"Estado: {respuesta.StatusCode}."),
                 };
@@ -518,6 +520,10 @@ namespace SimpleOps.Legal {
             try {
 
                 using var certificado = new X509Certificate2(Equipo.RutaCertificado, Equipo.ClaveCertificado);
+                if (certificado.NotAfter < AhoraUtcAjustado)
+                        return Falso(out mensaje, $"El certificado electrónico se venció en {certificado.NotAfter.ATexto(FormatoFecha)}.");
+                if (certificado.NotBefore > AhoraUtcAjustado) 
+                    return Falso(out mensaje, $"El certificado electrónico aún no es válido. Es válido desde {certificado.NotBefore.ATexto(FormatoFecha)}.");
 
                 var claveTitularID = ((X509SubjectKeyIdentifierExtension)certificado.Extensions.Cast<X509Extension>()
                     .Where(e => e is X509SubjectKeyIdentifierExtension).Single()).SubjectKeyIdentifier; // Obtiene el SubjectKeyIdentifier del certificado según requerido por la documentación Oasis WSS X509 Token Profile 1.1. En realidad a la DIAN no le importa este valor mientras sea consistente en todo el documento pero se prefiere hacer según el estándar Oasis.
@@ -584,7 +590,7 @@ namespace SimpleOps.Legal {
                     "</soap:Envelope>";
 
             } catch (CryptographicException) {
-                return Falso(out mensaje, "Ocurrió un error criptográfico. La clave del certificado puede ser incorrecta.");
+                return Falso(out mensaje, "Ocurrió un error criptográfico. La clave del certificado puede ser incorrecta o cambiaste el certificado sin reiniciar SimpleOps.");
             } catch (Exception) {
                 throw;
             }
