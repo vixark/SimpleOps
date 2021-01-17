@@ -9,14 +9,14 @@ using SimpleOps.Datos;
 namespace SimpleOps.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20200616053129_dos")]
-    partial class dos
+    [Migration("20210115062815_Uno")]
+    partial class Uno
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.2");
+                .HasAnnotation("ProductVersion", "3.1.8");
 
             modelBuilder.Entity("SimpleOps.Modelo.Aplicación", b =>
                 {
@@ -602,17 +602,9 @@ namespace SimpleOps.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<double>("Precio")
-                        .HasColumnType("REAL");
-
-                    b.Property<int>("ProductoID")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("ID");
 
                     b.HasIndex("ClienteID");
-
-                    b.HasIndex("ProductoID");
 
                     b.ToTable("Cotizaciones");
                 });
@@ -714,6 +706,24 @@ namespace SimpleOps.Migrations
                     b.HasIndex("ProductoID");
 
                     b.ToTable("LíneasCompras");
+                });
+
+            modelBuilder.Entity("SimpleOps.Modelo.LíneaCotización", b =>
+                {
+                    b.Property<int>("CotizaciónID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ProductoID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("Precio")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("CotizaciónID", "ProductoID");
+
+                    b.HasIndex("ProductoID");
+
+                    b.ToTable("LíneasCotizaciones");
                 });
 
             modelBuilder.Entity("SimpleOps.Modelo.LíneaNegocio", b =>
@@ -2595,12 +2605,6 @@ namespace SimpleOps.Migrations
                         .HasForeignKey("ClienteID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("SimpleOps.Modelo.Producto", "Producto")
-                        .WithMany()
-                        .HasForeignKey("ProductoID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("SimpleOps.Modelo.InformePago", b =>
@@ -2632,6 +2636,21 @@ namespace SimpleOps.Migrations
                     b.HasOne("SimpleOps.Modelo.Compra", "Compra")
                         .WithMany("Líneas")
                         .HasForeignKey("CompraID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SimpleOps.Modelo.Producto", "Producto")
+                        .WithMany()
+                        .HasForeignKey("ProductoID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SimpleOps.Modelo.LíneaCotización", b =>
+                {
+                    b.HasOne("SimpleOps.Modelo.Cotización", "Cotización")
+                        .WithMany("Líneas")
+                        .HasForeignKey("CotizaciónID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

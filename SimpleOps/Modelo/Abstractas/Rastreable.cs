@@ -32,7 +32,7 @@ namespace SimpleOps.Modelo {
 
         #region Métodos
 
-        public abstract override string ToString(); // Obliga a las entidades derivadas a implementar un método ToString() propio para describirse de una manera entendible para el usuario. También se podría hacer a nivel de interface (ver https://stackoverflow.com/a/50930292/8330412) pero habría que crear otro método entonces se prefiere hacer por clase abstracta.
+        public abstract override string ToString(); // Obliga a las entidades derivadas a implementar un método ToString() propio para describirse de una manera entendible para el usuario. También se podría hacer a nivel de interface (ver https://stackoverflow.com/a/50930292/8330412), pero habría que crear otro método entonces se prefiere hacer por clase abstracta.
 
         #endregion Métodos>
 

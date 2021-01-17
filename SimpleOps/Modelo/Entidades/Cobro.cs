@@ -16,7 +16,7 @@ namespace SimpleOps.Modelo {
     /// Registro de cobros realizados a clientes por facturas de venta vencidas.
     /// </summary>
     [ControlInserción(ControlConcurrencia.Ninguno)]
-    class Cobro : Registro { // Es Registro porque no cambia una vez generada. No se necesita rastrear la información de actualización.
+    class Cobro : Registro { // Es Registro porque no cambia una vez generada. No se necesita rastrear la información de actualización ni se necesita llevar un control especial de algún ID del cobro.
 
 
         #region Propiedades
@@ -25,7 +25,7 @@ namespace SimpleOps.Modelo {
         public int ClienteID { get; set; }
 
         /// <summary>
-        /// Prefijo + número de las facuras de ventas que fueron cobradas.
+        /// Prefijo + número de las facturas de ventas que fueron cobradas.
         /// </summary>
         /// <MaxLength>1000</MaxLength>
         [MaxLength(1000)]
@@ -62,7 +62,7 @@ namespace SimpleOps.Modelo {
 
         public Cobro(Cliente cliente) {
             (ClienteID, Cliente) = (cliente.ID, cliente);
-            NúmerosFacturas = new List<string>(); // Poner parámetro  List<Venta> ventas y pendiente hacer código genérico de cálculo de vencimiento de factura e implementar aquí la extracción de los valores requeridos por el cobro.
+            NúmerosFacturas = new List<string>(); // Poner parámetro List<Venta> ventas y pendiente hacer código genérico de cálculo de vencimiento de factura e implementar aquí la extracción de los valores requeridos por el cobro.
         } // Cobro>
 
         #endregion Constructores>

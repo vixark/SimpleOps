@@ -49,7 +49,7 @@
                     <td class="fecha-td">
                         <div class="fecha-cn">
                             <span class="t18b fecha-tít">Fecha</span>
-                            <div class="fecha-val">@Model.FechaHora?.ToShortDateString()</div>
+                            <div class="fecha-val">@Model.FechaHora?.ToShortDateString() @Model.FechaHora?.ToShortTimeString()</div>
                         </div>
                     </td>
 
@@ -216,8 +216,6 @@
 @if (Model.MostrarInformaciónAdicional) {
 
     <div class="infoextra t14n" style="height: 20px; margin-top: -20px;"> @* Información solo necesaria para clientes que son estrictos al pie de la letra con los requerimientos de la DIAN. Se establece un tamaño y margen manual para que la adición de este elemento no afecte el resto de los cálculos de tamaños del documento. *@
-        <span class="t14b">Nombre Documento:</span> Representación Gráfica de @Model.NombreDocumento Electrónica de Venta
-        <span class="t14b">Fecha y Hora de Emisión:</span> @Model.FechaHora?.ToShortDateString() @Model.FechaHora?.ToShortTimeString()
     </div>
 
 }
@@ -227,15 +225,17 @@
 
     /* <Información Superior */
 
-    .cliente-cn, .oc-cn, .fecha-cn, .venc-cn { position: relative; bottom: 13px; }
+    .cliente-cn,.oc-cn, .fecha-cn, .venc-cn { position: relative; bottom: 13px; }
 
     .cliente-cn { left: 15px; } /* El título de cliente va alineado a la izquierda entonces se debe separar un poco de la curva. */
 
     .cliente-tít, .fecha-tít, .venc-tít, .oc-tít { background-color: white; padding-right: 10px; padding-left: 10px; }
 
-    .cliente-nom { margin-top: 7px; }
+    .cliente-nom, .oc-val { margin-top: 7px; }
 
-    .fecha-val, .venc-val, .oc-val { margin-top: 13px; } /* Las fechas y oc se deben separar más del título porque deben quedar centradas en la celda mientras que los datos del cliente deben quedar lo más cercano posible pues estos son los que determinan el alto de toda la sección de información superior. */
+    .fecha-val { margin-top: 8px; } /* Es ligeramente mayor que cliente-nom y oc-val porque al ser dos renglones necesita un poco más de espacio para verse bien. */
+
+    .venc-val { margin-top: 13px; } /* La fecha de vencimiento se deben separar más del título porque deben quedar centradas en la celda mientras que los datos del cliente deben quedar lo más cercano posible pues estos son los que determinan el alto de toda la sección de información superior. */
 
     .fechas-td, .cliente-td { border: @APuntos(Model.GrosorBordes) solid @Model.ColorBordes; border-radius: 15px; }
 
@@ -249,7 +249,7 @@
 
     .venc-td { width: @APuntos(anchoFechas / 2 + diferenciaAnchoFechaYVencimiento); vertical-align: top; }
 
-    .fecha-td { width: @APuntos(anchoFechas / 2 - diferenciaAnchoFechaYVencimiento); vertical-align: top; height: 65px; }
+    .fecha-td { width: @APuntos(anchoFechas / 2 - diferenciaAnchoFechaYVencimiento); vertical-align: top; height: 75px; } /* Los 75px son establecidos para permitir un margen de 8px arriba y abajo para la fecha y hora de emisión. */
 
     .oc-cn-cn { border-top: @APuntos(Model.GrosorBordes) solid @Model.ColorBordes; } /* Elemento auxiliar necesario porque iText tiene un error que oculta el oc-tít detrás del borde de oc-td si se le pusiera a este. Se intentó con z-index y tampoco funciona. */
 

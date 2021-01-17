@@ -42,10 +42,10 @@ namespace SimpleOps.DocumentosGráficos {
 
         public int MargenInferiorNombres { get; set; } = 5; // Margen inferior debajo de la fila de nombres de columnas.
 
-        #region Propiedades>
+        #endregion Propiedades>
 
 
-        #endregion Propiedades Autocalculadas>
+        #region Propiedades Autocalculadas>
 
         public int AnchoUnidad => MostrarUnidad ? 70 : 0; // Aunque cabe en 60 se le da un poco de espacio con 70 para que no quede muy cerca de cantidad.
 

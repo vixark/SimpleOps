@@ -638,6 +638,27 @@ namespace SimpleOps.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Cotizaciones",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    CreadorID = table.Column<int>(nullable: false),
+                    FechaHoraCreación = table.Column<string>(nullable: false),
+                    ClienteID = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cotizaciones", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Cotizaciones_Clientes_ClienteID",
+                        column: x => x.ClienteID,
+                        principalTable: "Clientes",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "InformesPagos",
                 columns: table => new
                 {
@@ -733,35 +754,6 @@ namespace SimpleOps.Migrations
                         name: "FK_Sedes_Municipios_MunicipioID",
                         column: x => x.MunicipioID,
                         principalTable: "Municipios",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Cotizaciones",
-                columns: table => new
-                {
-                    ID = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    CreadorID = table.Column<int>(nullable: false),
-                    FechaHoraCreación = table.Column<string>(nullable: false),
-                    ProductoID = table.Column<int>(nullable: false),
-                    ClienteID = table.Column<int>(nullable: false),
-                    Precio = table.Column<double>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Cotizaciones", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_Cotizaciones_Clientes_ClienteID",
-                        column: x => x.ClienteID,
-                        principalTable: "Clientes",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Cotizaciones_Productos_ProductoID",
-                        column: x => x.ProductoID,
-                        principalTable: "Productos",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -994,6 +986,7 @@ namespace SimpleOps.Migrations
                     RetencionesExtra = table.Column<double>(nullable: false),
                     Estado = table.Column<byte>(nullable: false),
                     ConsecutivoDianAnual = table.Column<int>(nullable: true),
+                    Cude = table.Column<string>(maxLength: 96, nullable: true),
                     ProveedorID = table.Column<int>(nullable: false),
                     ComprobanteEgresoID = table.Column<int>(nullable: true),
                     PedidoID = table.Column<int>(nullable: true)
@@ -1017,6 +1010,31 @@ namespace SimpleOps.Migrations
                         name: "FK_Compras_Proveedores_ProveedorID",
                         column: x => x.ProveedorID,
                         principalTable: "Proveedores",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LíneasCotizaciones",
+                columns: table => new
+                {
+                    ProductoID = table.Column<int>(nullable: false),
+                    CotizaciónID = table.Column<int>(nullable: false),
+                    Precio = table.Column<double>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LíneasCotizaciones", x => new { x.CotizaciónID, x.ProductoID });
+                    table.ForeignKey(
+                        name: "FK_LíneasCotizaciones_Cotizaciones_CotizaciónID",
+                        column: x => x.CotizaciónID,
+                        principalTable: "Cotizaciones",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_LíneasCotizaciones_Productos_ProductoID",
+                        column: x => x.ProductoID,
+                        principalTable: "Productos",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -1200,6 +1218,7 @@ namespace SimpleOps.Migrations
                     RetencionesExtra = table.Column<double>(nullable: false),
                     Estado = table.Column<byte>(nullable: false),
                     ConsecutivoDianAnual = table.Column<int>(nullable: true),
+                    Cude = table.Column<string>(maxLength: 96, nullable: true),
                     ProveedorID = table.Column<int>(nullable: false),
                     CompraID = table.Column<int>(nullable: false),
                     Razón = table.Column<int>(nullable: false)
@@ -1244,6 +1263,7 @@ namespace SimpleOps.Migrations
                     RetencionesExtra = table.Column<double>(nullable: false),
                     Estado = table.Column<byte>(nullable: false),
                     ConsecutivoDianAnual = table.Column<int>(nullable: true),
+                    Cude = table.Column<string>(maxLength: 96, nullable: true),
                     ProveedorID = table.Column<int>(nullable: false),
                     CompraID = table.Column<int>(nullable: false),
                     Razón = table.Column<int>(nullable: false)
@@ -1321,6 +1341,7 @@ namespace SimpleOps.Migrations
                     RetencionesExtra = table.Column<double>(nullable: false),
                     Estado = table.Column<byte>(nullable: false),
                     ConsecutivoDianAnual = table.Column<int>(nullable: true),
+                    Cude = table.Column<string>(maxLength: 96, nullable: true),
                     ClienteID = table.Column<int>(nullable: false),
                     FechaPagoComisiónEnVenta = table.Column<DateTime>(nullable: true),
                     FechaPagoComisiónEnPago = table.Column<DateTime>(nullable: true),
@@ -1463,6 +1484,7 @@ namespace SimpleOps.Migrations
                     RetencionesExtra = table.Column<double>(nullable: false),
                     Estado = table.Column<byte>(nullable: false),
                     ConsecutivoDianAnual = table.Column<int>(nullable: true),
+                    Cude = table.Column<string>(maxLength: 96, nullable: true),
                     ClienteID = table.Column<int>(nullable: false),
                     VentaID = table.Column<int>(nullable: false),
                     Razón = table.Column<int>(nullable: false)
@@ -1507,6 +1529,7 @@ namespace SimpleOps.Migrations
                     RetencionesExtra = table.Column<double>(nullable: false),
                     Estado = table.Column<byte>(nullable: false),
                     ConsecutivoDianAnual = table.Column<int>(nullable: true),
+                    Cude = table.Column<string>(maxLength: 96, nullable: true),
                     ClienteID = table.Column<int>(nullable: false),
                     VentaID = table.Column<int>(nullable: false),
                     Razón = table.Column<int>(nullable: false)
@@ -1755,11 +1778,6 @@ namespace SimpleOps.Migrations
                 column: "ClienteID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Cotizaciones_ProductoID",
-                table: "Cotizaciones",
-                column: "ProductoID");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_InformesPagos_ClienteID",
                 table: "InformesPagos",
                 column: "ClienteID");
@@ -1772,6 +1790,11 @@ namespace SimpleOps.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_LíneasCompras_ProductoID",
                 table: "LíneasCompras",
+                column: "ProductoID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LíneasCotizaciones_ProductoID",
+                table: "LíneasCotizaciones",
                 column: "ProductoID");
 
             migrationBuilder.CreateIndex(
@@ -2113,13 +2136,13 @@ namespace SimpleOps.Migrations
                 name: "ContactosProveedores");
 
             migrationBuilder.DropTable(
-                name: "Cotizaciones");
-
-            migrationBuilder.DropTable(
                 name: "InventariosConsignación");
 
             migrationBuilder.DropTable(
                 name: "LíneasCompras");
+
+            migrationBuilder.DropTable(
+                name: "LíneasCotizaciones");
 
             migrationBuilder.DropTable(
                 name: "LíneasNotasCréditoCompra");
@@ -2168,6 +2191,9 @@ namespace SimpleOps.Migrations
 
             migrationBuilder.DropTable(
                 name: "RolesUsuarios");
+
+            migrationBuilder.DropTable(
+                name: "Cotizaciones");
 
             migrationBuilder.DropTable(
                 name: "NotasCréditoCompra");

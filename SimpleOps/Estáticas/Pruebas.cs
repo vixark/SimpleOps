@@ -37,7 +37,7 @@ namespace SimpleOps {
             var contactos = ctx.Contactos.ToList();
             var contactosClientes = ctx.ContactosClientes.ToList();
             var contactosProveedores = ctx.ContactosProveedores.ToList();
-            var cotizaciones = ctx.Cotizaciones.ToList();
+            var líneasCotizaciones = ctx.LíneasCotizaciones.ToList();
             var líneasCompras = ctx.LíneasCompras.ToList();
             var líneasNotasCréditoCompra = ctx.LíneasNotasCréditoCompra.ToList();
             var líneasNotasCréditoVenta = ctx.LíneasNotasCréditoVenta.ToList();
@@ -59,6 +59,7 @@ namespace SimpleOps {
             var notasCréditoCompra = ctx.NotasCréditoCompra.ToList();
             var notasCréditoVenta = ctx.NotasCréditoVenta.ToList();
             var notasDébitoCompra = ctx.NotasDébitoCompra.ToList();
+            var cotizaciones = ctx.Cotizaciones.ToList();
             var notasDébitoVenta = ctx.NotasDébitoVenta.ToList();
             var ordenesCompra = ctx.OrdenesCompra.ToList();
             var pedidos = ctx.Pedidos.ToList();
@@ -85,7 +86,7 @@ namespace SimpleOps {
 
             // Conflicto de Actualización
             using var ctx = new Contexto(TipoContexto.Escritura);
-            UsuarioActual.ID = 2; //  Para generar conflicto de concurrencia por usuarios actualizadores diferentes. Comentar esta línea para probar el conflicto silenciado por ser un cambio del mismo usuario.
+            UsuarioActual.ID = 2; // Para generar conflicto de concurrencia por usuarios actualizadores diferentes. Comentar esta línea para probar el conflicto silenciado por ser un cambio del mismo usuario.
             var milisegundoActual = AhoraUtcAjustado.Millisecond;
             var primerUsuario = ctx.Usuarios.First();
             var primeraCompra = ctx.Compras.First();
@@ -466,7 +467,7 @@ namespace SimpleOps {
                 GuardarOpciones(Empresa);
                 MostrarInformación("¡Éxito del envío de la factura electrónica completa a la DIAN!", "Éxito"); // Éxito. Se puede continuar con los procedimientos posteriores como grabar en la base de datos, hacer cambios en la interfaz y demás. La factura se considera realizada así puedan fallar los siguientes procedimientos de representación gráfica y email al cliente.
 
-                if (venta != null && CrearPdf(venta, ventaElectrónica, out _)) {
+                if (venta != null && CrearPdfVenta(venta, ventaElectrónica, out _)) {
                     // Si se creó la representación gráfica exitosamente, se puede enviar el email al cliente.
                 } else {
                     MostrarError("No se pudo crear la representación gráfica de la factura electrónica.");
@@ -486,7 +487,7 @@ namespace SimpleOps {
                     Empresa.PróximoNúmeroDocumentoElectrónicoPruebas++;
                     GuardarOpciones(Empresa);
                     MostrarInformación("¡Éxito del envío de la nota crédito electrónica a la DIAN!", "Éxito");
-                    if (notaCrédito != null && CrearPdf(notaCrédito, notaCréditoElectrónica, out _)) {
+                    if (notaCrédito != null && CrearPdfVenta(notaCrédito, notaCréditoElectrónica, out _)) {
                         // Si se creó la representación gráfica exitosamente, se puede enviar el email al cliente.
                     } else {
                         MostrarError("No se pudo crear la representación gráfica de la nota crédito electrónica.");
@@ -531,7 +532,7 @@ namespace SimpleOps {
                     GuardarOpciones(Empresa);
                     MostrarInformación($"¡Éxito del envío de la factura electrónica simple #{i} a la DIAN!", "Éxito");
 
-                    if (ventaSimple != null && CrearPdf(ventaSimple, ventaSimpleElectrónica, out _)) {
+                    if (ventaSimple != null && CrearPdfVenta(ventaSimple, ventaSimpleElectrónica, out _)) {
                         // Si se creó la representación gráfica exitosamente, se puede enviar el email al cliente.
                     } else {
                         MostrarError("No se pudo crear la representación gráfica de la factura electrónica.");

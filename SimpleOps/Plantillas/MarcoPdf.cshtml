@@ -54,11 +54,11 @@
                     <td class="tder">
 
                         <div>
-                            <span class="t30b fc-l230">@Model.NombreDocumento @Model.CódigoDocumento</span>
+                            <span class="t18b fc-l100">@Model.NombreDocumento Electrónica de Venta</span>
                         </div>
 
                         <div>
-                            <span class="t14b fc-s50">Representación Gráfica</span>
+                            <span class="t30b fc-l230">@Model.CódigoDocumento</span>
                         </div>
 
                     </td>
@@ -167,6 +167,8 @@
 
     .fc-s100 { color: @(Model.ModoImpresión ? "#9B9B9B" : "#004312"); } /* Se obtiene con Paint.Net el fc-s255 sobre el fc con una transparencia de 100. */
 
+    .fc-s70 { color: @(Model.ModoImpresión ? "#CDCDCD" : "#005016"); } /* Se obtiene con Paint.Net el fc-s255 sobre el fc con una transparencia de 70. */
+
     .fc-s50 { color: @(Model.ModoImpresión ? "#CDCDCD" : "#005918"); } /* Se obtiene con Paint.Net el fc-s255 sobre el fc con una transparencia de 50. */
 
     .fc-s0, fc-l0 { color: @(Model.ModoImpresión ? "#FFFFFF" : "#006F1F"); } /* Es el mismo color fc pero para aplicarlo a fuentes. Se sigue la misma convención fc-s# para facilitar su recordación. */
@@ -214,14 +216,14 @@
 
     /* <Cabeza */
 
-    .tb-cabeza { 
-        height: @APuntos(Model.AltoCabeza); width: @APuntos(Model.AnchoContenido); 
+    .tb-cabeza {
+        height: @APuntos(Model.AltoCabeza); width: @APuntos(Model.AnchoContenido);
         margin-right: @APuntos(Model.MargenHorizontal); margin-left: @APuntos(Model.MargenHorizontal);
     }
 
     .logo { height: @APuntos(Model.AltoLogo); }
 
-    .l-cabeza { 
+    .l-cabeza {
         height: @APuntos(Model.SeparaciónLíneaBajoCabeza - (Model.ModoImpresión ? 3 : 0 )); /* Se le restan 3 de los 10 que se agregan al pie para que las medidas sean iguales en ambos modos. */
         border-bottom: solid @APuntos(Model.AnchoLíneaBajoCabeza - (Model.ModoImpresión ? 7 : 0 )) @(Model.ModoImpresión ? Model.ColorBordes : "#D0AB00"); /* Se le restan 7 de los 10 que se agregan al pie para que las medidas sean iguales en ambos modos. */
     }
@@ -231,8 +233,8 @@
 
     /* <Cuerpo */
 
-    .cuerpo { 
-        margin-right: @APuntos(Model.MargenHorizontal); margin-left: @APuntos(Model.MargenHorizontal); 
+    .cuerpo {
+        margin-right: @APuntos(Model.MargenHorizontal); margin-left: @APuntos(Model.MargenHorizontal);
         margin-top: @APuntos(Model.MargenVertical); margin-bottom: @APuntos(Model.MargenVertical);
     }
 
@@ -241,10 +243,10 @@
 
     /* <Pie */
 
-    .pie { 
-        position: absolute; bottom: 0px; left: 0px; 
-        height: @APuntos(Model.AltoPie + (Model.ModoImpresión ? 10 : 0)); width: 100%; 
-        padding-top: @APuntos(Model.RellenoSuperiorPie); 
+    .pie {
+        position: absolute; bottom: 0px; left: 0px;
+        height: @APuntos(Model.AltoPie + (Model.ModoImpresión ? 10 : 0)); width: 100%;
+        padding-top: @APuntos(Model.RellenoSuperiorPie);
     }
 
     /* Pie> */

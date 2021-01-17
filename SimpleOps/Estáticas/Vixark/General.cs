@@ -114,6 +114,7 @@ namespace Vixark {
                 { "contactos", (Género.Masculino, NúmeroSustantivo.Plural) },
                 { "contactosclientes", (Género.Masculino, NúmeroSustantivo.Plural) },
                 { "contactosproveedores", (Género.Masculino, NúmeroSustantivo.Plural) },
+                { "líneascotizaciones", (Género.Femenino, NúmeroSustantivo.Plural) },
                 { "cotizaciones", (Género.Femenino, NúmeroSustantivo.Plural) },
                 { "líneascompras", (Género.Femenino, NúmeroSustantivo.Plural) },
                 { "líneasnotascréditocompra", (Género.Femenino, NúmeroSustantivo.Plural) },
@@ -226,6 +227,7 @@ namespace Vixark {
                 { "notacréditocompraid", (Género.Femenino, NúmeroSustantivo.Singular) },
                 { "notacréditoventaid", (Género.Femenino, NúmeroSustantivo.Singular) },
                 { "notadébitocompraid", (Género.Femenino, NúmeroSustantivo.Singular) },
+                { "cotizaciónid", (Género.Femenino, NúmeroSustantivo.Singular) },
                 { "notadébitoventaid", (Género.Femenino, NúmeroSustantivo.Singular) },
                 { "ordencompraid", (Género.Femenino, NúmeroSustantivo.Singular) },
                 { "cantidadentregada", (Género.Femenino, NúmeroSustantivo.Singular) },
@@ -309,7 +311,7 @@ namespace Vixark {
                 { "contacto", (Género.Masculino, NúmeroSustantivo.Singular) },
                 { "contactocliente", (Género.Masculino, NúmeroSustantivo.Singular) },
                 { "contactoproveedor", (Género.Masculino, NúmeroSustantivo.Singular) },
-                { "cotización", (Género.Femenino, NúmeroSustantivo.Singular) },
+                { "líneacotización", (Género.Femenino, NúmeroSustantivo.Singular) },
                 { "líneacompra", (Género.Femenino, NúmeroSustantivo.Singular) },
                 { "líneanotacréditocompra", (Género.Femenino, NúmeroSustantivo.Singular) },
                 { "líneanotacréditoventa", (Género.Femenino, NúmeroSustantivo.Singular) },
@@ -328,6 +330,7 @@ namespace Vixark {
                 { "movimientobancario", (Género.Masculino, NúmeroSustantivo.Singular) },
                 { "movimientoefectivo", (Género.Masculino, NúmeroSustantivo.Singular) },
                 { "municipio", (Género.Masculino, NúmeroSustantivo.Singular) },
+                { "cotización", (Género.Femenino, NúmeroSustantivo.Singular) },
                 { "notacréditocompra", (Género.Femenino, NúmeroSustantivo.Singular) },
                 { "notacréditoventa", (Género.Femenino, NúmeroSustantivo.Singular) },
                 { "notadébitocompra", (Género.Femenino, NúmeroSustantivo.Singular) },
@@ -1473,6 +1476,7 @@ namespace Vixark {
         /// <param name="lista"></param>
         /// <param name="error"></param>
         /// <param name="columnasAOmitir"></param>
+        /// <param name="textoConexión"></param>
         /// <returns></returns>
         public static bool InsertarEnBaseDeDatosSQL<T>(List<T> lista, string nombreTabla, string textoConexión, out string error,
             List<string>? columnasAOmitir = null) {

@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
-using static Vixark.General;
 using static SimpleOps.Global;
+using static Vixark.General;
+using static SimpleOps.DocumentosGráficos.DocumentosGráficos;
+using SimpleOps.DocumentosGráficos;
+using AutoMapper;
 
 
 
@@ -12,21 +15,18 @@ namespace SimpleOps.Modelo {
 
 
     /// <summary>
-    /// Precio dado a cliente. Se diferencia de PrecioCliente en que la tabla Cotizaciones es un registro histórico mientras que la tabla PreciosClientes tiene solo los últimos precios.
+    /// Ofrecimiento de precios de venta de varios productos a un cliente.
     /// </summary>
-    [ControlInserción(ControlConcurrencia.Ninguno)]
-    class Cotización : Registro { // Es registro porque una vez generado no admite cambios, no es necesario rastrear información de actualización.
+    [ControlInserción(ControlConcurrencia.Ninguno)] // Desde la lógica de la operación no hay problema en realizar dos cotizaciones al mismo tiempo al mismo cliente desde dos computadores diferentes, aunque no sería deseable que se hicieran con precios diferentes la concurrencia no es tanto problema.
+    class Cotización : Registro {
 
 
         #region Propiedades
 
-        public Producto? Producto { get; set; } // Obligatorio.
-        public int ProductoID { get; set; } 
-
         public Cliente? Cliente { get; set; } // Obligatorio.
-        public int ClienteID { get; set; } 
+        public int ClienteID { get; set; }
 
-        public decimal Precio { get; set; } // Obligatorio.
+        public List<LíneaCotización> Líneas { get; set; } = new List<LíneaCotización>();
 
         #endregion Propiedades>
 
@@ -35,20 +35,32 @@ namespace SimpleOps.Modelo {
 
         private Cotización() { } // Solo para que EF Core no saque error.
 
-        public Cotización(Producto producto, Cliente cliente, decimal precio) 
-            => (ProductoID, ClienteID, Precio, Producto, Cliente) = (producto.ID, cliente.ID, precio, producto, cliente);
+        public Cotización(Cliente cliente) => (ClienteID, Cliente) = (cliente.ID, cliente);
 
         #endregion Constructores>
 
 
         #region Métodos y Funciones
 
-        public override string ToString() => $"el {FechaHoraCreación.ToShortDateString()} de {ATexto(Producto, ProductoID)} a {ATexto(Cliente, ClienteID)}";
+        public override string ToString() => $"{ID} a {ATexto(Cliente, ClienteID)}";
+
+
+        public DatosCotización ObtenerDatos(OpcionesDocumento opcionesDocumento) {
+
+            var mapeador = new Mapper(ConfiguraciónMapeadorVenta);
+            var datos = mapeador.Map<DatosCotización>(this);
+            datos.NombreDocumento = "Cotización";
+            CompletarDatosCotización(opcionesDocumento, datos, Líneas);
+            return datos;
+
+        } // ObtenerDatos>
+
 
         #endregion Métodos y Funciones>
 
 
     } // Cotización>
+
 
 
 } // SimpleOps.Modelo>

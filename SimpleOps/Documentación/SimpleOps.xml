@@ -162,6 +162,15 @@
             <param name="datosVenta"></param>
             <param name="líneas"></param>
         </member>
+        <member name="M:SimpleOps.DocumentosGráficos.DocumentosGráficos.CompletarDatosCotización``1(SimpleOps.DocumentosGráficos.OpcionesDocumento,SimpleOps.DocumentosGráficos.DatosCotización,System.Collections.Generic.List{``0})">
+            <summary>
+            Procedimiento común para las cotizaciones y catálogos que termina de completar el objeto de datos después de ser mapeado.
+            </summary>
+            <typeparam name="L"></typeparam>
+            <param name="opcionesDocumento"></param>
+            <param name="datosCotización"></param>
+            <param name="líneas"></param>
+        </member>
         <member name="M:SimpleOps.DocumentosGráficos.DocumentosGráficos.ObtenerTotalPáginas``2(``0,System.Collections.Generic.List{``1})">
             <summary>
             Obtiene el total de páginas para los documentos en modo <see cref="F:SimpleOps.DocumentosGráficos.DatosDocumento.Modo.CuerpoContinuo"/>.
@@ -171,6 +180,13 @@
             <param name="datosDocumento"></param>
             <param name="Líneas"></param>
             <returns></returns>
+        </member>
+        <member name="T:SimpleOps.DocumentosGráficos.OpcionesDocumento">
+            <summary>
+            Clase auxiliar para encapsular algunos parámetros externos al documento en sí del documento gráfico. Por lo general cambian
+            los tamaños, colores o cantidad de elementos en el documento y pueden ser personalizables por el usuario al generar
+            el documento.
+            </summary>
         </member>
         <member name="T:SimpleOps.DocumentosGráficos.PlantillaBase`1">
             <summary>
@@ -1380,7 +1396,7 @@
         </member>
         <member name="P:SimpleOps.Modelo.Cobro.NúmerosFacturas">
             <summary>
-            Prefijo + número de las facuras de ventas que fueron cobradas.
+            Prefijo + número de las facturas de ventas que fueron cobradas.
             </summary>
             <MaxLength>1000</MaxLength>
         </member>
@@ -1465,7 +1481,7 @@
         </member>
         <member name="T:SimpleOps.Modelo.Cotización">
             <summary>
-            Precio dado a cliente. Se diferencia de PrecioCliente en que la tabla Cotizaciones es un registro histórico mientras que la tabla PreciosClientes tiene solo los últimos precios.
+            Ofrecimiento de precios de venta de varios productos a un cliente.
             </summary>
         </member>
         <member name="T:SimpleOps.Modelo.InformePago">
@@ -1510,6 +1526,11 @@
         <member name="T:SimpleOps.Modelo.LíneaCompra">
             <summary>
             Línea de producto comprado.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Modelo.LíneaCotización">
+            <summary>
+            Precio dado a cliente. Se diferencia de PrecioCliente en que la tabla Cotizaciones es un registro histórico mientras que la tabla PreciosClientes tiene solo los últimos precios.
             </summary>
         </member>
         <member name="T:SimpleOps.Modelo.LíneaNegocio">
@@ -2631,6 +2652,7 @@
             <param name="lista"></param>
             <param name="error"></param>
             <param name="columnasAOmitir"></param>
+            <param name="textoConexión"></param>
             <returns></returns>
         </member>
         <member name="M:Vixark.General.ATabla``1(System.Collections.Generic.IList{``0},System.String,System.Collections.Generic.List{System.String})">

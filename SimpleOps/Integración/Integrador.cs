@@ -149,7 +149,7 @@ namespace SimpleOps.Integración {
                 var rutaDocumento = documentoElectrónico?.Ruta;
                 if (!File.Exists(rutaDocumento)) throw new Exception($"No se pudo encontrar el archivo XML de la {nombre} electrónica {rutaDocumento}.");
 
-                if (documentoCliente != null && CrearPdf(documentoCliente, documentoElectrónico, out string rutaPdf)) {
+                if (documentoCliente != null && CrearPdfVenta(documentoCliente, documentoElectrónico, out string rutaPdf)) {
 
                     if (!File.Exists(rutaPdf)) 
                         throw new Exception($"No se pudo encontrar el PDF con la representación gráfica de la {nombre} electrónica {rutaPdf}.");

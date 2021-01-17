@@ -70,6 +70,7 @@ namespace SimpleOps.Datos {
         public DbSet<NotaCréditoCompra> NotasCréditoCompra { get; set; } = null!;
         public DbSet<NotaDébitoVenta> NotasDébitoVenta { get; set; } = null!;
         public DbSet<NotaDébitoCompra> NotasDébitoCompra { get; set; } = null!;
+        public DbSet<Cotización> Cotizaciones { get; set; } = null!;
         // Documentos>
 
         // Líneas de Documentos
@@ -82,10 +83,10 @@ namespace SimpleOps.Datos {
         public DbSet<LíneaNotaDébitoCompra> LíneasNotasDébitoCompra { get; set; } = null!;
         public DbSet<LíneaPedido> LíneasPedidos { get; set; } = null!;
         public DbSet<LíneaOrdenCompra> LíneasOrdenesCompra { get; set; } = null!;
+        public DbSet<LíneaCotización> LíneasCotizaciones { get; set; } = null!;
         // Líneas de Documentos>
 
         // Entidades Económicas y Productos
-        public DbSet<Cotización> Cotizaciones { get; set; } = null!;
         public DbSet<PrecioCliente> PreciosClientes { get; set; } = null!;
         public DbSet<PrecioProveedor> PreciosProveedores { get; set; } = null!;
         public DbSet<ReferenciaCliente> ReferenciasClientes { get; set; } = null!;
@@ -267,6 +268,7 @@ namespace SimpleOps.Datos {
             constructor.Entity<ContactoCliente>().HasKey(cc => new { cc.ContactoID, cc.ClienteID });
             constructor.Entity<ContactoProveedor>().HasKey(cp => new { cp.ContactoID, cp.ProveedorID });
             constructor.Entity<RolUsuario>().HasKey(ur => new { ur.RolID, ur.UsuarioID });
+            constructor.Entity<LíneaCotización>().HasKey(dc => new { dc.CotizaciónID, dc.ProductoID });
             constructor.Entity<LíneaVenta>().HasKey(dv => new { dv.VentaID, dv.ProductoID });
             constructor.Entity<LíneaCompra>().HasKey(dc => new { dc.CompraID, dc.ProductoID });
             constructor.Entity<LíneaRemisión>().HasKey(dr => new { dr.RemisiónID, dr.ProductoID });
@@ -814,7 +816,7 @@ namespace SimpleOps.Datos {
                         "Contactos" => ctx.Contactos.Any(),
                         "ContactosClientes" => ctx.ContactosClientes.Any(),
                         "ContactosProveedores" => ctx.ContactosProveedores.Any(),
-                        "Cotizaciones" => ctx.Cotizaciones.Any(),
+                        "LíneasCotizaciones" => ctx.LíneasCotizaciones.Any(),
                         "LíneasCompras" => ctx.LíneasCompras.Any(),
                         "LíneasNotasCréditoCompra" => ctx.LíneasNotasCréditoCompra.Any(),
                         "LíneasNotasCréditoVenta" => ctx.LíneasNotasCréditoVenta.Any(),
@@ -836,6 +838,7 @@ namespace SimpleOps.Datos {
                         "NotasCréditoCompra" => ctx.NotasCréditoCompra.Any(),
                         "NotasCréditoVenta" => ctx.NotasCréditoVenta.Any(),
                         "NotasDébitoCompra" => ctx.NotasDébitoCompra.Any(),
+                        "Cotizaciones" =>  ctx.Cotizaciones.Any(),
                         "NotasDébitoVenta" => ctx.NotasDébitoVenta.Any(),
                         "OrdenesCompra" => ctx.OrdenesCompra.Any(),
                         "Pedidos" => ctx.Pedidos.Any(),
@@ -875,7 +878,7 @@ namespace SimpleOps.Datos {
                         "Contactos" => cargarJson<Contacto>(nombreTabla),
                         "ContactosClientes" => cargarJson<ContactoCliente>(nombreTabla),
                         "ContactosProveedores" => cargarJson<ContactoProveedor>(nombreTabla),
-                        "Cotizaciones" => cargarJson<Cotización>(nombreTabla),
+                        "LíneasCotizaciones" => cargarJson<LíneaCotización>(nombreTabla),
                         "LíneasCompras" => cargarJson<LíneaCompra>(nombreTabla),
                         "LíneasNotasCréditoCompra" => cargarJson<LíneaNotaCréditoCompra>(nombreTabla),
                         "LíneasNotasCréditoVenta" => cargarJson<LíneaNotaCréditoVenta>(nombreTabla),
@@ -898,6 +901,7 @@ namespace SimpleOps.Datos {
                         "NotasCréditoVenta" => cargarJson<NotaCréditoVenta>(nombreTabla),
                         "NotasDébitoCompra" => cargarJson<NotaDébitoCompra>(nombreTabla),
                         "NotasDébitoVenta" => cargarJson<NotaDébitoVenta>(nombreTabla),
+                        "Cotizaciones" => cargarJson<Cotización>(nombreTabla),
                         "OrdenesCompra" => cargarJson<OrdenCompra>(nombreTabla),
                         "Pedidos" => cargarJson<Pedido>(nombreTabla),
                         "PreciosClientes" => cargarJson<PrecioCliente>(nombreTabla),
