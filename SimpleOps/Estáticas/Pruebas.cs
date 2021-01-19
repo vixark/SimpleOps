@@ -399,6 +399,24 @@ namespace SimpleOps {
         } // DocumentosElectrónicos>
 
 
+        public static void GeneraciónCatálogo() {
+
+            var cliente = new Cliente("Distribuciones ABC", new Municipio("Bogotá", "Distrito Capital"), TipoCliente.Distribuidor) {
+                TipoEntidad = TipoEntidad.Empresa, Dirección = "Calle 80-100", Teléfono = "4589843", Identificación = "990986892", 
+            };
+            var cotización = new Cotización(cliente);
+            cotización.Líneas = new List<LíneaCotización>() { 
+                new LíneaCotización(cotización, new Producto("Televisor"), 1200000),
+                new LíneaCotización(cotización, new Producto("Videoproyector"), 1400000),
+                new LíneaCotización(cotización, new Producto("Mueble"), 2000000),
+                new LíneaCotización(cotización, new Producto("Monitor"), 600000),
+                new LíneaCotización(cotización, new Producto("Escritorio"), 500000)
+            };
+            CrearPdfCatálogo(cotización, out string rutaPdf);
+            
+        } // GeneraciónCatálogo>
+
+
         public static void GeneraciónPdf() {
 
             // Prueba del Motor de Razor para la Generación de HTML
