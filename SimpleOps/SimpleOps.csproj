@@ -90,8 +90,4 @@
     </EmbeddedResource>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Guías\Imagenes\Obtención de Certificado de Firma Digital\" />
-  </ItemGroup>
-
 </Project>

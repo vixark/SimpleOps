@@ -1,0 +1,162 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" href="CSS/Estilos.css">
+</head>
+
+<body>
+
+    <h2>Obtención de Certificado de Firma Digital con Andes SCD</h2>
+
+    <p>
+        Esta guía es para generar el certificado de firma digital con la entidad certificadora Andes SCD, quiénes vendían certificados
+        a 297 500 $ anuales en el año 2020, a 24 792 $ por mes era un precio razonable y su servicio es bueno. El precio no debería cambiar mucho de
+        año a año, así que si te cotizan un precio considerablemente mayor te recomiendo consultar con las otras entidades certificadoras.
+        El procedimiento no debería ser muy diferente con las otras entidades, pero si eliges otra deberás consultar con ellos
+        cómo generar y obtener el certificado. El costo anual del certificado es lo único que deberás pagar para facturar electrónicamente con
+        <b>SimpleOps</b> y de todas maneras también lo tendrías que pagar si usaras las otras alternativas de facturación electrónica cómo el portal
+        de la DIAN y los proveedores tecnológicos.
+    </p>
+
+    <p>
+        El certificado tendrá vigencia de un año, entonces deberás recordar generar un nuevo certificado varias semanas antes que se venza.
+    </p>
+
+    <p>
+        Este procedimiento te lo puede realizar un asesor de Andes SCD si te contactas con ellos y le das acceso remoto para que usen tu computador,
+        pero si no te sientes cómodo dándole acceso remoto de tu computador a un tercero o si prefieres hacerlo por tu cuenta sigue los siguientes pasos.
+    </p>
+
+    <p>
+        Comunícate con Andes SCD en su línea telefónica que puedes encontrar en su <a href="https://www.andesscd.com.co">sitio web</a>. Solicítales
+        una cotización y un asesor comercial te enviará a tu email una cotización con el valor y la información para realizar el pago. Realiza el pago
+        y respónde por email al asesor adjuntando el RUT de tu empresa y el comprobante de pago.
+    </p>
+
+    <p>
+        Unos días después recibirás un email de Andes SCD donde te envían un enlace e instrucciones para diligenciar tus datos y generar el certificado.
+        Puedes seguir sus instrucciones o puedes continuar con esta guía.
+    </p>
+
+    <p>
+        Ingresa <a href="https://www.andesscd.com.co/solicitud-de-certificados/facturacion-electronica/persona-juridica/">aquí</a>, lee
+        los términos y condiciones, lee el aviso de privacidad, chequea <i>Acepto los Términos y Condiciones</i>,
+        chequea <i>Autorizo el Tratamiento de Datos Personales</i> y haz clic en <i>Siguiente</i>.
+    </p>
+    <img src="Imagenes/Certificado de Firma Digital Andes/AceptaciónCondicionesAndes.png" />
+
+    <p>
+        <b>Datos personales del titular del certificado:</b> Ingresa los datos del representante legal de tu empresa y haz clic
+        en <i>Siguiente</i>. Te enviarán un código al email del representante legal ingresado en la página anterior. Ingresa el código recibido y haz clic
+        en <i>Siguiente</i>.
+    </p>
+
+    <p>
+        <b>Datos de la entidad:</b> Ingresa los datos de tu empresa. En <i>Cargo</i> ingresa el cargo que tiene el representante legal
+        en la empresa. En <i>Unidad Organizacional</i> ingresa <i>Administrativo</i>.
+        Si no sabes que ingresar en <i>Sucursal o dependencia</i> puedes ingresar <i>Gerencia</i>. Haz clic en <i>Siguiente</i>.
+    </p>
+
+    <p>
+        <b>Formato de entrega:</b> Descarga y descomprime el <i>Generador CSR</i>.
+    </p>
+    <img src="Imagenes/Certificado de Firma Digital Andes/FormatoEntregaDescargaGeneradorCSR.png" />
+
+
+    <p>
+        Abre la carpeta descomprimida, ejecuta <i>Instalar.exe</i> y sigue el procedimiento de instalación.
+        Abre el programa <i>Generador CSR</i> que acabaste de instalar. Ingresa el departamento, ciudad y nombre de tu empresa.
+        En <i>Área Empresa</i> ingresa <i>Administrativo</i>. En <i>Nombre o Website</i> ingresa el nombre completo del representante legal
+        incluyendo sus dos apellidos. Haz clic en <i>Generar CSR</i>.
+    </p>
+    <img src="Imagenes/Certificado de Firma Digital Andes/GeneraciónCSR.png" />
+
+
+    <p>
+        En el mensaje que te aparecerá no le des clic inmediatamente en <i>Aceptar</i>. Toma nota de la ruta de la carpeta después
+        de <i>-out</i>, ábrela en el explorador de archivos y copia (no los cortes) los 2 los archivos en ella (CSR y KEY)
+        a una carpeta segura de tu computador <b>¡No pierdas estos archivos!</b> Si los pierdes tendrás que comunicarte con Andes SCD.
+    </p>
+    <img src="Imagenes/Certificado de Firma Digital Andes/RutaCSR.png" />
+
+    <p>
+        Una vez copiados los archivos vuelve al programa y haz clic en <i>Aceptar</i> en el diálogo pendiente. Es posible los archivos
+        sean copiados nuevamente en el escritorio. Los puedes ignorar porque son iguales a los que ya copiaste.
+    </p>
+
+    <p>
+        Se te mostrará un mensaje de éxito y el cuadro de texto CSR se llenará con un código.
+        Copia todo el texto en <i>CSR</i>, incluyendo <i>-----BEGIN</i> y <i>REQUEST-----</i>, vuelve a la página web de Andes SCD y
+        pégalo en el cuadro de texto
+        <i>CSR</i>. Especifica la fecha de inicio de vigencia del certificado y la duración de la vigencia que pagaste.
+        En <i>Plataforma de interacción</i> selecciona <i>Facturación electrónica</i>, selecciona cualquier opción en <i>¿Cómo nos conoció?</i> y haz
+        clic en <i>Siguiente</i>.
+    </p>
+    <img src="Imagenes/Certificado de Firma Digital Andes/DatosEntrega.png" />
+
+
+    <p>
+        <b>Documentación Soporte Solicitud:</b> Adjunta (solo se permiten archivos PDF)
+        el certificado de la cámara de comercio de tu empresa con menos de 3 meses desde su actualización,
+        la fotocopia de la cédula del representante legal al 150% y el RUT de tu empresa. Haz clic en <i>Siguiente</i>.
+    </p>
+    <img src="Imagenes/Certificado de Firma Digital Andes/DocumentosSoporte.png" />
+
+
+    <p>
+        <b>Método de pago:</b> Selecciona <i>Subir Comprobante de pago</i>, adjunta el comprobante de pago, ingresa el correeo donde recibirás
+        la factura de Andes SCD y haz clic en <i>Solicitar Certificado</i>.
+    </p>
+    <img src="Imagenes/Certificado de Firma Digital Andes/MétodoDePago.png" />
+
+    <p>
+        Te mostrará un número de solicitud que te servirá para hacer seguimiento al proceso. Ahora deberás
+        esperar algunos días y Andes SCD te enviará un email con las instrucciones para descargar tu certificado.
+    </p>
+
+    <p>
+        Al recibir el email de Andes SCD que te informa la emisión del certificado haz clic en <i>Descargar</i> (punto 5) para
+        obtener el programa <i>Generador PFX</i>, guarda en un lugar seguro tu clave del certificado (punto 2) y
+        abre la página para descargar haciendo clic en <i>Descargar Certificado</i> (punto 1).
+    </p>
+    <img src="Imagenes/Certificado de Firma Digital Andes/EmailGeneraciónPFX.png" />
+
+    <p>
+        Verifica los datos del representante legal e ingresa los datos faltantes. En contraseña ingresa la contraseña del certificado que recién
+        guardaste. Haz clic en <i>Validar</i>.
+    </p>
+    <img src="Imagenes/Certificado de Firma Digital Andes/ZonaSuscriptoresAndesSCD.png" />
+
+
+    <p>
+        Haz clic en <i>Descarga</i> y después en <i>Haga click para descargar archivo con el certificado</i>. Descargarás un archivo
+        con extensión PEM, guárdalo en un lugar seguro. Este archivo lo usarás en el programa <i>Generador PFX</i> para generar
+        tu certificado de firma digital (el PFX).
+    </p>
+    <img src="Imagenes/Certificado de Firma Digital Andes/DescargaCertificadoAndesSCD.png" />
+
+    <p>
+        Descomprime el archivo que descargaste anteriormente <i>GeneradorPFX_1.6.zip</i>, abre la carpeta descomprimida,
+        ejecuta <i>Instalar.exe</i> y sigue el procedimiento de instalación.
+        Abre el programa <i>Generador PFX</i> que acabaste de instalar. Haz clic en <i>Llave Privada > Examinar...</i> y abre el
+        archivo KEY que guardaste hace unos días. Este archivo lo generaste con el programa <i>Generador CSR</i> y debe tener
+        el nombre del representante legal y extensión .key. Haz clic en <i>Archivo PEM > Examinar...</i> y abre el archivo PEM que acabaste
+        de descargar. En <i>Guardar En..</i> selecciona donde quieres guardar tu archivo PFX.
+        En <i>Clave del PEM</i> escribe la clave del certificado que te enviaron en el email con la emisión del certificado.
+        Haz clic en <i>Generar PFX</i>.
+    </p>
+    <img src="Imagenes/Certificado de Firma Digital Andes/GeneradorPFX.png" />
+
+    <p>
+        Haz clic en <i>Aceptar</i> en el diálogo siguiente y unos segundos después recibirás un mensaje que te informa
+        la creación exitosa del archivo <i>Certificado.pfx</i>. Guárdalo en un lugar seguro, este es tu certificado de firma digital que te
+        permitirá facturar electrónicamente con <b>SimpleOps</b>.
+    </p>
+
+</body>
+
+</html>
