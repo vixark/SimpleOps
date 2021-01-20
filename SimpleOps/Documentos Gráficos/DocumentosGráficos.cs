@@ -102,7 +102,7 @@ namespace SimpleOps.DocumentosGráficos {
             }, plantillaCompilada => {
 
                 var datos = cotización.ObtenerDatos(new OpcionesDocumento());
-                var creado = CrearPdf(datos, plantillaCompilada, @"D:\", out string rutaPdfAux);
+                var creado = CrearPdf(datos, plantillaCompilada, @"D:\", out string rutaPdfAux); // Pendiente: establecer ruta desde configuración. 
                 return (creado, rutaPdfAux);
 
             });

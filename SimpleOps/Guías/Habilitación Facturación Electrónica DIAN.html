@@ -5,33 +5,10 @@
 <head>
     <meta charset="utf-8" />
     <title></title>
+    <link rel="stylesheet" href="CSS/Estilos.css">
 </head>
 
 <body>
-
-    <style type="text/css" media="screen">
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            width: 800px;
-            margin: auto;
-        }
-
-        img {
-            display: block;
-            margin: auto;
-            margin-top: 80px;
-            margin-bottom: 80px;
-            max-width: 800px;
-        }
-
-        h1, h2 {
-            margin-top: 80px;
-            margin-bottom: 30px;
-        }
-
-    </style>
-
 
     <h1>Habilitación de Facturación Electrónica DIAN con SimpleOps</h1>
     <p>
@@ -45,7 +22,7 @@
         esta guía, pero ten en cuenta que tendrás que realizar algunos pasos de manera diferente.
     </p>
 
-    <h2>Habilitación DIAN</h2>
+    <h2>Habilitación de Pruebas en la DIAN</h2>
 
     <p>
         Ingresa a <a href="https://www.dian.gov.co">www.dian.gov.co</a> y haz clic en <i>Temas de interés > Factura Electrónica > Habilitación</i>.
@@ -128,12 +105,18 @@
     </p>
 
 
-    <h2>Certificado de Firma Digital</h2>
+    <h2>Obtención de Certificado de Firma Digital</h2>
     <p>
         Un certificado digital es un archivo con extensión PFX que necesitarás para enviar las facturas electrónicas a la DIAN.
         Existen varias entidades certificadoras en Colombia que te pueden vender este archivo anualmente.
         Las puedes consultar <a href="https://onac.org.co/directorio-de-acreditacion-buscador">aquí</a>,
         selecciona <i>Entidades Certificación Digital (ECD)</i>, <i>Entidad de Certificación Abierta</i> y haz clic en <i>Buscar</i>.
+    </p>
+
+    <p>
+        Si actualmente facturas electrónicamente con otra aplicación o con el portal de la DIAN, no necesitarás realizar este procedimiento
+        nuevamente para poder facturar con <b>SimpleOps</b>. El certificado de firma digital que ya tienes te servirá,
+        asegúrate de tener tu archivo PFX y tu clave y puedes pasar al procedimiento de pruebas.
     </p>
 
     <p>
@@ -197,8 +180,8 @@
 
     <p>
         Abre la carpeta descomprimida, ejecuta <i>Instalar.exe</i> y sigue el procedimiento de instalación.
-        Abre el programa <i>Generador CSR</i> que acabaste de instalar. Ingresa el departamento, ciudad y nombre de tu empresa. 
-        En <i>Área Empresa</i> ingresa <i>Administrativo</i>. En <i>Nombre o Website</i> ingresa el nombre completo del representante legal 
+        Abre el programa <i>Generador CSR</i> que acabaste de instalar. Ingresa el departamento, ciudad y nombre de tu empresa.
+        En <i>Área Empresa</i> ingresa <i>Administrativo</i>. En <i>Nombre o Website</i> ingresa el nombre completo del representante legal
         incluyendo sus dos apellidos. Haz clic en <i>Generar CSR</i>.
     </p>
     <img src="Imagenes/Habilitación Facturación Electrónica DIAN/GeneraciónCSR.png" />
@@ -242,9 +225,59 @@
     <img src="Imagenes/Habilitación Facturación Electrónica DIAN/MétodoDePago.png" />
 
     <p>
-        Te mostrará un número de solicitud que te servirá para hacer seguimiento al proceso. Ahora deberás 
+        Te mostrará un número de solicitud que te servirá para hacer seguimiento al proceso. Ahora deberás
         esperar algunos días y Andes SCD te enviará un email con las instrucciones para descargar tu certificado.
     </p>
+
+    <p>
+        Al recibir el email de Andes SCD que te informa la emisión del certificado haz clic en <i>Descargar</i> (punto 5) para
+        obtener el programa <i>Generador PFX</i>, guarda en un lugar seguro tu clave del certificado (punto 2) y
+        abre la página para descargar haciendo clic en <i>Descargar Certificado</i> (punto 1).
+    </p>
+    <img src="Imagenes/Habilitación Facturación Electrónica DIAN/EmailGeneraciónPFX.png" />
+
+    <p>
+        Verifica los datos del representante legal e ingresa los datos faltantes. En contraseña ingresa la contraseña del certificado que recién
+        guardaste. Haz clic en <i>Validar</i>.
+    </p>
+    <img src="Imagenes/Habilitación Facturación Electrónica DIAN/ZonaSuscriptoresAndesSCD.png" />
+
+
+    <p>
+        Haz clic en <i>Descarga</i> y después en <i>Haga click para descargar archivo con el certificado</i>. Descargarás un archivo
+        con extensión PEM, guárdalo en un lugar seguro. Este archivo lo usarás en el programa <i>Generador PFX</i> para generar
+        tu certificado de firma digital (el PFX).
+    </p>
+    <img src="Imagenes/Habilitación Facturación Electrónica DIAN/DescargaCertificadoAndesSCD.png" />
+
+    <p>
+        Descomprime el archivo que descargaste anteriormente <i>GeneradorPFX_1.6.zip</i>, abre la carpeta descomprimida,
+        ejecuta <i>Instalar.exe</i> y sigue el procedimiento de instalación.
+        Abre el programa <i>Generador PFX</i> que acabaste de instalar. Haz clic en <i>Llave Privada > Examinar...</i> y abre el
+        archivo KEY que guardaste hace unos días. Este archivo lo generaste con el programa <i>Generador CSR</i> y debe tener
+        el nombre del representante legal y extensión .key. Haz clic en <i>Archivo PEM > Examinar...</i> y abre el archivo PEM que acabaste
+        de descargar. En <i>Guardar En..</i> selecciona donde quieres guardar tu archivo PFX.
+        En <i>Clave del PEM</i> escribe la clave del certificado que te enviaron en el email con la emisión del certificado.
+        Haz clic en <i>Generar PFX</i>.
+    </p>
+    <img src="Imagenes/Habilitación Facturación Electrónica DIAN/GeneradorPFX.png" />
+
+    <p>
+        Haz clic en <i>Aceptar</i> en el diálogo siguiente y unos segundos después recibirás un mensaje que te informa
+        la creación exitosa del archivo <i>Certificado.pfx</i>. Guárdalo en un lugar seguro, este es tu certificado de firma digital que te
+        permitirá facturar electrónicamente con <b>SimpleOps</b>.
+    </p>
+
+
+    <h2>Configuración de SimpleOps y Pruebas de Habilitación</h2>
+
+    <p>
+        Una vez hayas habilitado a <b>SimpleOps</b> en el portal de la DIAN y hayas obtenido el certificado de firma digital podrás configurar
+        <b>SimpleOps</b> con los datos de tu empresa y realizar las pruebas en el servidor de la DIAN, que una vez pasadas te permitirán empezar
+        a facturar electrónicamente.
+    </p>
+
+
 
 </body>
 

@@ -141,6 +141,12 @@ namespace SimpleOps {
                 c.CreateMap<NotaCréditoVenta, Integración.DatosVenta>().ReverseMap();
             });
 
+       public static MapperConfiguration ConfiguraciónMapeadorCotización
+            = new MapperConfiguration(c => {
+                c.CreateMap<LíneaCotización, DatosLíneaProducto>();
+                c.CreateMap<Cotización, DatosCotización>().ForMember(vg => vg.CódigoDocumento, mce => mce.MapFrom(v => v.ID));
+            });
+
         public static MapperConfiguration ConfiguraciónMapeadorEmpresa = new MapperConfiguration(c => c.CreateMap<OpcionesEmpresa, DatosEmpresa>());
 
         public static iText.Html2pdf.ConverterProperties OpcionesConversiónPdf = new iText.Html2pdf.ConverterProperties(); // Se termina de configurar en IniciarVariablesGlobales().
