@@ -73,7 +73,7 @@ namespace SimpleOps.Singleton {
         #region Facturación Electrónica
         // No todos los usuarios tendrían acceso a la posibilidad de facturar electrónicamente, ni a la clave del certificado. Se establecen estas rutas como personalización de cada equipo/usuario.
 
-        public string RutaCertificado { get; set; } = @"D:\Programas\SimpleOps\Firma Electrónica\Certificado.pfx"; // Archivo .pfx con el certificado para la firma digital.
+        public string RutaCertificado { get; set; } = @"D:\Programas\SimpleOpsxxxxxxxxxxx\Firma Electrónica\Certificado.pfx"; // Archivo .pfx con el certificado para la firma digital.
 
         public string RutaClaveCertificado { get; set; } = @"D:\Programas\SimpleOps\Firma Electrónica\Clave.txt"; // Un archivo .txt con una sola línea y en ella la clave del certificado sin ningún espacio al frente ni atrás.
 
