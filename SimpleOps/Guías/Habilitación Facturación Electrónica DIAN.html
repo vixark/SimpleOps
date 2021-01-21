@@ -10,7 +10,8 @@
 
 <body>
 
-    <style> /* Temporalmente se copia textual desde Estilos.css para poder que funcione con htmlpreview.github.io. */
+    <style>
+        /* Temporalmente se copia textual desde Estilos.css para poder que funcione con htmlpreview.github.io. */
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -30,7 +31,6 @@
             margin-top: 80px;
             margin-bottom: 30px;
         }
-
     </style>
 
     <h1>Habilitación de Facturación Electrónica DIAN con SimpleOps</h1>
@@ -169,11 +169,20 @@
 
     <p>
         Crea una carpeta en tu computador con el nombre <i>SimpleOps</i> (por ejemplo, D:\Programas\SimpleOps) y crea dentro de ella las
-        siguientes 6 nuevas carpetas:
-        <i>Código</i>, <i>Datos</i>, <i>Firma Electrónica</i>, <i>Opciones</i>, <i>Plantillas Documentos</i> y
-        <i>Programa Tercero</i>. Crea una carpeta con nombre <i>Integración SimpleOps</i> dentro de <i>Programa Tercero</i>. 
+        siguientes 2 nuevas carpetas: <i>Código</i> y <i>Firma Electrónica</i>.
         Asegúrate de crearlas exactamente cómo están escritas (incluyendo tildes) para que no tengas
-        contratiempos más adelante. Abre Visual Studio y haz clic en <i>Tareas Iniciales > Clonar un repositorio</i>. En <i>Ubicación del repositorio</i>
+        contratiempos más adelante.
+    </p>
+
+    <p>
+        Copia y pega (no lo cortes) tu archivo PFX con tu certificado de firma digital en la carpeta <i>\SimpleOps\Firma Electrónica</i> y renómbralo a
+        <i>Certificado.pfx</i>. Crea un archivo de texto (extensión .txt) en la carpeta <i>\SimpleOps\Firma Electrónica</i>, nómbralo <i>Clave.txt</i>,
+        ábrelo, escribe tu clave del certificado de firma digital sin agregar espacios ni nuevas líneas y guárdalo.
+    </p>
+    <img src="Imagenes/Habilitación Facturación Electrónica DIAN/ArchivosFirmaElectrónica.png" />
+
+    <p>
+        Abre Visual Studio y haz clic en <i>Tareas Iniciales > Clonar un repositorio</i>. En <i>Ubicación del repositorio</i>
         escribe https://github.com/vixark/SimpleOps.git y en <i>Ruta de acceso</i> selecciona tu carpeta <i>\SimpleOps\Código</i> y haz clic en
         <i>Clonar</i>.
     </p>
@@ -188,10 +197,17 @@
     <p>
         Con esto abrirás el código por primera vez. La próxima vez que vayas a abrir el código abre
         el archivo <i>\SimpleOps\Código\SimpleOps.sln</i> y actualiza el código a la última versión en GitHub haciendo clic en la esquina inferior derecha
-        en <i>master > "Pull"</i>. Si te sale un error de sincronización, en Cambios de GIT > 
+        en <i>master > "Pull"</i>. 
     </p>
     <img src="Imagenes/Habilitación Facturación Electrónica DIAN/ActualizarCambiosSimpleOpsSln.png" />
 
+    <p>
+        Si te sale el error <i>No se pueden incorporar los cambios...</i>, en <i>Cambios de GIT > Cambios</i> haz clic derecho
+        en el archivo que cambiaste (usualmente <i>OpcionesEquipo.cs</i>) y haz clic en <i>Deshacer Cambios</i> e intenta actualizar el código nuevamente.
+        Ten cuidado si has realizado
+        personalizaciones adicionales a las indicadas en esta guía porque te podrían aparecer más archivos y deberás analizar con más cuidado
+        cómo proceder para evitar perder tus personalizaciones.
+    </p>
 
     <p>
         Busca (Ctrl + F) el texto <i>Public string RutaAplicación</i> para que encuentres el siguiente fragmento de código y reemplaza en los 4
@@ -199,7 +215,6 @@
         Esto deberás hacerlo cada vez que actualices el código, aunque si usas la ruta <i>D:\Programas\</i> no tendrás que hacerlo.
     </p>
     <img src="Imagenes/Habilitación Facturación Electrónica DIAN/CambioRutasCódigo.png" />
-
 
 </body>
 

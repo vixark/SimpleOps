@@ -668,6 +668,7 @@ namespace SimpleOps {
 
             OpcionesConversiónPdf.SetFontProvider(new iText.Html2pdf.Resolver.Font.DefaultFontProvider(true, true, true)); // Necesario para poder usar la fuente Calibri, se podría tardar algunos segundos. Si llega a ser un problema de rendimiento revisar las opciones en SimpleOps.xlsx > Tareas > Rendimiento Generación de PDF.
             ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaDatos, crearSiNoExiste: true); // Se ejecuta para crear la carpeta si no existe.
+            ObtenerRutaCarpeta(Equipo.RutaIntegración, "",  crearSiNoExiste: true);
 
         } // IniciarVariablesGlobales>
 
