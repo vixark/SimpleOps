@@ -168,12 +168,13 @@
     </p>
 
     <p>
-        Crea una carpeta en tu computador con el nombre <i>SimpleOps</i> (por ejemplo, D:\Programas\SimpleOps) y crea dentro de ella las 
+        Crea una carpeta en tu computador con el nombre <i>SimpleOps</i> (por ejemplo, D:\Programas\SimpleOps) y crea dentro de ella las
         siguientes 6 nuevas carpetas:
         <i>Código</i>, <i>Datos</i>, <i>Firma Electrónica</i>, <i>Opciones</i>, <i>Plantillas Documentos</i> y
-        <i>Programa Tercero</i>. Asegúrate de crearlas exactamente cómo están escritas (incluyendo tildes) para que no tengas
+        <i>Programa Tercero</i>. Crea una carpeta con nombre <i>Integración SimpleOps</i> dentro de <i>Programa Tercero</i>. 
+        Asegúrate de crearlas exactamente cómo están escritas (incluyendo tildes) para que no tengas
         contratiempos más adelante. Abre Visual Studio y haz clic en <i>Tareas Iniciales > Clonar un repositorio</i>. En <i>Ubicación del repositorio</i>
-        escribe https://github.com/vixark/SimpleOps.git y en <i>Ruta de acceso</i> selecciona tu carpeta <i>\SimpleOps\Código</i> y haz clic en 
+        escribe https://github.com/vixark/SimpleOps.git y en <i>Ruta de acceso</i> selecciona tu carpeta <i>\SimpleOps\Código</i> y haz clic en
         <i>Clonar</i>.
     </p>
     <img src="Imagenes/Habilitación Facturación Electrónica DIAN/ClonarRepositorio.png" />
@@ -185,11 +186,20 @@
     <img src="Imagenes/Habilitación Facturación Electrónica DIAN/AbrirSimpleOpsSln.png" />
 
     <p>
-        La próxima vez que vayas a abrir el código de <b>SimpleOps</b> abre
+        Con esto abrirás el código por primera vez. La próxima vez que vayas a abrir el código abre
         el archivo <i>\SimpleOps\Código\SimpleOps.sln</i> y actualiza el código a la última versión en GitHub haciendo clic en la esquina inferior derecha
-        en <i>master > Recuperar cambios</i>.
+        en <i>master > "Pull"</i>.
     </p>
     <img src="Imagenes/Habilitación Facturación Electrónica DIAN/ActualizarCambiosSimpleOpsSln.png" />
+
+
+    <p>
+        Busca (Ctrl + F) el texto <i>Public string RutaAplicación</i> para que encuentres el siguiente fragmento de código y reemplaza en los 4
+        textos indicados <i>D:\Programas</i> por la ruta de la carpeta donde está tu carpeta <i>\SimpleOps</i>.
+        Esto deberás hacerlo cada vez que actualices el código, aunque si usas la ruta <i>D:\Programas\</i> no tendrás que hacerlo.
+    </p>
+    <img src="Imagenes/Habilitación Facturación Electrónica DIAN/CambioRutasCódigo.png" />
+
 
 </body>
 

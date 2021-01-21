@@ -665,7 +665,10 @@ namespace SimpleOps {
         /// Inicia algunas variables que no se pueden iniciar en el cuerpo de la clase Global porque requieren unos pasos adicionales para establecer su valor.
         /// </summary>
         public static void IniciarVariablesGlobales() {
+
             OpcionesConversiónPdf.SetFontProvider(new iText.Html2pdf.Resolver.Font.DefaultFontProvider(true, true, true)); // Necesario para poder usar la fuente Calibri, se podría tardar algunos segundos. Si llega a ser un problema de rendimiento revisar las opciones en SimpleOps.xlsx > Tareas > Rendimiento Generación de PDF.
+            ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaDatos, crearSiNoExiste: true); // Se ejecuta para crear la carpeta si no existe.
+
         } // IniciarVariablesGlobales>
 
 
