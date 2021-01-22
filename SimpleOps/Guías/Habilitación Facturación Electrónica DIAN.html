@@ -31,6 +31,16 @@
             margin-top: 80px;
             margin-bottom: 30px;
         }
+
+        h3 {
+            margin-top: 40px;
+        }
+
+        li {
+            margin-bottom: 10px;
+            margin-top: 10px;
+        }
+
     </style>
 
     <h1>Habilitación de Facturación Electrónica DIAN con SimpleOps</h1>
@@ -103,6 +113,7 @@
 
         <ul>
             <li><i>TestSetID</i>, guárdalo con el nombre <i>IdentificadorPruebas</i>.</li>
+            <li><i>Número Resolución</i>, guárdalo con el nombre <i>NúmeroAutorizaciónFacturación</i>.</li>
             <li><i>Rango desde</i>, guárdalo con el nombre <i>PrimerNúmeroFacturaAutorizada</i>.</li>
             <li><i>Rango hasta</i>, guárdalo con el nombre <i>ÚltimoNúmeroFacturaAutorizada</i>.</li>
             <li><i>Fecha desde</i>, guárdala con el nombre <i>InicioAutorizaciónFacturación</i>.</li>
@@ -159,12 +170,12 @@
         a facturar electrónicamente.
     </p>
 
-    <h3>Instalación SimpleOps</h3>
+    <h3>Instalación de SimpleOps</h3>
     <p>
         <b>SimpleOps</b> se encuentra en una etapa preliminar de desarrollo, por lo tanto aún no cuenta con instalador y la mejor
         manera de ejecutarlo es directamente desde el código fuente. Para ejecutar el código necesitarás
         <a href="https://visualstudio.microsoft.com/es/vs/community/">Visual Studio</a>. Si quieres ejecutar <b>SimpleOps</b> sin necesidad
-        de instalar Visual Studio me puedes escribir a vixark@outlook.com.
+        de instalar Visual Studio, me puedes escribir a vixark@outlook.com.
     </p>
 
     <p>
@@ -207,7 +218,7 @@
     <img src="Imagenes/Habilitación Facturación Electrónica DIAN/ActualizarCambiosSimpleOpsSln.png" />
 
     <p>
-        Si te sale el error <i>No se pueden incorporar los cambios...</i>, en <i>Cambios de GIT > Cambios</i> haz <i>clic derecho > Deshacer Cambios</i>
+        Si te sale el error <i>No se pueden incorporar los cambios...</i>, en <i>Cambios de GIT > Cambios</i>, haz <i>clic derecho > Deshacer Cambios</i>
         en los archivos que cambiaste (usualmente <i>OpcionesEquipo.cs</i> y <i>Global.cs</i>) e intenta
         actualizar el código nuevamente.
         Ten cuidado si has realizado
@@ -237,9 +248,178 @@
         Suspende la ejecución (Shift + F5).
     </p>
 
-    <h3>Configuración Datos Empresa</h3>
+    <h3>Configuración de Datos de tu Empresa</h3>
 
+    <p>
+        Para hacerlo necesitarás agregar varios datos de tu empresa al archivo <i>Empresa.json</i>.
+        Abre el archivo <i>[CarpetaProgramas]\SimpleOps\Opciones\Empresa.json</i> con Visual Studio
+        (<i>clic derecho > Abrir con.. > Microsoft Visual Studio</i>).
+        Para editarlo más fácil haz <i>clic derecho en el texto > Desminimizar</i>.
+    </p>
 
+    <p>
+        Al agregar los valores usa dobles comillas ("") para los valores <b>[Texto]</b>, ninguna comilla para los <b>[Número]</b>, el formato
+        "YYYY-MM-DDT00:00:00Z" (con dobles comillas) para <b>[Fecha]</b> y true o false (sin comillas) para <b>[Booleano]</b>.
+    </p>
+
+    <p>
+        Si un texto tiene tildes o eñes debes procesarlo con esta
+        <a href="https://www.freeformatter.com/json-escape.html#ad-output">utilidad</a>. Ingresa el texto en el cuadro, haz clic en <i>ESCAPE</i>,
+        ,copia el texto del cuadro <i>Escaped string</i> y pégalo en el archivo. Por ejemplo, el texto <i>Corporación</i> se convierte en
+        <i>Corporaci\u00F3n</i>, que es el texto que se debe usar.
+    </p>
+
+    <ul>
+        <li>
+            <b>MunicipioFacturaci\u00F3nID [Número]:</b>
+            ID del municipio de la dirección de facturación. Encuentra los IDs de los municipios <a href="IDs Municipios.html">aquí</a>.
+        </li>
+
+        <li>
+            <b>MunicipioUbicaci\u00F3nID [Número]:</b>
+            Se usa si es necesario especificar un municipio diferente al de facturación para la ubicación de la empresa.
+            Si se deja en <i>null</i>, se usa MunicipioFacturaciónID.
+        </li>
+
+        <li>
+            <b>Raz\u00F3nSocial [Texto]:</b>
+            Razón social como está registrada en el RUT.
+        </li>
+
+        <li>
+            <b>Tel\u00E9fonoPrincipal [Texto]:</b>
+            Línea telefónica principal. Puede ser celular o fijo.
+        </li>
+
+        <li>
+            <b>EmailVentas [Texto]:</b>
+            Email principal de ventas. Se escribirá en la representación gráfica de la factura electrónica.
+        </li>
+
+        <li>
+            <b>SitioWeb [Texto]:</b>
+            Sitio web. Si no tiene, puedes dejarlo en <i>null</i>.
+        </li>
+
+        <li>
+            <b>Direcci\u00F3nFacturaci\u00F3n [Texto]:</b>
+            Dirección de facturación registrada en el RUT.
+        </li>
+
+        <li>
+            <b>Direcci\u00F3nUbicaci\u00F3n  [Texto]:</b>
+            Se usa si es necesario especificar una dirección diferente a la de facturación para la ubicación de la empresa.
+            Si se deja en <i>null</i>, se usa la dirección de facturación.
+        </li>
+
+        <li>
+            <b>Nit [Texto]:</b>
+            Nit sin dígito de verificación.
+        </li>
+
+        <li>
+            <b>NombreComercial [Texto]:</b>
+            Se usa para informarlo a la DIAN al hacer la factura electrónica y para usarlo en representación gráfica de la factura electrónica.
+            Si se deja en <i>null</i>, se omite en la factura electrónica y en la representación gráfica se usa la razón social.
+        </li>
+
+        <li>
+            <b>TipoContribuyente [Texto]:</b>
+            Los tipos de contribuyente que le aplican separados por coma. Las opciones disponibles son:
+            Ordinario (le aplica a las empresas que no se ha acogido a uno de los otros régimenes como simple o gran contribuyente), GranContribuyente
+            Autorretenedor, RetenedorIVA, RégimenSimple, ResponsableIVA y NoResponsableIVA.
+        </li>
+
+        <li>
+            <b>N\u00FAmeroAutorizaci\u00F3nFacturaci\u00F3n [Número]:</b>
+            Número del código de la resolución otorgada para la numeración de facturación.
+            El número que copiaste desde el portal de la DIAN con nombre <i>NúmeroAutorizaciónFacturación</i>.
+        </li>
+
+        <li>
+            <b>InicioAutorizaci\u00F3nFacturaci\u00F3n [Fecha]:</b>
+            Fecha inicial de la autorización de la numeración de facturación.
+            La fecha que copiaste desde el portal de la DIAN con nombre <i>InicioAutorizaciónFacturación</i>. Recuerda usar el formato
+            "YYYY-MM-DDT00:00:00Z" para ingresar las fechas, por ejemplo "2019-01-19T00:00:00Z".
+        </li>
+
+        <li>
+            <b>FinAutorizaci\u00F3nFacturaci\u00F3n [Fecha]:</b>
+            Fecha final de la autorización de la numeración de facturación.
+            La fecha que copiaste desde el portal de la DIAN con nombre <i>FinAutorizaciónFacturación</i>.
+        </li>
+
+        <li>
+            <b>PrefijoFacturas [Texto]:</b>
+            Prefijo de la autorización de numeración de facturación dado por el SIE de numeración.
+            Cómo primero vas a realizar las pruebas de facturación ingresa el prefijo de pruebas: "SETP".
+        </li>
+
+        <li>
+            <b>PrimerN\u00FAmeroFacturaAutorizada [Número]:</b>
+            Valor inicial del rango de numeración otorgado por la DIAN.
+            El número que copiaste desde el portal de la DIAN con nombre <i>PrimerNúmeroFacturaAutorizada</i>.
+        </li>
+
+        <li>
+            <b>\u00DAltimoN\u00FAmeroFacturaAutorizada [Número]:</b>
+            Valor final del rango de numeración otorgado por la DIAN.
+            El número que copiaste desde el portal de la DIAN con nombre <i>ÚltimoNúmeroFacturaAutorizada</i>.
+        </li>
+
+        <li>
+            <b>IdentificadorPruebas [Texto]:</b>
+            Texto provisto por la DIAN para realizar las pruebas de habilitación de facturación electrónica.
+            El texto que copiaste desde el portal de la DIAN con nombre <i>IdentificadorPruebas</i>.
+        </li>
+
+        <li>
+            <b>IdentificadorAplicaci\u00F3n [Texto]:</b>
+            Identificador de la aplicación habilitado para la emisión de facturas electrónicas.
+            El texto que copiaste desde el portal de la DIAN con nombre <i>IdentificadorAplicación</i>.
+        </li>
+
+        <li>
+            <b>PinAplicaci\u00F3n [Texto]:</b>
+            Pin elegido al habilitar la facturación electrónica en la DIAN.
+            El texto que copiaste desde el portal de la DIAN con nombre <i>PinAplicación</i>.
+        </li>
+
+        <li>
+            <b>ClaveT\u00E9cnicaAplicaci\u00F3n [Texto]:</b>
+            Clave dada por la DIAN asociada a la aplicación.
+            El texto que copiaste desde el portal de la DIAN con nombre <i>ClaveTécnicaAplicación</i>.
+        </li>
+
+        <li>
+            <b>NombreContactoFacturaci\u00F3n [Texto]:</b>
+            Nombre de la persona encargada de la facturación. Se usa para escribirlo en la factura electrónica.
+            No es obligatorio, pero los clientes podrían hacer uso de él.
+        </li>
+
+        <li>
+            <b>Tel\u00E9fonoContactoFacturaci\u00F3n [Texto]:</b>
+            Teléfono de la persona encargada de la facturación. Se usa para escribirlo en la factura electrónica.
+            No es obligatorio, pero los clientes podrían hacer uso de él.
+        </li>
+
+        <li>
+            <b>EmailContactoFacturaci\u00F3n [Texto]:</b>
+            Email de la persona encargada de la facturación. Se usa para escribirlo en la factura electrónica.
+            No es obligatorio, pero los clientes podrían hacer uso de él.
+        </li>
+
+        <li>
+            <b>MostrarUnidad [Booleano]:</b>
+            Ingresa <i>true</i> (sin comillas) si tu empresa vende productos con diferentes unidades de medida (par, unidad, etc) o
+            si tu empresa no maneja diferentes unidades de medida, pero deseas que la unidad de medida <i>unidad</i> se muestre en la
+            representación gráfica de la factura electrónica. Si no quieres que se muestre la unidad de medida ingresa <i>false</i>.
+        </li>
+
+    </ul>
+    <img src="Imagenes/Habilitación Facturación Electrónica DIAN/AdiciónDatosEmpresa.png" />
+
+    <p>Presiona <i>Ctrl + S</i> para guardar los cambios realizados.</p>
 
 </body>
 

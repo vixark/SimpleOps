@@ -39,7 +39,7 @@ namespace SimpleOps.Singleton {
 
         public Municipio MunicipioFacturación = null!; // Es un clon de solo lectura. Se garantiza no será nulo porque siempre se carga al iniciar. Datos del municipio de la dirección de facturación de la empresa. Se actualiza al iniciar SimpleOps, al cambiar Empresa.Datos.MunicipioFacturaciónID y al realizar cambios en la tabla municipios. Para que funcione la factura electrónica debe tener un departamento de Colombia y este corresponder a uno de los valores de la columna Nombre en el numeral 13.4.2 de la documentación de factura electrónica. Aunque si no corresponde no genera Rechazo si no Notificación. El código del municipio debe corresponder a un valor válido de lista de municipios en el numeral 13.4.3 de la documentación de factura electrónica de la DIAN. Para que funcione la factura electrónica con la DIAN debe ser un municipio de Colombia y su nombre corresponder a uno de los valores del la columna Nombre Municipio en el numeral 13.4.3 de la documentación de factura electrónica. Aunque si no corresponde no genera Rechazo si no Notificación.
 
-        private int municipioFacturaciónID = 1; // ID del municipio de la dirección de facturación. 1: Bogotá, 2: Medellín, 3: Cali, 4: Barranquilla, etc. Ver tabla municipios. Siempre será establecido. Si no se establece inicia por defecto en Bogotá.
+        private int municipioFacturaciónID = 1; // ID del municipio de la dirección de facturación. 1: Bogotá, 2: Medellín, 3: Cali, 4: Barranquilla, etc. Ver tabla municipios en Guías/IDs Municipios.html. Siempre será establecido. Si no se establece inicia por defecto en Bogotá.
         public int MunicipioFacturaciónID { 
 
             get => municipioFacturaciónID;
@@ -97,7 +97,7 @@ namespace SimpleOps.Singleton {
 
         public Banco BancoPreferido { get; set; } = Banco.Ninguno; // Si no es Banco.Ninguno este banco se usará por defecto para registrar todas las acciones que requieran un banco de la empresa (carga de movimientos bancarios, registro de pagos, etc). Para realizar acciones sobre los otros bancos la interfaz de usuario provee medios para cambiar temporalmente el banco sobre el que se realizará la acción y hacer un banco como el nuevo preferido. Este banco preferido debe estar en el diccionario CuentasBancarias.
 
-        public string? NombreComercial { get; set; } // Se usa para notificar a la DIAN en la factura electrónica y para usarlo en representación gráfica de las facturas. Si es nulo se omite en la factura electrónica y en la representación gráfica se usa la razón social.
+        public string? NombreComercial { get; set; } // Se usa para informarlo a la DIAN al hacer la factura electrónica y para usarlo en representación gráfica de las facturas. Si es nulo se omite en la factura electrónica y en la representación gráfica se usa la razón social.
 
         public TipoContribuyente TipoContribuyente { get; set; } = TipoContribuyente.Ordinario | TipoContribuyente.ResponsableIVA; // Si se necesitan agregar varios valores se hace así: Global.TipoContribuyente.Autorretenedor | Global.TipoContribuyente.AgenteDeRetenciónIVA. 
 
@@ -140,13 +140,13 @@ namespace SimpleOps.Singleton {
 
         public string? PinAplicación { get; set; } // Pin elegido por el usuario que habilitó la facturación electrónica en la DIAN.
 
-        public string? ClaveTécnicaAplicación { get; set; } // Clave dada por la DIAN al habilitar la facturación electrónica.
+        public string? ClaveTécnicaAplicación { get; set; } // Clave dada por la DIAN asociada a la aplicación.
 
-        public string? NombreContactoFacturación { get; set; } // Se usa para escribirlo en la factura electrónica. No es obligatorio, pero los clientes podrían hacer uso de él.
+        public string? NombreContactoFacturación { get; set; } // Nombre de la persona encargada de la facturación. Se usa para escribirlo en la factura electrónica. No es obligatorio, pero los clientes podrían hacer uso de él.
 
-        public string? TeléfonoContactoFacturación { get; set; } // Se usa para escribirlo en la factura electrónica. No es obligatorio, pero los clientes podrían hacer uso de él.
+        public string? TeléfonoContactoFacturación { get; set; } // Teléfono de la persona encargada de la facturación. Se usa para escribirlo en la factura electrónica. No es obligatorio, pero los clientes podrían hacer uso de él.
 
-        public string? EmailContactoFacturación { get; set; } // Se usa para escribirlo en la factura electrónica. No es obligatorio, pero los clientes podrían hacer uso de él.
+        public string? EmailContactoFacturación { get; set; } // Email de la persona encargada de la facturación. Se usa para escribirlo en la factura electrónica. No es obligatorio, pero los clientes podrían hacer uso de él.
 
         public decimal ImpuestoConsumoUnitarioPredeterminado { get; set; } = 0; // El valor unitario de impuesto de consumo que se aplica si no se especifica en el producto ni se puede obtener del tipo.
 

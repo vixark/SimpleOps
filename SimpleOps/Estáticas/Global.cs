@@ -56,6 +56,8 @@ namespace SimpleOps {
 
         public const string CarpetaLibrerías = "Librerías";
 
+        public const string CarpetaLicencias = "Licencias"; // Carpeta que va dentro de CarpetaLibrerías y contiene las licencias de las librerías en ella.
+
         public const string CarpetaDatos = "Datos";
 
         public const string CarpetaDatosDesarrollo = "Datos"; // Nombre de la carpeta en el repositorio que contiene Contexto.cs, Datos [Vacía].db (que se actualiza manualmente cada vez que hay un cambio en la estructura de la base de datos) y la carpeta de los datos JSON, ver CarpetaDatosJsonDesarrollo. 
@@ -244,7 +246,7 @@ namespace SimpleOps {
         public enum TipoCobro : byte { Desconocido = 0, Email = 1, Telefónico = 2, Personal = 3, AgenciaDeCobros = 4, Prejurídico = 5, Jurídico = 6, Otro = 255 } // Nuevos elementos se añaden antes de Otro.
 
         [Flags] public enum TipoContribuyente { // No cambiar los nombres de las enumeración ni de los elementos porque estos se usan en los archivos de opciones JSON. Tomados de la tabla 13.2.6.1. del 'Anexo técnico de factura electrónica de venta validación previa.pdf' de la DIAN. Se usa en el primer elemento 'Ordinario' en vez de 'No aplica' y 'Retenedor IVA' en vez de 'Agente de Retención de IVA' porque se entienden más que como están en la tabla de la DIAN. Si se agregaran nuevos elementos que no constituyen una responsabilidad fiscal según la tabla 13.2.6.1. (como los de las responsabilidades de IVA) se deben omitir en Dian.ObtenerResponsabilidadFiscal().
-            [Display(Name = "Ordinario")] Ordinario = 1, [Display(Name = "Gran Contribuyente")] GranContribuyente = 2, Autorretenedor = 4, // Ordinario es el que le aplica a una empresa normal que no se ha acogido a uno de los otros régimenes como Simple o Gran Contribuyente.
+            [Display(Name = "Ordinario")] Ordinario = 1, [Display(Name = "Gran Contribuyente")] GranContribuyente = 2, Autorretenedor = 4, // Ordinario es el que le aplica a una empresa que no se ha acogido a uno de los otros régimenes como Simple o Gran Contribuyente.
             [Display(Name = "Retenedor de IVA")] RetenedorIVA = 8, [Display(Name = "Régimen Simple")] RégimenSimple = 16,
             [Display(Name = "Responsable de IVA")] ResponsableIVA = 32, [Display(Name = "No Responsable de IVA")] NoResponsableIVA = 64 // Se complementa esta enumeración con las responsabilidades de IVA para forzar a realizar un manejo integrado en esta enumeración de todas las responsabilidades actuales y futuras. Tomadas de la tabla 'Modificación del anexo técnico (06-09-2019)' de la documentación de la DIAN para la facturación electrónica. ResponsableIVA es el equivalente al antiguo régimen común y NoResponsableIVA al antiguo régimen simplificado.
         }
@@ -643,8 +645,8 @@ namespace SimpleOps {
                 if (File.Exists(rutaBaseDatosVacíaDesarrollo)) {
 
                     File.Copy(rutaBaseDatosVacíaDesarrollo, RutaBaseDatosSQLite);
-                    foreach (var archivoJson in Directory.GetFiles(rutaDatosJsonDesarrollo)) {
-                        File.Copy(archivoJson, Path.Combine(rutaDatosJson, Path.GetFileName(archivoJson)));
+                    foreach (var rutaJson in Directory.GetFiles(rutaDatosJsonDesarrollo)) {
+                        File.Copy(rutaJson, Path.Combine(rutaDatosJson, Path.GetFileName(rutaJson)));
                     }
                     var éxito = Contexto.CargarDatosIniciales(rutaDatosJson, out string error);
                     if (éxito) {
@@ -655,6 +657,21 @@ namespace SimpleOps {
 
                 } else {
                     throw new Exception($"No se encontró la base de datos vacía en {rutaBaseDatosVacíaDesarrollo}");
+                }
+
+            }
+
+            if (!File.Exists(RutaFirmador)) {
+
+                var rutaLibrerías = ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaLibrerías, crearSiNoExiste: true);
+                var rutaLibreríasDesarrollo = ObtenerRutaCarpeta(RutaDesarrollo, CarpetaLibrerías, crearSiNoExiste: false);
+                var rutaLicencias = ObtenerRutaCarpeta(rutaLibrerías, CarpetaLicencias, crearSiNoExiste: true);
+                var rutaLicenciasDesarrollo = ObtenerRutaCarpeta(rutaLibreríasDesarrollo, CarpetaLicencias, crearSiNoExiste: false);
+                foreach (var rutaLibrería in Directory.GetFiles(rutaLibreríasDesarrollo)) {
+                    File.Copy(rutaLibrería, Path.Combine(rutaLibrerías, Path.GetFileName(rutaLibrería)));
+                }
+                foreach (var rutaLicencia in Directory.GetFiles(rutaLicenciasDesarrollo)) {
+                    File.Copy(rutaLicencia, Path.Combine(rutaLicencias, Path.GetFileName(rutaLicencia)));
                 }
 
             }
