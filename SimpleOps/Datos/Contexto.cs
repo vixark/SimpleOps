@@ -433,11 +433,16 @@ namespace SimpleOps.Datos {
                 municipios.Single(m => m.ID == Empresa.MunicipioFacturaciónID).CopiarA(ref Empresa.MunicipioFacturación!); // Siempre debe existir.
                 municipios.Single(m => m.ID == Empresa.MunicipioUbicaciónEfectivoID).CopiarA(ref Empresa.MunicipioUbicación!); // Siempre debe existir porque incluso en el caso que no haya MunicipioUbicaciónID se usa MunicipioFacturaciónID en su reemplazo.
             } else {
-                if (ctx.Municipios.Any())
-                    throw new Exception($"No se esperaba que la tabla municipios tenga filas y en ellas no se encuentre alguno de los ids de municipios de la empresa. " + 
-                        $"MunicipioFacturaciónID: {Empresa.MunicipioFacturaciónID}. MunicipioUbicaciónID: {Empresa.MunicipioUbicaciónEfectivoID}");
-            }
 
+                if (ctx.Municipios.Any()) {
+                    throw new Exception($"No se esperaba que la tabla municipios tenga filas y en ellas no se encuentre alguno de los ids de " +
+                                        $"municipios de la empresa. MunicipioFacturaciónID: {Empresa.MunicipioFacturaciónID}. " +
+                                        $"MunicipioUbicaciónID: {Empresa.MunicipioUbicaciónEfectivoID}");
+                } else {
+                    throw new Exception($"No se esperaba que la tabla municipios no tenga filas."); // Se puede deber a un error en la creación automática de la base de datos SQLite (ver Global.ConfigurarCarpetasYArchivos()) o un problema con la base de datos SQL.
+                }
+
+            }
 
         } // LeerMunicipiosDeInterés>
 

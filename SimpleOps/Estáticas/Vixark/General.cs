@@ -432,7 +432,10 @@ namespace Vixark {
 
 
         /// <summary>
-        /// Obtiene la ruta de una carpeta y provee la opción de crearla si no existe.
+        /// Obtiene la ruta de una carpeta y provee la opción de crearla si no existe. Si se quiere verificar la existencia
+        /// de cierta carpeta se puede pasar la ruta en rutaPadre y pasar nombreCarpeta vacío. Funciona correctamente 
+        /// si la carpeta que se requiere crear está dentro de una carpeta que tampoco existe, en este caso se crean todas las carpetas 
+        /// necesarias para que exista la ruta rutaPadre + nombreCarpeta.
         /// </summary>
         public static string ObtenerRutaCarpeta(string rutaPadre, string nombreCarpeta, bool crearSiNoExiste) {
 

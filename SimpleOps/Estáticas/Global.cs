@@ -58,6 +58,10 @@ namespace SimpleOps {
 
         public const string CarpetaDatos = "Datos";
 
+        public const string CarpetaDatosDesarrollo = "Datos"; // Nombre de la carpeta en el repositorio que contiene Contexto.cs, Datos [Vacía].db (que se actualiza manualmente cada vez que hay un cambio en la estructura de la base de datos) y la carpeta de los datos JSON, ver CarpetaDatosJsonDesarrollo. 
+
+        public const string CarpetaDatosJsonDesarrollo = "Datos JSON"; // En esta carpeta se proveen datos iniciales comunes a todos los usuarios para iniciar automáticamente su propia base de datos (Datos.db) si esta no se encuentra, principalmente contiene Municipios.json.
+
         public const string CarpetaOpciones = "Opciones";
 
         public const string CarpetaPlantillas = "Plantillas Documentos";
@@ -613,6 +617,52 @@ namespace SimpleOps {
 
 
         /// <summary>
+        /// Crea o reemplaza algunas carpetas y archivos necesarios.
+        /// </summary>
+        public static void ConfigurarCarpetasYArchivos() {
+
+            if (ModoDesarrolloPlantillasDocumentos) {
+
+                foreach (var plantilla in ObtenerValores<PlantillaDocumento>()) {
+                    var rutaDesarrollo = ObtenerRutaPlantilla(plantilla);
+                    if (File.Exists(rutaDesarrollo)) File.Copy(rutaDesarrollo, ObtenerRutaPlantilla(plantilla, forzarRutaAplicación: true), overwrite: true);
+                }
+
+            }
+
+            ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaDatos, crearSiNoExiste: true); // Se ejecuta para crear la carpeta de Datos si no existe.
+            ObtenerRutaCarpeta(Equipo.RutaIntegración, "", crearSiNoExiste: true); // Se ejecuta para crear la carpetas de integración con terceros si no existen. Al pasar una carpeta vacía usa la rutaPadre.
+
+            if (!File.Exists(RutaBaseDatosSQLite) && UsarSQLite) { // Si la base de datos SQLite no existe y se quiere usar SQLite copiará una base de datos vacía desde la ruta de desarrollo y la llenará con datos básicos comunes a todos los usuarios, principalmente datos de los municipios de Colombia.
+
+                var rutaDatosDesarrollo = ObtenerRutaCarpeta(RutaDesarrollo, CarpetaDatosDesarrollo, crearSiNoExiste: false);
+                var rutaDatosJsonDesarrollo = ObtenerRutaCarpeta(rutaDatosDesarrollo, CarpetaDatosJsonDesarrollo, crearSiNoExiste: false);
+                var rutaBaseDatosVacíaDesarrollo = Path.Combine(rutaDatosDesarrollo, ArchivoBaseDatosVacíaSQLite);
+                var rutaDatosJson = ObtenerRutaDatosJson();
+
+                if (File.Exists(rutaBaseDatosVacíaDesarrollo)) {
+
+                    File.Copy(rutaBaseDatosVacíaDesarrollo, RutaBaseDatosSQLite);
+                    foreach (var archivoJson in Directory.GetFiles(rutaDatosJsonDesarrollo)) {
+                        File.Copy(archivoJson, Path.Combine(rutaDatosJson, Path.GetFileName(archivoJson)));
+                    }
+                    var éxito = Contexto.CargarDatosIniciales(rutaDatosJson, out string error);
+                    if (éxito) {
+                        MostrarInformación("Se creó la base de datos SQLite y se cargaron exitosamente los datos iniciales.", "Base de Datos SQLite Creada");
+                    } else {
+                        MostrarError(error);
+                    }
+
+                } else {
+                    throw new Exception($"No se encontró la base de datos vacía en {rutaBaseDatosVacíaDesarrollo}");
+                }
+
+            }
+
+        } // ConfigurarCarpetasYArchivos>
+
+
+        /// <summary>
         /// Carga un tipo de opciones desde un archivo JSON. Si no existe lo crea usando los valores predeterminados.
         /// </summary>
         public static void CargarOpciones<T>(ref T opciones,
@@ -667,8 +717,6 @@ namespace SimpleOps {
         public static void IniciarVariablesGlobales() {
 
             OpcionesConversiónPdf.SetFontProvider(new iText.Html2pdf.Resolver.Font.DefaultFontProvider(true, true, true)); // Necesario para poder usar la fuente Calibri, se podría tardar algunos segundos. Si llega a ser un problema de rendimiento revisar las opciones en SimpleOps.xlsx > Tareas > Rendimiento Generación de PDF.
-            ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaDatos, crearSiNoExiste: true); // Se ejecuta para crear la carpeta si no existe.
-            ObtenerRutaCarpeta(Equipo.RutaIntegración, "",  crearSiNoExiste: true);
 
         } // IniciarVariablesGlobales>
 

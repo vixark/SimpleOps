@@ -230,6 +230,11 @@
             Carga todas las opciones desde los archivos JSON. Si no existen los crea usando los valores predeterminados.
             </summary>
         </member>
+        <member name="M:SimpleOps.Global.ConfigurarCarpetasYArchivos">
+            <summary>
+            Crea o reemplaza algunas carpetas y archivos necesarios.
+            </summary>
+        </member>
         <member name="M:SimpleOps.Global.CargarOpciones``1(``0@,Vixark.General.Serialización)">
             <summary>
             Carga un tipo de opciones desde un archivo JSON. Si no existe lo crea usando los valores predeterminados.
@@ -2233,7 +2238,10 @@
         </member>
         <member name="M:Vixark.General.ObtenerRutaCarpeta(System.String,System.String,System.Boolean)">
             <summary>
-            Obtiene la ruta de una carpeta y provee la opción de crearla si no existe.
+            Obtiene la ruta de una carpeta y provee la opción de crearla si no existe. Si se quiere verificar la existencia
+            de cierta carpeta se puede pasar la ruta en rutaPadre y pasar nombreCarpeta vacío. Funciona correctamente 
+            si la carpeta que se requiere crear está dentro de una carpeta que tampoco existe, se crean todas las carpetas 
+            necesarias para que exista la ruta rutaPadre + nombreCarpeta.
             </summary>
         </member>
         <member name="M:Vixark.General.ObtenerRutaCambiandoExtensión(System.String,System.String)">

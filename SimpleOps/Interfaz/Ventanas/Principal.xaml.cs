@@ -54,6 +54,7 @@ namespace SimpleOps.Interfaz {
             IniciarVariablesGenerales();
             IniciarVariablesGlobales();
             CargarOpciones();
+            ConfigurarCarpetasYArchivos();
             OperacionesEspecialesDatos = false; // Se debe establecer en falso después de cargar las opciones.
 
             #endregion Iniciaciones>
@@ -64,15 +65,8 @@ namespace SimpleOps.Interfaz {
             if (HabilitarRastreoDeDatosSensibles) 
                 LblAlerta.Content = $"Está habilitado el rastreo de datos sensibles. Esta función se debe desactivar en producción.{NuevaLínea}";
 
-            if (ModoDesarrolloPlantillasDocumentos) {
-
+            if (ModoDesarrolloPlantillasDocumentos)
                 LblAlerta.Content += $"Está habilitado el reemplazo de plantillas CSHTML. Esta función se debe desactivar en producción.{NuevaLínea}";
-                foreach (var plantilla in ObtenerValores<PlantillaDocumento>()) {
-                    var rutaDesarrollo = ObtenerRutaPlantilla(plantilla);
-                    if (File.Exists(rutaDesarrollo)) File.Copy(rutaDesarrollo, ObtenerRutaPlantilla(plantilla, forzarRutaAplicación: true), overwrite: true);
-                }
-
-            }
 
             if (HabilitarPruebasUnitarias) 
                 LblAlerta.Content += $"Están habilitadas las pruebas unitarias. Esta función se debe desactivar en producción.{NuevaLínea}";
@@ -104,7 +98,7 @@ namespace SimpleOps.Interfaz {
 
             // LeerBaseDatosCompleta();
             if (HabilitarPruebasUnitarias) {
-                // DocumentosElectrónicos(); // Prueba para ensayar todos los procedimientos relacionados con la facturación electrónica.
+                DocumentosElectrónicos(); // Prueba para ensayar todos los procedimientos relacionados con la facturación electrónica.
                 // IntegraciónAplicacionesTerceros(); // Esta prueba se usa cuando se quiere simular el comportamiento de un programa tercero que genera archivos de comunicación .json con SimpleOps para el modo de integración de facturación electrónica. Si ya se dispone de un programa tercero generando correctamente los archivos no es necesario activar esta línea.
                 GeneraciónCatálogo(); // Prueba para ensayar el procedimiento de generación automática de catálogos con precios.
             }
@@ -120,7 +114,7 @@ namespace SimpleOps.Interfaz {
 
             var éxito = Contexto.CargarDatosIniciales(ObtenerRutaDatosJson(), out string error);
             if (éxito) {
-                MostrarInformación("Se cargaron exitósamente los datos iniciales.", "Datos Cargados");
+                MostrarInformación("Se cargaron exitosamente los datos iniciales.", "Datos Cargados");
             } else {
                 MostrarError(error);
             }
