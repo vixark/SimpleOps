@@ -40,9 +40,9 @@ namespace SimpleOps {
 
         public static bool HabilitarPruebasUnitarias = true; // Se usa verdadero cuando se quieran realizar las pruebas al iniciar la aplicación.
 
-        public static bool ModoIntegraciónFacturaElectrónica = false; // Modo especial para integrar solo la funcionalidad de facturación electrónica a aplicaciones no compatibles con .Net Core 3.1.
+        public static bool ModoIntegraciónTerceros = false; // Modo especial para integrar la funcionalidad de facturación electrónica y la generación de catálogos con programas terceros.
 
-        public static string RutaDesarrollo = @"D:\Archivos\Proyectos\SimpleOps\Código\SimpleOps\SimpleOps"; // Se usa para que al iniciar en modo de desarrollo copie los archivos CSHTML en Plantillas a 'CarpetaPlantillas' en la ruta de la aplicación. En el computador de desarrollo en casa está en D:\Archivos\Proyectos\SimpleOps\Código\SimpleOps\SimpleOps. En el computador de desarrollo de la empresa está en E:\Dropbox\Desarrollos\SimpleOps\Código\SimpleOps\SimpleOps.
+        public static string RutaDesarrollo = Rutas.Desarrollo; // Se actualiza en Rutas para permitir que los usuarios del código cambien este valor sin que sus cambios sean reemplazados con una nueva versión del código de Global.cs.
 
         public const string NombreAplicación = "SimpleOps";
 
@@ -406,17 +406,13 @@ namespace SimpleOps {
             if (municipio == null) {
 
                 if (Empresa.HabilitarProductosVirtuales) {
-                    #pragma warning disable CS0162 // Se desactiva la advertencia de código inaccesible porque según las necesidades de cada empresa se puede o no HabilitarProductosVirtuales.
                     formaEntrega = FormaEntrega.Virtual;
-                    #pragma warning restore CS0162
                 } else {
-                    #pragma warning disable CS0162 // Se desactiva la advertencia de código inaccesible porque según las necesidades de cada empresa se puede o no HabilitarProductosVirtuales.
                     if (OperacionesEspecialesDatos) {
                         formaEntrega = FormaEntrega.Virtual; // Cualquiera. Solo es para que no saque error en procesos de migración y carga inicial de datos.
                     } else {
                         formaEntrega = FormaEntrega.Desconocida;
                     }
-                    #pragma warning restore CS0162
                 }
 
             } else {
@@ -642,7 +638,7 @@ namespace SimpleOps {
             }
                 
             ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaDatos, crearSiNoExiste: true); // Se ejecuta para crear la carpeta de Datos si no existe.
-            ObtenerRutaCarpeta(Equipo.RutaIntegración, "", crearSiNoExiste: true); // Se ejecuta para crear la carpetas de integración con terceros si no existen. Al pasar una carpeta vacía usa la rutaPadre.
+            if (!string.IsNullOrEmpty(Equipo.RutaIntegración)) ObtenerRutaCarpeta(Equipo.RutaIntegración, "", crearSiNoExiste: true); // Se ejecuta para crear la carpetas de integración con terceros si no existen. Al pasar una carpeta vacía usa la rutaPadre. Si no se ha establecido la RutaIntegración puede ser que el usuario no va a usar la integración de terceros entonces no es necesario crear esta carpeta. 
 
             if (!File.Exists(RutaFirmador)) {
 

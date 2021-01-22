@@ -914,6 +914,7 @@ namespace SimpleOps {
             if (pruebaIntegración) {
 
                 var datos = venta.ObtenerDatosIntegración();
+                if (string.IsNullOrEmpty(Equipo.RutaIntegración)) throw new Exception("No se esperaba que no existiera Equipo.RutaIntegración."); // No es un código que normalmente vaya a ejecutar un usuario entonces con la excepción basta.
                 File.WriteAllText(Path.Combine(Equipo.RutaIntegración, $"{DocumentoIntegración.Venta.ATexto()}{AhoraNombresArchivos}.json"), 
                     Serializar(datos, Serialización.EnumeraciónEnTexto));
                 mensaje = "";
@@ -946,6 +947,7 @@ namespace SimpleOps {
             if (pruebaIntegración) {
 
                 var datos = notaCrédito.ObtenerDatosIntegración();
+                if (string.IsNullOrEmpty(Equipo.RutaIntegración)) throw new Exception("No se esperaba que no existiera Equipo.RutaIntegración."); // No es un código que normalmente vaya a ejecutar un usuario entonces con la excepción basta.
                 File.WriteAllText(Path.Combine(Equipo.RutaIntegración, $"{DocumentoIntegración.NotaCrédito.ATexto()}{AhoraNombresArchivos}.json"),
                     Serializar(datos, Serialización.EnumeraciónEnTexto));
                 mensaje = "";

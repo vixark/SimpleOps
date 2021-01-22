@@ -36,9 +36,7 @@ namespace SimpleOps.Interfaz {
 
         readonly ILogger Rastreador = FábricaRastreadores.CreateLogger<Principal>();
 
-        #pragma warning disable IDE0052 // Quitar miembros privados no leídos. Se acepta porque se necesita el objeto público siempre activo durante la ejecución de la aplicación para que pueda interceptar los cambios de archivos en la carpeta de integración.
-        Integrador? Integrador { get; set; }
-        #pragma warning restore IDE0052
+        Integrador? Integrador { get; set; } // Se necesita el objeto público siempre activo durante la ejecución de la aplicación para que pueda interceptar los cambios de archivos en la carpeta de integración.
 
 
         /// <summary>
@@ -71,10 +69,18 @@ namespace SimpleOps.Interfaz {
             if (HabilitarPruebasUnitarias) 
                 LblAlerta.Content += $"Están habilitadas las pruebas unitarias. Esta función se debe desactivar en producción.{NuevaLínea}";
 
-            if (ModoIntegraciónFacturaElectrónica) {
-                Integrador = new Integrador();
+            if (ModoIntegraciónTerceros) {
+
                 Visibility = Visibility.Visible;
-                LblAlerta.Content += $"Está habilitado el modo de integración con programas terceros.";
+                Integrador = new Integrador();
+                if (Integrador.Iniciado) {
+                    LblAlerta.Content += $"Está habilitado el modo de integración con programas terceros que permite facturar " +
+                                         $"electrónicamente y generar catálogos desde otro programa.";
+                } else {
+                    ModoIntegraciónTerceros = false; // Se desactiva para que no funcione en este modo si se usa esta variable en códigos futuros.
+                    LblAlerta.Content += $"Sucedió un error habilitando el modo de integración con programas terceros.";
+                }
+
             }
 
             if (string.IsNullOrEmpty(LblAlerta.Content?.ToString())) LblAlerta.Visibility = Visibility.Collapsed;

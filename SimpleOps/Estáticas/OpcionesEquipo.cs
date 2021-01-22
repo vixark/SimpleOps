@@ -65,7 +65,7 @@ namespace SimpleOps.Singleton {
 
         #region Rutas
 
-        public string RutaAplicación { get; set; } = @"D:\Programas\SimpleOps"; // En el computador de producción está en D:\Programas\SimpleOps. En el computador de desarrollo en casa está en D:\Programas\SimpleOps. En el computador de desarrollo de la empresa está en E:\SimpleOps. Esta ruta debe ser la misma que está almacenada en '[RutaAplicación]\Opciones\Equipo.json', se necesita escribir aquí principalmente para poder ubicar estos archivos de opciones.
+        public string RutaAplicación { get; set; } = Rutas.Aplicación; // Se actualiza en Rutas para permitir que los usuarios del código cambien este valor sin que sus cambios sean reemplazados con una nueva versión del código de OpcionesEquipo.cs.
 
         #endregion Rutas>
 
@@ -73,18 +73,18 @@ namespace SimpleOps.Singleton {
         #region Facturación Electrónica
         // No todos los usuarios tendrían acceso a la posibilidad de facturar electrónicamente, ni a la clave del certificado. Se establecen estas rutas como personalización de cada equipo/usuario.
 
-        public string RutaCertificado { get; set; } = @"D:\Programas\SimpleOps\Firma Electrónica\Certificado.pfx"; // Archivo .pfx con el certificado para la firma digital. No se autocalcula con RutaAplicación porque es posible que este archivo que es delicado se necesite guardar en otra ubicación.
+        public string? RutaCertificado { get; set; } // Archivo .pfx con el certificado para la firma digital. No se autocalcula con RutaAplicación porque es posible que este archivo que es delicado se necesite guardar en otra ubicación. 
 
-        public string RutaClaveCertificado { get; set; } = @"D:\Programas\SimpleOps\Firma Electrónica\Clave.txt"; // Un archivo .txt con una sola línea y en ella la clave del certificado sin ningún espacio al frente ni atrás. No se autocalcula con RutaAplicación porque es posible que este archivo que es delicado se necesite guardar en otra ubicación.
+        public string? RutaClaveCertificado { get; set; } // Un archivo .txt con una sola línea y en ella la clave del certificado sin ningún espacio al frente ni atrás. No se autocalcula con RutaAplicación porque es posible que este archivo que es delicado se necesite guardar en otra ubicación.
+
+        public string? RutaIntegración { get; set; } // Carpeta dentro de un programa tercero usada para almacenar archivos de comunicación entre SimpleOps y este programa tercero.
 
         public float RelaciónFuentesPdfPantalla { get; set; } = 0.59375F; // 0,59375 = 9.5 / 16 para pantallas grandes con 125% de zoom en Windows. 0.740625 = 11.85 / 16 para pantallas medianas con zoom 100% en Windows. Es un factor de conversión aproximado entre el tamaño de la fuente en puntos de HTML y el tamaño de la letra usando medidas la librería System.Drawing. Es necesario para poder calcular el alto de la lista de productos y la cantidad de páginas de los documentos gráficos.
 
-        public string RutaIntegración { get; set; } = @"D:\Programas\SimpleOps\Programa Tercero\Integración SimpleOps"; // Carpeta dentro de un programa tercero usada para almacenar archivos de comunicación entre SimpleOps y este programa tercero.
-
 
         public string? _ClaveCertificado;
-        [JsonIgnore] // La clave del certificado no se debe guardar en otro lugar que el usuario no conozca por su seguridad.
-        public string? ClaveCertificado {
+        [JsonIgnore] 
+        public string? ClaveCertificado { // La clave del certificado no se debe guardar en otro lugar que el usuario no conozca por su seguridad. Esta propiedad permite que se pida la clave del certificado cada vez que se vaya a iniciar la facturación o tomarla de RutaClaveCertificado.
 
             get {
 
@@ -128,9 +128,17 @@ namespace SimpleOps.Singleton {
                             return true;
 
                         } else {
-                            MostrarInformación($"No se encontró el certificado de facturación electrónica en {RutaCertificado}.{DobleLínea}" +
-                                               $"No se podrá facturar electrónicamente.", "Sin Certificado");
-                            return false; // No hay certificado entonces tampoco pide la clave. 
+
+                            if (string.IsNullOrEmpty(RutaCertificado)) {
+                                MostrarInformación($"No se ha seleccionado el archivo del certificado.{DobleLínea}" +
+                                                   $"No se podrá facturar electrónicamente.", "Sin Certificado");
+                                return false; // No hay certificado entonces tampoco pide la clave. 
+                            } else {
+                                MostrarInformación($"No se encontró el certificado de facturación electrónica en {RutaCertificado}.{DobleLínea}" +
+                                                   $"No se podrá facturar electrónicamente.", "Sin Certificado");
+                                return false; // No hay certificado entonces tampoco pide la clave. 
+                            }
+
                         }
 
                     }

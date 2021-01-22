@@ -137,9 +137,15 @@ namespace SimpleOps.Legal {
                 return Falso(out mensaje, "No se han cargado todos los productos de las líneas de la factura");
             if (Documento.Líneas.Any(d => d.Producto?.Descripción == null)) 
                 return Falso(out mensaje, "No se ha establecido la descripción para al menos un producto.");
-            if (!File.Exists(Equipo.RutaCertificado)) return Falso(out mensaje, $"No existe el archivo del certificado {Equipo.RutaCertificado}.");
-            if (!File.Exists(Equipo.RutaClaveCertificado)) 
-                return Falso(out mensaje, $"No existe el archivo con la clave del certificado {Equipo.RutaClaveCertificado}.");
+            if (!File.Exists(Equipo.RutaCertificado)) {
+
+                if (string.IsNullOrEmpty(Equipo.RutaCertificado)) {
+                    return Falso(out mensaje, $"No se ha seleccionado el archivo del certificado.");
+                } else {
+                    return Falso(out mensaje, $"No existe el archivo del certificado {Equipo.RutaCertificado}.");
+                }
+                
+            }
             if (Documento.ConsecutivoDianAnual == null) return Falso(out mensaje, $"El consecutivo de la DIAN anual no puede ser nulo.");
             // Verificaciones>
 
@@ -436,9 +442,7 @@ namespace SimpleOps.Legal {
             var ublExtension1 = new UBLExtensionType(); // 1 de 2..N FAB01.    
             var extensionContentDian = new ExtensionContentDianType(); // 1..1 FAB02.
             ublExtension1.ExtensionContent = extensionContentDian;
-            #pragma warning disable IDE0017 // Simplificar la inicialización de objetos. La sugerencia de crear un arbol de iniciación de dianExtensions produce un código complicado de depurar.
             var dianExtensions = new DianExtensionsType(); // 1..1 FAB03.
-            #pragma warning restore IDE0017
 
             if (venta != null) { // En los archivos XML de ejemplo de la DIAN este campo no está en la nota crédito ni en la nota débito. Tampoco está en la documentación los campos homólogos CAB04 o DAB04.
 
@@ -1133,9 +1137,7 @@ namespace SimpleOps.Legal {
         /// </summary>
         public bool Firmar() {
 
-            if (!File.Exists(Equipo.RutaCertificado)) throw new Exception($"No existe el archivo con el certificado {Equipo.RutaCertificado}.");
-            if (!File.Exists(Equipo.RutaClaveCertificado)) 
-                throw new Exception($"No existe el archivo con la clave del certificado {Equipo.RutaClaveCertificado}.");
+            if (!File.Exists(Equipo.RutaCertificado)) throw new Exception($"No existe el archivo con el certificado {Equipo.RutaCertificado}."); // Se maneja como excepción porque no debería llegar a este punto sin este archivo.
 
             var informaciónInicio = new ProcessStartInfo(RutaFirmador) {
                 Arguments = @$"""{Equipo.RutaCertificado}"" {Equipo.ClaveCertificado} ""{ObtenerRuta(firmado: false)}"" ""{Ruta}"" " +

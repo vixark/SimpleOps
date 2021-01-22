@@ -46,6 +46,8 @@ namespace SimpleOps.Integración {
         /// </summary>
         public string? ÚltimoArchivoCreado {get; set; }
 
+        public bool Iniciado { get; set; } = false;
+
         #endregion Propiedades>
 
 
@@ -53,14 +55,34 @@ namespace SimpleOps.Integración {
 
 
         public Integrador() {
+            
+            if (string.IsNullOrEmpty(Equipo.RutaIntegración)) {
 
-            SupervisorArchivos = new FileSystemWatcher { Path = Equipo.RutaIntegración, Filter = "*.json", NotifyFilter = NotifyFilters.LastAccess |
-                NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName };
-            SupervisorArchivos.Changed += EnCambioArchivo;
-            SupervisorArchivos.Created += EnCreaciónArchivo;
-            SupervisorArchivos.Deleted += EnEliminaciónArchivo;
-            SupervisorArchivos.Renamed += EnRenombradoArchivo;
-            SupervisorArchivos.EnableRaisingEvents = true;
+                SupervisorArchivos = new FileSystemWatcher();
+                MostrarError("No se ha seleccionado la ruta de integración con programas terceros. " +
+                             "No funcionará la facturación electrónica ni la generación de catálogos desde programas terceros.");
+                Iniciado = false;
+
+            } else if (!Directory.Exists(Equipo.RutaIntegración)) {
+
+                SupervisorArchivos = new FileSystemWatcher();
+                MostrarError($"No se encontró el directorio de integración con programas terceros {Equipo.RutaIntegración}. " +
+                             $"No funcionará la facturación electrónica ni la generación de catálogos desde programas terceros.");
+                Iniciado = false;
+
+            } else {
+
+                SupervisorArchivos = new FileSystemWatcher { Path = Equipo.RutaIntegración, Filter = "*.json", NotifyFilter = NotifyFilters.LastAccess |
+                    NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName
+                };
+                SupervisorArchivos.Changed += EnCambioArchivo;
+                SupervisorArchivos.Created += EnCreaciónArchivo;
+                SupervisorArchivos.Deleted += EnEliminaciónArchivo;
+                SupervisorArchivos.Renamed += EnRenombradoArchivo;
+                SupervisorArchivos.EnableRaisingEvents = true;
+                Iniciado = true;
+
+            }
 
         } // Integrador>
 
