@@ -55,19 +55,12 @@ namespace SimpleOps.Integración {
 
 
         public Integrador() {
-            
-            if (string.IsNullOrEmpty(Equipo.RutaIntegración)) {
 
+            if (!Existe(TipoRuta.Directorio, Equipo.RutaIntegración, "integración con programas terceros", out string? mensaje,
+                "No funcionará la facturación electrónica ni la generación de catálogos desde programas terceros")) {
+
+                MostrarError(mensaje);
                 SupervisorArchivos = new FileSystemWatcher();
-                MostrarError("No se ha seleccionado la ruta de integración con programas terceros. " +
-                             "No funcionará la facturación electrónica ni la generación de catálogos desde programas terceros.");
-                Iniciado = false;
-
-            } else if (!Directory.Exists(Equipo.RutaIntegración)) {
-
-                SupervisorArchivos = new FileSystemWatcher();
-                MostrarError($"No se encontró el directorio de integración con programas terceros {Equipo.RutaIntegración}. " +
-                             $"No funcionará la facturación electrónica ni la generación de catálogos desde programas terceros.");
                 Iniciado = false;
 
             } else {

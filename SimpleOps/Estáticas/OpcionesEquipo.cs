@@ -97,8 +97,11 @@ namespace SimpleOps.Singleton {
 
                     } else {
 
-                        if (!ExisteArchivo(RutaCertificado, "certificado de firma digital", out string? _, "No se podrá facturar electrónicamente.")) {
-                            return false; // No hay certificado entonces tampoco pide la clave.          
+                        if (!Existe(TipoRuta.Archivo, RutaCertificado, "certificado de firma digital", out string? mensaje, "No se podrá facturar electrónicamente")) {
+
+                            MostrarError(mensaje);
+                            return false; // No hay certificado entonces tampoco pide la clave.  
+                            
                         } else {
 
                             otraVez:

@@ -914,8 +914,9 @@ namespace SimpleOps {
             if (pruebaIntegración) {
 
                 var datos = venta.ObtenerDatosIntegración();
-                if (string.IsNullOrEmpty(Equipo.RutaIntegración)) throw new Exception("No se esperaba que no existiera Equipo.RutaIntegración."); // No es un código que normalmente vaya a ejecutar un usuario entonces con la excepción basta.
-                File.WriteAllText(Path.Combine(Equipo.RutaIntegración, $"{DocumentoIntegración.Venta.ATexto()}{AhoraNombresArchivos}.json"), 
+                if (!Existe(TipoRuta.Directorio, Equipo.RutaIntegración, "integración con programas terceros", out string? mensajeExiste))
+                    throw new Exception(mensajeExiste); // No es un código que normalmente vaya a ejecutar un usuario entonces con la excepción basta.
+                File.WriteAllText(Path.Combine(Equipo.RutaIntegración!, $"{DocumentoIntegración.Venta.ATexto()}{AhoraNombresArchivos}.json"), // Se usa ! porque en la línea anterior saca exepción si RutaIntegración es nula.
                     Serializar(datos, Serialización.EnumeraciónEnTexto));
                 mensaje = "";
                 return true;
@@ -947,8 +948,9 @@ namespace SimpleOps {
             if (pruebaIntegración) {
 
                 var datos = notaCrédito.ObtenerDatosIntegración();
-                if (string.IsNullOrEmpty(Equipo.RutaIntegración)) throw new Exception("No se esperaba que no existiera Equipo.RutaIntegración."); // No es un código que normalmente vaya a ejecutar un usuario entonces con la excepción basta.
-                File.WriteAllText(Path.Combine(Equipo.RutaIntegración, $"{DocumentoIntegración.NotaCrédito.ATexto()}{AhoraNombresArchivos}.json"),
+                if (!Existe(TipoRuta.Directorio, Equipo.RutaIntegración, "integración con programas terceros", out string? mensajeExiste))
+                    throw new Exception(mensajeExiste); // No es un código que normalmente vaya a ejecutar un usuario entonces con la excepción basta.
+                File.WriteAllText(Path.Combine(Equipo.RutaIntegración!, $"{DocumentoIntegración.NotaCrédito.ATexto()}{AhoraNombresArchivos}.json"), // Se usa ! porque en la línea anterior saca exepción si RutaIntegración es nula.
                     Serializar(datos, Serialización.EnumeraciónEnTexto));
                 mensaje = "";
                 return true;
