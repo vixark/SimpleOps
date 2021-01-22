@@ -516,6 +516,7 @@ namespace SimpleOps.Legal {
             mensaje = null;
             string? sobreFirmado = null;
             respuestaXml = null;
+            if (!ExisteArchivo(Equipo.RutaCertificado, "certificado de firma digital", out string? mensajeExiste)) return Falso(out mensaje, mensajeExiste);
 
             try {
 

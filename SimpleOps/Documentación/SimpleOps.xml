@@ -311,11 +311,11 @@
         <member name="T:SimpleOps.Rutas">
             <summary>
             Variables globales estáticas que permiten ejecutar y configurar SimpleOps más fácilmente en otros equipos y
-            permiten la actualización desde el repositorio minimizando la cantidad de conflictos.
-            Cómo es una clase que pocas veces se va a modificar desde el desarrollo 
-            puede ser modificada por los usuarios del código para configurar las rutas de instalación
-            y desarrollo sin necesidad de tenerlas que cambiar nuevamente cada vez que se actualice el código desde
-            el repositorio, cómo si puede suceder si estas rutas se guardaran en Global.cs u OpcionesEmpresa.cs.
+            permiten la actualización desde el repositorio minimizando la cantidad de conflictos. Como es una clase que 
+            pocas veces se va a modificar desde el desarrollo, puede ser modificada por los usuarios del código para 
+            configurar las rutas de instalación y desarrollo sin necesidad de tenerlas que cambiar nuevamente cada vez 
+            que se actualice el código desde el repositorio, cómo si puede suceder si estas rutas se guardaran en Global.cs 
+            u OpcionesEmpresa.cs.
             </summary>
         </member>
         <member name="T:SimpleOps.Integración.Integrador">
@@ -2282,6 +2282,16 @@
             </summary>
             <param name="rutaArchivo"></param>
             <param name="rutaCarpetaDestino"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Vixark.General.ExisteArchivo(System.String,System.String,System.String@,System.String)">
+            <summary>
+            Función que permite devolver un mensaje descriptivo sobre la existencia o la falta de asignación del valor de la ruta de cierto archivo.
+            </summary>
+            <param name="rutaArchivo">Ruta del archivo que se quiere verificar si existe. Puede ser nulo o vacío y se devolverá un mensaje adecuado.</param>
+            <param name="nombreArchivo">Nombre del archivo que se usará en el mensaje de información si no lo encuentra o si no se ha establecido.</param>
+            <param name="mensaje">Variable en la que se devuelve el mensaje.</param>
+            <param name="textoAdicional">Texto adicional opcional al final del mensaje para ambos casos.</param>
             <returns></returns>
         </member>
         <member name="M:Vixark.General.ObtenerBytesZip(System.String)">

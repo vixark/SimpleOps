@@ -137,15 +137,7 @@ namespace SimpleOps.Legal {
                 return Falso(out mensaje, "No se han cargado todos los productos de las líneas de la factura");
             if (Documento.Líneas.Any(d => d.Producto?.Descripción == null)) 
                 return Falso(out mensaje, "No se ha establecido la descripción para al menos un producto.");
-            if (!File.Exists(Equipo.RutaCertificado)) {
-
-                if (string.IsNullOrEmpty(Equipo.RutaCertificado)) {
-                    return Falso(out mensaje, $"No se ha seleccionado el archivo del certificado.");
-                } else {
-                    return Falso(out mensaje, $"No existe el archivo del certificado {Equipo.RutaCertificado}.");
-                }
-                
-            }
+            if (!ExisteArchivo(Equipo.RutaCertificado, "certificado de firma digital", out string? mensajeExiste)) return Falso(out mensaje, mensajeExiste);
             if (Documento.ConsecutivoDianAnual == null) return Falso(out mensaje, $"El consecutivo de la DIAN anual no puede ser nulo.");
             // Verificaciones>
 
@@ -1137,7 +1129,7 @@ namespace SimpleOps.Legal {
         /// </summary>
         public bool Firmar() {
 
-            if (!File.Exists(Equipo.RutaCertificado)) throw new Exception($"No existe el archivo con el certificado {Equipo.RutaCertificado}."); // Se maneja como excepción porque no debería llegar a este punto sin este archivo.
+            if (!ExisteArchivo(Equipo.RutaCertificado, "certificado de firma digital", out string? mensaje)) throw new Exception(mensaje); // Se maneja como excepción porque no debería llegar a este punto sin este archivo.
 
             var informaciónInicio = new ProcessStartInfo(RutaFirmador) {
                 Arguments = @$"""{Equipo.RutaCertificado}"" {Equipo.ClaveCertificado} ""{ObtenerRuta(firmado: false)}"" ""{Ruta}"" " +

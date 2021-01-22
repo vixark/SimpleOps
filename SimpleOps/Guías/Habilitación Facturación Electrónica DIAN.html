@@ -198,8 +198,7 @@
     <p>
         Abre Visual Studio y haz clic en <i>Tareas Iniciales > Clonar un repositorio</i>. En <i>Ubicación del repositorio</i>
         ingresa https://github.com/vixark/SimpleOps.git y en <i>Ruta de acceso</i> selecciona <i>[CarpetaProgramas]\SimpleOps\Código</i>
-        y haz clic en
-        <i>Clonar</i>.
+        y haz clic en <i>Clonar</i>.
     </p>
     <img src="Imagenes/Habilitación Facturación Electrónica DIAN/ClonarRepositorio.png" />
 
@@ -212,40 +211,30 @@
     <p>
         Con esto abrirás el código por primera vez. La próxima vez que vayas a abrir el código abre
         el archivo <i>[CarpetaProgramas]\SimpleOps\Código\SimpleOps.sln</i> y actualiza el código a la última versión en GitHub haciendo clic
-        en la esquina inferior derecha
-        en <i>master > "Pull"</i>.
+        en la esquina inferior derecha en <i>master > "Pull"</i>.
     </p>
     <img src="Imagenes/Habilitación Facturación Electrónica DIAN/ActualizarCambiosSimpleOpsSln.png" />
 
     <p>
         Si te sale el error <i>No se pueden incorporar los cambios...</i>, en <i>Cambios de GIT > Cambios</i>, haz <i>clic derecho > Deshacer Cambios</i>
-        en los archivos que cambiaste (usualmente <i>OpcionesEquipo.cs</i> y <i>Global.cs</i>) e intenta
-        actualizar el código nuevamente.
-        Ten cuidado si has realizado
-        cambios al código adicionales a los indicados en esta guía porque te podrían aparecer más archivos en conflicto y deberás analizar con
-        más cuidado
-        cómo proceder para evitar perder tus cambios.
+        en los archivos que cambiaste (usualmente <i>Rutas.cs</i>) e intenta actualizar el código nuevamente.
+        Ten cuidado si has realizado cambios al código adicionales a los indicados en esta guía porque te podrían aparecer más archivos en conflicto y deberás analizar con
+        más cuidado cómo proceder para evitar perder tus cambios.
     </p>
 
-    <p>
-        Busca (Ctrl + F) el texto <i>Public string RutaAplicación</i> para que encuentres el siguiente fragmento de código y reemplaza en los 4
-        textos indicados <i>D:\Programas</i> por <i>[CarpetaProgramas]</i>.
-        Esto deberás hacerlo nuevamente si te salió el error <i>No se pueden incorporar los cambios...</i>.
+    <p>      
+        Abre <i>SimpleOps > Estáticas > Rutas.cs</i> en el Explorador de soluciones. Cambia el valor entre comillas
+        de Desarrollo por <i>[CarpetaProgramas]\SimpleOps\Código\SimpleOps</i> y el valor entre comillas de Aplicación
+        por <i>[CarpetaProgramas]\SimpleOps</i>. Esto deberás hacerlo la primera vez que abras el código y 
+        cada vez que te salga el error <i>No se pueden incorporar los cambios...</i> al intentar actualizar el código.
     </p>
-    <img src="Imagenes/Habilitación Facturación Electrónica DIAN/CambioRutasCódigo.png" />
-
-    <p>
-        Busca el texto <i>public static string RutaDesarrollo</i> para que encuentres el siguiente fragmento de código y reemplaza todo el texto
-        entre comillas por <i>[CarpetaProgramas]\SimpleOps\Código\SimpleOps</i>. Esto deberás hacerlo nuevamente si te salió el error
-        <i>No se pueden incorporar los cambios...</i>.
-    </p>
-    <img src="Imagenes/Habilitación Facturación Electrónica DIAN/RutaDesarrolloSimpleOps.png" />
+    <img src="Imagenes/Habilitación Facturación Electrónica DIAN/CambioRutas.png" />
 
 
     <p>
         Ejecuta <b>SimpleOps</b> (F5), espera unos segundos y te aparecerá un mensaje que dice <i>Base de Datos SQLite Creada</i>, esto significa
         que realizaste correctamente los pasos anteriores y que se creo la base de datos y todos los archivos necesarios para ejecutar <b>SimpleOps</b>.
-        Suspende la ejecución (Shift + F5).
+        Vuelve al código y suspende la ejecución (Shift + F5).
     </p>
 
     <h3>Configuración de Datos de tu Empresa</h3>

@@ -97,7 +97,9 @@ namespace SimpleOps.Singleton {
 
                     } else {
 
-                        if (File.Exists(RutaCertificado)) {
+                        if (!ExisteArchivo(RutaCertificado, "certificado de firma digital", out string? _, "No se podrá facturar electrónicamente.")) {
+                            return false; // No hay certificado entonces tampoco pide la clave.          
+                        } else {
 
                             otraVez:
                             var clave =
@@ -126,18 +128,6 @@ namespace SimpleOps.Singleton {
 
                             ClaveCertificado = clave;
                             return true;
-
-                        } else {
-
-                            if (string.IsNullOrEmpty(RutaCertificado)) {
-                                MostrarInformación($"No se ha seleccionado el archivo del certificado.{DobleLínea}" +
-                                                   $"No se podrá facturar electrónicamente.", "Sin Certificado");
-                                return false; // No hay certificado entonces tampoco pide la clave. 
-                            } else {
-                                MostrarInformación($"No se encontró el certificado de facturación electrónica en {RutaCertificado}.{DobleLínea}" +
-                                                   $"No se podrá facturar electrónicamente.", "Sin Certificado");
-                                return false; // No hay certificado entonces tampoco pide la clave. 
-                            }
 
                         }
 

@@ -527,6 +527,32 @@ namespace Vixark {
         } // ObtenerHashArchivo>
 
 
+        /// <summary>
+        /// Función que permite devolver un mensaje descriptivo sobre la no existencia o la falta de asignación del valor de la ruta de cierto archivo.
+        /// </summary>
+        /// <param name="rutaArchivo">Ruta del archivo que se quiere verificar si existe. Puede ser nulo o vacío y se devolverá un mensaje adecuado.</param>
+        /// <param name="nombreArchivo">Nombre del archivo que se usará en el mensaje de información si no lo encuentra o si no se ha establecido.</param>
+        /// <param name="mensaje">Variable en la que se devuelve el mensaje.</param>
+        /// <param name="textoAdicional">Texto adicional opcional al final del mensaje para ambos casos.</param>
+        /// <returns></returns>
+        public static bool ExisteArchivo(string? rutaArchivo, string nombreArchivo, out string? mensaje, string textoAdicional = "") {
+
+            mensaje = "";
+            if (!File.Exists(rutaArchivo)) {
+
+                if (string.IsNullOrEmpty(rutaArchivo)) {
+                    return Falso(out mensaje, $"No se ha seleccionado el archivo de {nombreArchivo}. {textoAdicional}");
+                } else {
+                    return Falso(out mensaje, $"No existe el {nombreArchivo} en {rutaArchivo}. {textoAdicional}");
+                }
+
+            } else {
+                return true;
+            }
+
+        } // ExisteArchivo>
+
+
         #endregion Archivos y Carpetas>
 
 
