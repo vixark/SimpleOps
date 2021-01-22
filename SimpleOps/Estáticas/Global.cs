@@ -638,7 +638,7 @@ namespace SimpleOps {
             var rutaCarpetaImagenesPlantillas = ObtenerRutaCarpeta(rutaCarpetaPlantillas, CarpetaImagenesPlantillas, crearSiNoExiste: true);
             foreach (var rutaImagen in Directory.GetFiles(rutaCarpetaImagenesPlantillasDesarrollo)) {
                 var rutaImagenNueva = Path.Combine(rutaCarpetaImagenesPlantillas, Path.GetFileName(rutaImagen));
-                if (!File.Exists(rutaImagenNueva)) File.Copy(rutaImagen, rutaImagenNueva); // Sólo se copia la imagen si no está porque es posible que el usuario la haya personalizado.
+                if (!File.Exists(rutaImagenNueva)) File.Copy(rutaImagen, rutaImagenNueva); // Solo se copia la imagen si no está porque es posible que el usuario la haya personalizado.
             }
                 
             ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaDatos, crearSiNoExiste: true); // Se ejecuta para crear la carpeta de Datos si no existe.

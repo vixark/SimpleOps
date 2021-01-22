@@ -73,9 +73,9 @@ namespace SimpleOps.Singleton {
         #region Facturación Electrónica
         // No todos los usuarios tendrían acceso a la posibilidad de facturar electrónicamente, ni a la clave del certificado. Se establecen estas rutas como personalización de cada equipo/usuario.
 
-        public string RutaCertificado { get; set; } = @"D:\Programas\SimpleOps\Firma Electrónica\Certificado.pfx"; // Archivo .pfx con el certificado para la firma digital.
+        public string RutaCertificado { get; set; } = @"D:\Programas\SimpleOps\Firma Electrónica\Certificado.pfx"; // Archivo .pfx con el certificado para la firma digital. No se autocalcula con RutaAplicación porque es posible que este archivo que es delicado se necesite guardar en otra ubicación.
 
-        public string RutaClaveCertificado { get; set; } = @"D:\Programas\SimpleOps\Firma Electrónica\Clave.txt"; // Un archivo .txt con una sola línea y en ella la clave del certificado sin ningún espacio al frente ni atrás.
+        public string RutaClaveCertificado { get; set; } = @"D:\Programas\SimpleOps\Firma Electrónica\Clave.txt"; // Un archivo .txt con una sola línea y en ella la clave del certificado sin ningún espacio al frente ni atrás. No se autocalcula con RutaAplicación porque es posible que este archivo que es delicado se necesite guardar en otra ubicación.
 
         public float RelaciónFuentesPdfPantalla { get; set; } = 0.59375F; // 0,59375 = 9.5 / 16 para pantallas grandes con 125% de zoom en Windows. 0.740625 = 11.85 / 16 para pantallas medianas con zoom 100% en Windows. Es un factor de conversión aproximado entre el tamaño de la fuente en puntos de HTML y el tamaño de la letra usando medidas la librería System.Drawing. Es necesario para poder calcular el alto de la lista de productos y la cantidad de páginas de los documentos gráficos.
 
