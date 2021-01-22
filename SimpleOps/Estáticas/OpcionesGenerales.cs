@@ -67,7 +67,7 @@ namespace SimpleOps.Singleton {
 
         public double PorcentajeRetenciónIVALegal { get; set; } = 0.15; // Porcentaje legal de retención del IVA. Tomado de https://www.gerencie.com/retencion-en-la-fuente-por-iva-reteiva.html.
 
-        public decimal UVT { get; set; } = 35607; // Tomado de https://www.gerencie.com/uvt-2020.html.
+        public decimal UVT { get; set; } = 36308; // Tomado de https://www.gerencie.com/uvt-2021.html. 2020: 35607.
 
         public int HorasAjusteUtc { get; set; } = -5; // -5 para Colombia. Cantidad de horas fijas que se le restarán a la hora UTC para obtener la hora semilocal que se usará para almacenar las fechas de las operaciones en la base de datos. Es semilocal porque coincide con la hora local del equipo en los paises en los que no hay horario de verano ni zonas horarias. Para evitar referenciar a SimpleOps.exe desde Dian.dll este valor es escrito manualmente en Dian.sln.
 

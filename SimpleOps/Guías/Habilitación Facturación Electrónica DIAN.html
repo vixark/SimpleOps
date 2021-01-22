@@ -168,8 +168,8 @@
     </p>
 
     <p>
-        Crea una carpeta en tu computador con el nombre <i>SimpleOps</i> y crea dentro de ella las
-        siguientes 2 nuevas carpetas: <i>Código</i> y <i>Firma Electrónica</i>. Para fines de esta guía la carpeta donde creaste la carpeta
+        Crea una carpeta en tu computador con el nombre <i>SimpleOps</i> y crea dentro de ella la carpeta <i>Código</i>
+        y la carpeta <i>Firma Electrónica</i>. Para fines de esta guía la carpeta donde creaste la carpeta
         <i>SimpleOps</i> se llamará <i>[CarpetaProgramas]</i>, por ejemplo si la creaste en <i>D:\Programas\SimpleOps</i>,
         tu <i>[CarpetaProgramas]</i> será <i>D:\Programas</i>.
         Asegúrate de crear las carpetas exactamente cómo están escritas (incluyendo tildes) para que después no tengas
@@ -178,7 +178,7 @@
 
     <p>
         Copia y pega (no lo cortes) tu archivo PFX con tu certificado de firma digital en <i>[CarpetaProgramas]\SimpleOps\Firma Electrónica</i> y renómbralo a
-        <i>Certificado.pfx</i>. Crea un archivo de texto (extensión .txt) en <i>[CarpetaProgramas]\SimpleOps\Firma Electrónica</i>, 
+        <i>Certificado.pfx</i>. Crea un archivo de texto (extensión .txt) en <i>[CarpetaProgramas]\SimpleOps\Firma Electrónica</i>,
         nómbralo <i>Clave.txt</i>,
         ábrelo, escribe tu clave del certificado de firma digital sin agregar espacios ni nuevas líneas y guárdalo.
     </p>
@@ -186,7 +186,7 @@
 
     <p>
         Abre Visual Studio y haz clic en <i>Tareas Iniciales > Clonar un repositorio</i>. En <i>Ubicación del repositorio</i>
-        escribe https://github.com/vixark/SimpleOps.git y en <i>Ruta de acceso</i> selecciona <i>[CarpetaProgramas]\SimpleOps\Código</i> 
+        ingresa https://github.com/vixark/SimpleOps.git y en <i>Ruta de acceso</i> selecciona <i>[CarpetaProgramas]\SimpleOps\Código</i>
         y haz clic en
         <i>Clonar</i>.
     </p>
@@ -200,9 +200,9 @@
 
     <p>
         Con esto abrirás el código por primera vez. La próxima vez que vayas a abrir el código abre
-        el archivo <i>[CarpetaProgramas]\SimpleOps\Código\SimpleOps.sln</i> y actualiza el código a la última versión en GitHub haciendo clic 
+        el archivo <i>[CarpetaProgramas]\SimpleOps\Código\SimpleOps.sln</i> y actualiza el código a la última versión en GitHub haciendo clic
         en la esquina inferior derecha
-        en <i>master > "Pull"</i>. 
+        en <i>master > "Pull"</i>.
     </p>
     <img src="Imagenes/Habilitación Facturación Electrónica DIAN/ActualizarCambiosSimpleOpsSln.png" />
 
@@ -218,7 +218,7 @@
 
     <p>
         Busca (Ctrl + F) el texto <i>Public string RutaAplicación</i> para que encuentres el siguiente fragmento de código y reemplaza en los 4
-        textos indicados <i>D:\Programas</i> por tu <i>[CarpetaProgramas]</i>.
+        textos indicados <i>D:\Programas</i> por <i>[CarpetaProgramas]</i>.
         Esto deberás hacerlo nuevamente si te salió el error <i>No se pueden incorporar los cambios...</i>.
     </p>
     <img src="Imagenes/Habilitación Facturación Electrónica DIAN/CambioRutasCódigo.png" />
@@ -229,6 +229,15 @@
         <i>No se pueden incorporar los cambios...</i>.
     </p>
     <img src="Imagenes/Habilitación Facturación Electrónica DIAN/RutaDesarrolloSimpleOps.png" />
+
+
+    <p>
+        Ejecuta <b>SimpleOps</b> (F5), espera unos segundos y te aparecerá un mensaje que dice <i>Base de Datos SQLite Creada</i>, esto significa
+        que realizaste correctamente los pasos anteriores y que se creo la base de datos y todos los archivos necesarios para ejecutar <b>SimpleOps</b>.
+        Suspende la ejecución (Shift + F5).
+    </p>
+
+    <h3>Configuración Datos Empresa</h3>
 
 
 
