@@ -136,42 +136,42 @@
 
     table td { padding: 0px; }
 
-    a { color: @(Model.ModoImpresión ? "#191919" : "#005918"); @(Model.ModoImpresión ? "text-decoration: none;" : "") } /* Usualmente es el mismo fc-s50, pero podría ser cambiado por otro si se desea. */
+    a { color: @(Model.ModoImpresión ? "#191919" : "#891220"); @(Model.ModoImpresión ? "text-decoration: none;" : "") } /* Usualmente es el mismo fc-s50, pero podría ser cambiado por otro si se desea. */
 
     /* General> */
 
 
     /* <Colores */
 
-    .fc { background-color: @(Model.ModoImpresión ? "#FFFFFF" : "#006F1F"); } /* fc: Fondo de color. */
+    .fc { background-color: @(Model.ModoImpresión ? "#FFFFFF" : "#AB1728"); } /* fc: Fondo de color. */
 
     .fgtl { background-color: #9B9B9B; color: #FFFFFF; } /* Un estilo de fondo plano gris y color de letra blanco o casi blanco adecuado para la impresión. Es equivalente al fondo color + alguna clase fc-l###, pero solo debe ser usado en ciertos elementos de poca área como el encabezado de las columnas. Se debe establecer con un condicional en cada elemento cuando sea modo impresión y establecer las clases fc y fc-l### cuando no lo sea. */
 
     .fc-l255 { color: @(Model.ModoImpresión ? "#000000" : "white"); } /* Color luz sobre el fondo de color usado principalmente para los textos. Usualmente es blanco 255-255-255. */
 
-    .fc-l230 { color: @(Model.ModoImpresión ? "#191919" : "#E6F0E9"); } /* Se obtiene con Paint.Net el fc-l255 sobre el fc con una transparencia de 230. */
+    .fc-l230 { color: @(Model.ModoImpresión ? "#191919" : "#F6E8E9"); } /* Se obtiene con Paint.Net el fc-l255 sobre el fc con una transparencia de 230. */
 
-    .fc-l200 { color: @(Model.ModoImpresión ? "#373737" : "#C8DFCE"); } /* Se obtiene con Paint.Net el fc-l255 sobre el fc con una transparencia de 200. */
+    .fc-l200 { color: @(Model.ModoImpresión ? "#373737" : "#ECCCD0"); } /* Se obtiene con Paint.Net el fc-l255 sobre el fc con una transparencia de 200. */
 
-    .fc-l150 { color: @(Model.ModoImpresión ? "#696969" : "#96C3A2"); } /* Se obtiene con Paint.Net el fc-l255 sobre el fc con una transparencia de 150. */
+    .fc-l150 { color: @(Model.ModoImpresión ? "#696969" : "#DC9FA6"); } /* Se obtiene con Paint.Net el fc-l255 sobre el fc con una transparencia de 150. */
 
-    .fc-l100 { color: @(Model.ModoImpresión ? "#9B9B9B" : "#64A776"); } /* Se obtiene con Paint.Net el fc-l255 sobre el fc con una transparencia de 100. */
+    .fc-l100 { color: @(Model.ModoImpresión ? "#9B9B9B" : "#CB717C"); } /* Se obtiene con Paint.Net el fc-l255 sobre el fc con una transparencia de 100. */
 
-    .fc-l50 { color: @(Model.ModoImpresión ? "#CDCDCD" : "#328B4A"); } /* Se obtiene con Paint.Net el fc-l255 sobre el fc con una transparencia de 50. */
+    .fc-l50 { color: @(Model.ModoImpresión ? "#CDCDCD" : "#BB4452"); } /* Se obtiene con Paint.Net el fc-l255 sobre el fc con una transparencia de 50. */
 
     .fc-s255 { color: black; } /* Color sombra sobre el fondo de color. Usualmente es negro 0-0-0. */
 
-    .fc-s200 { color: @(Model.ModoImpresión ? "#373737" : "#001706"); } /* Se obtiene con Paint.Net el fc-s255 sobre el fc con una transparencia de 200. */
+    .fc-s200 { color: @(Model.ModoImpresión ? "#373737" : "#240408"); } /* Se obtiene con Paint.Net el fc-s255 sobre el fc con una transparencia de 200. */
 
-    .fc-s150 { color: @(Model.ModoImpresión ? "#696969" : "#002D0C"); } /* Se obtiene con Paint.Net el fc-s255 sobre el fc con una transparencia de 150. */
+    .fc-s150 { color: @(Model.ModoImpresión ? "#696969" : "#460910"); } /* Se obtiene con Paint.Net el fc-s255 sobre el fc con una transparencia de 150. */
 
-    .fc-s100 { color: @(Model.ModoImpresión ? "#9B9B9B" : "#004312"); } /* Se obtiene con Paint.Net el fc-s255 sobre el fc con una transparencia de 100. */
+    .fc-s100 { color: @(Model.ModoImpresión ? "#9B9B9B" : "#670D18"); } /* Se obtiene con Paint.Net el fc-s255 sobre el fc con una transparencia de 100. */
 
-    .fc-s70 { color: @(Model.ModoImpresión ? "#CDCDCD" : "#005016"); } /* Se obtiene con Paint.Net el fc-s255 sobre el fc con una transparencia de 70. */
+    .fc-s70 { color: @(Model.ModoImpresión ? "#CDCDCD" : "#7C101D"); } /* Se obtiene con Paint.Net el fc-s255 sobre el fc con una transparencia de 70. */
 
-    .fc-s50 { color: @(Model.ModoImpresión ? "#CDCDCD" : "#005918"); } /* Se obtiene con Paint.Net el fc-s255 sobre el fc con una transparencia de 50. */
+    .fc-s50 { color: @(Model.ModoImpresión ? "#CDCDCD" : "#891220"); } /* Se obtiene con Paint.Net el fc-s255 sobre el fc con una transparencia de 50. */
 
-    .fc-s0, fc-l0 { color: @(Model.ModoImpresión ? "#FFFFFF" : "#006F1F"); } /* Es el mismo color fc pero para aplicarlo a fuentes. Se sigue la misma convención fc-s# para facilitar su recordación. */
+    .fc-s0, fc-l0 { color: @(Model.ModoImpresión ? "#FFFFFF" : "#AB1728"); } /* Es el mismo color fc pero para aplicarlo a fuentes. Se sigue la misma convención fc-s# para facilitar su recordación. */
 
     /* Colores> */
 
@@ -225,7 +225,8 @@
 
     .l-cabeza {
         height: @APuntos(Model.SeparaciónLíneaBajoCabeza - (Model.ModoImpresión ? 3 : 0 )); /* Se le restan 3 de los 10 que se agregan al pie para que las medidas sean iguales en ambos modos. */
-        border-bottom: solid @APuntos(Model.AnchoLíneaBajoCabeza - (Model.ModoImpresión ? 7 : 0 )) @(Model.ModoImpresión ? Model.ColorBordes : "#D0AB00"); /* Se le restan 7 de los 10 que se agregan al pie para que las medidas sean iguales en ambos modos. */
+        border-bottom: solid @APuntos(Model.AnchoLíneaBajoCabeza - (Model.ModoImpresión ? 7 : 0 )) /* Se le restan 7 de los 10 que se agregan al pie para que las medidas sean iguales en ambos modos. */
+            @(Model.ModoImpresión ? Model.ColorBordes : "#5E0000");
     }
 
     /* Cabeza> */
