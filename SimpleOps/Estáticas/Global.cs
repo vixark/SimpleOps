@@ -632,8 +632,32 @@ namespace SimpleOps {
 
             }
 
+            var rutaCarpetaPlantillasDesarrollo = ObtenerRutaCarpeta(RutaDesarrollo, CarpetaPlantillasDesarrollo, crearSiNoExiste: false);
+            var rutaCarpetaPlantillas = ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaPlantillas, crearSiNoExiste: true);
+            var rutaCarpetaImagenesPlantillasDesarrollo = ObtenerRutaCarpeta(rutaCarpetaPlantillasDesarrollo, CarpetaImagenesPlantillas, crearSiNoExiste: false);
+            var rutaCarpetaImagenesPlantillas = ObtenerRutaCarpeta(rutaCarpetaPlantillas, CarpetaImagenesPlantillas, crearSiNoExiste: true);
+            foreach (var rutaImagen in Directory.GetFiles(rutaCarpetaImagenesPlantillasDesarrollo)) {
+                var rutaImagenNueva = Path.Combine(rutaCarpetaImagenesPlantillas, Path.GetFileName(rutaImagen));
+                if (!File.Exists(rutaImagenNueva)) File.Copy(rutaImagen, rutaImagenNueva); // Sólo se copia la imagen si no está porque es posible que el usuario la haya personalizado.
+            }
+                
             ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaDatos, crearSiNoExiste: true); // Se ejecuta para crear la carpeta de Datos si no existe.
             ObtenerRutaCarpeta(Equipo.RutaIntegración, "", crearSiNoExiste: true); // Se ejecuta para crear la carpetas de integración con terceros si no existen. Al pasar una carpeta vacía usa la rutaPadre.
+
+            if (!File.Exists(RutaFirmador)) {
+
+                var rutaLibrerías = ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaLibrerías, crearSiNoExiste: true);
+                var rutaLibreríasDesarrollo = ObtenerRutaCarpeta(RutaDesarrollo, CarpetaLibrerías, crearSiNoExiste: false);
+                var rutaLicencias = ObtenerRutaCarpeta(rutaLibrerías, CarpetaLicencias, crearSiNoExiste: true);
+                var rutaLicenciasDesarrollo = ObtenerRutaCarpeta(rutaLibreríasDesarrollo, CarpetaLicencias, crearSiNoExiste: false);
+                foreach (var rutaLibrería in Directory.GetFiles(rutaLibreríasDesarrollo)) {
+                    File.Copy(rutaLibrería, Path.Combine(rutaLibrerías, Path.GetFileName(rutaLibrería)));
+                }
+                foreach (var rutaLicencia in Directory.GetFiles(rutaLicenciasDesarrollo)) {
+                    File.Copy(rutaLicencia, Path.Combine(rutaLicencias, Path.GetFileName(rutaLicencia)));
+                }
+
+            }
 
             if (!File.Exists(RutaBaseDatosSQLite) && UsarSQLite) { // Si la base de datos SQLite no existe y se quiere usar SQLite copiará una base de datos vacía desde la ruta de desarrollo y la llenará con datos básicos comunes a todos los usuarios, principalmente datos de los municipios de Colombia.
 
@@ -657,21 +681,6 @@ namespace SimpleOps {
 
                 } else {
                     throw new Exception($"No se encontró la base de datos vacía en {rutaBaseDatosVacíaDesarrollo}");
-                }
-
-            }
-
-            if (!File.Exists(RutaFirmador)) {
-
-                var rutaLibrerías = ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaLibrerías, crearSiNoExiste: true);
-                var rutaLibreríasDesarrollo = ObtenerRutaCarpeta(RutaDesarrollo, CarpetaLibrerías, crearSiNoExiste: false);
-                var rutaLicencias = ObtenerRutaCarpeta(rutaLibrerías, CarpetaLicencias, crearSiNoExiste: true);
-                var rutaLicenciasDesarrollo = ObtenerRutaCarpeta(rutaLibreríasDesarrollo, CarpetaLicencias, crearSiNoExiste: false);
-                foreach (var rutaLibrería in Directory.GetFiles(rutaLibreríasDesarrollo)) {
-                    File.Copy(rutaLibrería, Path.Combine(rutaLibrerías, Path.GetFileName(rutaLibrería)));
-                }
-                foreach (var rutaLicencia in Directory.GetFiles(rutaLicenciasDesarrollo)) {
-                    File.Copy(rutaLicencia, Path.Combine(rutaLicencias, Path.GetFileName(rutaLicencia)));
                 }
 
             }
