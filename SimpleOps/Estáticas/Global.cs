@@ -36,13 +36,13 @@ namespace SimpleOps {
 
         public static bool HabilitarRastreoDeDatosSensibles = false; // Si se establece en verdadero en la ventana 'Inmediato' se podrá ver el detalle de las acciones ejecutados en la base de datos, incluyendo los datos. Si se deja en falso EF Core reemplazará los datos por textos de reemplazo. En producción siempre debe estar en falso.
 
-        public static bool ModoDesarrolloPlantillasDocumentos = true; // En modo desarrollo se usa en verdadero para permitir que los cambios que se hagan a los archivos CSHTML en SimpleOps/Plantillas sean copiados a la ruta de la aplicación y para habilitar algunas líneas de código que facilitan el desarrollo de estas plantillas. En producción se deben usar directamente los archivos en la ruta de la aplicación porque no se tienen los de desarrollo.
+        public static bool ModoDesarrolloPlantillasDocumentos = Configuración.ModoDesarrolloPlantillasDocumentos; // Se actualiza en Rutas para permitir que los usuarios del código cambien este valor sin que sus cambios sean reemplazados con una nueva versión del código de Global.cs.
 
-        public static bool HabilitarPruebasUnitarias = true; // Se usa verdadero cuando se quieran realizar las pruebas al iniciar la aplicación.
+        public static bool HabilitarPruebasUnitarias = Configuración.HabilitarPruebasUnitarias; // Se actualiza en Rutas para permitir que los usuarios del código cambien este valor sin que sus cambios sean reemplazados con una nueva versión del código de Global.cs.
 
-        public static bool ModoIntegraciónTerceros = false; // Modo especial para integrar la funcionalidad de facturación electrónica y la generación de catálogos con programas terceros.
+        public static bool ModoIntegraciónTerceros = Configuración.ModoIntegraciónTerceros; // Se actualiza en Rutas para permitir que los usuarios del código cambien este valor sin que sus cambios sean reemplazados con una nueva versión del código de Global.cs.
 
-        public static string RutaDesarrollo = Rutas.Desarrollo; // Se actualiza en Rutas para permitir que los usuarios del código cambien este valor sin que sus cambios sean reemplazados con una nueva versión del código de Global.cs.
+        public static string RutaDesarrollo = Configuración.RutaDesarrollo; // Se actualiza en Rutas para permitir que los usuarios del código cambien este valor sin que sus cambios sean reemplazados con una nueva versión del código de Global.cs.
 
         public const string NombreAplicación = "SimpleOps";
 

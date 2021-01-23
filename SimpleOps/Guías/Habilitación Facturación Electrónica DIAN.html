@@ -216,19 +216,43 @@
 
     <p>
         Si te sale el error <i>No se pueden incorporar los cambios...</i>, en <i>Cambios de GIT > Cambios</i>, haz <i>clic derecho > Deshacer Cambios</i>
-        en los archivos que cambiaste (usualmente <i>Rutas.cs</i>) e intenta actualizar el código nuevamente.
+        en los archivos que cambiaste (usualmente <i>Configuración.cs</i>) e intenta actualizar el código nuevamente.
         Ten cuidado si has realizado cambios al código adicionales a los indicados en esta guía porque te podrían aparecer más archivos en conflicto y deberás analizar con
         más cuidado cómo proceder para evitar perder tus cambios.
     </p>
 
     <p>
-        Abre <i>SimpleOps > Estáticas > Rutas.cs</i> en el Explorador de soluciones. Cambia el valor entre comillas
-        de Desarrollo por <i>[CarpetaProgramas]\SimpleOps\Código\SimpleOps</i> y el valor entre comillas de Aplicación
-        por <i>[CarpetaProgramas]\SimpleOps</i>. Esto deberás hacerlo la primera vez que abras el código y
+        Abre <i>SimpleOps > Estáticas > Configuración.cs</i> en el Explorador de soluciones. Cambia el valor los siguientes valores:
+        
+        <ul>
+            <li>
+                <b>RutaDesarrollo:</b> Cámbialo por <i>[CarpetaProgramas]\SimpleOps\Código\SimpleOps</i>
+            </li>
+            <li>
+                <b>RutaAplicación:</b> Cámbialo por <i>[CarpetaProgramas]\SimpleOps</i>
+            </li>
+            <li>
+                <b>ModoDesarrolloPlantillasDocumentos:</b> Si necesitas realizar grandes cambios
+                al diseño de la representación gráfica de la factura electrónica, establécelo en <i>true</i> para facilitarte el rediseño.
+                Si solo quieres cambiar los colores y logos, establécelo en <i>false</i>.
+            </li>
+            <li>
+                <b>HabilitarPruebasUnitarias:</b> Cámbialo por <i>true</i>.
+            </li>
+            <li>
+                <b>ModoIntegraciónTerceros:</b> Si quieres habilitar la facturación electrónica en un programa tercero (otro ERP, Excel u otro) mediante
+                <b>SimpleOps</b>, establécelo en <i>true</i>. Si quieres usar <b>SimpleOps</b> 
+                como tu ERP y facturador electrónico establécelo en <i>false</i>. <b>Nota:</b> A enero de 2021, <b>SimpleOps</b> aún no tiene interfaz 
+                gráfica y no puede ser usado como ERP, entonces la única opción para facturar electrónicamente es usando un programa tercero.
+            </li>
+        </ul>
+
+    </p>
+    <img src="../Guías/Imagenes/Habilitación Facturación Electrónica DIAN/ClaseConfiguración.png" />
+    <p>
+        Estos cambios deberás hacerlos la primera vez que abras el código y
         cada vez que te salga el error <i>No se pueden incorporar los cambios...</i> al intentar actualizar el código.
     </p>
-    <img src="Imagenes/Habilitación Facturación Electrónica DIAN/CambioRutas.png" />
-
 
     <p>
         Ejecuta <b>SimpleOps</b> (F5), espera unos segundos y te aparecerá un mensaje que dice <i>Base de Datos SQLite Creada</i>, esto significa
@@ -453,6 +477,22 @@
     <img src="Imagenes/Habilitación Facturación Electrónica DIAN/AdiciónDatosEmpresa.png" />
 
     <p>Presiona <i>Ctrl + S</i> para guardar los cambios realizados.</p>
+
+
+    <h3>Pruebas de Facturación Electrónica</h3>
+    <p>
+        <b>SimpleOps</b> ya está listo para iniciar las pruebas de facturación electrónica. Primero se realizarán unas pruebas internas
+        y después se realizarán las pruebas oficiales ante la DIAN, que una vez cumplidas activan el estatus de tu empresa como facturador electrónico
+        usando <b>SimpleOps</b>.
+    </p>
+
+    <p>
+        Abre el código, abre <i>SimpleOps > Estáticas > Global.cs</i>,  <i>true</i>.
+        Ejecuta <b>SimpleOps</b> (F5), espera unos segundos y te aparecerá un mensaje sobre, esto significa
+        que realizaste correctamente los pasos anteriores y que se creo la base de datos y todos los archivos necesarios para ejecutar <b>SimpleOps</b>.
+        Vuelve al código y suspende la ejecución (Shift + F5).
+    </p>
+
 
 </body>
 

@@ -65,7 +65,7 @@ namespace SimpleOps.Singleton {
 
         #region Rutas
 
-        public string RutaAplicación { get; set; } = Rutas.Aplicación; // Se actualiza en Rutas para permitir que los usuarios del código cambien este valor sin que sus cambios sean reemplazados con una nueva versión del código de OpcionesEquipo.cs.
+        public string RutaAplicación { get; set; } = Configuración.RutaAplicación; // Se actualiza en Rutas para permitir que los usuarios del código cambien este valor sin que sus cambios sean reemplazados con una nueva versión del código de OpcionesEquipo.cs.
 
         #endregion Rutas>
 
