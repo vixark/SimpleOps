@@ -2293,9 +2293,8 @@
             <param name="tipo">Archivo o carpeta.</param>
             <param name="ruta">Ruta del archivo o carpeta que se quiere verificar si existe. Puede ser nulo o vacío y se devolverá un mensaje 
             adecuado.</param>
-            <param name="nombre">
-              Nombre del archivo o carpeta que se usará en el mensaje de información si no lo encuentra o si no se ha
-              establecido.</param>
+            <param name="nombre">Nombre del archivo o carpeta que se usará en el mensaje de información si no lo encuentra o si no se ha 
+            establecido.</param>
             <param name="mensaje">Variable en la que se devuelve el mensaje.</param>
             <param name="textoAdicional">Texto adicional opcional al final del mensaje para ambos casos.</param>
             <returns></returns>
