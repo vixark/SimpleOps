@@ -223,7 +223,7 @@
 
     <p>
         Abre <i>SimpleOps > Estáticas > Configuración.cs</i> en el Explorador de soluciones. Cambia el valor los siguientes valores:
-        
+
         <ul>
             <li>
                 <b>RutaDesarrollo:</b> Cámbialo por <i>[CarpetaProgramas]\SimpleOps\Código\SimpleOps</i>
@@ -232,17 +232,15 @@
                 <b>RutaAplicación:</b> Cámbialo por <i>[CarpetaProgramas]\SimpleOps</i>
             </li>
             <li>
-                <b>ModoDesarrolloPlantillasDocumentos:</b> Si necesitas realizar grandes cambios
-                al diseño de la representación gráfica de la factura electrónica, establécelo en <i>true</i> para facilitarte el rediseño.
-                Si solo quieres cambiar los colores y logos, establécelo en <i>false</i>.
+                <b>ModoDesarrolloPlantillasDocumentos:</b> Establécelo en <i>false</i>.
             </li>
             <li>
                 <b>HabilitarPruebasUnitarias:</b> Cámbialo por <i>true</i>.
             </li>
             <li>
                 <b>ModoIntegraciónTerceros:</b> Si quieres habilitar la facturación electrónica en un programa tercero (otro ERP, Excel u otro) mediante
-                <b>SimpleOps</b>, establécelo en <i>true</i>. Si quieres usar <b>SimpleOps</b> 
-                como tu ERP y facturador electrónico establécelo en <i>false</i>. <b>Nota:</b> A enero de 2021, <b>SimpleOps</b> aún no tiene interfaz 
+                <b>SimpleOps</b>, establécelo en <i>true</i>. Si quieres usar <b>SimpleOps</b>
+                como tu ERP y facturador electrónico establécelo en <i>false</i>. <b>Nota:</b> A enero de 2021, <b>SimpleOps</b> aún no tiene interfaz
                 gráfica y no puede ser usado como ERP, entonces la única opción para facturar electrónicamente es usando un programa tercero.
             </li>
         </ul>
@@ -479,7 +477,7 @@
     <p>Presiona <i>Ctrl + S</i> para guardar los cambios realizados.</p>
 
 
-    <h3>Pruebas de Facturación Electrónica</h3>
+    <h3>Pruebas Internas y Personalización</h3>
     <p>
         <b>SimpleOps</b> ya está listo para iniciar las pruebas de facturación electrónica. Primero se realizarán unas pruebas internas
         y después se realizarán las pruebas oficiales ante la DIAN, que una vez cumplidas activan el estatus de tu empresa como facturador electrónico
@@ -495,11 +493,25 @@
     </p>
 
     <p>
-        Abre la carpeta <div>[CarpetaProgramas]\SimpleOps\Documentos Electrónicos\[Año]\[Mes]-[Día]</div> donde encontrarás las representaciones
-        gráficas (Archivos PDFs) de los documentos de prueba que acabas de enviar a la DIAN (los archivos con <i>-I</i> son adecuados para imprimir
-        en impresoras blanco y negro) y las facturas electrónicas en sí (archivos XMLs).
+        Abre la carpeta <i>[CarpetaProgramas]\SimpleOps\Documentos Electrónicos\[Año]\[Mes]-[Día]</i> donde encontrarás las representaciones
+        gráficas (archivos PDFs) de los documentos de prueba que acabas de enviar a la DIAN y las facturas electrónicas en sí (archivos XMLs).
     </p>
 
+    <p>
+        Puedes personalizar la representación gráfica cambiando las imagenes y los colores; Las imagenes las encuentras en
+        <i>[CarpetaProgramas]\SimpleOps\Plantillas Documentos\Imagenes</i> y los colores los puedes cambiar abriendo
+        <i>[CarpetaProgramas]\SimpleOps\Plantillas Documentos\MarcoPdf.cshtml</i> con Visual Studio y cambiando los
+        <a href="https://www.colorcodehex.com/html-color-picker.html">colores HEX</a> en <i> &lt;style&gt; &gt; Colores</i>. El primer
+        color después de <i>Model.ModoImpresión</i> es el color del modo blanco y negro para impresión (archivos terminados en <i>-I</i>), 
+        cambia el segundo color para personalizar el color de la representación gráfica a color.
+    </p>
+    <img src="../Guías/Imagenes/Habilitación Facturación Electrónica DIAN/CambioColores.png" />
+
+    <p>
+        Guarda los cambios y ejecuta nuevamente <b>SimpleOps</b> para generar las nuevas representaciones gráficas. Cuando estés satisfecho con
+        el diseño de la representación gráfica, abre <i>SimpleOps > Estáticas > Configuración.cs</i> en el Explorador de soluciones y cambia el
+        valor de <i>HabilitarPruebasUnitarias</i> a <i>false</i>.
+    </p>
 
 </body>
 

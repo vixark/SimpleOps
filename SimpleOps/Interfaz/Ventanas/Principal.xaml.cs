@@ -105,7 +105,7 @@ namespace SimpleOps.Interfaz {
             // LeerBaseDatosCompleta();
             if (HabilitarPruebasUnitarias) {
                 DocumentosElectrónicos(); // Prueba para ensayar todos los procedimientos relacionados con la facturación electrónica.
-                // IntegraciónAplicacionesTerceros(); // Esta prueba se usa cuando se quiere simular el comportamiento de un programa tercero que genera archivos de comunicación .json con SimpleOps para el modo de integración de facturación electrónica. Si ya se dispone de un programa tercero generando correctamente los archivos no es necesario activar esta línea.
+                // IntegraciónAplicacionesTerceros(); // Esta prueba se usa cuando se quiere simular el comportamiento de un programa tercero que genera archivos de comunicación .json con SimpleOps para el modo de integración de facturación electrónica. Si ya se dispone de un programa tercero generando correctamente los archivos, no es necesario activar esta línea.
                 GeneraciónCatálogo(); // Prueba para ensayar el procedimiento de generación automática de catálogos con precios.
             }
 
@@ -144,6 +144,9 @@ namespace SimpleOps.Interfaz {
             }
 
         } // ReiniciarBaseDatosSQLite_Clic>
+
+
+        private void PruebasHabilitaciónFacturaciónElectrónica_Clic(object sender, RoutedEventArgs e) => Pruebas.Habilitación();
 
 
     } // Principal>

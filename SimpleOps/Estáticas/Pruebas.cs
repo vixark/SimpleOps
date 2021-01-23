@@ -386,7 +386,6 @@ namespace SimpleOps {
             if (ObtenerDígitoVerificación("890568469") != "8") MostrarError("Falló ObtenerDígitoVerificación()");
             if (ObtenerDígitoVerificación("990854369") != "9") MostrarError("Falló ObtenerDígitoVerificación()");
 
-            // Habilitación(); // Solo habilitar cuando se quieran hacer las pruebas para la habilitación de la empresa como facturador electrónico desde el código.
             Facturación(pruebaHabilitación: false); // Las pruebas de habilitación solo se harán con un botón especial, son peligrosas porque activan el modo de facturación electrónica obligatoria para la empresa.
             VentaGenérica1Excel();
             VentaGenérica2Excel();
@@ -445,7 +444,7 @@ namespace SimpleOps {
         /// </summary>
         public static void Habilitación() {
 
-            var títuloDiálogos = "Pruebas Habilitación Facturación Electrónica";
+            var títuloDiálogos = "Pruebas de Habilitación de Facturación Electrónica";
             if (MostrarDiálogo($"¿Deseas realizar las pruebas para habilitar a tu empresa como facturador electrónico ante la DIAN?{DobleLínea}" + 
                                "¡Cuidado! Si las pruebas resultan exitosas tu empresa estará obligada a seguir facturando electrónicamente y no " +
                                "podrá seguir facturando de la manera tradicional. Hazlo solo cuando tengas todo listo para operar facturando " +
