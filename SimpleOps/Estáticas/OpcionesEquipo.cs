@@ -73,13 +73,13 @@ namespace SimpleOps.Singleton {
         #region Facturación Electrónica
         // No todos los usuarios tendrían acceso a la posibilidad de facturar electrónicamente, ni a la clave del certificado. Se establecen estas rutas como personalización de cada equipo/usuario.
 
-        public string? RutaCertificado { get; set; } // Archivo .pfx con el certificado para la firma digital. No se autocalcula con RutaAplicación porque es posible que este archivo que es delicado se necesite guardar en otra ubicación. 
+        public string? RutaCertificado { get; set; } // Ruta del archivo PFX con el certificado de firma digital. No se autocalcula con RutaAplicación porque es posible que este archivo que es delicado se necesite guardar en otra ubicación. 
 
-        public string? RutaClaveCertificado { get; set; } // Un archivo .txt con una sola línea y en ella la clave del certificado sin ningún espacio al frente ni atrás. No se autocalcula con RutaAplicación porque es posible que este archivo que es delicado se necesite guardar en otra ubicación.
+        public string? RutaClaveCertificado { get; set; } // Ruta del archivo TXT con una sola línea sin ningún espacio al frente ni atrás que contiene la clave del certificado de firma digital. No se autocalcula con RutaAplicación porque es posible que este archivo que es delicado se necesite guardar en otra ubicación.
 
         public string? RutaIntegración { get; set; } // Carpeta dentro de un programa tercero usada para almacenar archivos de comunicación entre SimpleOps y este programa tercero.
 
-        public float RelaciónFuentesPdfPantalla { get; set; } = 0.59375F; // 0,59375 = 9.5 / 16 para pantallas grandes con 125% de zoom en Windows. 0.740625 = 11.85 / 16 para pantallas medianas con zoom 100% en Windows. Es un factor de conversión aproximado entre el tamaño de la fuente en puntos de HTML y el tamaño de la letra usando medidas la librería System.Drawing. Es necesario para poder calcular el alto de la lista de productos y la cantidad de páginas de los documentos gráficos.
+        public float RelaciónFuentesPdfPantalla { get; set; } = 0.7422F; // 0.5938 = 9.5 / 16 para pantallas grandes con 125% de escala en Windows. 0.7422 para pantallas medianas con escala 100% en Windows. Es un factor de conversión aproximado entre el tamaño de la fuente en puntos de HTML y el tamaño de la letra usando medidas la librería System.Drawing. Es necesario para poder calcular el alto de la lista de productos y la cantidad de páginas de los documentos gráficos.
 
 
         public string? _ClaveCertificado;

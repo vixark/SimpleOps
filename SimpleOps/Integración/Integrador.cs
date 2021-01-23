@@ -56,7 +56,7 @@ namespace SimpleOps.Integración {
 
         public Integrador() {
 
-            if (!Existe(TipoRuta.Directorio, Equipo.RutaIntegración, "integración con programas terceros", out string? mensaje,
+            if (!Existe(TipoRuta.Carpeta, Equipo.RutaIntegración, "integración con programas terceros", out string? mensaje,
                 "No funcionará la facturación electrónica ni la generación de catálogos desde programas terceros")) {
 
                 MostrarError(mensaje);

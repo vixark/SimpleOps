@@ -40,7 +40,6 @@
             margin-bottom: 10px;
             margin-top: 10px;
         }
-
     </style>
 
     <h1>Habilitación de Facturación Electrónica DIAN con SimpleOps</h1>
@@ -175,7 +174,7 @@
         <b>SimpleOps</b> se encuentra en una etapa preliminar de desarrollo, por lo tanto aún no cuenta con instalador y la mejor
         manera de ejecutarlo es directamente desde el código fuente. Para ejecutar el código necesitarás
         <a href="https://visualstudio.microsoft.com/es/vs/community/">Visual Studio</a>. Si quieres ejecutar <b>SimpleOps</b> sin necesidad
-        de instalar Visual Studio, me puedes escribir a vixark@outlook.com.
+        de instalar Visual Studio, me puedes escribir a vixark@outlook.com explicándome tu caso.
     </p>
 
     <p>
@@ -222,10 +221,10 @@
         más cuidado cómo proceder para evitar perder tus cambios.
     </p>
 
-    <p>      
+    <p>
         Abre <i>SimpleOps > Estáticas > Rutas.cs</i> en el Explorador de soluciones. Cambia el valor entre comillas
         de Desarrollo por <i>[CarpetaProgramas]\SimpleOps\Código\SimpleOps</i> y el valor entre comillas de Aplicación
-        por <i>[CarpetaProgramas]\SimpleOps</i>. Esto deberás hacerlo la primera vez que abras el código y 
+        por <i>[CarpetaProgramas]\SimpleOps</i>. Esto deberás hacerlo la primera vez que abras el código y
         cada vez que te salga el error <i>No se pueden incorporar los cambios...</i> al intentar actualizar el código.
     </p>
     <img src="Imagenes/Habilitación Facturación Electrónica DIAN/CambioRutas.png" />
@@ -237,6 +236,56 @@
         Vuelve al código y suspende la ejecución (Shift + F5).
     </p>
 
+
+
+    <h3>Configuración en tu Computador</h3>
+    <p>
+        Con este procedimiento le informarás a <b>SimpleOps</b> donde puede encontrar los archivos del certificado y harás otras configuraciones
+        relacionadas con tu computador.
+    </p>
+    <p>
+        Abre el archivo <i>[CarpetaProgramas]\SimpleOps\Opciones\Equipo.json</i> (<i>clic derecho > Abrir con.. > Microsoft Visual Studio</i>)
+        y para editarlo más fácil haz <i>clic derecho en el texto > Desminimizar</i> e ingresa los siguientes valores.
+    </p>
+
+    <p>
+        Para los valores <b>[Texto]</b> usa dobles comillas ("") y para los <b>[Número]</b> ninguna comilla y punto como separador de decimales.
+        Los textos debes preprocesarlos con <a href="https://www.freeformatter.com/json-escape.html#ad-output">esta utilidad</a>.
+        Ingresa el texto en el cuadro, haz clic en <i>ESCAPE</i>,
+        copia el texto del cuadro <i>Escaped string</i> y pégalo en el archivo. Por ejemplo, el texto <i>D:\Programas\SimpleOps\Firma Electrónica</i>
+        se convierte en <i>D:\\Programas\\SimpleOps\\Firma Electr\u00F3nica</i>, que es el texto que se debe usar.
+    </p>
+
+    <ul>
+
+        <li>
+            <b>RutaCertificado [Texto]:</b>
+            Ruta del archivo PFX con el certificado de firma digital. <i>[CarpetaProgramas]\SimpleOps\Firma Electrónica\Certificado.pfx</i>.
+        </li>
+
+        <li>
+            <b>RutaClaveCertificado [Texto]:</b>
+            Ruta del archivo TXT con una sola línea que contiene la clave del certificado de firma digital.
+            <i>[CarpetaProgramas]\SimpleOps\Firma Electrónica\Clave.txt</i>.
+        </li>
+
+        <li>
+            <b>RutaIntegraci\u00F3n [Texto]:</b>
+            Carpeta usada para almacenar los archivos de comunicación entre <b>SimpleOps</b> y un programa tercero.
+            <i>[CarpetaProgramas]\SimpleOps\Programa Tercero\Integración SimpleOps</i>.
+        </li>
+
+        <li>
+            <b>Relaci\u00F3nFuentesPdfPantalla [Número]:</b>
+            Valor necesario para calcular correctamente si una factura necesita una o más hojas. Si tu monitor es de 24 pulgadas o menos, usa 0.7422.
+            Si tu monitor es mayor a 24 pulgadas, calcula este factor con 0.7422 / (Factor de escala de Windows / 100). El factor de escala lo encuentras
+            en <i>Configuración > Sistema > Pantalla > Configuración avanzada de escala > Personalizar la escala</i>.
+        </li>
+    </ul>
+    <img src="Imagenes/Habilitación Facturación Electrónica DIAN/ConfiguraciónEquipoJson.png" />
+
+    <p>Presiona <i>Ctrl + S</i> para guardar los cambios realizados.</p>
+
     <h3>Configuración de Datos de tu Empresa</h3>
 
     <p>
@@ -247,15 +296,10 @@
     </p>
 
     <p>
-        Al agregar los valores usa dobles comillas ("") para los valores <b>[Texto]</b>, ninguna comilla para los <b>[Número]</b>, el formato
-        "YYYY-MM-DDT00:00:00Z" (con dobles comillas) para <b>[Fecha]</b> y true o false (sin comillas) para <b>[Booleano]</b>.
-    </p>
-
-    <p>
-        Si un texto tiene tildes o eñes debes procesarlo con esta
-        <a href="https://www.freeformatter.com/json-escape.html#ad-output">utilidad</a>. Ingresa el texto en el cuadro, haz clic en <i>ESCAPE</i>,
-        ,copia el texto del cuadro <i>Escaped string</i> y pégalo en el archivo. Por ejemplo, el texto <i>Corporación</i> se convierte en
-        <i>Corporaci\u00F3n</i>, que es el texto que se debe usar.
+        Para los valores <b>[Fecha]</b> usa el formato "YYYY-MM-DDT00:00:00Z" (con dobles comillas) y para los <b>[Booleano]</b>
+        usa true o false (sin comillas).
+        Si un texto tiene tildes o eñes debes preprocesarlo con <a href="https://www.freeformatter.com/json-escape.html#ad-output">esta utilidad</a>,
+        si no las tiene lo puedes ingresar sin preprocesarlo.
     </p>
 
     <ul>

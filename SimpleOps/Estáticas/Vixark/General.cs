@@ -53,7 +53,7 @@ namespace Vixark {
 
         [Flags] public enum Serialización { EnumeraciónEnTexto = 1, DiccionarioClaveEnumeración = 2 } // Se puede establecer una o varias serializaciones especiales con el operador |.
 
-        public enum TipoRuta { Archivo, Directorio }
+        public enum TipoRuta { Archivo, Carpeta }
 
         #endregion Enumeraciones>
 
@@ -531,13 +531,13 @@ namespace Vixark {
 
         /// <summary>
         /// Función que permite devolver un mensaje descriptivo sobre la no existencia o la falta de asignación del valor de la ruta de cierto archivo 
-        /// o directorio. Si no se va a usar el mensaje obtenido no es necesario usar esta función porque File.Exists() o Directory.Exists() funcionan
+        /// o carpeta. Si no se va a usar el mensaje obtenido no es necesario usar esta función porque File.Exists() o Directory.Exists() funcionan
         /// correctamente si la ruta es nula.
         /// </summary>
-        /// <param name="tipo">Archivo o directorio.</param>
-        /// <param name="ruta">Ruta del archivo o directorio que se quiere verificar si existe. Puede ser nulo o vacío y se devolverá un mensaje 
+        /// <param name="tipo">Archivo o carpeta.</param>
+        /// <param name="ruta">Ruta del archivo o carpeta que se quiere verificar si existe. Puede ser nulo o vacío y se devolverá un mensaje 
         /// adecuado.</param>
-        /// <param name="nombre">Nombre del archivo o directorio que se usará en el mensaje de información si no lo encuentra o si no se ha 
+        /// <param name="nombre">Nombre del archivo o carpeta que se usará en el mensaje de información si no lo encuentra o si no se ha 
         /// establecido.</param>
         /// <param name="mensaje">Variable en la que se devuelve el mensaje.</param>
         /// <param name="textoAdicional">Texto adicional opcional al final del mensaje para ambos casos.</param>
@@ -545,7 +545,7 @@ namespace Vixark {
         public static bool Existe(TipoRuta tipo, string? ruta, string nombre, out string? mensaje, string textoAdicional = "") {
 
             mensaje = "";
-            if ((tipo == TipoRuta.Archivo && !File.Exists(ruta)) || ((tipo == TipoRuta.Directorio && !Directory.Exists(ruta)))) {
+            if ((tipo == TipoRuta.Archivo && !File.Exists(ruta)) || ((tipo == TipoRuta.Carpeta && !Directory.Exists(ruta)))) {
 
                 var textoAdicionalYPunto = textoAdicional + (string.IsNullOrEmpty(textoAdicional) ? "" : ".");
                 if (string.IsNullOrEmpty(ruta)) {

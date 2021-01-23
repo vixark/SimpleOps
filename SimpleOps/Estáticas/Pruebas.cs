@@ -914,7 +914,7 @@ namespace SimpleOps {
             if (pruebaIntegración) {
 
                 var datos = venta.ObtenerDatosIntegración();
-                if (!Existe(TipoRuta.Directorio, Equipo.RutaIntegración, "integración con programas terceros", out string? mensajeExiste))
+                if (!Existe(TipoRuta.Carpeta, Equipo.RutaIntegración, "integración con programas terceros", out string? mensajeExiste))
                     throw new Exception(mensajeExiste); // No es un código que normalmente vaya a ejecutar un usuario entonces con la excepción basta.
                 File.WriteAllText(Path.Combine(Equipo.RutaIntegración!, $"{DocumentoIntegración.Venta.ATexto()}{AhoraNombresArchivos}.json"), // Se usa ! porque en la línea anterior saca exepción si RutaIntegración es nula.
                     Serializar(datos, Serialización.EnumeraciónEnTexto));
@@ -948,7 +948,7 @@ namespace SimpleOps {
             if (pruebaIntegración) {
 
                 var datos = notaCrédito.ObtenerDatosIntegración();
-                if (!Existe(TipoRuta.Directorio, Equipo.RutaIntegración, "integración con programas terceros", out string? mensajeExiste))
+                if (!Existe(TipoRuta.Carpeta, Equipo.RutaIntegración, "integración con programas terceros", out string? mensajeExiste))
                     throw new Exception(mensajeExiste); // No es un código que normalmente vaya a ejecutar un usuario entonces con la excepción basta.
                 File.WriteAllText(Path.Combine(Equipo.RutaIntegración!, $"{DocumentoIntegración.NotaCrédito.ATexto()}{AhoraNombresArchivos}.json"), // Se usa ! porque en la línea anterior saca exepción si RutaIntegración es nula.
                     Serializar(datos, Serialización.EnumeraciónEnTexto));

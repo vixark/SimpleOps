@@ -154,18 +154,18 @@ namespace SimpleOps.DocumentosGráficos {
         } // CrearPdfVenta>
 
 
-        private static bool CrearPdf<D>(D datos, PlantillaCompilada<D> plantillaCompilada, string rutaDirectorioPdf, out string rutaPdf,
+        private static bool CrearPdf<D>(D datos, PlantillaCompilada<D> plantillaCompilada, string rutaCarpetaPdf, out string rutaPdf,
             bool modoImpresión = false) where D : DatosDocumento {
 
             rutaPdf = "";
             var html = plantillaCompilada.ObtenerHtml(datos);
             if (ModoDesarrolloPlantillasDocumentos)
 
-                File.WriteAllText(Path.Combine(rutaDirectorioPdf, $"{datos.CódigoDocumento}.html"), html);
+                File.WriteAllText(Path.Combine(rutaCarpetaPdf, $"{datos.CódigoDocumento}.html"), html);
 
             try {
 
-                rutaPdf = Path.Combine(rutaDirectorioPdf, $"{datos.PrefijoNombreArchivo}{datos.CódigoDocumento}{(modoImpresión ? "-I" : "")}.pdf");
+                rutaPdf = Path.Combine(rutaCarpetaPdf, $"{datos.PrefijoNombreArchivo}{datos.CódigoDocumento}{(modoImpresión ? "-I" : "")}.pdf");
                 using var escritorPdf = new PdfWriter(rutaPdf);
                 using var pdf = new PdfDocument(escritorPdf);
                 pdf.SetDefaultPageSize(iText.Kernel.Geom.PageSize.LETTER);

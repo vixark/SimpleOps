@@ -2287,14 +2287,15 @@
         <member name="M:Vixark.General.Existe(Vixark.General.TipoRuta,System.String,System.String,System.String@,System.String)">
             <summary>
             Función que permite devolver un mensaje descriptivo sobre la no existencia o la falta de asignación del valor de la ruta de cierto archivo 
-            o directorio. Si no se va a usar el mensaje obtenido no es necesario usar esta función porque File.Exists() o Directory.Exists() funcionan
+            o carpeta. Si no se va a usar el mensaje obtenido no es necesario usar esta función porque File.Exists() o Directory.Exists() funcionan
             correctamente si la ruta es nula.
             </summary>
-            <param name="tipo">Archivo o directorio.</param>
-            <param name="ruta">Ruta del archivo o directorio que se quiere verificar si existe. Puede ser nulo o vacío y se devolverá un mensaje 
+            <param name="tipo">Archivo o carpeta.</param>
+            <param name="ruta">Ruta del archivo o carpeta que se quiere verificar si existe. Puede ser nulo o vacío y se devolverá un mensaje 
             adecuado.</param>
-            <param name="nombre">Nombre del archivo o directorio que se usará en el mensaje de información si no lo encuentra o si no se ha 
-            establecido.</param>
+            <param name="nombre">
+              Nombre del archivo o carpeta que se usará en el mensaje de información si no lo encuentra o si no se ha
+              establecido.</param>
             <param name="mensaje">Variable en la que se devuelve el mensaje.</param>
             <param name="textoAdicional">Texto adicional opcional al final del mensaje para ambos casos.</param>
             <returns></returns>
