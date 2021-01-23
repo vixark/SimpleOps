@@ -447,8 +447,9 @@ namespace SimpleOps {
             var títuloDiálogos = "Pruebas de Habilitación de Facturación Electrónica";
             if (MostrarDiálogo($"¿Deseas realizar las pruebas para habilitar a tu empresa como facturador electrónico ante la DIAN?{DobleLínea}" + 
                                "¡Cuidado! Si las pruebas resultan exitosas tu empresa estará obligada a seguir facturando electrónicamente y no " +
-                               "podrá seguir facturando de la manera tradicional. Hazlo solo cuando tengas todo listo para operar facturando " +
-                               "electrónicamente.", títuloDiálogos, MessageBoxButton.YesNo) == MessageBoxResult.Yes) {
+                               "podrá seguir facturando de la manera tradicional física. Hazlo solo cuando tengas todo listo para operar facturando " +
+                               "electrónicamente. Si actualmente facturas con la solución gratuita de la DIAN o con un operador tecnológico, aún podrás" +
+                               "seguir facturando de esa forma.", títuloDiálogos, MessageBoxButton.YesNo) == MessageBoxResult.Yes) {
 
                 if (Facturación(pruebaHabilitación: true)) {
                     MostrarInformación("Las pruebas para la habilitación de tu empresa como facturador electrónico han sido exitosas.", títuloDiálogos);

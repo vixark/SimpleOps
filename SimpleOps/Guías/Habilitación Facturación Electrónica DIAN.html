@@ -502,7 +502,7 @@
         <i>[CarpetaProgramas]\SimpleOps\Plantillas Documentos\Imagenes</i> y los colores los puedes cambiar abriendo
         <i>[CarpetaProgramas]\SimpleOps\Plantillas Documentos\MarcoPdf.cshtml</i> con Visual Studio y cambiando los
         <a href="https://www.colorcodehex.com/html-color-picker.html">colores HEX</a> en <i> &lt;style&gt; &gt; Colores</i>. El primer
-        color después de <i>Model.ModoImpresión</i> es el color del modo blanco y negro para impresión (archivos terminados en <i>-I</i>), 
+        color después de <i>Model.ModoImpresión</i> es el color del modo blanco y negro para impresión (archivos terminados en <i>-I</i>),
         cambia el segundo color para personalizar el color de la representación gráfica a color.
     </p>
     <img src="../Guías/Imagenes/Habilitación Facturación Electrónica DIAN/CambioColores.png" />
@@ -510,7 +510,23 @@
     <p>
         Guarda los cambios y ejecuta nuevamente <b>SimpleOps</b> para generar las nuevas representaciones gráficas. Cuando estés satisfecho con
         el diseño de la representación gráfica, abre <i>SimpleOps > Estáticas > Configuración.cs</i> en el Explorador de soluciones y cambia el
-        valor de <i>HabilitarPruebasUnitarias</i> a <i>false</i>.
+        valor de <i>HabilitarPruebasUnitarias</i> a <i>false</i> para no ejecutar más las pruebas de facturación cada vez que inicies <b>SimpleOps</b>.
+    </p>
+
+    <p>
+        Puedes abrir el portal de habilitación de la DIAN y hacer clic en <i>Documentos > Enviados</i> para verificar los documentos electrónicos 
+        de prueba que has generado con <b>SimpleOps</b>.
+    </p>
+
+    <h3>Pruebas de Habilitación en la DIAN</h3>
+    <p>
+        Este procedimiento habilitará tu empresa cómo facturador electrónico usando <b>SimpleOps</b> en la DIAN y no podrás seguir facturando de la forma
+        tradicional física. Si actualmente facturas con la solución gratuita de la DIAN o con un operador tecnológico, aún podrás seguir facturando 
+        de esa forma.
+    </p>
+
+    <p>
+        Ejecuta <b>SimpleOps</b> (F5) y presiona el botón <i>Hacer Pruebas para Habilitar la Facturación Electrónica en la DIAN</i>.
     </p>
 
 </body>
