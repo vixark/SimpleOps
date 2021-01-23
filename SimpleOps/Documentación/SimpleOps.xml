@@ -220,6 +220,16 @@
             crear el cuerpo (plantilla actual) con @CrearCuerpo().
             </summary>
         </member>
+        <member name="T:SimpleOps.Configuración">
+            <summary>
+            Variables globales estáticas que permiten ejecutar y configurar SimpleOps más fácilmente en otros equipos y
+            permiten la actualización desde el repositorio minimizando la cantidad de conflictos. Como es una clase que 
+            pocas veces se va a modificar desde el desarrollo, puede ser modificada por los usuarios del código para 
+            configurar las rutas de instalación y desarrollo y otras configuraciones sin necesidad de tenerlas que cambiar 
+            nuevamente cada vez que se actualice el código desde el repositorio, cómo si puede suceder si estos valores
+            se guardaran en Global.cs u OpcionesEmpresa.cs.
+            </summary>
+        </member>
         <member name="T:SimpleOps.Global">
             <summary>
             Métodos, funciones y constantes estáticas de uso global para todo SimpleOps. Se diferencian de Vixark.General porque son propias del funcionamiento de SimpleOps y no de uso general compartido con otros proyectos.
@@ -306,16 +316,6 @@
             Se envían los documentos como pruebas de habilitación a la DIAN y automáticamente se activa la facturación electrónica para la empresa y 
             esta ya no podrá facturar por el método tradicional. Solo se debe hacer cuando la empresa esté completamente segura que procederá a la migración
             y seguirá facturando electrónicamente.
-            </summary>
-        </member>
-        <member name="T:SimpleOps.Rutas">
-            <summary>
-            Variables globales estáticas que permiten ejecutar y configurar SimpleOps más fácilmente en otros equipos y
-            permiten la actualización desde el repositorio minimizando la cantidad de conflictos. Como es una clase que 
-            pocas veces se va a modificar desde el desarrollo, puede ser modificada por los usuarios del código para 
-            configurar las rutas de instalación y desarrollo sin necesidad de tenerlas que cambiar nuevamente cada vez 
-            que se actualice el código desde el repositorio, cómo si puede suceder si estas rutas se guardaran en Global.cs 
-            u OpcionesEmpresa.cs.
             </summary>
         </member>
         <member name="T:SimpleOps.Integración.Integrador">

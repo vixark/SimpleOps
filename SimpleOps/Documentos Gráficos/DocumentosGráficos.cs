@@ -128,25 +128,23 @@ namespace SimpleOps.DocumentosGráficos {
 
             }, plantillaCompilada => {
 
-                var opcionesDocumento = new OpcionesDocumento() { ModoImpresión = false, 
-                    MostrarInformaciónAdicional = documento.MostrarInformaciónAdicional };
-                var datos = documento switch {
-                    Venta v => v.ObtenerDatos(opcionesDocumento),
-                    NotaCréditoVenta ncv => ncv.ObtenerDatos(opcionesDocumento),
-                    _ => throw new Exception(CasoNoConsiderado(typeof(D).Name))
-                };
+                bool crearPdf(bool modoImpresión, out string rutaPdfAux) {
 
-                var creado = CrearPdf(datos, plantillaCompilada, documentoElectrónico.RutaDocumentosElectrónicosHoy, out string rutaPdfAux,
-                    modoImpresión: opcionesDocumento.ModoImpresión);
+                    var opciones = new OpcionesDocumento() {
+                        ModoImpresión = modoImpresión, MostrarInformaciónAdicional = documento.MostrarInformaciónAdicional
+                    };
+                    var datos = documento switch {
+                        Venta v => v.ObtenerDatos(opciones),
+                        NotaCréditoVenta ncv => ncv.ObtenerDatos(opciones),
+                        _ => throw new Exception(CasoNoConsiderado(typeof(D).Name))
+                    };
+                    return CrearPdf(datos, plantillaCompilada, documentoElectrónico.RutaDocumentosElectrónicosHoy, out rutaPdfAux,
+                        modoImpresión: modoImpresión);
 
-                if (creado && Empresa.GenerarPDFsAdicionalesImpresión) {
+                }
 
-                    opcionesDocumento.ModoImpresión = true;
-                    datos.ModoImpresión = opcionesDocumento.ModoImpresión; // No es necesario volverlos a obtener porque son iguales excepto el ModoImpresión.
-                    CrearPdf(datos, plantillaCompilada, documentoElectrónico.RutaDocumentosElectrónicosHoy, out _, 
-                        modoImpresión: opcionesDocumento.ModoImpresión);
-
-                }    
+                var creado = crearPdf(modoImpresión: false, out string rutaPdfAux);
+                if (creado && Empresa.GenerarPDFsAdicionalesImpresión) crearPdf(modoImpresión: true, out string _);
                 return (creado, rutaPdfAux);
 
             });
