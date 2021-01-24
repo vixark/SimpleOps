@@ -448,7 +448,7 @@ namespace SimpleOps {
             if (MostrarDiálogo($"¿Deseas realizar las pruebas para habilitar a tu empresa como facturador electrónico ante la DIAN?{DobleLínea}" + 
                                "¡Cuidado! Si las pruebas resultan exitosas tu empresa estará obligada a seguir facturando electrónicamente y no " +
                                "podrá seguir facturando de la manera tradicional física. Hazlo solo cuando tengas todo listo para operar facturando " +
-                               "electrónicamente. Si actualmente facturas con la solución gratuita de la DIAN o con un operador tecnológico, aún podrás" +
+                               "electrónicamente. Si actualmente facturas con la solución gratuita de la DIAN o con un operador tecnológico, aún podrás " +
                                "seguir facturando de esa forma.", títuloDiálogos, MessageBoxButton.YesNo) == MessageBoxResult.Yes) {
 
                 if (Facturación(pruebaHabilitación: true)) {
@@ -930,7 +930,8 @@ namespace SimpleOps {
 
         public static bool NotaCréditoEjemploXml(out string? mensaje, int númeroNotaCrédito, bool pruebaHabilitación, Venta venta,
             out NotaCréditoVenta? notaCrédito, 
-            out DocumentoElectrónico<Factura<Cliente, LíneaNotaCréditoVenta>, LíneaNotaCréditoVenta>? notaCréditoElectrónica, bool pruebaIntegración = false) {
+            out DocumentoElectrónico<Factura<Cliente, LíneaNotaCréditoVenta>, LíneaNotaCréditoVenta>? notaCréditoElectrónica, 
+            bool pruebaIntegración = false) {
 
             notaCréditoElectrónica = null;
             notaCrédito = null;

@@ -528,7 +528,7 @@ namespace SimpleOps.Legal {
                     return Falso(out mensaje, $"El certificado electrónico aún no es válido. Es válido desde {certificado.NotBefore.ATexto(FormatoFecha)}.");
 
                 var claveTitularID = ((X509SubjectKeyIdentifierExtension)certificado.Extensions.Cast<X509Extension>()
-                    .Where(e => e is X509SubjectKeyIdentifierExtension).Single()).SubjectKeyIdentifier; // Obtiene el SubjectKeyIdentifier del certificado según requerido por la documentación Oasis WSS X509 Token Profile 1.1. En realidad a la DIAN no le importa este valor mientras sea consistente en todo el documento pero se prefiere hacer según el estándar Oasis.
+                    .Where(e => e is X509SubjectKeyIdentifierExtension).Single()).SubjectKeyIdentifier; // Obtiene el SubjectKeyIdentifier del certificado según requerido por la documentación Oasis WSS X509 Token Profile 1.1. En realidad a la DIAN no le importa este valor mientras sea consistente en todo el documento, pero se prefiere hacer según el estándar Oasis.
                 var tokenBinarioDeSeguridad = Convert.ToBase64String(certificado.Export(X509ContentType.Cert, Equipo.ClaveCertificado)); // Según https://stackoverflow.com/questions/32404687/c-sharp-add-wssesecurity-and-binarysecuritytoken-to-envelope-xml-file-programma.
 
                 var wsaTo = @"<wsa:To xmlns:wsu=""http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"" " +
