@@ -37,15 +37,15 @@ namespace SimpleOps {
     static class Configuración {
 
 
-        public static string RutaDesarrollo = @"D:\Archivos\Proyectos\SimpleOps\Código\SimpleOps\SimpleOps"; // Se usa para que al iniciar en modo de desarrollo copie los archivos CSHTML en Plantillas a 'CarpetaPlantillas' en la ruta de la aplicación. En el computador de desarrollo en casa está en D:\Archivos\Proyectos\SimpleOps\Código\SimpleOps\SimpleOps. En el computador de desarrollo de la empresa está en E:\Dropbox\Desarrollos\SimpleOps\Código\SimpleOps\SimpleOps.
+        public static string RutaDesarrollo = @"D:\Programas\SimpleOps\Código\SimpleOps"; // Se usa para que al iniciar en modo de desarrollo copie los archivos CSHTML en la carpeta Plantillas en el código a la carpeta plantillas en la ruta de la aplicación.
         
-        public static string RutaAplicación = @"D:\Programas\SimpleOps"; // En el computador de producción está en D:\Programas\SimpleOps. En el computador de desarrollo en casa está en D:\Programas\SimpleOps. En el computador de desarrollo de la empresa está en E:\SimpleOps. Esta ruta debe ser la misma que está almacenada en '[RutaAplicación]\Opciones\Equipo.json', se necesita escribir aquí principalmente para poder ubicar inicialmente el archivo Equipo.json.
+        public static string RutaAplicación = @"D:\Programas\SimpleOps"; // Esta ruta debe ser la misma que está almacenada en '[RutaAplicación]\Opciones\Equipo.json', se necesita escribir aquí principalmente para poder ubicar inicialmente el archivo Equipo.json.
 
-        public static bool ModoDesarrolloPlantillasDocumentos = true; // En modo desarrollo se usa en verdadero para permitir que los cambios que se hagan a los archivos CSHTML en SimpleOps/Plantillas sean copiados a la ruta de la aplicación y para habilitar algunas líneas de código que facilitan el desarrollo de estas plantillas. En producción se deben usar directamente los archivos en la ruta de la aplicación porque no se tienen los de desarrollo.
+        public static bool ModoDesarrolloPlantillasDocumentos = true; // En modo desarrollo se usa en verdadero para permitir que los cambios que se hagan a los archivos CSHTML en la carpeta Plantillas sean copiados a la ruta de la aplicación y para habilitar algunas líneas de código que facilitan el desarrollo de estas plantillas. En producción se deben usar directamente los archivos en la ruta de la aplicación porque no se tienen los de desarrollo.
 
         public static bool HabilitarPruebasUnitarias = true; // Se usa verdadero cuando se quieran realizar las pruebas al iniciar la aplicación.
 
-        public static bool ModoIntegraciónTerceros = false; // Modo especial para integrar la funcionalidad de facturación electrónica y la generación de catálogos con programas terceros.
+        public static bool ModoIntegraciónTerceros = false; // Modo que permite integrar la funcionalidad de facturación electrónica y la generación de catálogos con programas terceros.
 
 
     } // Configuración>

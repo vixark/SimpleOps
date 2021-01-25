@@ -146,7 +146,7 @@ namespace SimpleOps.Interfaz {
         } // ReiniciarBaseDatosSQLite_Clic>
 
 
-        private void PruebasHabilitaciónFacturaciónElectrónica_Clic(object sender, RoutedEventArgs e) => Pruebas.Habilitación();
+        private void PruebasHabilitaciónFacturaciónElectrónica_Clic(object sender, RoutedEventArgs e) => Habilitación();
 
 
     } // Principal>
