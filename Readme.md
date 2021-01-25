@@ -1,5 +1,5 @@
 # SimpleOps
-<b>[En Construcción]</b>
+<b>[En Desarrollo]</b>
 <br/>
 <br/>
 Aplicación de información y gestión (ERP) para pequeñas empresas, trabajadores independientes, tiendas y restaurantes. Totalmente gratis, sin limitaciones, código abierto y libre. Incluye facturación electrónica requerida por la DIAN en Colombia, compras, cotizaciones, inventarios, ordenes de compra, pedidos y más. 
