@@ -14,6 +14,7 @@ using System.Text;
 using static Vixark.General;
 using static SimpleOps.Global;
 using AutoMapper;
+using static SimpleOps.Configuración;
 
 
 
@@ -51,7 +52,7 @@ namespace SimpleOps.DocumentosGráficos {
 
 
         private static bool CrearPdf<T>(out string rutaPdf, Func<RazorEngine, PlantillaCompilada<T>> crearPlantillaCompilada, 
-            Func<PlantillaCompilada<T>, (bool, string)> crearPdf) where T : class { // Una vez compilada la plantilla la primera vez este procedimiento es relativamente rápido en alrededor de 200ms, 150ms de estos son en la generación del HTML que se podrían reducir si se almacenaran los archivos CSHTML en memoria o directamente la plantilla compilada según https://github.com/adoconnection/RazorEngineCore/wiki/@Include-and-@Layout, pero por el momento se prefiere evitar esto para no complicar más el procedimiento y facilitar hacer cambios a los archivos CSHTML al permitir que estos cambios se hagan efectivos sin necesidad de reiniciar la aplicación.
+            Func<PlantillaCompilada<T>, (bool, string)> crearPdf, bool modoDesarrollo = ModoDesarrolloPlantillas) where T : class { // Una vez compilada la plantilla la primera vez este procedimiento es relativamente rápido en alrededor de 200ms, 150ms de estos son en la generación del HTML que se podrían reducir si se almacenaran los archivos CSHTML en memoria o directamente la plantilla compilada según https://github.com/adoconnection/RazorEngineCore/wiki/@Include-and-@Layout, pero por el momento se prefiere evitar esto para no complicar más el procedimiento y facilitar hacer cambios a los archivos CSHTML al permitir que estos cambios se hagan efectivos sin necesidad de reiniciar la aplicación.
 
             otraVez:
             var creado = false;
@@ -73,7 +74,7 @@ namespace SimpleOps.DocumentosGráficos {
 
             if (plantillaCompilada != null) (creado, rutaPdf) = crearPdf(plantillaCompilada);
 
-            if (ModoDesarrolloPlantillasDocumentos) {
+            if (modoDesarrollo) {
 
                 if (creado) AbrirArchivo(rutaPdf);
                 SuspenderEjecuciónEnModoDesarrollo(); // Al estar detenida la ejecución en este punto se pueden editar los archivos de plantillas CSHTML, guardar el archivo de la plantilla, cerrar el último PDF creado si está abierto y reanudar ejecución para generar un nuevo PDF con los cambios realizados.
@@ -153,13 +154,11 @@ namespace SimpleOps.DocumentosGráficos {
 
 
         private static bool CrearPdf<D>(D datos, PlantillaCompilada<D> plantillaCompilada, string rutaCarpetaPdf, out string rutaPdf,
-            bool modoImpresión = false) where D : DatosDocumento {
+            bool modoImpresión = false, bool modoDesarrollo = ModoDesarrolloPlantillas) where D : DatosDocumento {
 
             rutaPdf = "";
             var html = plantillaCompilada.ObtenerHtml(datos);
-            if (ModoDesarrolloPlantillasDocumentos)
-
-                File.WriteAllText(Path.Combine(rutaCarpetaPdf, $"{datos.CódigoDocumento}.html"), html);
+            if (modoDesarrollo) File.WriteAllText(Path.Combine(rutaCarpetaPdf, $"{datos.CódigoDocumento}.html"), html);
 
             try {
 

@@ -19,6 +19,7 @@ using System.Windows.Shapes;
 using static SimpleOps.Global;
 using static Vixark.General;
 using static SimpleOps.Pruebas;
+using static SimpleOps.Configuración;
 using SimpleOps.Interfaz;
 using System.IO;
 using SimpleOps.Integración;
@@ -59,11 +60,12 @@ namespace SimpleOps.Interfaz {
 
 
             #region Modos Especiales
+            #pragma warning disable CS0162 // Se detectó código inaccesible. Se omite la advertencia porque las variables de este bloque que son constantes pueden ser modificado por el usuario del código en Configuración.cs.
 
             if (HabilitarRastreoDeDatosSensibles) 
                 LblAlerta.Content = $"Está habilitado el rastreo de datos sensibles. Esta función se debe desactivar en producción.{NuevaLínea}";
 
-            if (ModoDesarrolloPlantillasDocumentos)
+            if (ModoDesarrolloPlantillas)
                 LblAlerta.Content += $"Está habilitado el reemplazo de plantillas CSHTML. Esta función se debe desactivar en producción.{NuevaLínea}";
 
             if (HabilitarPruebasUnitarias) 
@@ -77,14 +79,14 @@ namespace SimpleOps.Interfaz {
                     LblAlerta.Content += $"Está habilitado el modo de integración con programas terceros que permite facturar " +
                                          $"electrónicamente y generar catálogos desde otro programa.";
                 } else {
-                    ModoIntegraciónTerceros = false; // Se desactiva para que no funcione en este modo si se usa esta variable en códigos futuros.
-                    LblAlerta.Content += $"Sucedió un error habilitando el modo de integración con programas terceros.";
+                    throw new Exception($"Sucedió un error habilitando el modo de integración con programas terceros.");
                 }
-
-            }
+                
+            }         
 
             if (string.IsNullOrEmpty(LblAlerta.Content?.ToString())) LblAlerta.Visibility = Visibility.Collapsed;
 
+            #pragma warning restore CS0162
             #endregion Modos Especiales>
 
 
@@ -103,11 +105,16 @@ namespace SimpleOps.Interfaz {
             #endregion Enlace de Datos a Interfaz>
 
             // LeerBaseDatosCompleta();
+
+            #pragma warning disable CS0162 // Se detectó código inaccesible. Se omite la advertencia porque HabilitarPruebasUnitarias puede ser modificado por el usuario del código en Configuración.cs.
             if (HabilitarPruebasUnitarias) {
+
                 DocumentosElectrónicos(); // Prueba para ensayar todos los procedimientos relacionados con la facturación electrónica.
                 // IntegraciónAplicacionesTerceros(); // Esta prueba se usa cuando se quiere simular el comportamiento de un programa tercero que genera archivos de comunicación .json con SimpleOps para el modo de integración de facturación electrónica. Si ya se dispone de un programa tercero generando correctamente los archivos, no es necesario activar esta línea.
                 GeneraciónCatálogo(); // Prueba para ensayar el procedimiento de generación automática de catálogos con precios.
-            }
+
+            } else { _ = 0; } // Solo se usa esta línea para que no saque advertencia de supresión de CS0162 innecesaria.
+            #pragma warning restore CS0162 
 
         } // Principal>
 

@@ -37,15 +37,15 @@ namespace SimpleOps {
     static class Configuración {
 
 
-        public static string RutaDesarrollo = @"D:\Programas\SimpleOps\Código\SimpleOps"; // Se usa para que al iniciar en modo de desarrollo copie los archivos CSHTML en la carpeta Plantillas en el código a la carpeta plantillas en la ruta de la aplicación.
+        public const string RutaDesarrollo = @"D:\Programas\SimpleOps\Código\SimpleOps"; // Se usa para que al iniciar en modo de desarrollo copie los archivos CSHTML en la carpeta Plantillas en el código a la carpeta plantillas en la ruta de la aplicación.
         
-        public static string RutaAplicación = @"D:\Programas\SimpleOps"; // Esta ruta debe ser la misma que está almacenada en '[RutaAplicación]\Opciones\Equipo.json', se necesita escribir aquí principalmente para poder ubicar inicialmente el archivo Equipo.json.
+        public const string RutaAplicación = @"D:\Programas\SimpleOps"; // Esta ruta debe ser la misma que está almacenada en '[RutaAplicación]\Opciones\Equipo.json', se necesita escribir aquí principalmente para poder ubicar inicialmente el archivo Equipo.json.
 
-        public static bool ModoDesarrolloPlantillasDocumentos = true; // En modo desarrollo se usa en verdadero para permitir que los cambios que se hagan a los archivos CSHTML en la carpeta Plantillas sean copiados a la ruta de la aplicación y para habilitar algunas líneas de código que facilitan el desarrollo de estas plantillas. En producción se deben usar directamente los archivos en la ruta de la aplicación porque no se tienen los de desarrollo.
+        public const bool ModoDesarrolloPlantillas = true; // En modo desarrollo se usa en verdadero para permitir que los cambios que se hagan a los archivos CSHTML en la carpeta Plantillas sean copiados a la ruta de la aplicación y para habilitar algunas líneas de código que facilitan el desarrollo de estas plantillas. En producción se deben usar directamente los archivos en la ruta de la aplicación porque no se tienen los de desarrollo.
 
-        public static bool HabilitarPruebasUnitarias = true; // Se usa verdadero cuando se quieran realizar las pruebas al iniciar la aplicación.
+        public const bool HabilitarPruebasUnitarias = true; // Se usa verdadero cuando se quieran realizar las pruebas al iniciar la aplicación.
 
-        public static bool ModoIntegraciónTerceros = false; // Modo que permite integrar la funcionalidad de facturación electrónica y la generación de catálogos con programas terceros.
+        public const bool ModoIntegraciónTerceros = false; // Modo que permite integrar la funcionalidad de facturación electrónica y la generación de catálogos con programas terceros.
 
 
     } // Configuración>

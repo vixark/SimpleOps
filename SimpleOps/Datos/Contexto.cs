@@ -155,11 +155,13 @@ namespace SimpleOps.Datos {
 
         protected override void OnConfiguring(DbContextOptionsBuilder opciones) {
 
-            if (HabilitarRastreoDeDatosSensibles) {
-                opciones.UseSqlite(@$"Data Source={RutaBaseDatosSQLite}").UseLoggerFactory(FábricaRastreadores).EnableSensitiveDataLogging();
+            #pragma warning disable CS0162 // Se detectó código inaccesible. Se omite la advertencia porque HabilitarRastreoDeDatosSensibles puede ser modificado por el usuario del código.
+            if (HabilitarRastreoDeDatosSensibles) {         
+                opciones.UseSqlite(@$"Data Source={RutaBaseDatosSQLite}").UseLoggerFactory(FábricaRastreadores).EnableSensitiveDataLogging();      
             } else {
                 opciones.UseSqlite(@$"Data Source={RutaBaseDatosSQLite}").UseLoggerFactory(FábricaRastreadores);
             }
+            #pragma warning restore CS0162
 
         } // OnConfiguring>
 
@@ -198,10 +200,12 @@ namespace SimpleOps.Datos {
 
             }
 
+            #pragma warning disable CS0162 // Se detectó código inaccesible. Se omite la advertencia porque UsarSQLite y GuardarDecimalComoDoubleSQLite pueden ser modificado por el usuario del código.
             if (UsarSQLite && GuardarDecimalComoDoubleSQLite) {
                 constructor.UsarConvertidorGlobal<decimal?, double?>();
                 constructor.UsarConvertidorGlobal<decimal, double>(); // Conversión global intermedia entre double y decimal para forzar que se guarden todos los decimales del modelo como reales en SQLite y permitir OrderBy() y otras operaciones de comparación directamente en la base de datos. Tiene el inconveniente de producir pérdida de precisión en los datos guardados (en comparación con guardarlos como decimal) pues quedan con la precisión de double. Aún así, después de leer los valores de la base de datos se almacenan en las propiedades de las entidades como decimal entonces las operaciones matemáticas se siguen haciendo en decimal y se disminuye la posible pérdida precisión en estas operaciones entonces el efecto no es tan grave. Además, 15 dígitos de precisión de double son más que suficientes para los usos actuales porque podría representar hasta 1 000 000 000 000.00 (1 billón de pesos colombianos) con 2 cifras decimales, cualquier aplicación que requiera manejar valores de dinero superior debería estar usando un servidor de SQL (No SQLite) que no tiene este inconveniente. Ver recomendación en https://docs.microsoft.com/en-us/ef/core/providers/sqlite/limitations.
-            }
+            } else { _ = 0; } // Solo se usa esta línea para que no saque advertencia de supresión de CS0162 innecesaria.
+            #pragma warning restore CS0162
 
             // Conversión de Datos>
 

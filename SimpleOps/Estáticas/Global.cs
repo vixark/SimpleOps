@@ -12,6 +12,7 @@ using System.IO;
 using SimpleOps.Singleton;
 using AutoMapper;
 using SimpleOps.DocumentosGráficos;
+using static SimpleOps.Configuración;
 
 
 
@@ -34,15 +35,7 @@ namespace SimpleOps {
 
         public const bool GuardarDecimalComoDoubleSQLite = true; // Si es verdadero todas las propiedades decimal se almacenarán en la base de datos SQLite como double (real). Esto implica una pérdida de resolución númerica pero permite realizar operaciones de comparación como OrderBy() directamente en la base de datos y reduce en alrededor de 7% el tamaño de la base de datos. En los ensayos realizados se pasó de 20 268 KB (usando OptimizarTamañoSQLiteConFechaReducida) a 18 816 KB. Ver recomendación en https://docs.microsoft.com/en-us/ef/core/providers/sqlite/?tabs=dotnet-core-cli.
 
-        public static bool HabilitarRastreoDeDatosSensibles = false; // Si se establece en verdadero en la ventana 'Inmediato' se podrá ver el detalle de las acciones ejecutados en la base de datos, incluyendo los datos. Si se deja en falso EF Core reemplazará los datos por textos de reemplazo. En producción siempre debe estar en falso.
-
-        public static bool ModoDesarrolloPlantillasDocumentos = Configuración.ModoDesarrolloPlantillasDocumentos; // Se actualiza en Rutas para permitir que los usuarios del código cambien este valor sin que sus cambios sean reemplazados con una nueva versión del código de Global.cs.
-
-        public static bool HabilitarPruebasUnitarias = Configuración.HabilitarPruebasUnitarias; // Se actualiza en Rutas para permitir que los usuarios del código cambien este valor sin que sus cambios sean reemplazados con una nueva versión del código de Global.cs.
-
-        public static bool ModoIntegraciónTerceros = Configuración.ModoIntegraciónTerceros; // Se actualiza en Rutas para permitir que los usuarios del código cambien este valor sin que sus cambios sean reemplazados con una nueva versión del código de Global.cs.
-
-        public static string RutaDesarrollo = Configuración.RutaDesarrollo; // Se actualiza en Rutas para permitir que los usuarios del código cambien este valor sin que sus cambios sean reemplazados con una nueva versión del código de Global.cs.
+        public const bool HabilitarRastreoDeDatosSensibles = false; // Si se establece en verdadero en la ventana 'Inmediato' se podrá ver el detalle de las acciones ejecutados en la base de datos, incluyendo los datos. Si se deja en falso EF Core reemplazará los datos por textos de reemplazo. En producción siempre debe estar en falso.
 
         public const string NombreAplicación = "SimpleOps";
 
@@ -442,16 +435,17 @@ namespace SimpleOps {
 
         public static string ObtenerRutaOpciones() => ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaOpciones, crearSiNoExiste: true);
 
-        public static string ObtenerRutaPlantilla(PlantillaDocumento plantilla, bool forzarRutaAplicación = false)
-            => Path.Combine(ObtenerRutaCarpetaPlantillas(forzarRutaAplicación), $"{plantilla}.cshtml");
+        public static string ObtenerRutaPlantilla(PlantillaDocumento plantilla, bool forzarRutaAplicación = false, 
+            bool modoDesarrollo = ModoDesarrolloPlantillas)
+            => Path.Combine(ObtenerRutaCarpetaPlantillas(forzarRutaAplicación, modoDesarrollo), $"{plantilla}.cshtml");
 
         public static string ObtenerRutaCarpetaImagenesPlantillas()
             => ObtenerRutaCarpeta(ObtenerRutaCarpetaPlantillas(forzarRutaAplicación: true), CarpetaImagenesPlantillas, crearSiNoExiste: true); // Por facilidad no se maneja la carpeta de imagenes en la ruta de desarrollo. No es necesario modificarlas desde el Visual Studio. Las plantillas si se manejan en ambos lugares porque si se requiere trabajar en ellas y se deben agregar al repositorio y también se requieren tener las propias por fuera del repositorio para la empresa actual.
 
 
-        public static string ObtenerRutaCarpetaPlantillas(bool forzarRutaAplicación = false) {
+        public static string ObtenerRutaCarpetaPlantillas(bool forzarRutaAplicación = false, bool modoDesarrollo = ModoDesarrolloPlantillas) {
 
-            if (!forzarRutaAplicación && ModoDesarrolloPlantillasDocumentos) { // Para facilitar el desarrollo se devuelve directamente la ruta de la plantilla de desarrollo cuando no se esté forzando que la tome de la ruta de la aplicación (típicamente solo al iniciar cuando ReemplazarPlantillasDocumentos es verdadero).
+            if (!forzarRutaAplicación && modoDesarrollo) { // Para facilitar el desarrollo se devuelve directamente la ruta de la plantilla de desarrollo cuando no se esté forzando que la tome de la ruta de la aplicación (típicamente solo al iniciar cuando ReemplazarPlantillasDocumentos es verdadero).
                 return ObtenerRutaCarpeta(RutaDesarrollo, CarpetaPlantillasDesarrollo, crearSiNoExiste: false);
             } else {
                 return ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaPlantillas, crearSiNoExiste: true);
@@ -619,11 +613,20 @@ namespace SimpleOps {
         /// </summary>
         public static void ConfigurarCarpetasYArchivos() {
 
-            if (ModoDesarrolloPlantillasDocumentos) {
+            foreach (var plantilla in ObtenerValores<PlantillaDocumento>()) {
 
-                foreach (var plantilla in ObtenerValores<PlantillaDocumento>()) {
-                    var rutaDesarrollo = ObtenerRutaPlantilla(plantilla);
-                    if (File.Exists(rutaDesarrollo)) File.Copy(rutaDesarrollo, ObtenerRutaPlantilla(plantilla, forzarRutaAplicación: true), overwrite: true);
+                var rutaDesarrollo = ObtenerRutaPlantilla(plantilla, modoDesarrollo: true);
+                var rutaProducción = ObtenerRutaPlantilla(plantilla, forzarRutaAplicación: true);
+                if (File.Exists(rutaDesarrollo)) {
+
+                    #pragma warning disable CS0162 // Se detectó código inaccesible. Se omite la advertencia porque ModoDesarrolloPlantillas puede ser modificado por el usuario del código.
+                    if (ModoDesarrolloPlantillas) {
+                        File.Copy(rutaDesarrollo, rutaProducción, overwrite: true); // Se reemplaza siempre las últimas plantillas en la ruta de operación si se está en modo desarrollo. Esto podría causar que en algunas ocasiones no estén actualizadas porque se les hizo cambios después de la última ejecución en modo desarrollo, pero es mejor que igual se haga. 
+                    } else {
+                        if (!File.Exists(rutaProducción)) File.Copy(rutaDesarrollo, rutaProducción); // Si no existe en la ruta de producción siempre se debe copiar, independiente de en qué modo esté.
+                    }
+                    #pragma warning restore CS0162
+
                 }
 
             }
