@@ -469,7 +469,10 @@ namespace SimpleOps.Legal {
                 
             } catch (WebException excepciónWeb) {
 
-                if (!(excepciónWeb.Response is HttpWebResponse respuesta)) throw;
+                if (excepciónWeb.Status == WebExceptionStatus.NameResolutionFailure) 
+                    return Falso(out mensaje, $"No se pudo conectar al servidor de la DIAN. Verifica tu conexión de internet." +
+                                              $"{DobleLínea}WebExceptionStatus.NameResolutionFailure.");
+                if (!(excepciónWeb.Response is HttpWebResponse respuesta)) throw; // Error aún desconocido.
 
                 string? mensajeRespuesta = "";
                 if (respuesta.StatusCode == HttpStatusCode.InternalServerError) {

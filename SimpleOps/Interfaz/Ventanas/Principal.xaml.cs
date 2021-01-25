@@ -79,7 +79,7 @@ namespace SimpleOps.Interfaz {
                     LblAlerta.Content += $"Está habilitado el modo de integración con programas terceros que permite facturar " +
                                          $"electrónicamente y generar catálogos desde otro programa.";
                 } else {
-                    throw new Exception($"Sucedió un error habilitando el modo de integración con programas terceros.");
+                    LblAlerta.Content += $"Sucedió un error habilitando el modo de integración con programas terceros.";
                 }
                 
             }         
