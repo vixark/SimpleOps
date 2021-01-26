@@ -41,9 +41,9 @@ namespace SimpleOps {
         
         public const string RutaAplicación = @"D:\Programas\SimpleOps"; // Esta ruta debe ser la misma que está almacenada en '[RutaAplicación]\Opciones\Equipo.json', se necesita escribir aquí principalmente para poder ubicar inicialmente el archivo Equipo.json.
 
-        public const bool HacerPruebasUnitarias = false; // Se usa verdadero cuando se quieran realizar las pruebas al iniciar la aplicación.
-
         public const bool ModoIntegraciónTerceros = false; // Modo que permite integrar la funcionalidad de facturación electrónica y la generación de catálogos con programas terceros.
+
+        public const bool HacerPruebasUnitarias = false; // Se usa verdadero cuando se quieran realizar las pruebas al iniciar la aplicación.
 
         public const bool UsarSQLite = true; // Si es falso se usa MS SQL.
 
