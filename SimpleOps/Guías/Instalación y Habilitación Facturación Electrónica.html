@@ -42,7 +42,8 @@
         }
     </style>
 
-    <h1>Habilitación de Facturación Electrónica DIAN con SimpleOps</h1>
+    <h1>Instalación de SimpleOps y Habilitación de la Facturación Electrónica</h1>
+
     <p>
         Para que <b>SimpleOps</b> pueda generar tus facturas electrónicas válidas legalmente es necesario que habilites a tu
         empresa ante la DIAN cómo facturador electrónico usando <b>SimpleOps</b>, que compres y generes un certificado de firma digital con una entidad
@@ -51,15 +52,30 @@
 
     <p>
         Esta guía fue escrita para empresas (personas jurídicas). Si necesitas el facturar electrónicamente como persona natural aún puedes seguir
-        esta guía, pero ten en cuenta que tendrás que realizar algunos pasos de manera diferente.
+        esta guía, pero ten en cuenta que tendrás que realizar algunos pasos de manera diferente. La facturación electrónica solo está implementada
+        para la DIAN de Colombia. Si estás en otro país, puedes usar <b>SimpleOps</b> como ERP pero deberás desactivar la funcionalidad de facturación
+        electrónica.
     </p>
 
-    <h2>Habilitación de Pruebas en la DIAN</h2>
+    <h2>Pasos</h2>
+
+    <ul style="list-style-type: decimal;">
+        <li><a href="#paso1">Habilitación de Pruebas en la DIAN</a></li>
+        <li><a href="#paso2">Obtención de Certificado de Firma Digital</a></li>
+        <li><a href="#paso3">Instalación de SimpleOps</a></li>
+        <li><a href="#paso4">Configuración de SimpleOps en tu Computador</a></li>
+        <li><a href="#paso5">Configuración de los Datos de tu Empresa en SimpleOps</a></li>
+        <li><a href="#paso6">Pruebas Internas de Facturación y Personalización de Factura</a></li>
+        <li><a href="#paso7">Pruebas de Habilitación en la DIAN</a></li>
+        <li><a href="#paso8">Solicitud de la Resolución de Facturación Electrónica a la DIAN</a></li>
+    </ul>
+
+    <h2 id="paso1">1. Habilitación de Pruebas en la DIAN</h2>
 
     <p>
         Ingresa a <a href="https://www.dian.gov.co">www.dian.gov.co</a> y haz clic en <i>Temas de interés > Factura Electrónica > Habilitación</i>.
     </p>
-    <img src="Imagenes/Habilitación Facturación Electrónica DIAN/DianHabilitación.png" />
+    <img src="Imagenes/Instalación y Habilitación Facturación Electrónica/DianHabilitación.png" />
 
     <p>
         Selecciona <i>Empresa</i>.
@@ -69,11 +85,11 @@
         y hazlo más rápidamente.
     </p>
 
-    <img src="Imagenes/Habilitación Facturación Electrónica DIAN/EntrarDianPortal.png" />
+    <img src="Imagenes/Instalación y Habilitación Facturación Electrónica/EntrarDianPortal.png" />
 
     <p>Obtendrás un mensaje así:</p>
 
-    <img src="Imagenes/Habilitación Facturación Electrónica DIAN/MensajeEnlaceAccesoDIAN.png" />
+    <img src="Imagenes/Instalación y Habilitación Facturación Electrónica/MensajeEnlaceAccesoDIAN.png" />
 
     <p>
         Revisa tu cuenta de email que registraste en la DIAN cuando actualizaste tu RUT, abre el mensaje que te debió haber llegado de la DIAN
@@ -86,7 +102,7 @@
         electrónicas de tus proveedores y haz clic en <i>Registrar</i>.
     </p>
 
-    <img src="Imagenes/Habilitación Facturación Electrónica DIAN/RegistroFacturadorElectrónico.png" />
+    <img src="Imagenes/Instalación y Habilitación Facturación Electrónica/RegistroFacturadorElectrónico.png" />
 
     <p>
         Te preguntará que si estás seguro de proceder, dale clic en <i>Sí</i> e inicia otra vez sesión como se describió anteriormente.
@@ -98,13 +114,13 @@
         Por ejemplo, SimpleOps990823244. En <i>Pin del SW</i> escribe una contraseña propia de 5 números, guárdala en un lugar seguro con el nombre
         <i>PinAplicación</i>. Finalmente, haz clic en <i>Adicionar</i>.
     </p>
-    <img src="Imagenes/Habilitación Facturación Electrónica DIAN/AdiciónModoOperación.png" />
+    <img src="Imagenes/Instalación y Habilitación Facturación Electrónica/AdiciónModoOperación.png" />
 
     <p>
         Se agregará una nueva fila a la tabla inferior.
         Haz clic en el ícono derecho en la columna <i>Acciones</i>. Ten cuidado de no hacer clic en la papelera que está a la izquierda de este.
     </p>
-    <img src="Imagenes/Habilitación Facturación Electrónica DIAN/DetallesSetDePruebas.png" />
+    <img src="Imagenes/Instalación y Habilitación Facturación Electrónica/DetallesSetDePruebas.png" />
 
     <p>
         Te aparecerá una página donde debes copiar y guardar en un lugar seguro estos valores que necesitarás para configurar <b>SimpleOps</b>
@@ -124,7 +140,7 @@
 
     </p>
 
-    <img src="Imagenes/Habilitación Facturación Electrónica DIAN/ParametrosFacturaciónElectrónica.png" />
+    <img src="Imagenes/Instalación y Habilitación Facturación Electrónica/ParametrosFacturaciónElectrónica.png" />
 
     <p>
         Al copiar los valores asegúrate que los estas copiando completos, si la pantalla de tu computador es pequeña parte de algunos textos
@@ -138,7 +154,7 @@
     </p>
 
 
-    <h2>Obtención de Certificado de Firma Digital</h2>
+    <h2 id="paso2">2. Obtención de Certificado de Firma Digital</h2>
     <p>
         Un certificado digital es un archivo con extensión PFX que necesitarás para enviar las facturas electrónicas a la DIAN.
         Existen varias entidades certificadoras en Colombia que te pueden vender este archivo anualmente.
@@ -161,7 +177,7 @@
     </p>
 
 
-    <h2>Configuración de SimpleOps y Pruebas de Habilitación</h2>
+    <h2 id="paso3">3. Instalación de SimpleOps</h2>
 
     <p>
         Una vez hayas habilitado a <b>SimpleOps</b> en el portal de la DIAN y hayas obtenido el certificado de firma digital podrás configurar
@@ -169,14 +185,14 @@
         a facturar electrónicamente.
     </p>
 
-    <h3>Instalación de SimpleOps</h3>
+
     <p>
         <b>SimpleOps</b> se encuentra en desarrollo, por lo tanto aún no cuenta con instalador y la mejor
         manera de ejecutarlo es directamente desde el código fuente. Para ejecutar el código necesitarás
         <a href="https://visualstudio.microsoft.com/es/vs/community/">Visual Studio</a>. Si ya tienes instalado Visual Studio, actualízalo
         a la última versión (busca y abre Visual Studio Installer en Windows). Si quieres ejecutar <b>SimpleOps</b> sin necesidad
-        de instalar Visual Studio, me puedes escribir a vixark@outlook.com explicándome tu caso, pero antes asegúrate de leer 
-        <a href="https://github.com/vixark/SimpleOps#licencia">la licencia</a>.
+        de instalar Visual Studio, me puedes escribir a vixark@outlook.com explicándome tu caso, pero antes asegúrate de leer
+        <a href="https://github.com/vixark/SimpleOps">la licencia</a>.
     </p>
 
     <p>
@@ -194,27 +210,27 @@
         nómbralo <i>Clave.txt</i>,
         ábrelo, escribe tu clave del certificado de firma digital sin agregar espacios ni nuevas líneas y guárdalo.
     </p>
-    <img src="Imagenes/Habilitación Facturación Electrónica DIAN/ArchivosFirmaElectrónica.png" />
+    <img src="Imagenes/Instalación y Habilitación Facturación Electrónica/ArchivosFirmaElectrónica.png" />
 
     <p>
         Abre Visual Studio y haz clic en <i>Tareas Iniciales > Clonar un repositorio</i>. En <i>Ubicación del repositorio</i>
         ingresa https://github.com/vixark/SimpleOps.git y en <i>Ruta de acceso</i> selecciona <i>[CarpetaProgramas]\SimpleOps\Código</i>
         y haz clic en <i>Clonar</i>.
     </p>
-    <img src="Imagenes/Habilitación Facturación Electrónica DIAN/ClonarRepositorio.png" />
+    <img src="Imagenes/Instalación y Habilitación Facturación Electrónica/ClonarRepositorio.png" />
 
 
     <p>
         Abre el <i>Explorador de Soluciones</i> y haz doble clic en <i>SimpleOps.sln</i>.
     </p>
-    <img src="Imagenes/Habilitación Facturación Electrónica DIAN/AbrirSimpleOpsSln.png" />
+    <img src="Imagenes/Instalación y Habilitación Facturación Electrónica/AbrirSimpleOpsSln.png" />
 
     <p>
         Con esto abrirás el código por primera vez. La próxima vez que vayas a abrir el código abre
         el archivo <i>[CarpetaProgramas]\SimpleOps\Código\SimpleOps.sln</i> y actualiza el código a la última versión en GitHub haciendo clic
         en la esquina inferior derecha en <i>master > "Pull"</i>.
     </p>
-    <img src="Imagenes/Habilitación Facturación Electrónica DIAN/ActualizarCambiosSimpleOpsSln.png" />
+    <img src="Imagenes/Instalación y Habilitación Facturación Electrónica/ActualizarCambiosSimpleOpsSln.png" />
 
     <p>
         Si te sale el error <i>No se pueden incorporar los cambios...</i>, en <i>Cambios de GIT > Cambios</i>, haz <i>clic derecho > Deshacer Cambios</i>
@@ -224,7 +240,7 @@
     </p>
 
     <p>
-        Abre <i>SimpleOps > Estáticas > Configuración.cs</i> en el Explorador de soluciones. Cambia el valor los siguientes valores:
+        Abre <i>SimpleOps > Estáticas > Configuración.cs</i> en el Explorador de soluciones y cambia el valor los siguientes valores:
 
         <ul>
             <li>
@@ -248,7 +264,7 @@
         </ul>
 
     </p>
-    <img src="../Guías/Imagenes/Habilitación Facturación Electrónica DIAN/ClaseConfiguración.png" />
+    <img src="../Guías/Imagenes/Instalación y Habilitación Facturación Electrónica/ClaseConfiguración.png" />
     <p>
         Estos cambios deberás hacerlos la primera vez que abras el código y
         cada vez que te salga el error <i>No se pueden incorporar los cambios...</i> al intentar actualizar el código.
@@ -262,7 +278,7 @@
 
 
 
-    <h3>Configuración en tu Computador</h3>
+    <h2 id="paso4">4. Configuración de SimpleOps en tu Computador</h2>
     <p>
         Con este procedimiento le informarás a <b>SimpleOps</b> donde puede encontrar los archivos del certificado y harás otras configuraciones
         relacionadas con tu computador.
@@ -306,11 +322,11 @@
             en <i>Configuración > Sistema > Pantalla > Configuración avanzada de escala > Personalizar la escala</i>.
         </li>
     </ul>
-    <img src="Imagenes/Habilitación Facturación Electrónica DIAN/ConfiguraciónEquipoJson.png" />
+    <img src="Imagenes/Instalación y Habilitación Facturación Electrónica/ConfiguraciónEquipoJson.png" />
 
     <p>Presiona <i>Ctrl + S</i> para guardar los cambios realizados.</p>
 
-    <h3>Configuración de Datos de tu Empresa</h3>
+    <h2 id="paso5">5. Configuración de los Datos de tu Empresa en SimpleOps</h2>
 
     <p>
         Para hacerlo necesitarás agregar varios datos de tu empresa al archivo <i>Empresa.json</i>.
@@ -474,12 +490,12 @@
         </li>
 
     </ul>
-    <img src="Imagenes/Habilitación Facturación Electrónica DIAN/AdiciónDatosEmpresa.png" />
+    <img src="Imagenes/Instalación y Habilitación Facturación Electrónica/AdiciónDatosEmpresa.png" />
 
     <p>Presiona <i>Ctrl + S</i> para guardar los cambios realizados.</p>
 
 
-    <h3>Pruebas Internas y Personalización</h3>
+    <h2 id="paso6">6. Pruebas Internas de Facturación y Personalización de Factura</h2>
     <p>
         <b>SimpleOps</b> ya está listo para iniciar las pruebas de facturación electrónica. Primero se realizarán unas pruebas internas
         y después se realizarán las pruebas oficiales ante la DIAN, que una vez cumplidas activan el estatus de tu empresa como facturador electrónico
@@ -507,7 +523,7 @@
         color después de <i>Model.ModoImpresión</i> es el color del modo blanco y negro para impresión (archivos terminados en <i>-I</i>),
         cambia el segundo color para personalizar el color de la representación gráfica a color.
     </p>
-    <img src="../Guías/Imagenes/Habilitación Facturación Electrónica DIAN/CambioColores.png" />
+    <img src="../Guías/Imagenes/Instalación y Habilitación Facturación Electrónica/CambioColores.png" />
 
     <p>
         Guarda los cambios y ejecuta nuevamente <b>SimpleOps</b> para generar las nuevas representaciones gráficas. Cuando estés satisfecho con
@@ -516,23 +532,31 @@
     </p>
 
     <p>
-        Puedes abrir el portal de habilitación de la DIAN y hacer clic en <i>Documentos > Enviados</i> para verificar los documentos electrónicos 
+        Puedes abrir el portal de habilitación de la DIAN y hacer clic en <i>Documentos > Enviados</i> para verificar los documentos electrónicos
         de prueba que has generado con <b>SimpleOps</b>.
     </p>
 
-    <h3>Pruebas de Habilitación en la DIAN</h3>
+    <p>
+        Un error que te puede salir es <i>Rechazo 90: Documento con CUFE '...' procesado anteriormente</i>. Esto se puede deber a que estás
+        intentando hacer una factura electrónica con un número que ya usaste antes. Para solucionarlo suspende la ejecución,
+        ingresa al portal de habilitación de la DIAN, haz clic en <i>Documentos > Enviados</i>, toma nota del último de pruebas SETP990000###
+        (sin tener en cuenta el 99 inicial), súmale 1 a ese número, escríbe el valor resultante en <i>[CarpetaProgramas]\SimpleOps\Opciones\Empresa.json</i>
+        > <i>Pr\u00F3ximoN\u00FAmeroDocumentoElectr\u00F3nicoPruebas</i>, guarda el archivo e intenta nuevamente.
+    </p>
+
+    <h2 id="paso7">7. Pruebas de Habilitación en la DIAN</h2>
     <p>
         Este procedimiento habilitará tu empresa cómo facturador electrónico usando <b>SimpleOps</b> en la DIAN y no podrás seguir facturando de la forma
-        tradicional física. Si actualmente facturas con la solución gratuita de la DIAN o con un operador tecnológico, aún podrás seguir facturando 
+        tradicional física. Si actualmente facturas con la solución gratuita de la DIAN o con un operador tecnológico, aún podrás seguir facturando
         de esa forma.
     </p>
-      
+
     <p>
-        Ejecuta <b>SimpleOps</b> (F5) y presiona el botón <i>Hacer Pruebas para Habilitar la Facturación Electrónica en la DIAN</i>. Se generarán
-        las mismas facturas que en las pruebas internas, pero esta vez le informará a la DIAN que cuenten a las requeridas para 
+        Ejecuta <b>SimpleOps</b> (F5) y presiona el botón <i>Hacer Pruebas Habilitación</i>. Se generarán
+        las mismas facturas que en las pruebas internas, pero esta vez le informará a la DIAN que cuenten a las requeridas para
         habilitar a tu empresa como facturador electrónico. Al recibir el primer mensaje de éxito (de la primera factura) no hagas
         clic inmediatamente en <i>Aceptar</i>, espera un par de minutos y después haz clic en <i>Aceptar</i>. Esto es necesario porque en ocasiones
-        el servidor de la DIAN no acepta las notas crédito y débito si se hacen muy seguidas a la primera factura. 
+        el servidor de la DIAN no acepta las notas crédito y débito si se hacen muy seguidas a la primera factura.
         Haz clic en <i>Aceptar</i> en los siguientes mensajes de éxito hasta que termine con todos.
     </p>
 
@@ -541,16 +565,18 @@
         a partir de la cual empezarás a facturar electrónicamente con <b>SimpleOps</b>. Selecciona la fecha y haz clic en <i>Aceptar</i>.
         Haz clic en <i>Aceptar</i> en el siguiente mensaje y habrás terminado las pruebas de habilitación.
     </p>
-    <img src="Imagenes/Habilitación Facturación Electrónica DIAN/FechaInicioProducción.png" />
+    <img src="Imagenes/Instalación y Habilitación Facturación Electrónica/FechaInicioProducción.png" />
 
-    <h3>Solicitar la Resolución de Facturación Electrónica a la DIAN</h3>
+    <h2 id="paso8">8. Solicitud de la Resolución de Facturación Electrónica a la DIAN</h2>
     <p>
-        Para poder iniciar la facturación electrónica con <b>SimpleOps</b>, se requiere informarle a la DIAN el prefijo y el rango de 
-        numeración que usarás en tus facturas electrónicas. Este procedimiento normalmente lo realiza el contador o representante legal 
+        Para poder iniciar la facturación electrónica con <b>SimpleOps</b>, se requiere informarle a la DIAN el prefijo y el rango de
+        numeración que usarás en tus facturas electrónicas. Este procedimiento normalmente lo realiza el contador o representante legal
         de tu empresa ya que implica ingresar al portal de la DIAN con su contraseña. Puedes ver <a href="https://vimeo.com/369961366">este video</a>
-        para conocer cómo se realiza. Una vez realizado, solicítale el archivo de la resolución a la persona encargada, 
+        para conocer cómo se realiza. Una vez realizado, solicítale el archivo de la resolución a la persona encargada,
         lo necesitarás para el siguiente paso.
     </p>
+
+
 
 </body>
 

@@ -292,7 +292,7 @@ namespace SimpleOps {
             // 2. Si se necesita la entidad para ser modificada y a veces sus hijos se pueden cargar la entidad sin Include y usar los métodos CargarLista 
             //    y CargarPropiedad dentro de un condicional.
             // 3. Si se necesita la entidad o la entidad y sus hijos para solo lectura se debe usar Include + AsNoTracking.
-            // 4. Si se tienen muchos hijos(más de 3 niveles) se deberá comparar el rendimiento de Include + AsNoTracking con Tipo Anónimo + AsNoTracking 
+            // 4. Si se tienen muchos hijos (más de 3 niveles) se deberá comparar el rendimiento de Include + AsNoTracking con Tipo Anónimo + AsNoTracking 
             //    y consultas por separado similar a como funciona CargarPropiedad y CargarLista pero adaptado a la estructura más compleja.	
             // 5. Agregar segundos AsNoTracking después de Include no cambia el rendimiento. Esto pasa porque AsNoTracking es una configuración 
             //    global de la consulta. Ver https://stackoverflow.com/questions/44140413/ef-include-with-asnotracking.
@@ -470,8 +470,6 @@ namespace SimpleOps {
                                    "correcta. Estos documentos se pueden consultar en el portal de habilitación de la DIAN, pero no suman a los necesarios " +
                                    "para la habilitación de la facturación electrónica. Para habilitar a tu empresa como facturador " +
                                    "electrónico usa el botón de habilitación.", "Envío Documentos Electrónicos");
-
-            if (Empresa.AmbienteFacturaciónElectrónica == AmbienteFacturaciónElectrónica.Producción) ObtenerClaveTécnicaAmbienteProducción();
 
             if (!EnviarSolicitud("<wcf:GetStatus><wcf:trackId>123456666</wcf:trackId></wcf:GetStatus>", Operación.GetStatus, out string? mensajeEnvío, out _)) {
                 MostrarError(mensajeEnvío, "Error en Solicitud GetStatus a la DIAN.");

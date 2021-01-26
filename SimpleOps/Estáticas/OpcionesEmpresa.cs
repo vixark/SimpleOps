@@ -140,7 +140,7 @@ namespace SimpleOps.Singleton {
 
         public string? PinAplicación { get; set; } // Pin elegido por el usuario que habilitó la facturación electrónica en la DIAN.
 
-        public string? ClaveTécnicaAplicación { get; set; } // Clave dada por la DIAN asociada a la aplicación.
+        public string? ClaveTécnicaAplicación { get; set; } // Clave dada por la DIAN asociada a la aplicación. Se obtiene con ObtenerClaveTécnicaAmbienteProducción().
 
         public string? NombreContactoFacturación { get; set; } // Nombre de la persona encargada de la facturación. Se usa para escribirlo en la factura electrónica. No es obligatorio, pero los clientes podrían hacer uso de él.
 

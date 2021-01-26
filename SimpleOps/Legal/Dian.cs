@@ -217,23 +217,30 @@ namespace SimpleOps.Legal {
         /// </summary>
         /// <returns></returns>
         public static string? ObtenerClaveTécnicaAmbienteProducción() {
-
+    
             string? claveTécnica = null;
-            if (!EnviarSolicitud($"<wcf:GetNumberingRange>" +
-                                     $"<wcf:accountCode>{Empresa.Nit}</wcf:accountCode>" +
-                                     $"<wcf:accountCodeT>{Empresa.Nit}</wcf:accountCodeT>" +
-                                     $"<wcf:softwareCode>{Empresa.IdentificadorAplicación}</wcf:softwareCode>" +
-                                 $"</wcf:GetNumberingRange>", Operación.GetNumberingRange, out string? mensajeEnvío, out XmlDocument? respuestaXml)) {
 
-                MostrarError(mensajeEnvío, "Error en obtención de la clave técnica de facturación electrónica.");
-
+            if (Empresa.AmbienteFacturaciónElectrónica != AmbienteFacturaciónElectrónica.Producción) {
+                MostrarError("La clave técnica solo se puede obtener en el ambiente de producción.", "Error en obtención de la clave técnica de facturación electrónica.");
             } else {
 
-                var nodoGetNumberingRangeResult = respuestaXml?["s:Envelope"]?["s:Body"]?["GetNumberingRangeResponse"]?["GetNumberingRangeResult"];
-                if (nodoGetNumberingRangeResult?["b:OperationCode"]?.InnerText == "100") {
-                    claveTécnica = nodoGetNumberingRangeResult?["b:ResponseList"]?["c:NumberRangeResponse"]?["c:TechnicalKey"].InnerText;
+                if (!EnviarSolicitud($"<wcf:GetNumberingRange>" +
+                                         $"<wcf:accountCode>{Empresa.Nit}</wcf:accountCode>" +
+                                         $"<wcf:accountCodeT>{Empresa.Nit}</wcf:accountCodeT>" +
+                                         $"<wcf:softwareCode>{Empresa.IdentificadorAplicación}</wcf:softwareCode>" +
+                                     $"</wcf:GetNumberingRange>", Operación.GetNumberingRange, out string? mensajeEnvío, out XmlDocument? respuestaXml)) {
+
+                    MostrarError(mensajeEnvío, "Error en obtención de la clave técnica de facturación electrónica.");
+
                 } else {
-                    MostrarError(mensajeEnvío, "Error en el XML de respuesta para la obtención de la clave técnica de facturación electrónica.");
+
+                    var nodoGetNumberingRangeResult = respuestaXml?["s:Envelope"]?["s:Body"]?["GetNumberingRangeResponse"]?["GetNumberingRangeResult"];
+                    if (nodoGetNumberingRangeResult?["b:OperationCode"]?.InnerText == "100") {
+                        claveTécnica = nodoGetNumberingRangeResult?["b:ResponseList"]?["c:NumberRangeResponse"]?["c:TechnicalKey"].InnerText;
+                    } else {
+                        MostrarError(mensajeEnvío, "Error en el XML de respuesta para la obtención de la clave técnica de facturación electrónica.");
+                    }
+
                 }
 
             }

@@ -156,6 +156,10 @@ namespace SimpleOps.Interfaz {
         private void PruebasHabilitaciónFacturaciónElectrónica_Clic(object sender, RoutedEventArgs e) => Habilitación();
 
 
+        private void ObtenerClaveTécnicaProducción_Clic(object sender, RoutedEventArgs e) =>
+            MessageBox.Show($"La clave técnica es:{DobleLínea}{Legal.Dian.ObtenerClaveTécnicaAmbienteProducción()}");
+
+
     } // Principal>
 
 

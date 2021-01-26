@@ -42,7 +42,8 @@
                         </StackPanel.Resources>
                         <Button Click="CargarDatosIniciales_Clic" Content="Cargar Datos Iniciales" />
                         <Button Click="ReiniciarBaseDatosSQLite_Clic" Content="Reiniciar Base de Datos" />
-                        <Button Click="PruebasHabilitaciónFacturaciónElectrónica_Clic" Content="Hacer Pruebas para &#xa;Habilitar la Facturación&#xa;Electrónica en la DIAN" Height="60" />
+                        <Button Click="PruebasHabilitaciónFacturaciónElectrónica_Clic" Content="Hacer Pruebas Habilitación" />
+                        <Button Click="ObtenerClaveTécnicaProducción_Clic" Content="Obtener Clave Técnica" />
                     </StackPanel>
                     
                 </StackPanel>
