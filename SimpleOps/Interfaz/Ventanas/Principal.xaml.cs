@@ -66,7 +66,7 @@ namespace SimpleOps.Interfaz {
                 LblAlerta.Content = $"Está habilitado el rastreo de datos sensibles. Esta función se debe desactivar en producción.{NuevaLínea}";
 
             if (HacerPruebasUnitarias) 
-                LblAlerta.Content += $"Se realizarán las pruebas unitarias. Por rendimient esta función se debe desactivar en producción.{NuevaLínea}";
+                LblAlerta.Content += $"Se realizarán las pruebas unitarias. Por rendimiento esta función se debe desactivar en producción.{NuevaLínea}";
 
             if (ModoIntegraciónTerceros) {
 

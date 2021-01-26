@@ -53,7 +53,7 @@ namespace SimpleOps {
 
         public const string CarpetaPlantillas = "Plantillas Documentos";
 
-        public const string CarpetaImagenesPlantillas = "Imagenes"; // Es la misma para el modo desarrollo y producción.
+        public const string CarpetaImagenesPlantillas = "Imagenes"; // Es la misma para el modo desarrollo y producción (en la ruta de la aplicación).
 
         public const string CarpetaPlantillasDesarrollo = "Plantillas";
 
@@ -88,7 +88,30 @@ namespace SimpleOps {
 
         public static Usuario UsuarioActual = new Usuario("David", "david@simpleops.net") { ID = 1 }; // Temporalmente mientras se implementa se usará usuario 1. Al implementar usuarios lo debería obtener de la base de datos.
 
-        public static bool ModoDesarrolloPlantillas { get; set; } = false; // Se usa verdadero para permitir que los cambios que se hagan a los archivos CSHTML en la carpeta Plantillas sean copiados a la ruta de la aplicación y para habilitar algunas líneas de código que facilitan el desarrollo de estas plantillas. En producción se deben usar directamente los archivos en la ruta de la aplicación porque no se tienen los de desarrollo. Se usa cómo una variable de estado porque al ser algo más relacionado con el desarrollo y no la operación normal de parte de un usuario, no vale la pena generar cadenas de parámetros para llevar este valor de una manera más segura (sin problemas de estado) hasta las funciones que lo usan.
+        private static bool _ModoDesarrolloPlantillas = false;
+        public static bool ModoDesarrolloPlantillas { // Se usa verdadero para permitir que los cambios que se hagan a los archivos CSHTML en la carpeta Plantillas sean copiados a la ruta de la aplicación y para habilitar algunas líneas de código que facilitan el desarrollo de estas plantillas. En producción se deben usar directamente los archivos en la ruta de la aplicación porque no se tienen los de desarrollo. Se usa cómo una variable de estado porque al ser algo más relacionado con el desarrollo y no la operación normal de parte de un usuario, no vale la pena generar cadenas de parámetros para llevar este valor de una manera más segura (sin problemas de estado) hasta las funciones que lo usan.
+            
+            get => _ModoDesarrolloPlantillas;
+
+            set {
+
+                _ModoDesarrolloPlantillas = value;
+                if (_ModoDesarrolloPlantillas) {
+
+                    var rutaDesarrollo = ObtenerRutaCarpetaPlantillas(forzarRutaDesarrollo: true);
+                    var rutaAplicación = ObtenerRutaCarpetaPlantillas(forzarRutaAplicación: true);
+                    MessageBox.Show($"Activado el modo de desarrollo de plantillas.{DobleLínea}Este modo suspende la ejecución del código después de " +
+                                    $"crear cada archivo PDF, permite la edición de los archivos CSHTML durante esta suspención y al reanudar genera " +
+                                    $"nuevamente el mismo archivo con los cambios realizados. Esto facilita la edición y desarrollo de archivos CSHTML. " +
+                                    $"Todos archivos de plantillas CSHTML serán copiados de '{rutaDesarrollo}' a '{rutaAplicación}' cada vez que se " +
+                                    $"genere un documento. Si has editado directamente los archivos en '{rutaAplicación}', has una copia de ellos " +
+                                    $"antes de continuar en este modo.", "Activado el Modo de Desarrollo de Plantillas");
+
+                }
+
+            }
+
+        } 
 
         #endregion Estados>
 
@@ -429,16 +452,17 @@ namespace SimpleOps {
 
         public static string ObtenerRutaOpciones() => ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaOpciones, crearSiNoExiste: true);
 
-        public static string ObtenerRutaPlantilla(PlantillaDocumento plantilla, bool forzarRutaAplicación = false, string? carpetaForzada = null)
-            => Path.Combine(carpetaForzada ?? ObtenerRutaCarpetaPlantillas(forzarRutaAplicación), $"{plantilla}.cshtml");
+        public static string ObtenerRutaPlantilla(PlantillaDocumento plantilla, bool forzarRutaAplicación = false, bool forzarRutaDesarrollo = false)
+            => Path.Combine(ObtenerRutaCarpetaPlantillas(forzarRutaAplicación, forzarRutaDesarrollo), $"{plantilla}.cshtml");
 
-        public static string ObtenerRutaCarpetaImagenesPlantillas()
-            => ObtenerRutaCarpeta(ObtenerRutaCarpetaPlantillas(forzarRutaAplicación: true), CarpetaImagenesPlantillas, crearSiNoExiste: true); // Por facilidad no se maneja la carpeta de imagenes en la ruta de desarrollo. No es necesario modificarlas desde el Visual Studio. Las plantillas si se manejan en ambos lugares porque si se requiere trabajar en ellas y se deben agregar al repositorio y también se requieren tener las propias por fuera del repositorio para la empresa actual.
+        public static string ObtenerRutaCarpetaImagenesPlantillas() 
+            => ObtenerRutaCarpeta(ObtenerRutaCarpetaPlantillas(forzarRutaAplicación: true, forzarRutaDesarrollo: false), 
+                CarpetaImagenesPlantillas, crearSiNoExiste: true); // No se maneja la carpeta de imagenes en la ruta de desarrollo. No es necesario modificarlas desde el Visual Studio. Las plantillas si se manejan en ambos lugares porque si se requiere trabajar en ellas y se deben agregar al repositorio y también se requieren tener las propias por fuera del repositorio en la ruta de la aplicación.
 
 
-        public static string ObtenerRutaCarpetaPlantillas(bool forzarRutaAplicación = false) {
+        public static string ObtenerRutaCarpetaPlantillas(bool forzarRutaAplicación = false, bool forzarRutaDesarrollo = false) {
 
-            if (!forzarRutaAplicación && ModoDesarrolloPlantillas) { // Para facilitar el desarrollo se devuelve directamente la ruta de la plantilla de desarrollo cuando no se esté forzando que la tome de la ruta de la aplicación (típicamente solo al iniciar cuando ReemplazarPlantillasDocumentos es verdadero).
+            if (forzarRutaDesarrollo || (!forzarRutaAplicación && ModoDesarrolloPlantillas)) { // Para facilitar el desarrollo se devuelve directamente la ruta de la plantilla de desarrollo cuando no se esté forzando que la tome de la ruta de la aplicación (típicamente solo al iniciar cuando ReemplazarPlantillasDocumentos es verdadero).
                 return ObtenerRutaCarpeta(RutaDesarrollo, CarpetaPlantillasDesarrollo, crearSiNoExiste: false);
             } else {
                 return ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaPlantillas, crearSiNoExiste: true);
@@ -601,19 +625,18 @@ namespace SimpleOps {
         } // CargarOpciones>
 
 
-        public static void CopiarPlantillasAProducción(bool sobreescribir) {
+        public static void CopiarPlantillasARutaAplicación(bool sobreescribir) {
 
             foreach (var plantilla in ObtenerValores<PlantillaDocumento>()) {
 
-                var rutaDesarrollo = ObtenerRutaPlantilla(plantilla,
-                    carpetaForzada: ObtenerRutaCarpeta(RutaDesarrollo, CarpetaPlantillasDesarrollo, crearSiNoExiste: false));
-                var rutaProducción = ObtenerRutaPlantilla(plantilla, forzarRutaAplicación: true);
-                if (File.Exists(rutaDesarrollo) && (sobreescribir || !File.Exists(rutaProducción))) 
-                    File.Copy(rutaDesarrollo, rutaProducción, overwrite: sobreescribir);
+                var rutaEnDesarrollo = ObtenerRutaPlantilla(plantilla, forzarRutaDesarrollo: true);
+                var rutaEnAplicación = ObtenerRutaPlantilla(plantilla, forzarRutaAplicación: true);
+                if (File.Exists(rutaEnDesarrollo) && (sobreescribir || !File.Exists(rutaEnAplicación))) 
+                    File.Copy(rutaEnDesarrollo, rutaEnAplicación, overwrite: sobreescribir);
 
             }
 
-        } // CopiarPlantillasAProducción>
+        } // CopiarPlantillasARutaAplicación>
 
 
         /// <summary>
@@ -630,7 +653,7 @@ namespace SimpleOps {
                 if (!File.Exists(rutaImagenNueva)) File.Copy(rutaImagen, rutaImagenNueva); // Solo se copia la imagen si no está porque es posible que el usuario la haya personalizado.
             }
 
-            CopiarPlantillasAProducción(sobreescribir: false);
+            CopiarPlantillasARutaAplicación(sobreescribir: false);
                 
             ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaDatos, crearSiNoExiste: true); // Se ejecuta para crear la carpeta de Datos si no existe.
             if (!string.IsNullOrEmpty(Equipo.RutaIntegración)) ObtenerRutaCarpeta(Equipo.RutaIntegración, "", crearSiNoExiste: true); // Se ejecuta para crear la carpetas de integración con terceros si no existen. Al pasar una carpeta vacía usa la rutaPadre. Si no se ha establecido la RutaIntegración puede ser que el usuario no va a usar la integración de terceros entonces no es necesario crear esta carpeta. 
