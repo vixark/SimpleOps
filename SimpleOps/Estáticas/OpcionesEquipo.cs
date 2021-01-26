@@ -112,8 +112,8 @@ namespace SimpleOps.Singleton {
                                                                 "Clave Certificado Firma Electrónica");
 
                             if (string.IsNullOrEmpty(clave)) {
-                                MostrarInformación($"No se ingresó una clave del certificado de facturación electrónica.{DobleLínea}No se podrá facturar " +
-                                                   $"electrónicamente.", "Sin Clave Certificado");
+                                MostrarError($"No se ingresó una clave del certificado de facturación electrónica.{DobleLínea}No se podrá facturar " +
+                                                   $"electrónicamente.");
                                 return false;
                             }
 
@@ -121,8 +121,7 @@ namespace SimpleOps.Singleton {
                                 using var certificado = new X509Certificate2(RutaCertificado, clave); // Verifica que la clave sea correcta.
                             } catch (CryptographicException) {
 
-                                MostrarError($"La clave ingresada para el certificado {RutaCertificado} es incorrecta.{DobleLínea}Intenta nuevamente.",
-                                    "Clave Certificado Incorrecta");
+                                MostrarError($"La clave ingresada para el certificado {RutaCertificado} es incorrecta.{DobleLínea}Intenta nuevamente.");
                                 goto otraVez;
 
                             } catch (Exception) {

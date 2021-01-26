@@ -740,9 +740,9 @@ namespace SimpleOps.Datos {
         private static void MostrarErrorBloqueosExistentes(List<Bloqueo> bloqueosExistentes, string? nombreTablas) {
 
             var textoTabla = nombreTablas != null && nombreTablas.Contiene(",") ? "tablas" : "tabla";
-            MostrarAlerta($"No se pudo realizar la acción porque {ObtenerPalabraNúmeroYGénero(textoTabla, "el")} {textoTabla} {nombreTablas} " + 
+            MostrarAdvertencia($"No se pudo realizar la acción porque {ObtenerPalabraNúmeroYGénero(textoTabla, "el")} {textoTabla} {nombreTablas} " + 
                 $"{ObtenerPalabraNúmeroYGénero(textoTabla, "está")} {ObtenerPalabraNúmeroYGénero(textoTabla, "bloqueado")} por " +
-                $"{bloqueosExistentes.Select(b => b.Usuario?.Nombre).Distinct().ToList().ATexto()}.", "Acción No Realizada"); // Se refiere a acción y no a bloqueo porque normalmente el bloqueo se intenta hacer antes de realizar una acción.
+                $"{bloqueosExistentes.Select(b => b.Usuario?.Nombre).Distinct().ToList().ATexto()}."); // Se refiere a acción y no a bloqueo porque normalmente el bloqueo se intenta hacer antes de realizar una acción.
 
         } // MostrarErrorBloqueosExistentes>
 

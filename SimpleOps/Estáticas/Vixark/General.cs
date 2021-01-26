@@ -1820,17 +1820,18 @@ namespace Vixark {
 
         #region Interfaz
 
-        public static MessageBoxResult MostrarDiálogo(string? mensaje, string? título, MessageBoxButton botones = MessageBoxButton.OK,
+        public static MessageBoxResult MostrarDiálogo(string? mensaje, string título, MessageBoxButton botones = MessageBoxButton.OK,
             MessageBoxImage imagen = MessageBoxImage.None) => MessageBox.Show(mensaje, título, botones, imagen); // Este debe ser el único MessageBox.Show en todo el código.
 
-        public static MessageBoxResult MostrarError(string? mensaje, string? título = "Error")
-            => MostrarDiálogo(mensaje, título, MessageBoxButton.OK, MessageBoxImage.Error);
+        public static MessageBoxResult MostrarError(string? mensaje) => MostrarDiálogo(mensaje, "Error", MessageBoxButton.OK, MessageBoxImage.Error); // Por estandarización de la interfaz de los diálogos no se permite la personalización del título de estos diálogos. Si se necesita un diálogo con título especial usar MostrarDiálogo.
 
-        public static MessageBoxResult MostrarInformación(string? mensaje, string? título = "Información")
-            => MostrarDiálogo(mensaje, título, MessageBoxButton.OK, MessageBoxImage.Information);
+        public static MessageBoxResult MostrarInformación(string? mensaje) 
+            => MostrarDiálogo(mensaje, "Información", MessageBoxButton.OK, MessageBoxImage.Information); // Por estandarización de la interfaz de los diálogos no se permite la personalización del título de estos diálogos. Si se necesita un diálogo con título especial usar MostrarDiálogo.
 
-        public static MessageBoxResult MostrarAlerta(string? mensaje, string? título = "Alerta")
-            => MostrarDiálogo(mensaje, título, MessageBoxButton.OK, MessageBoxImage.Warning);
+        public static MessageBoxResult MostrarÉxito(string? mensaje) => MostrarDiálogo(mensaje, "Éxito", MessageBoxButton.OK, MessageBoxImage.Exclamation); // Por estandarización de la interfaz de los diálogos no se permite la personalización del título de estos diálogos. Si se necesita un diálogo con título especial usar MostrarDiálogo.
+
+        public static MessageBoxResult MostrarAdvertencia(string? mensaje) 
+            => MostrarDiálogo(mensaje, "Advertencia", MessageBoxButton.OK, MessageBoxImage.Warning); // Por estandarización de la interfaz de los diálogos no se permite la personalización del título de estos diálogos. Si se necesita un diálogo con título especial usar MostrarDiálogo.
 
         #endregion Interfaz>
 

@@ -105,7 +105,7 @@ namespace SimpleOps {
                                        $"nuevamente el mismo archivo con los cambios realizados. Esto facilita la edición y desarrollo de archivos CSHTML. " +
                                        $"Todos archivos de plantillas CSHTML serán copiados de '{rutaDesarrollo}' a '{rutaAplicación}' cada vez que se " +
                                        $"genere un documento. Si has editado directamente los archivos en '{rutaAplicación}', has una copia de ellos " +
-                                       $"antes de continuar en este modo.", "Activado el modo de desarrollo de plantillas");
+                                       $"antes de continuar en este modo.");
 
                 }
 
@@ -688,7 +688,7 @@ namespace SimpleOps {
                     }
                     var éxito = Contexto.CargarDatosIniciales(rutaDatosJson, out string error);
                     if (éxito) {
-                        MostrarInformación("Se creó la base de datos SQLite y se cargaron exitosamente los datos iniciales.", "Base de Datos SQLite Creada");
+                        MostrarÉxito("Se creó la base de datos SQLite y se cargaron exitosamente los datos iniciales.");
                     } else {
                         MostrarError(error);
                     }
@@ -724,7 +724,7 @@ namespace SimpleOps {
                     IntentarBorrar(rutaJson);
                     MostrarError($"No se pudo leer el archivo de opciones {rutaJson}.{DobleLínea}{NombreAplicación} iniciará usando los valores " +
                                  $"predeterminados. Si necesitas migrar los valores anteriores los puedes tomar de la copia realizada {rutaCopia}." +
-                                 $"{DobleLínea}{ex.Message}.", "Error Cargando Opciones");
+                                 $"{DobleLínea}{ex.Message}.");
                     goto otraVez;
 
                 }

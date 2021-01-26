@@ -124,7 +124,7 @@ namespace SimpleOps.Interfaz {
 
             var éxito = Contexto.CargarDatosIniciales(ObtenerRutaDatosJson(), out string error);
             if (éxito) {
-                MostrarInformación("Se cargaron exitosamente los datos iniciales.", "Datos Cargados");
+                MostrarInformación("Se cargaron exitosamente los datos iniciales.");
             } else {
                 MostrarError(error);
             }
@@ -137,13 +137,13 @@ namespace SimpleOps.Interfaz {
             Rastreador.LogInformation("ReiniciarBaseDatosSQLite_Clic");
 
             var rutaCopiasSeguridad = ObtenerRutaCopiasSeguridad();
-            if (MostrarDiálogo($"Se moverá la base de datos actual a  {rutaCopiasSeguridad} y se iniciará una base de datos nueva vacía.{DobleLínea}" +
-                               $"¿Deseas continuar?", "Reiniciar Base de Datos", MessageBoxButton.YesNo) == MessageBoxResult.Yes) {
+            if (MostrarDiálogo($"Se moverá la base de datos actual a {rutaCopiasSeguridad} y se iniciará una base de datos nueva vacía.{DobleLínea}" +
+                               $"¿Deseas continuar?", "¿Reiniciar Base de Datos?", MessageBoxButton.YesNo) == MessageBoxResult.Yes) {
 
                 var nuevaRuta = System.IO.Path.Combine(rutaCopiasSeguridad, ArchivoBaseDatosSQLite.Reemplazar(".db", " [" + AhoraNombresArchivos + "].db"));
                 File.Move(RutaBaseDatosSQLite, nuevaRuta);
                 File.Copy(RutaBaseDatosVacíaSQLite, RutaBaseDatosSQLite);
-                MostrarInformación("Se ha reiniciado la base de datos SQLite exitósamente.", "Base de Datos Reiniciada");
+                MostrarInformación("Se ha reiniciado la base de datos SQLite exitósamente.");
 
             }
 

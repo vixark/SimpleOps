@@ -444,18 +444,17 @@ namespace SimpleOps {
         /// </summary>
         public static void Habilitación() {
 
-            var títuloDiálogos = "Pruebas de Habilitación de Facturación Electrónica";
             if (MostrarDiálogo($"¿Deseas realizar las pruebas para habilitar a tu empresa como facturador electrónico ante la DIAN?{DobleLínea}" + 
                                "¡Cuidado! Si las pruebas resultan exitosas tu empresa estará obligada a seguir facturando electrónicamente y no " +
                                "podrá seguir facturando de la manera tradicional física. Hazlo solo cuando tengas todo listo para operar facturando " +
                                "electrónicamente. Si actualmente facturas con la solución gratuita de la DIAN o con un operador tecnológico, aún podrás " +
-                               "seguir facturando de esa forma.", títuloDiálogos, MessageBoxButton.YesNo) == MessageBoxResult.Yes) {
+                               "seguir facturando de esa forma.", "¿Hacer Pruebas de Habilitación?", MessageBoxButton.YesNo) == MessageBoxResult.Yes) {
 
                 if (Facturación(pruebaHabilitación: true)) {
-                    MostrarInformación("Las pruebas para la habilitación de tu empresa como facturador electrónico han sido exitosas.", títuloDiálogos);
+                    MostrarInformación("Las pruebas para la habilitación de tu empresa como facturador electrónico han sido exitosas.");
                 } else {
                     MostrarError("Sucedió un error en una de las pruebas. Aún así es posible que se hayan completado las requeridas por la DIAN. " +
-                                 "Verifica el estado de las pruebas en el portal de habilitación de la DIAN.", títuloDiálogos);
+                                 "Verifica el estado de las pruebas en el portal de habilitación de la DIAN.");
                 }
 
             }
@@ -475,10 +474,10 @@ namespace SimpleOps {
                 MostrarInformación("Se enviarán varios documentos electrónicos a la DIAN. Con esto se verificará que la conexión y configuración esté " +
                                    "correcta. Estos documentos se pueden consultar en el portal de habilitación de la DIAN, pero no suman a los necesarios " +
                                    "para la habilitación de la facturación electrónica. Para habilitar a tu empresa como facturador " +
-                                   "electrónico usa el botón de habilitación.", "Envío Documentos Electrónicos");
+                                   "electrónico usa el botón de habilitación.");
 
             if (!EnviarSolicitud("<wcf:GetStatus><wcf:trackId>123456666</wcf:trackId></wcf:GetStatus>", Operación.GetStatus, out string? mensajeEnvío, out _)) {
-                MostrarError(mensajeEnvío, "Error en Solicitud GetStatus a la DIAN.");
+                MostrarError($"Error en solicitud GetStatus a la DIAN.{DobleLínea}{mensajeEnvío}");
                 return false;
             }
 
@@ -487,7 +486,7 @@ namespace SimpleOps {
 
                 Empresa.PróximoNúmeroDocumentoElectrónicoPruebas++;
                 GuardarOpciones(Empresa);
-                MostrarInformación("¡Éxito del envío de la factura electrónica completa a la DIAN!", "Éxito"); // Éxito. Se puede continuar con los procedimientos posteriores como grabar en la base de datos, hacer cambios en la interfaz y demás. La factura se considera realizada así puedan fallar los siguientes procedimientos de representación gráfica y email al cliente.
+                MostrarÉxito("¡Éxito del envío de la factura electrónica completa a la DIAN!"); // Éxito. Se puede continuar con los procedimientos posteriores como grabar en la base de datos, hacer cambios en la interfaz y demás. La factura se considera realizada así puedan fallar los siguientes procedimientos de representación gráfica y email al cliente.
 
                 if (venta != null && CrearPdfVenta(venta, ventaElectrónica, out _)) {
                     // Si se creó la representación gráfica exitosamente, se puede enviar el email al cliente.
@@ -496,7 +495,7 @@ namespace SimpleOps {
                 }
 
             } else {
-                MostrarError(mensaje, "Error en Factura Electrónica"); // Error. Se aborta la operación, no se debe grabar en la base de datos y se debe mantener la interfaz inalterada para que se realicen las correcciones necesarias.
+                MostrarError($"Error en factura electrónica.{DobleLínea}{mensaje}"); // Error. Se aborta la operación, no se debe grabar en la base de datos y se debe mantener la interfaz inalterada para que se realicen las correcciones necesarias.
                 return false;
             }
 
@@ -508,7 +507,7 @@ namespace SimpleOps {
 
                     Empresa.PróximoNúmeroDocumentoElectrónicoPruebas++;
                     GuardarOpciones(Empresa);
-                    MostrarInformación("¡Éxito del envío de la nota crédito electrónica a la DIAN!", "Éxito");
+                    MostrarÉxito("¡Éxito del envío de la nota crédito electrónica a la DIAN!");
                     if (notaCrédito != null && CrearPdfVenta(notaCrédito, notaCréditoElectrónica, out _)) {
                         // Si se creó la representación gráfica exitosamente, se puede enviar el email al cliente.
                     } else {
@@ -516,12 +515,12 @@ namespace SimpleOps {
                     }
 
                 } else {
-                    MostrarError(mensajeNotaCrédito, "Error en Nota Crédito Electrónica"); 
+                    MostrarError($"Error en nota crédito electrónica.{DobleLínea}{mensajeNotaCrédito}");
                     return false;
                 }
 
             } else {
-                MostrarError("No se puede hacer una nota crédito sin una venta asociada.", "Error en Nota Crédito Electrónica");
+                MostrarError("No se puede hacer una nota crédito sin una venta asociada.");
                 return false;
             }
 
@@ -531,15 +530,15 @@ namespace SimpleOps {
 
                     Empresa.PróximoNúmeroDocumentoElectrónicoPruebas++;
                     GuardarOpciones(Empresa);
-                    MostrarInformación("¡Éxito del envío de la nota débito electrónica a la DIAN!", "Éxito"); 
+                    MostrarÉxito("¡Éxito del envío de la nota débito electrónica a la DIAN!"); 
 
                 } else {
-                    MostrarError(mensajeNotaDébito, "Error en Nota Débito Electrónica"); 
+                    MostrarError($"Error en nota débito electrónica.{DobleLínea}{mensajeNotaDébito}"); 
                     return false;
                 }
 
             } else {
-                MostrarError("No se puede hacer una nota débito sin una venta asociada.", "Error en Nota Débito Electrónica");
+                MostrarError("No se puede hacer una nota débito sin una venta asociada.");
                 return false;
             }
 
@@ -552,7 +551,7 @@ namespace SimpleOps {
 
                     Empresa.PróximoNúmeroDocumentoElectrónicoPruebas++;
                     GuardarOpciones(Empresa);
-                    MostrarInformación($"¡Éxito del envío de la factura electrónica simple #{i} a la DIAN!", "Éxito");
+                    MostrarÉxito($"¡Éxito del envío de la factura electrónica simple #{i} a la DIAN!");
 
                     if (ventaSimple != null && CrearPdfVenta(ventaSimple, ventaSimpleElectrónica, out _)) {
                         // Si se creó la representación gráfica exitosamente, se puede enviar el email al cliente.
@@ -561,7 +560,7 @@ namespace SimpleOps {
                     }
 
                 } else {
-                    MostrarError(mensajeSimple, "Error en Factura Electrónica"); 
+                    MostrarError($"Error en factura electrónica.{DobleLínea}{mensajeSimple}"); 
                     return false;
                 }
 

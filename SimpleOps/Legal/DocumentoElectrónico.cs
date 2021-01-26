@@ -771,7 +771,7 @@ namespace SimpleOps.Legal {
             };
 
             if (customerParty.PartyLegalEntity[0].RegistrationName.Value != cliente.Nombre)
-                MostrarError(customerParty.PartyLegalEntity[0].RegistrationName.Value, "Error");
+                MostrarError(customerParty.PartyLegalEntity[0].RegistrationName.Value);
 
             if (cliente.ContactoFacturas != null) {
 
