@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>D:\Archivos\Proyectos\SimpleOps\Código\SimpleOps\SimpleOps\Documentación\SimpleOps.xml</DocumentationFile>
+    <DocumentationFile>Documentación\SimpleOps.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

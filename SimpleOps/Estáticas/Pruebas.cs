@@ -607,7 +607,7 @@ namespace SimpleOps {
             // Prueba CUDE 1>
 
             // Prueba CUDE 2
-            Empresa.PinAplicación = "12301";
+            Empresa.PinAplicación = "123011";
             Empresa.AmbienteFacturaciónElectrónica = AmbienteFacturaciónElectrónica.Producción;
             var notaCrédito = new NotaCréditoVenta(cliente, venta) {
                 FechaHora = new DateTime(2019, 01, 12, 7, 0, 0), SubtotalBase = 5000, IVA = 950, ImpuestoConsumo = 0, Número = 7871,
