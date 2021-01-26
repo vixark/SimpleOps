@@ -46,7 +46,7 @@
                         <Button Click="HacerPruebasInternasFacturación_Clic" Content="Hacer Pruebas Internas" />
                         <Button Click="PruebasHabilitaciónFacturación_Clic" Content="Hacer Pruebas Habilitación" />
                         <Button Click="ObtenerClaveTécnicaProducción_Clic" Content="Obtener Clave Técnica" />
-                        <CheckBox FontSize="{StaticResource TamañoLetraS}" Foreground="{StaticResource BrochaFrente200}">Desarrollo de Plantillas</CheckBox>
+                        <CheckBox IsChecked="{Binding Path=(SimpleOps:Global.ModoDesarrolloPlantillas)}" FontSize="{StaticResource TamañoLetraS}" Foreground="{StaticResource BrochaFrente200}">Desarrollo de Plantillas</CheckBox>
                     </StackPanel>
                     
                 </StackPanel>

@@ -52,7 +52,7 @@ namespace SimpleOps.DocumentosGráficos {
 
 
         private static bool CrearPdf<T>(out string rutaPdf, Func<RazorEngine, PlantillaCompilada<T>> crearPlantillaCompilada, 
-            Func<PlantillaCompilada<T>, (bool, string)> crearPdf, bool modoDesarrollo = ModoDesarrolloPlantillas) where T : class { // Una vez compilada la plantilla la primera vez este procedimiento es relativamente rápido en alrededor de 200ms, 150ms de estos son en la generación del HTML que se podrían reducir si se almacenaran los archivos CSHTML en memoria o directamente la plantilla compilada según https://github.com/adoconnection/RazorEngineCore/wiki/@Include-and-@Layout, pero por el momento se prefiere evitar esto para no complicar más el procedimiento y facilitar hacer cambios a los archivos CSHTML al permitir que estos cambios se hagan efectivos sin necesidad de reiniciar la aplicación.
+            Func<PlantillaCompilada<T>, (bool, string)> crearPdf) where T : class { // Una vez compilada la plantilla la primera vez este procedimiento es relativamente rápido en alrededor de 200ms, 150ms de estos son en la generación del HTML que se podrían reducir si se almacenaran los archivos CSHTML en memoria o directamente la plantilla compilada según https://github.com/adoconnection/RazorEngineCore/wiki/@Include-and-@Layout, pero por el momento se prefiere evitar esto para no complicar más el procedimiento y facilitar hacer cambios a los archivos CSHTML al permitir que estos cambios se hagan efectivos sin necesidad de reiniciar la aplicación.
 
             otraVez:
             var creado = false;
@@ -74,9 +74,10 @@ namespace SimpleOps.DocumentosGráficos {
 
             if (plantillaCompilada != null) (creado, rutaPdf) = crearPdf(plantillaCompilada);
 
-            if (modoDesarrollo) {
+            if (ModoDesarrolloPlantillas) {
 
                 if (creado) AbrirArchivo(rutaPdf);
+                CopiarPlantillasAProducción(sobreescribir: true); // En el modo desarrollo se intentará mantener sincronizadas las carpetas de plantillas en producción con la última versión de las plantillas en las carpetas de desarrollo. Justo antes del punto de interrupción a continuación es un buen lugar para hacerlo porque después de este el usuario del código puede suspender la ejecución. Esto reduce el rendimiento, pero es algo que solo se presenta en el modo desarrollo. No es completamente necesario actualizar las plantillas para que funcione en modo desarrollo porque estas son leídas directamente de las carpetas de plantillas de desarrollo, pero si es conveniente para mantener solo una versión de las plantillas en el computador y evitar confusiones.
                 SuspenderEjecuciónEnModoDesarrollo(); // Al estar detenida la ejecución en este punto se pueden editar los archivos de plantillas CSHTML, guardar el archivo de la plantilla, cerrar el último PDF creado si está abierto y reanudar ejecución para generar un nuevo PDF con los cambios realizados.
                 goto otraVez;
 
@@ -153,12 +154,12 @@ namespace SimpleOps.DocumentosGráficos {
         } // CrearPdfVenta>
 
 
-        private static bool CrearPdf<D>(D datos, PlantillaCompilada<D> plantillaCompilada, string rutaCarpetaPdf, out string rutaPdf,
-            bool modoImpresión = false, bool modoDesarrollo = ModoDesarrolloPlantillas) where D : DatosDocumento {
+        private static bool CrearPdf<D>(D datos, PlantillaCompilada<D> plantillaCompilada, string rutaCarpetaPdf, out string rutaPdf, 
+            bool modoImpresión = false) where D : DatosDocumento {
 
             rutaPdf = "";
             var html = plantillaCompilada.ObtenerHtml(datos);
-            if (modoDesarrollo) File.WriteAllText(Path.Combine(rutaCarpetaPdf, $"{datos.CódigoDocumento}.html"), html);
+            if (ModoDesarrolloPlantillas) File.WriteAllText(Path.Combine(rutaCarpetaPdf, $"{datos.CódigoDocumento}.html"), html);
 
             try {
 
