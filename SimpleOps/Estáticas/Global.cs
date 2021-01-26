@@ -100,12 +100,12 @@ namespace SimpleOps {
 
                     var rutaDesarrollo = ObtenerRutaCarpetaPlantillas(forzarRutaDesarrollo: true);
                     var rutaAplicación = ObtenerRutaCarpetaPlantillas(forzarRutaAplicación: true);
-                    MessageBox.Show($"Activado el modo de desarrollo de plantillas.{DobleLínea}Este modo suspende la ejecución del código después de " +
-                                    $"crear cada archivo PDF, permite la edición de los archivos CSHTML durante esta suspención y al reanudar genera " +
-                                    $"nuevamente el mismo archivo con los cambios realizados. Esto facilita la edición y desarrollo de archivos CSHTML. " +
-                                    $"Todos archivos de plantillas CSHTML serán copiados de '{rutaDesarrollo}' a '{rutaAplicación}' cada vez que se " +
-                                    $"genere un documento. Si has editado directamente los archivos en '{rutaAplicación}', has una copia de ellos " +
-                                    $"antes de continuar en este modo.", "Activado el Modo de Desarrollo de Plantillas");
+                    MostrarInformación($"Activado el modo de desarrollo de plantillas.{DobleLínea}Este modo suspende la ejecución del código después de " +
+                                       $"crear cada archivo PDF, permite la edición de los archivos CSHTML durante esta suspención y al reanudar genera " +
+                                       $"nuevamente el mismo archivo con los cambios realizados. Esto facilita la edición y desarrollo de archivos CSHTML. " +
+                                       $"Todos archivos de plantillas CSHTML serán copiados de '{rutaDesarrollo}' a '{rutaAplicación}' cada vez que se " +
+                                       $"genere un documento. Si has editado directamente los archivos en '{rutaAplicación}', has una copia de ellos " +
+                                       $"antes de continuar en este modo.", "Activado el modo de desarrollo de plantillas");
 
                 }
 

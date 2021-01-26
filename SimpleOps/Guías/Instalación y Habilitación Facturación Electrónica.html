@@ -68,6 +68,7 @@
         <li><a href="#paso6">Pruebas Internas de Facturación y Personalización de Factura</a></li>
         <li><a href="#paso7">Pruebas de Habilitación en la DIAN</a></li>
         <li><a href="#paso8">Solicitud de la Resolución de Facturación Electrónica a la DIAN</a></li>
+        <li><a href="#paso9">Configuración de Modo Producción</a></li>
     </ul>
 
     <h2 id="paso1">1. Habilitación de Pruebas en la DIAN</h2>
@@ -254,6 +255,9 @@
                 <b>SimpleOps</b>, establécelo en <i>true</i>. Si quieres usar <b>SimpleOps</b>
                 como tu ERP y facturador electrónico establécelo en <i>false</i>. <b>Nota:</b> A enero de 2021, <b>SimpleOps</b> aún no tiene interfaz
                 gráfica y no puede ser usado como ERP, entonces la única opción para facturar electrónicamente es usando un programa tercero.
+            </li>
+            <li>
+                <b>HacerPruebasUnitarias:</b> Cámbialo por <i>false</i>.
             </li>
         </ul>
 
@@ -496,11 +500,11 @@
     </p>
 
     <p>
-        Ejecuta <b>SimpleOps</b> (F5), espera unos segundos y te aparecerá un mensaje sobre el envío de documentos electrónicos a la DIAN, léelo y
-        haz clic en <i>Aceptar</i>. Si realizaste correctamente todos los pasos anteriores te aparecerá un mensaje de Éxito que significa que
-        <b>SimpleOps</b> se comunicó con el servidor de la DIAN en nombre de tu empresa y pudo enviar exitósamente la primera factura electrónica
-        de prueba interna. Haz clic en Aceptar y se ejecutarán varias pruebas de otras facturas, notas débito y notas crédito, puedes volver al código
-        (Shift + F5) y suspender la ejecución cuando desees.
+        Ejecuta <b>SimpleOps</b> (F5), haz clic en el botón <i>Hacer Pruebas Internas</i>, espera unos segundos y te aparecerá un mensaje sobre
+        el envío de documentos electrónicos a la DIAN, léelo y haz clic en <i>Aceptar</i>. Si realizaste correctamente todos los pasos anteriores
+        te aparecerá un mensaje de Éxito que significa que <b>SimpleOps</b> se comunicó con el servidor de la DIAN en nombre de tu empresa y pudo
+        enviar exitósamente la primera factura electrónica de prueba interna. Haz clic en Aceptar y se ejecutarán varias pruebas de otras
+        facturas, notas débito y notas crédito, puedes volver al código (Shift + F5) y suspender la ejecución cuando desees.
     </p>
 
     <p>
@@ -509,7 +513,7 @@
     </p>
 
     <p>
-        Puedes personalizar la representación gráfica cambiando las imagenes y los colores; Las imagenes las encuentras en
+        Puedes personalizar la representación gráfica cambiando las imagenes y los colores: las imagenes las encuentras en
         <i>[CarpetaProgramas]\SimpleOps\Plantillas Documentos\Imagenes</i> y los colores los puedes cambiar abriendo
         <i>[CarpetaProgramas]\SimpleOps\Plantillas Documentos\MarcoPdf.cshtml</i> con Visual Studio y cambiando los
         <a href="https://www.colorcodehex.com/html-color-picker.html">colores HEX</a> en <i> &lt;style&gt; &gt; Colores</i>. El primer
@@ -519,9 +523,9 @@
     <img src="../Guías/Imagenes/Instalación y Habilitación Facturación Electrónica/CambioColores.png" />
 
     <p>
-        Guarda los cambios y ejecuta nuevamente <b>SimpleOps</b> para generar las nuevas representaciones gráficas. Cuando estés satisfecho con
-        el diseño de la representación gráfica, abre <i>SimpleOps > Estáticas > Configuración.cs</i> en el Explorador de soluciones y cambia el
-        valor de <i>HabilitarPruebasUnitarias</i> a <i>false</i> para no ejecutar más las pruebas de facturación cada vez que inicies <b>SimpleOps</b>.
+        Guarda los cambios y ejecuta nuevamente <b>SimpleOps</b> para generar las nuevas representaciones gráficas. Alternativamente puedes
+        activar el modo <i>Desarrollo de Plantillas</i> que te facilitará el proceso de edición de archivos CSHTML y generación de archivos PDF
+        modificados.
     </p>
 
     <p>
@@ -567,6 +571,45 @@
         de tu empresa ya que implica ingresar al portal de la DIAN con su contraseña. Puedes ver <a href="https://vimeo.com/369961366">este video</a>
         para conocer cómo se realiza. Una vez realizado, solicítale el archivo de la resolución a la persona encargada,
         lo necesitarás para el siguiente paso.
+    </p>
+
+    <h2 id="paso9">9. Configuración de Modo Producción</h2>
+    <p>
+        Haz dos copias del archivo <i>[CarpetaProgramas]\SimpleOps\Opciones\Empresa.json</i> y renómbralos a <i>Empresa - Producción.json</i> y
+        <i>Empresa - Pruebas.json</i> respectivamente. Abre el archivo de la resolución de autorización numeración de facturación y el archivo
+        <i>Empresa - Producción.json</i> y copia los siguientes valores de la resolución al archivo JSON:
+        <ul>
+            <li>
+                <b>N\u00FAmeroAutorizaci\u00F3nFacturaci\u00F3n [Texto]:</b> Casilla <i>4. Número de formulario</i> en la resolución.
+            </li>
+            <li>
+                <b>PrefijoFacturas [Texto]:</b> Casilla <i>31. Prefijo</i> en la resolución.
+            </li>
+            <li>
+                <b>PrimerN\u00FAmeroFacturaAutorizada [Número]:</b> Casilla <i>32. Desde el número</i> en la resolución.
+            </li>
+            <li>
+                <b>\u00DAltimoN\u00FAmeroFacturaAutorizada [Número]:</b> Casilla <i>33. Hasta el número</i> en la resolución.
+            </li>
+            <li>
+                <b>InicioAutorizaci\u00F3nFacturaci\u00F3n [Fecha]:</b> Casilla <i>997. Fecha formalización</i> en la resolución. Usa únicamente la fecha,
+                no es necesario agregar horas ni minutos ni segundos.
+            </li>
+            <li>
+                <b>FinAutorizaci\u00F3nFacturaci\u00F3n [Fecha]:</b> Fecha resultante de sumar a la casilla <i>997. Fecha formalización</i> la cantidad
+                de meses en la casilla <i>38. Vigencia</i>.
+            </li>
+            <li>
+                <b>AmbienteFacturaci\u00F3nElectr\u00F3nica [Texto]:</b> Cambia <i>Pruebas</i> por <i>Producci\u00F3n</i>.
+            </li>
+        </ul>
+
+    </p>
+    <img src="Imagenes/Instalación y Habilitación Facturación Electrónica/AutorizaciónNumeraciónFacturaciónElectrónica.png" />
+
+    <p>
+        Presiona <i>Ctrl + S</i> para guardar los cambios realizados. Vuelve a la carpeta <i>[CarpetaProgramas]\SimpleOps\Opciones</i>, elimina
+        el archivo <i>Empresa.json</i>, haz una copia de <i>Empresa - Producción.json</i> y renómbra la copia a <i>Empresa.json</i>.
     </p>
 
 
