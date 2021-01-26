@@ -65,11 +65,8 @@ namespace SimpleOps.Interfaz {
             if (HabilitarRastreoDeDatosSensibles) 
                 LblAlerta.Content = $"Está habilitado el rastreo de datos sensibles. Esta función se debe desactivar en producción.{NuevaLínea}";
 
-            if (ModoDesarrolloPlantillas)
-                LblAlerta.Content += $"Está habilitado el reemplazo de plantillas CSHTML. Esta función se debe desactivar en producción.{NuevaLínea}";
-
-            if (HabilitarPruebasUnitarias) 
-                LblAlerta.Content += $"Están habilitadas las pruebas unitarias. Esta función se debe desactivar en producción.{NuevaLínea}";
+            if (HacerPruebasUnitarias) 
+                LblAlerta.Content += $"Se realizarán las pruebas unitarias. Por rendimient esta función se debe desactivar en producción.{NuevaLínea}";
 
             if (ModoIntegraciónTerceros) {
 
@@ -107,9 +104,9 @@ namespace SimpleOps.Interfaz {
             // LeerBaseDatosCompleta();
 
             #pragma warning disable CS0162 // Se detectó código inaccesible. Se omite la advertencia porque HabilitarPruebasUnitarias puede ser modificado por el usuario del código en Configuración.cs.
-            if (HabilitarPruebasUnitarias) {
+            if (HacerPruebasUnitarias) {
 
-                DocumentosElectrónicos(); // Prueba para ensayar todos los procedimientos relacionados con la facturación electrónica.
+                DocumentosElectrónicos(); // Prueba para ensayar todos los procedimientos relacionados con la facturación electrónica. Las pruebas para generar facturas electrónicas se realizan con un botón.
                 // IntegraciónAplicacionesTerceros(); // Esta prueba se usa cuando se quiere simular el comportamiento de un programa tercero que genera archivos de comunicación .json con SimpleOps para el modo de integración de facturación electrónica. Si ya se dispone de un programa tercero generando correctamente los archivos, no es necesario activar esta línea.
                 GeneraciónCatálogo(); // Prueba para ensayar el procedimiento de generación automática de catálogos con precios.
 
@@ -153,11 +150,14 @@ namespace SimpleOps.Interfaz {
         } // ReiniciarBaseDatosSQLite_Clic>
 
 
-        private void PruebasHabilitaciónFacturaciónElectrónica_Clic(object sender, RoutedEventArgs e) => Habilitación();
+        private void PruebasHabilitaciónFacturación_Clic(object sender, RoutedEventArgs e) => Habilitación();
 
 
         private void ObtenerClaveTécnicaProducción_Clic(object sender, RoutedEventArgs e) =>
             MessageBox.Show($"La clave técnica es:{DobleLínea}{Legal.Dian.ObtenerClaveTécnicaAmbienteProducción()}");
+
+
+        private void HacerPruebasInternasFacturación_Clic(object sender, RoutedEventArgs e) => Facturación(pruebaHabilitación: false);
 
 
     } // Principal>

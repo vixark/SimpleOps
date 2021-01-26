@@ -386,7 +386,7 @@ namespace SimpleOps {
             if (ObtenerDígitoVerificación("890568469") != "8") MostrarError("Falló ObtenerDígitoVerificación()");
             if (ObtenerDígitoVerificación("990854369") != "9") MostrarError("Falló ObtenerDígitoVerificación()");
 
-            Facturación(pruebaHabilitación: false); // Las pruebas de habilitación solo se harán con un botón especial, son peligrosas porque activan el modo de facturación electrónica obligatoria para la empresa.
+            // Facturación(pruebaHabilitación: false); // Las pruebas de habilitación solo se harán con un botón especial, son peligrosas porque activan el modo de facturación electrónica obligatoria para la empresa. Las pruebas normales de facturación también se harán con un botón para mayor facilidad.
             VentaGenérica1Excel();
             VentaGenérica2Excel();
             VentaServiciosExcel();

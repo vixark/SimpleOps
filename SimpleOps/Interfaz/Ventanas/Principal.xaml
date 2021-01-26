@@ -21,7 +21,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <DockPanel Grid.Column="0" Width="200" >
+            <DockPanel Grid.Column="0" Width="220" >
 
                 <StackPanel DockPanel.Dock="Top" Interfaz:EstablecedorMargen.Margen="10, 10, 10, 10" >
                     <Button Content="Cotización" />
@@ -32,7 +32,7 @@
                 <StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom" >
 
                     <Separator />
-                    <StackPanel Width="200" Orientation="Vertical" HorizontalAlignment="Center" >
+                    <StackPanel Width="220" Orientation="Vertical" HorizontalAlignment="Center" Interfaz:EstablecedorMargen.Margen="10, 10, 10, 10" >
                         <StackPanel.Resources>
                             <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
                                 <Setter Property="Margin" Value="10, 10, 10, 10"/>
@@ -42,8 +42,11 @@
                         </StackPanel.Resources>
                         <Button Click="CargarDatosIniciales_Clic" Content="Cargar Datos Iniciales" />
                         <Button Click="ReiniciarBaseDatosSQLite_Clic" Content="Reiniciar Base de Datos" />
-                        <Button Click="PruebasHabilitaciónFacturaciónElectrónica_Clic" Content="Hacer Pruebas Habilitación" />
+                        <Label Foreground="{StaticResource BrochaFrente200}">Facturación Electrónica</Label>
+                        <Button Click="HacerPruebasInternasFacturación_Clic" Content="Hacer Pruebas Internas" />
+                        <Button Click="PruebasHabilitaciónFacturación_Clic" Content="Hacer Pruebas Habilitación" />
                         <Button Click="ObtenerClaveTécnicaProducción_Clic" Content="Obtener Clave Técnica" />
+                        <CheckBox FontSize="{StaticResource TamañoLetraS}" Foreground="{StaticResource BrochaFrente200}">Desarrollo de Plantillas</CheckBox>
                     </StackPanel>
                     
                 </StackPanel>

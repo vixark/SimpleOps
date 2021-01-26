@@ -14,6 +14,7 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Windows;
+using static SimpleOps.Configuración;
 
 
 
