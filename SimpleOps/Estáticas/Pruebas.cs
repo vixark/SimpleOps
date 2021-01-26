@@ -465,6 +465,12 @@ namespace SimpleOps {
 
         public static bool Facturación(bool pruebaHabilitación) {
 
+            if (Empresa.AmbienteFacturaciónElectrónica == AmbienteFacturaciónElectrónica.Producción) {
+                MostrarError("No se permite la generación de facturas de prueba en modo de producción de facturación electrónica porque todas las " +
+                             "facturas realizadas en este modo son legalmente válidas ante la DIAN.");
+                return false;
+            }
+                
             if (!pruebaHabilitación) 
                 MostrarInformación("Se enviarán varios documentos electrónicos a la DIAN. Con esto se verificará que la conexión y configuración esté " +
                                    "correcta. Estos documentos se pueden consultar en el portal de habilitación de la DIAN, pero no suman a los necesarios " +
