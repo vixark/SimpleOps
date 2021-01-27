@@ -401,8 +401,8 @@ namespace SimpleOps {
         public static void GeneraciónCatálogo() {
 
             var cliente = new Cliente("Distribuciones ABC", new Municipio("Bogotá", "Distrito Capital"), TipoCliente.Distribuidor) {
-                TipoEntidad = TipoEntidad.Empresa, Dirección = "Calle 80-100", Teléfono = "4589843", Identificación = "990986892", 
-            };
+                TipoEntidad = TipoEntidad.Empresa, Dirección = "Calle 80-100", Teléfono = "4589843", Identificación = "990986892" };
+
             var cotización = new Cotización(cliente);
             cotización.Líneas = new List<LíneaCotización>() { 
                 new LíneaCotización(cotización, new Producto("Televisor"), 1200000),

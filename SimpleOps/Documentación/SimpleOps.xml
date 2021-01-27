@@ -328,7 +328,7 @@
         </member>
         <member name="P:SimpleOps.Integración.Integrador.ModoProcesarNuevoArchivoEnCambioPosterior">
             <summary>
-            Si es verdadero cuando un archivo es creado registra su nombre en <see cref="P:SimpleOps.Integración.Integrador.ÚltimoArchivoCreado"/> y si el siguiente evento de cambio
+            Si es verdadero, cuando un archivo es creado registra su nombre en <see cref="P:SimpleOps.Integración.Integrador.ÚltimoArchivoCreado"/> y si el siguiente evento de cambio
             es sobre el mismo archivo se procesa el procedimiento <see cref="M:SimpleOps.Integración.Integrador.ProcesarNuevoArchivo(System.String,System.String)"/>. Esto es necesario porque
             en algunos casos el programa tercero genera el evento de creación de archivo y aún lo mantiene abierto porque no ha terminado
             de escribirlo, lo que genera una excepción en File.ReadAllText porque el archivo aún está en uso. Al hacer el procesamiento en el 
