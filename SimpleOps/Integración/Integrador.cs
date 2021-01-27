@@ -26,12 +26,19 @@ namespace SimpleOps.Integración {
     class Integrador : IDisposable {
 
 
+        #region Variables Estáticas
+
+        public static HashSet<string> ArchivosProcesados = new HashSet<string>();
+
+        #endregion Variables Estáticas>
+
+
         #region Propiedades
 
         FileSystemWatcher SupervisorArchivos { get; set; }
 
         /// <summary>
-        /// Si es verdadero cuando un archivo es creado registra su nombre en <see cref="ÚltimoArchivoCreado"/> y si el siguiente evento de cambio
+        /// Si es verdadero, cuando un archivo es creado registra su nombre en <see cref="ÚltimoArchivoCreado"/> y si el siguiente evento de cambio
         /// es sobre el mismo archivo se procesa el procedimiento <see cref="ProcesarNuevoArchivo(string, string)"/>. Esto es necesario porque
         /// en algunos casos el programa tercero genera el evento de creación de archivo y aún lo mantiene abierto porque no ha terminado
         /// de escribirlo, lo que genera una excepción en File.ReadAllText porque el archivo aún está en uso. Al hacer el procesamiento en el 
@@ -110,6 +117,9 @@ namespace SimpleOps.Integración {
 
 
         public static void ProcesarNuevoArchivo(string nombre, string ruta) {
+
+            if (ArchivosProcesados.Contains(nombre)) return; // Cuando se hace copiar y pegar de un archivo a procesar se genera el evento EnCambioArchivo doble. Es un problema conocido de .Net https://stackoverflow.com/questions/1764809/filesystemwatcher-changed-event-is-raised-twice. Con este hashset se evita que se procese una segunda vez.
+            ArchivosProcesados.Add(nombre);
 
             OperacionesEspecialesDatos = true; // Necesario para evitar el mensaje de error al escribir Cliente.ContactoFacturas.Email en el mapeo inverso hacia el objeto venta.
             try {
