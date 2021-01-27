@@ -5,7 +5,7 @@
 Aplicación de información y gestión (ERP) para pequeñas empresas, trabajadores independientes, tiendas y restaurantes. Totalmente gratis, sin limitaciones, código abierto y libre. Incluye facturación electrónica requerida por la DIAN en Colombia, compras, cotizaciones, inventarios, ordenes de compra, pedidos y más. 
 <br/>
 <br/>
-Desarrollado con las últimas tecnologías: C# 8, .Net Core 3.1, WPF, SQLite 3.30 y Entity Framework Core 3.1.
+Desarrollado con las últimas tecnologías: C# 8, .Net Core 3.1, WPF, SQLite 3.30 y EF Core 3.1.
 <br/>
 <br/>
 
