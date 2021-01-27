@@ -8,10 +8,9 @@ Aplicación de información y gestión (ERP) para pequeñas empresas, trabajador
 Desarrollado con las últimas tecnologías: C# 8, .Net Core 3.1, WPF, SQLite 3.30 y Entity Framework Core 3.1.
 <br/>
 <br/>
-<a href="http://simpleops.net">SimpleOps.net<a> <b>[En Desarrollo]</b>
 
 <h3>Licencia</h3>
-<a href="https://github.com/vixark/SimpleOps/blob/master/License.txt">GNU Affero General Public License v3.0</a>: Esta licencia te da permiso de modificar, distribuir y vender <b>SimpleOps</b> y tus modificaciones siempre y cuando le entregues al usuario el código fuente completo de <b>SimpleOps</b> y de tus modificaciones. Si usas una versión modificada de <b>SimpleOps</b> para prestar un servicio web, también deberás entregarle al usuario el código fuente completo de <b>SimpleOps</b> y de tus modificaciones.
+<a href="https://github.com/vixark/SimpleOps/blob/master/License.txt">GNU Affero General Public License v3.0</a>. Esta licencia te da permiso de modificar, distribuir y vender <b>SimpleOps</b> y tus modificaciones siempre y cuando le entregues al usuario el código fuente completo de <b>SimpleOps</b> y de tus modificaciones. Si usas una versión modificada de <b>SimpleOps</b> para prestar un servicio web, también deberás entregarle al usuario el código fuente completo de <b>SimpleOps</b> y de tus modificaciones.
 En otras palabras, el usuario de <b>SimpleOps</b> (o de una parte de su código) siempre deberá recibir el código fuente completo de <b>SimpleOps</b> y de las modificaciones que le hayas realizado, si no se lo entregas, estarás infringiendo la licencia.
 
 
