@@ -40,6 +40,12 @@
             margin-bottom: 10px;
             margin-top: 10px;
         }
+
+        .código {
+            font-family: Courier New, Courier, monospace;
+            margin-bottom: 50px;
+            margin-top: 50px;
+        }
     </style>
 
     <h1>Instalación de SimpleOps y Habilitación de la Facturación Electrónica</h1>
@@ -69,6 +75,7 @@
         <li><a href="#paso7">Pruebas de Habilitación en la DIAN</a></li>
         <li><a href="#paso8">Solicitud de la Resolución de Facturación Electrónica a la DIAN</a></li>
         <li><a href="#paso9">Configuración de Modo Producción</a></li>
+        <li><a href="#paso10">Facturación Electrónica</a></li>
     </ul>
 
     <h2 id="paso1">1. Habilitación de Pruebas en la DIAN</h2>
@@ -253,7 +260,7 @@
             <li>
                 <b>ModoIntegraciónTerceros:</b> Si quieres habilitar la facturación electrónica en un programa tercero (otro ERP, Excel u otro) mediante
                 <b>SimpleOps</b>, establécelo en <i>true</i>. Si quieres usar <b>SimpleOps</b>
-                como tu ERP y facturador electrónico establécelo en <i>false</i>. <b>Nota:</b> A enero de 2021, <b>SimpleOps</b> aún no tiene interfaz
+                como tu ERP y facturador electrónico establécelo en <i>false</i>. <b>Nota:</b> A junio de 2021, <b>SimpleOps</b> aún no tiene interfaz
                 gráfica y no puede ser usado como ERP, entonces la única opción para facturar electrónicamente es usando un programa tercero.
             </li>
             <li>
@@ -500,11 +507,11 @@
     </p>
 
     <p>
-        Ejecuta <b>SimpleOps</b> (F5), haz clic en el botón <i>Hacer Pruebas Internas</i>, espera unos segundos y te aparecerá un mensaje sobre
+        Ejecuta <b>SimpleOps</b>, haz clic en el botón <i>Hacer Pruebas Internas</i>, espera unos segundos y te aparecerá un mensaje sobre
         el envío de documentos electrónicos a la DIAN, léelo y haz clic en <i>Aceptar</i>. Si realizaste correctamente todos los pasos anteriores
         te aparecerá un mensaje de Éxito que significa que <b>SimpleOps</b> se comunicó con el servidor de la DIAN en nombre de tu empresa y pudo
         enviar exitósamente la primera factura electrónica de prueba interna. Haz clic en Aceptar y se ejecutarán varias pruebas de otras
-        facturas, notas débito y notas crédito, puedes volver al código (Shift + F5) y suspender la ejecución cuando desees.
+        facturas, notas débito y notas crédito, puedes volver al código y suspender la ejecución cuando desees.
     </p>
 
     <p>
@@ -549,7 +556,7 @@
     </p>
 
     <p>
-        Ejecuta <b>SimpleOps</b> (F5) y presiona el botón <i>Hacer Pruebas Habilitación</i>. Se generarán
+        Ejecuta <b>SimpleOps</b> y presiona el botón <i>Hacer Pruebas Habilitación</i>. Se generarán
         las mismas facturas que en las pruebas internas, pero esta vez le informará a la DIAN que cuenten a las requeridas para
         habilitar a tu empresa como facturador electrónico. Al recibir el primer mensaje de éxito (de la primera factura) no hagas
         clic inmediatamente en <i>Aceptar</i>, espera un par de minutos y después haz clic en <i>Aceptar</i>. Esto es necesario porque en ocasiones
@@ -613,7 +620,7 @@
         <i>Temas de interés > Factura Electrónica > Facturando Electrónicamente</i> e ingresa de la misma manera que al portal de habilitación.
         Después de ingresar al portal de facturador haz clic en <i>Partipantes > Asociar prefijos</i>. En <i>Proveedor - Software</i> selecciona
         la opción <i>[NombreDeTuEmpresa] - SimpleOps[NitDeTuEmpresa]</i>, en <i>Prefijo</i> selecciona la opción que contiene el prefijo, número
-        de resolución y rango de numeración recién autorizado y haz clic en <i>Agregar</i>. Verifica que la fecha de expiración sea la misma que 
+        de resolución y rango de numeración recién autorizado y haz clic en <i>Agregar</i>. Verifica que la fecha de expiración sea la misma que
         ingresaste en <i>Empresa - Producción.json</i> > <i>FinAutorizaci\u00F3nFacturaci\u00F3n</i>.
     </p>
     <img src="Imagenes/Instalación y Habilitación Facturación Electrónica/AsociaciónPrefijosPortalDIAN.png" />
@@ -622,15 +629,142 @@
     <p>
         Vuelve a la carpeta <i>[CarpetaProgramas]\SimpleOps\Opciones</i>, elimina
         el archivo <i>Empresa.json</i>, haz una copia de <i>Empresa - Producción.json</i> y renombra la copia a <i>Empresa.json</i>.
-        <b>Advertencia:</b> Con este cambio, <b>SimpleOps</b> funcionará en modo de producción de facturación electrónica y las facturas que se generen 
+        <b>Advertencia:</b> Con este cambio, <b>SimpleOps</b> funcionará en modo de producción de facturación electrónica y las facturas que se generen
         serán legalmente válidas ante la DIAN.
     </p>
 
     <p>
-        Ejecuta <b>SimpleOps</b> y haz clic en el botón <i>Obtener Clave Tecnica</i>.
+        Ejecuta <b>SimpleOps</b> y haz clic en el botón <i>Obtener Clave Tecnica</i>. Te aparecerá un mensaje con la clave técnica del ambiente de
+        producción. Puedes copiar el texto del mensaje usando Ctrl + C y pegarlo en el bloc de notas para más facilidad. Suspende la ejecución, abre
+        <i>Empresa - Producción.json</i> e ingresa el valor de la clave ténica en <i>ClaveT\u00E9cnicaAplicaci\u00F3n</i>. Guarda los cambios realizados,
+        cierra el archivo y nuevamente haz el procedimiento del parrafo anterior.
     </p>
 
-    <p>Este procedimiento lo deberás ha cer cada vez,, este el y el anterior....</p>
+    <p>
+        Este procedimiento y el <i>8. Solicitud de la Resolución de Facturación Electrónica a la DIAN</i> los deberás repetir cada vez que se te venza
+        la autorización de numeración.
+    </p>
+
+    <p>
+        ¡Con esto has finalizado y
+        <b>SimpleOps</b> está listo para facturar electrónicamente!
+    </p>
+
+    <h2 id="paso10">10. Facturación Electrónica</h2>
+    <p>
+        La facturación electrónica se puede hacer directamente con <b>SimpleOps</b>
+        funcionando como tu programa ERP o mediante el uso de un programa tercero (otro ERP, Excel u otro). <b>Nota:</b> A junio de 2021, <b>SimpleOps</b> aún no tiene interfaz
+        gráfica y no puede ser usado como ERP, entonces la única opción para facturar electrónicamente es usando un programa tercero.
+    </p>
+
+    <p>
+        Para facturar electrónicamente usando un programa tercero necesitarás que ese programa lleve el registro del concecutivo de facturación
+        y que genere un archivo JSON con la información mínima para generar la factura. En <b>SimpleOps</b> establece
+        <i>Estáticas > Configuración.cs > ModoIntegraciónTerceros</i> en <i>true</i>. En este modo <b>SimpleOps</b> supervisa una carpeta del
+        computador y si encuentra que un nuevo archivo ha sido añadido, lo procesa, le envía la factura
+        electrónica a la DIAN, genera la representación gráfica en PDF y genera un archivo respuesta que puede ser leído por el programa tercero,
+        que contiene el resultado de la operación y la descripción de errores si se presentan.
+    </p>
+
+    <p>
+        A continuación puedes ver el texto con la información necesaria que debe contener un archivo JSON para generar una factura electrónica:
+    </p>
+
+    <p class="código">
+        {<br />
+        "OrdenCompraN\u00FAmero": "OC222",<br />
+        "Raz\u00F3n": "Otra",<br />
+        "VentaPrefijo": null,<br />
+        "VentaN\u00FAmero": null,<br />
+        "L\u00EDneas": [<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;{<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"Cantidad": 10,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"Precio": 5500,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoReferencia": "R1",<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoDescripci\u00F3n": "Producto 1",<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoUnidad": "Unidad",<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoPorcentajeIVAPropio": null,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoExclu\u00EDdoIVA": false<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;},<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;{<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"Cantidad": 15,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"Precio": 7500,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoReferencia": "R2",<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoDescripci\u00F3n": "Producto 2",<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoUnidad": "Unidad",<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoPorcentajeIVAPropio": null,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoExclu\u00EDdoIVA": false<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;}<br />
+        ],<br />
+        "N\u00FAmero": 1,<br />
+        "Prefijo": "F",<br />
+        "Observaci\u00F3n": "Observaci\u00F3n sobre la venta.",<br />
+        "MostrarInformaci\u00F3nAdicional": false,<br />
+        "FechaHora": "2021-01-26T00:00:00.0000000Z",<br />
+        "ConsecutivoDianAnual": null,<br />
+        "ClienteNombre": "Empresa Ensayo",<br />
+        "ClienteTel\u00E9fono": "2202020",<br />
+        "ClienteMunicipioNombre": "Bogot\u00E1",<br />
+        "ClienteMunicipioDepartamento": "Distrito Capital",<br />
+        "ClienteDirecci\u00F3n": "Calle 20 20 20",<br />
+        "ClienteContactoFacturasEmail": "facturas@empresaensayo.com",<br />
+        "ClienteD\u00EDasCr\u00E9dito": 30,<br />
+        "ClienteMunicipioPorcentajeIVAPropio": null,<br />
+        "ClientePorcentajeIVAPropio": null,<br />
+        "ClienteTipoEntidad": "Empresa",<br />
+        "ClienteIdentificaci\u00F3n": "900900900"<br />
+        }<br />
+    </p>
+
+    <p>
+        La mayoría de los elementos son autoexplicativos, algunos requieren explicación adicional o aplican solo para notas crédito:
+        <ul>
+            <li>
+                <b>VentaPrefijo:</b> Prefijo de la factura a la que se le aplicará la nota crédito.
+            </li>
+            <li>
+                <b>VentaN\u00FAmero:</b> Número de la factura a la que se le aplicará la nota crédito.
+            </li>
+            <li>
+                <b>ProductoUnidad:</b> Principalmente puede ser Par o Unidad.
+            </li>
+            <li>
+                <b>ProductoPorcentajeIVAPropio:</b> Si el producto le aplica un IVA diferente de la tarifa normal del 19%. Si le aplica
+                ingresar el valor en decimal, por ejemplo 0.05 para 5%. Si se deja en null se aplicará la tarifa normal.
+            </li>
+            <li>
+                <b>ProductoExclu\u00EDdoIVA:</b> Si es verdadero es excluído de IVA y tiene un tratamiento tributario diferente porque no suma
+                a la base tributable.
+            </li>
+            <li>
+                <b>N\u00FAmero:</b> Número consecutivo de la factura o nota crédito. Este número lo debe controlar y aumentar el programa tercero.
+            </li>
+            <li>
+                <b>ConsecutivoDianAnual:</b> Se puede dejar en null.
+            </li>
+            <li>
+                <b>ClienteMunicipioNombre y ClienteMunicipioDepartamento:</b> Deben coincidir con los de
+                <a href="IDs Municipios.html">esta tabla</a> y deben ser procesado para omitir los carácteres inválidos para el JSON,
+                como lo hace <a href="https://www.freeformatter.com/json-escape.html">esta utilidad</a>.
+            </li>
+            <li>
+                <b>ClienteIdentificaci\u00F3n:</b> Nit del cliente sin número de verificación.
+            </li>
+        </ul>
+    </p>
+
+    <p>
+        Para probar el modo integración con terceros cambia nuevamente al modo de pruebas para evitar generar facturas legales:
+        En la carpeta <i>[CarpetaProgramas]\SimpleOps\Opciones</i>, elimina el archivo <i>Empresa.json</i>, haz una copia de
+        <i>Empresa - Pruebas.json</i> y renombra la copia a <i>Empresa.json</i>.
+    </p>
+
+    <p>
+        Copia el texto de ejemplo anterior, pégalo en el bloc de notas, cambia el valor de <i>N\u00FAmero</i> por el valor en
+        <i>Empresa.json > Pr\u00F3ximoN\u00FAmeroDocumentoElectr\u00F3nicoPruebas</i>, el <i>Prefijo</i> por <i>SETP</i> y guárdalo con el nombre
+        <i>VT-yyyy-MM-dd HH-mm-ss.json</i>, por ejemplo VT-2021-01-26 23-29-00.json si la fecha y hora actual es 26 de enero de 2021 a las 11:29 pm.
+        Ejecuta <b>SimpleOps</b> y 
+    </p>
 
 </body>
 
