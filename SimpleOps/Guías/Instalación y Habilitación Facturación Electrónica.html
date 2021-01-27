@@ -57,7 +57,7 @@
     </p>
 
     <p>
-        Esta guía fue escrita para empresas (personas jurídicas). Si necesitas el facturar electrónicamente como persona natural aún puedes seguir
+        Esta guía fue escrita para empresas (personas jurídicas). Si necesitas facturar electrónicamente como persona natural, aún puedes seguir
         esta guía, pero ten en cuenta que tendrás que realizar algunos pasos de manera diferente. La facturación electrónica solo está implementada
         para la DIAN de Colombia. Si estás en otro país, puedes usar <b>SimpleOps</b> como ERP pero deberás desactivar la funcionalidad de facturación
         electrónica.
@@ -430,7 +430,7 @@
         <li>
             <b>PrefijoFacturas [Texto]:</b>
             Prefijo de la autorización de numeración de facturación dado por el SIE de numeración.
-            Cómo primero vas a realizar las pruebas de facturación ingresa el prefijo de pruebas: "SETP".
+            Como primero vas a realizar las pruebas de facturación, ingresa el prefijo de pruebas: "SETP".
         </li>
 
         <li>
@@ -471,19 +471,19 @@
 
         <li>
             <b>NombreContactoFacturaci\u00F3n [Texto]:</b>
-            Nombre de la persona encargada de la facturación. Se usa para escribirlo en la factura electrónica.
+            Nombre de la persona encargada de la facturación. Se usa para escribirlo en la factura electrónica (XML).
             No es obligatorio, pero los clientes podrían hacer uso de él.
         </li>
 
         <li>
             <b>Tel\u00E9fonoContactoFacturaci\u00F3n [Texto]:</b>
-            Teléfono de la persona encargada de la facturación. Se usa para escribirlo en la factura electrónica.
+            Teléfono de la persona encargada de la facturación. Se usa para escribirlo en la factura electrónica (XML).
             No es obligatorio, pero los clientes podrían hacer uso de él.
         </li>
 
         <li>
             <b>EmailContactoFacturaci\u00F3n [Texto]:</b>
-            Email de la persona encargada de la facturación. Se usa para escribirlo en la factura electrónica.
+            Email de la persona encargada de la facturación. Se usa para escribirlo en la factura electrónica (XML).
             No es obligatorio, pero los clientes podrían hacer uso de él.
         </li>
 
@@ -511,13 +511,13 @@
         Ejecuta <b>SimpleOps</b>, haz clic en el botón <i>Hacer Pruebas Internas</i>, espera unos segundos y te aparecerá un mensaje sobre
         el envío de documentos electrónicos a la DIAN, léelo y haz clic en <i>Aceptar</i>. Si realizaste correctamente todos los pasos anteriores
         te aparecerá un mensaje de Éxito que significa que <b>SimpleOps</b> se comunicó con el servidor de la DIAN en nombre de tu empresa y pudo
-        enviar exitósamente la primera factura electrónica de prueba interna. Haz clic en Aceptar y se ejecutarán varias pruebas de otras
+        enviar exitósamente la primera factura electrónica de prueba interna. Haz clic en <i>Aceptar</i> y se ejecutarán varias pruebas de otras
         facturas, notas débito y notas crédito, puedes volver al código y suspender la ejecución cuando desees.
     </p>
 
     <p>
         Abre la carpeta <i>[CarpetaProgramas]\SimpleOps\Documentos Electrónicos\[Año]\[Mes]-[Día]</i> donde encontrarás las representaciones
-        gráficas (archivos PDFs) de los documentos de prueba que acabas de enviar a la DIAN y las facturas electrónicas en sí (archivos XMLs).
+        gráficas (archivos PDF) de los documentos de prueba que acabas de enviar a la DIAN y las facturas electrónicas (archivos XML).
     </p>
 
     <p>
@@ -617,9 +617,9 @@
     <p>Presiona <i>Ctrl + S</i> para guardar los cambios realizados.</p>
 
     <p>
-        Ingresa a <a href="https://www.dian.gov.co">www.dian.gov.co</a> y haz clic en
+        Ingresa al portal de facturador: en <a href="https://www.dian.gov.co">www.dian.gov.co</a> haz clic en
         <i>Temas de interés > Factura Electrónica > Facturando Electrónicamente</i> e ingresa de la misma manera que al portal de habilitación.
-        Después de ingresar al portal de facturador haz clic en <i>Partipantes > Asociar prefijos</i>. En <i>Proveedor - Software</i> selecciona
+        Haz clic en <i>Partipantes > Asociar prefijos</i>. En <i>Proveedor - Software</i> selecciona
         la opción <i>[NombreDeTuEmpresa] - SimpleOps[NitDeTuEmpresa]</i>, en <i>Prefijo</i> selecciona la opción que contiene el prefijo, número
         de resolución y rango de numeración recién autorizado y haz clic en <i>Agregar</i>. Verifica que la fecha de expiración sea la misma que
         ingresaste en <i>Empresa - Producción.json</i> > <i>FinAutorizaci\u00F3nFacturaci\u00F3n</i>.
@@ -636,7 +636,7 @@
 
     <p>
         Ejecuta <b>SimpleOps</b> y haz clic en el botón <i>Obtener Clave Tecnica</i>. Te aparecerá un mensaje con la clave técnica del ambiente de
-        producción. Puedes copiar el texto del mensaje usando Ctrl + C y pegarlo en el bloc de notas para más facilidad. Suspende la ejecución, abre
+        producción. Puedes copiar el texto del mensaje con <i>Ctrl + C</i> y pegarlo en el bloc de notas para más facilidad. Suspende la ejecución, abre
         <i>Empresa - Producción.json</i> e ingresa el valor de la clave ténica en <i>ClaveT\u00E9cnicaAplicaci\u00F3n</i>. Guarda los cambios realizados,
         cierra el archivo y nuevamente haz el procedimiento del parrafo anterior.
     </p>
@@ -647,20 +647,20 @@
     </p>
 
     <p>
-        ¡Con esto has finalizado y
+        ¡Con esto has finalizado con la DIAN y
         <b>SimpleOps</b> está listo para facturar electrónicamente!
     </p>
 
     <h2 id="paso10">10. Facturación Electrónica</h2>
     <p>
         La facturación electrónica se puede hacer directamente con <b>SimpleOps</b>
-        funcionando como tu programa ERP o mediante el uso de un programa tercero (otro ERP, Excel u otro). <b>Nota:</b> A junio de 2021, <b>SimpleOps</b> aún no tiene interfaz
+        funcionando como tu aplicación ERP o mediante el uso de un programa tercero (otro ERP, Excel u otro). <b>Nota:</b> A junio de 2021, <b>SimpleOps</b> aún no tiene interfaz
         gráfica y no puede ser usado como ERP, entonces la única opción para facturar electrónicamente es usando un programa tercero.
     </p>
 
     <p>
         Para facturar electrónicamente usando un programa tercero necesitarás que ese programa lleve el registro del concecutivo de facturación
-        y que genere un archivo JSON con la información mínima para generar la factura. En <b>SimpleOps</b> establece
+        y que genere un archivo JSON con la información mínima para generar la factura y en <b>SimpleOps</b> debes establecer
         <i>Estáticas > Configuración.cs > ModoIntegraciónTerceros</i> en <i>true</i>. En este modo <b>SimpleOps</b> supervisa una carpeta del
         computador y si encuentra que un nuevo archivo ha sido añadido, lo procesa, le envía la factura
         electrónica a la DIAN, genera la representación gráfica en PDF y genera un archivo respuesta que puede ser leído por el programa tercero,
@@ -668,7 +668,7 @@
     </p>
 
     <p>
-        A continuación puedes ver el texto con la información necesaria que debe contener un archivo JSON para generar una factura electrónica:
+        A continuación puedes ver un texto de ejemplo con la información necesaria que debe contener un archivo JSON para generar una factura electrónica:
     </p>
 
     <p class="código">
@@ -718,7 +718,7 @@
     </p>
 
     <p>
-        La mayoría de los elementos son autoexplicativos, algunos requieren explicación adicional o aplican solo para notas crédito:
+        La mayoría de los elementos son autoexplicativos. Algunos requieren explicación adicional o aplican solo para notas crédito:
         <ul>
             <li>
                 <b>VentaPrefijo:</b> Prefijo de la factura a la que se le aplicará la nota crédito.
@@ -730,22 +730,22 @@
                 <b>ProductoUnidad:</b> Principalmente puede ser Par o Unidad.
             </li>
             <li>
-                <b>ProductoPorcentajeIVAPropio:</b> Si el producto le aplica un IVA diferente de la tarifa normal del 19%. Si le aplica
+                <b>ProductoPorcentajeIVAPropio:</b> Si el producto le aplica un IVA diferente de la tarifa normal del 19%. Si le aplica, debes
                 ingresar el valor en decimal, por ejemplo 0.05 para 5%. Si se deja en null se aplicará la tarifa normal.
             </li>
             <li>
-                <b>ProductoExclu\u00EDdoIVA:</b> Si es verdadero es excluído de IVA y tiene un tratamiento tributario diferente porque no suma
+                <b>ProductoExclu\u00EDdoIVA:</b> Si se establece en <i>true</i> es excluído de IVA y tiene un tratamiento tributario diferente porque no suma
                 a la base tributable.
             </li>
             <li>
                 <b>N\u00FAmero:</b> Número consecutivo de la factura o nota crédito. Este número lo debe controlar y aumentar el programa tercero.
             </li>
             <li>
-                <b>ConsecutivoDianAnual:</b> Se puede dejar en null.
+                <b>ConsecutivoDianAnual:</b> Se puede dejar en null, normalmente se autocalcula internamente.
             </li>
             <li>
                 <b>ClienteMunicipioNombre y ClienteMunicipioDepartamento:</b> Deben coincidir con los de
-                <a href="IDs Municipios.html">esta tabla</a> y deben ser procesado para omitir los carácteres inválidos para el JSON,
+                <a href="IDs Municipios.html">esta tabla</a> y deben ser procesados para omitir los carácteres inválidos para el JSON,
                 como lo hace <a href="https://www.freeformatter.com/json-escape.html">esta utilidad</a>.
             </li>
             <li>
