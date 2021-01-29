@@ -47,7 +47,7 @@ namespace SimpleOps.Modelo {
 
         public DatosCotización ObtenerDatos(OpcionesDocumento opcionesDocumento) {
 
-            var mapeador = new Mapper(ConfiguraciónMapeadorVenta);
+            var mapeador = new Mapper(ConfiguraciónMapeadorCotización);
             var datos = mapeador.Map<DatosCotización>(this);
             datos.NombreDocumento = "Cotización";
             CompletarDatosCotización(opcionesDocumento, datos, Líneas);

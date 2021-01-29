@@ -43,8 +43,6 @@ namespace SimpleOps {
 
         public const bool ModoIntegraciónTerceros = false; // Modo que permite integrar la funcionalidad de facturación electrónica y la generación de catálogos con programas terceros.
 
-        public const bool HacerPruebasUnitarias = false; // Se usa verdadero cuando se quieran realizar las pruebas al iniciar la aplicación.
-
         public const bool UsarSQLite = true; // Si es falso se usa MS SQL.
 
         public const bool GuardarFechaReducidaSQLite = true; // Si es verdadero la base de datos se construirá con algunas columnas (FechaHoraDeCreación y otras que no requieren exactitud a la hora y minuto) con formato yyMMdd y otras columnas con formato yyMMddhhmmssf. Esto ahorra alrededor de 15% de espacio comparado con el formato por defecto. En los ensayos realizados con los datos iniciales se obtuvo el mismo tiempo de escritura de toda la base de datos de 5:30 min así que se espera que el rendimiento sea el mismo y el tamaño pasó de 23 752 KB a 20 268 KB. Ver https://stackoverflow.com/questions/49261542/entityframework-core-format-datetime-in-sqlite-database/59981186#59981186. Para cambiar este comportamiento se debe borrar la base de datos, reiniciar las migraciones y recrearla.

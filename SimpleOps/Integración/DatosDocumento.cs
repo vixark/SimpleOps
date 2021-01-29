@@ -24,8 +24,6 @@ namespace SimpleOps.Integración {
 
         public DateTime? FechaHora { get; set; } // Puede ser nulo para documentos que no la requieren como fichas técnicas.
 
-        public int? ConsecutivoDianAnual { get; set; }
-
         #endregion Propiedades Documento
 
 

@@ -131,7 +131,7 @@ namespace SimpleOps.Integración {
                     var mapeador = new Mapper(ConfiguraciónMapeadorVentaIntegraciónInverso);
                     var venta = mapeador.Map<Venta>(datosVenta);
                     venta.Líneas.ForEach(lv => lv.Venta = venta); // Necesario porque después de ser leídas por el Automapper no quedan automáticamente enlazadas.
-                    if (venta.ConsecutivoDianAnual == null) venta.ConsecutivoDianAnual = venta.Número - Empresa.PrimerNúmeroFacturaAutorizada + 1;
+                    venta.ConsecutivoDianAnual = venta.Número - Empresa.PrimerNúmeroFacturaAutorizada + 1;
                     ValidarCliente(venta.Cliente);
                     ProcesarDocumentoCliente(venta, ruta, "factura");
 
