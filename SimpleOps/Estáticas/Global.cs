@@ -55,9 +55,13 @@ namespace SimpleOps {
 
         public const string CarpetaImagenesPlantillas = "Imagenes"; // Es la misma para el modo desarrollo y producción (en la ruta de la aplicación).
 
+        public const string CarpetaImagenesProductos = "Productos"; // Está dentro de la CarpetaImagenesPlantillas y el nombre es el mismo para el modo desarrollo y producción (en la ruta de la aplicación).
+
         public const string CarpetaPlantillasDesarrollo = "Plantillas";
 
         public const string CarpetaDocumentosElectrónicos = "Documentos Electrónicos";
+
+        public const string CarpetaCotizaciones = "Cotizaciones"; // Carpeta donde se almacena el PDF de las cotizaciones y catálogos realizados.
 
         public const string NombreArchivoLogoEmpresa = "LogoEmpresa.png";
 
@@ -98,8 +102,8 @@ namespace SimpleOps {
                 _ModoDesarrolloPlantillas = value;
                 if (_ModoDesarrolloPlantillas) {
 
-                    var rutaDesarrollo = ObtenerRutaCarpetaPlantillas(forzarRutaDesarrollo: true);
-                    var rutaAplicación = ObtenerRutaCarpetaPlantillas(forzarRutaAplicación: true);
+                    var rutaDesarrollo = ObtenerRutaPlantillas(forzarRutaDesarrollo: true);
+                    var rutaAplicación = ObtenerRutaPlantillas(forzarRutaAplicación: true);
                     MostrarInformación($"Activado el modo de desarrollo de plantillas.{DobleLínea}Este modo suspende la ejecución del código después de " +
                                        $"crear cada archivo PDF, permite la edición de los archivos CSHTML durante esta suspención y al reanudar genera " +
                                        $"nuevamente el mismo archivo con los cambios realizados. Esto facilita la edición y desarrollo de archivos CSHTML. " +
@@ -159,8 +163,8 @@ namespace SimpleOps {
 
        public static MapperConfiguration ConfiguraciónMapeadorCotización
             = new MapperConfiguration(c => {
-                c.CreateMap<LíneaCotización, DatosLíneaProducto>();
-                c.CreateMap<Cotización, DatosCotización>().ForMember(vg => vg.CódigoDocumento, mce => mce.MapFrom(v => v.ID));
+                c.CreateMap<LíneaCotización, DatosLíneaProducto>().ForMember(dlc => dlc.PrecioBaseTexto, m => m.MapFrom(lc => lc.PrecioTexto));
+                c.CreateMap<Cotización, DatosCotización>().ForMember(dc => dc.CódigoDocumento, m => m.MapFrom(v => v.ID));
             });
 
         public static MapperConfiguration ConfiguraciónMapeadorEmpresa = new MapperConfiguration(c => c.CreateMap<OpcionesEmpresa, DatosEmpresa>());
@@ -341,6 +345,8 @@ namespace SimpleOps {
 
         public enum TipoReglaDian { Rechazo, Notificación }
 
+        public enum TipoCotización { Cotización, Catálogo }
+
         public enum RazónNotaCrédito { // Tomados del numeral 13.2.4. de la documentación de la DIAN para la facturación electrónica. AjustePrecio se supondrá que es para corrección de errores (hacia abajo) en el precio de algún producto y Descuento para descuentos acordados.
             [Display(Name = "Devolución Parcial")] DevoluciónParcial = 1, [Display(Name = "Anulación Factura")] AnulaciónFactura = 2, 
             [Display(Name = "Descuento")] Descuento = 3, [Display(Name = "Ajuste Precio")] AjustePrecio = 4, [Display(Name = "Otra")] Otra = 5 
@@ -350,8 +356,8 @@ namespace SimpleOps {
 
         public enum PlantillaDocumento {
             VentaPdf, ProformaPdf, NotaCréditoPdf, NotaDébitoPdf, CotizaciónPdf, PedidoPdf, ComprobanteEgresoPdf, CobroPdf, RemisiónPdf, CatálogoPdf,
-            MarcoPdf, ListaProductosPdf, VentaEmail, ProformaHtml, NotaCréditoEmail, NotaDébitoEmail, CotizaciónEmail, PedidoEmail, ComprobanteEgresoEmail, CobroEmail,
-            RemisiónEmail, CatálogoEmail, MarcoEmail, ListaProductosEmail
+            MarcoPdf, ListaProductosPdf, VentaEmail, ProformaHtml, NotaCréditoEmail, NotaDébitoEmail, CotizaciónEmail, PedidoEmail, ComprobanteEgresoEmail, 
+            CobroEmail, RemisiónEmail, CatálogoEmail, MarcoEmail, ListaProductosEmail
         }
 
         public enum DocumentoIntegración {
@@ -444,23 +450,48 @@ namespace SimpleOps {
         public static string ObtenerRutaDocumentosElectrónicos()
             => ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaDocumentosElectrónicos, crearSiNoExiste: true);
 
-        public static string ObtenerRutaDocumentosElectrónicosDeHoy()
-            => ObtenerRutaCarpeta(ObtenerRutaCarpeta(ObtenerRutaDocumentosElectrónicos(), AhoraUtcAjustado.Year.ATexto(), crearSiNoExiste: true),
-                  HoyNombresArchivos, crearSiNoExiste: true);
+        public static string ObtenerRutaCotizaciones() => ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaCotizaciones, crearSiNoExiste: true);
+
+        public static string ObtenerRutaDocumentosElectrónicosDeHoy() => ObtenerRutaDocumentosDeHoy(ObtenerRutaDocumentosElectrónicos());
+
+        public static string ObtenerRutaCotizacionesDeHoy() => ObtenerRutaDocumentosDeHoy(ObtenerRutaCotizaciones());
+
+        public static string ObtenerRutaDocumentosDeHoy(string rutaBase) => ObtenerRutaCarpeta(ObtenerRutaCarpeta(rutaBase, 
+            AhoraUtcAjustado.Year.ATexto(), crearSiNoExiste: true), HoyNombresArchivos, crearSiNoExiste: true);
 
         public static string ObtenerRutaCopiasSeguridad() => ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaCopiasSeguridad, crearSiNoExiste: true);
 
         public static string ObtenerRutaOpciones() => ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaOpciones, crearSiNoExiste: true);
 
-        public static string ObtenerRutaPlantilla(PlantillaDocumento plantilla, bool forzarRutaAplicación = false, bool forzarRutaDesarrollo = false)
-            => Path.Combine(ObtenerRutaCarpetaPlantillas(forzarRutaAplicación, forzarRutaDesarrollo), $"{plantilla}.cshtml");
+        public static string ObtenerRutaPlantilla(PlantillaDocumento plantilla, bool forzarRutaAplicación = false, bool forzarRutaDesarrollo = false, 
+            int númeroPágina = 1) => Path.Combine(ObtenerRutaPlantillas(forzarRutaAplicación, forzarRutaDesarrollo), 
+                $"{plantilla}{(númeroPágina == 1 ? "" : númeroPágina.ATexto())}.cshtml");
 
-        public static string ObtenerRutaCarpetaImagenesPlantillas() 
-            => ObtenerRutaCarpeta(ObtenerRutaCarpetaPlantillas(forzarRutaAplicación: true, forzarRutaDesarrollo: false), 
-                CarpetaImagenesPlantillas, crearSiNoExiste: true); // No se maneja la carpeta de imagenes en la ruta de desarrollo. No es necesario modificarlas desde el Visual Studio. Las plantillas si se manejan en ambos lugares porque si se requiere trabajar en ellas y se deben agregar al repositorio y también se requieren tener las propias por fuera del repositorio en la ruta de la aplicación.
+        public static string ObtenerRutaImagenesPlantillas() => ObtenerRutaCarpeta(ObtenerRutaPlantillas(forzarRutaAplicación: true, 
+            forzarRutaDesarrollo: false), CarpetaImagenesPlantillas, crearSiNoExiste: true); // No es necesario modificarlas desde el Visual Studio. Las plantillas si se manejan en ambos lugares porque si se requiere trabajar en ellas y se deben agregar al repositorio y también se requieren tener las propias por fuera del repositorio en la ruta de la aplicación.
+
+        public static string ObtenerRutaImagenesProductos() 
+            => ObtenerRutaCarpeta(ObtenerRutaImagenesPlantillas(), CarpetaImagenesProductos, crearSiNoExiste: true); // No es necesario modificarlas desde el Visual Studio. Las plantillas si se manejan en ambos lugares porque si se requiere trabajar en ellas y se deben agregar al repositorio y también se requieren tener las propias por fuera del repositorio en la ruta de la aplicación.
 
 
-        public static string ObtenerRutaCarpetaPlantillas(bool forzarRutaAplicación = false, bool forzarRutaDesarrollo = false) {
+        /// <summary>
+        /// Devuelve la ruta de la imagen del producto con la extensión que exista. Devuelve null si no existe ninguna imagen.
+        /// </summary>
+        /// <param name="referencia"></param>
+        /// <returns></returns>
+        public static string? ObtenerRutaImagenProducto(string? referencia) {
+
+            if (referencia == null) return null;
+            foreach (var extensión in ObtenerExtensionesImagenes()) {
+                var rutaPosibleImagen = Path.Combine(ObtenerRutaImagenesProductos(), $"{referencia}{extensión}");
+                if (File.Exists(rutaPosibleImagen)) return rutaPosibleImagen;
+            }
+            return null;
+
+        } // ObtenerRutaImagenProducto>
+
+
+        public static string ObtenerRutaPlantillas(bool forzarRutaAplicación = false, bool forzarRutaDesarrollo = false) {
 
             if (forzarRutaDesarrollo || (!forzarRutaAplicación && ModoDesarrolloPlantillas)) { // Para facilitar el desarrollo se devuelve directamente la ruta de la plantilla de desarrollo cuando no se esté forzando que la tome de la ruta de la aplicación (típicamente solo al iniciar cuando ReemplazarPlantillasDocumentos es verdadero).
                 return ObtenerRutaCarpeta(RutaDesarrollo, CarpetaPlantillasDesarrollo, crearSiNoExiste: false);
@@ -469,6 +500,27 @@ namespace SimpleOps {
             }
 
         } // ObtenerRutaCarpetaPlantillas>
+
+
+        public static Dictionary<int, string> ObtenerRutasPáginasPlantilla(PlantillaDocumento plantilla, bool omitirPrimera, bool forzarRutaAplicación = false, 
+            bool forzarRutaDesarrollo = false) {
+
+            var númeroPágina = 0;
+            bool existe;
+            var rutasPáginasPlantilla = new Dictionary<int, string>();
+
+            do {
+
+                númeroPágina++;
+                var rutaPlantilla = ObtenerRutaPlantilla(plantilla, forzarRutaAplicación, forzarRutaDesarrollo, númeroPágina);
+                existe = File.Exists(rutaPlantilla);
+                if (existe && (númeroPágina != 1 || !omitirPrimera)) rutasPáginasPlantilla.Add(númeroPágina, rutaPlantilla);
+
+            } while (existe);
+
+            return rutasPáginasPlantilla;
+
+        } // ObtenerRutasPáginasPlantilla>
 
 
         public static string ObtenerRutaOpciones<T>(T opciones) where T : class
@@ -629,10 +681,17 @@ namespace SimpleOps {
 
             foreach (var plantilla in ObtenerValores<PlantillaDocumento>()) {
 
-                var rutaEnDesarrollo = ObtenerRutaPlantilla(plantilla, forzarRutaDesarrollo: true);
-                var rutaEnAplicación = ObtenerRutaPlantilla(plantilla, forzarRutaAplicación: true);
-                if (File.Exists(rutaEnDesarrollo) && (sobreescribir || !File.Exists(rutaEnAplicación))) 
-                    File.Copy(rutaEnDesarrollo, rutaEnAplicación, overwrite: sobreescribir);
+                var rutasPáginasDesarrollo = ObtenerRutasPáginasPlantilla(plantilla, omitirPrimera: false, forzarRutaDesarrollo: true);
+                var rutasPáginasAplicación = ObtenerRutasPáginasPlantilla(plantilla, omitirPrimera: false, forzarRutaAplicación: true);
+                foreach (var kvp in rutasPáginasDesarrollo) {
+
+                    var rutaPáginaDesarrollo = kvp.Value;
+                    var númeroPáginaDesarrollo = kvp.Key;
+                    if (sobreescribir || !rutasPáginasAplicación.ContainsKey(númeroPáginaDesarrollo)) 
+                        File.Copy(rutaPáginaDesarrollo, ObtenerRutaPlantilla(plantilla, forzarRutaAplicación: true, númeroPágina: númeroPáginaDesarrollo), 
+                            overwrite: sobreescribir);
+
+                }
 
             }
 
@@ -644,14 +703,14 @@ namespace SimpleOps {
         /// </summary>
         public static void ConfigurarCarpetasYArchivos() {
 
-            var rutaCarpetaPlantillasDesarrollo = ObtenerRutaCarpeta(RutaDesarrollo, CarpetaPlantillasDesarrollo, crearSiNoExiste: false);
-            var rutaCarpetaPlantillas = ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaPlantillas, crearSiNoExiste: true);
-            var rutaCarpetaImagenesPlantillasDesarrollo = ObtenerRutaCarpeta(rutaCarpetaPlantillasDesarrollo, CarpetaImagenesPlantillas, crearSiNoExiste: false);
-            var rutaCarpetaImagenesPlantillas = ObtenerRutaCarpeta(rutaCarpetaPlantillas, CarpetaImagenesPlantillas, crearSiNoExiste: true);
-            foreach (var rutaImagen in Directory.GetFiles(rutaCarpetaImagenesPlantillasDesarrollo)) {
-                var rutaImagenNueva = Path.Combine(rutaCarpetaImagenesPlantillas, Path.GetFileName(rutaImagen));
-                if (!File.Exists(rutaImagenNueva)) File.Copy(rutaImagen, rutaImagenNueva); // Solo se copia la imagen si no está porque es posible que el usuario la haya personalizado.
-            }
+            var carpetaPlantillasDesarrollo = ObtenerRutaCarpeta(RutaDesarrollo, CarpetaPlantillasDesarrollo, crearSiNoExiste: false);
+            var carpetaPlantillas = ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaPlantillas, crearSiNoExiste: true);
+            var carpetaImagenesDesarrollo = ObtenerRutaCarpeta(carpetaPlantillasDesarrollo, CarpetaImagenesPlantillas, crearSiNoExiste: false);
+            var carpetaImagenes = ObtenerRutaCarpeta(carpetaPlantillas, CarpetaImagenesPlantillas, crearSiNoExiste: true);
+            var carpetaImagenesProductosDesarrollo = ObtenerRutaCarpeta(carpetaImagenesDesarrollo, CarpetaImagenesProductos, crearSiNoExiste: false);
+            var carpetaImagenesProductos = ObtenerRutaCarpeta(carpetaImagenes, CarpetaImagenesProductos, crearSiNoExiste: true);
+            CopiarArchivos(carpetaImagenesDesarrollo, carpetaImagenes, sobreescribir: false); // Solo se copia la imagen si no está porque es posible que el usuario la haya personalizado.
+            CopiarArchivos(carpetaImagenesProductosDesarrollo, carpetaImagenesProductos, sobreescribir: false); // Solo se copia la imagen si no está porque es posible que el usuario la haya personalizado. Aunque las imagenes de ejemplo no serán útiles para el usuario si terminan en su carpeta se nombran iniciando con ZZ para que al menos aparezcan al final de la carpeta si el usuario usa orden alfabético. El usuario podría si quisiera modificar estos archivos para que sean imagenes en blanco y no le estorben visualmente y al ser archivos existentes no serían reemplazados por el código.
 
             CopiarPlantillasARutaAplicación(sobreescribir: false);
                 

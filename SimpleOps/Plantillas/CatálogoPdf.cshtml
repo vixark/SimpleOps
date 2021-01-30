@@ -5,8 +5,14 @@
     ClaveMarco = "Marco";
 }
 
+<h1>Título Página 1 del Catálogo</h1><p>Contenido de la página 1 del catálogo.</p>
+@{
+    var referencia1 = Model.Líneas[1].ProductoReferencia;
+}
+@referencia1<br />
+@Model.Líneas[1].ProductoDescripción<br />
+@Model.Líneas[1].PrecioBaseTexto<br />
+<img src="@Model.ImágenesProductosBase64[referencia1]" />
 
 <style>
-
-
 </style>

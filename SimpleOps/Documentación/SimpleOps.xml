@@ -133,8 +133,8 @@
             un diccionario con como mínimo un marco. El documento tendrá un encabezado, un cuerpo que podrá ocupar varias páginas y finalmente habrá un pie de 
             página. Solo habrá un encabezado y un pie de página en todo el documento.<br/><br/>
             En el <see cref="F:SimpleOps.DocumentosGráficos.DatosDocumento.Modo.PáginasIndependientes"/> se debe pasar al diccionario un marco y un ítem con nombre Página[Número] 
-            por cada página extra que tenga el documento, excepto la Página1 porque en esta se agrega el cuerpo. Cada página del 
-            documento tendrá su propio encabezado y pie de página.
+            por cada página extra que tenga el documento, excepto la Página1 porque en esta se agrega el cuerpo (VentaPdf.cshtml, CatálogoPdf.cshtml, etc).
+            Cada página del documento tendrá su propio encabezado y pie de página.
             </summary>
         </member>
         <member name="T:SimpleOps.DocumentosGráficos.DocumentosGráficos">
@@ -153,6 +153,18 @@
             <param name="partes"></param>
             <returns></returns>
         </member>
+        <member name="M:SimpleOps.DocumentosGráficos.DocumentosGráficos.CrearPdfCatálogo(SimpleOps.Modelo.Cotización,System.String@,System.Nullable{System.Int32})">
+            <summary>
+            
+            </summary>
+            <param name="cotización"></param>
+            <param name="rutaPdf"></param>
+            <param name="tamañoImagenes">Alto y ancho al que se redimensionarán las imagenes. Si es nulo, no se redimensionan. Redimensionar
+            las imagenes ayuda a que el tamaño final del PDF sea más pequeño y además las imagenes son recortadas inteligentemente (ajustadas a su
+            contenido) antes de ser redimensionadas, esto permite que todos las imagenes de los productos tengan un tamaño homogéneo independiente
+            de como estén en las imagenes originales.</param>
+            <returns></returns>
+        </member>
         <member name="M:SimpleOps.DocumentosGráficos.DocumentosGráficos.CompletarDatosVenta``1(SimpleOps.DocumentosGráficos.OpcionesDocumento,SimpleOps.DocumentosGráficos.DatosVenta,System.Collections.Generic.List{``0})">
             <summary>
             Procedimiento común para las ventas y las notas crédito de ventas que termina de completar el objeto de datos después de ser mapeado.
@@ -160,15 +172,6 @@
             <typeparam name="M"></typeparam>
             <param name="opcionesDocumento"></param>
             <param name="datosVenta"></param>
-            <param name="líneas"></param>
-        </member>
-        <member name="M:SimpleOps.DocumentosGráficos.DocumentosGráficos.CompletarDatosCotización``1(SimpleOps.DocumentosGráficos.OpcionesDocumento,SimpleOps.DocumentosGráficos.DatosCotización,System.Collections.Generic.List{``0})">
-            <summary>
-            Procedimiento común para las cotizaciones y catálogos que termina de completar el objeto de datos después de ser mapeado.
-            </summary>
-            <typeparam name="L"></typeparam>
-            <param name="opcionesDocumento"></param>
-            <param name="datosCotización"></param>
             <param name="líneas"></param>
         </member>
         <member name="M:SimpleOps.DocumentosGráficos.DocumentosGráficos.ObtenerTotalPáginas``2(``0,System.Collections.Generic.List{``1})">
@@ -234,6 +237,13 @@
             <summary>
             Métodos, funciones y constantes estáticas de uso global para todo SimpleOps. Se diferencian de Vixark.General porque son propias del funcionamiento de SimpleOps y no de uso general compartido con otros proyectos.
             </summary>
+        </member>
+        <member name="M:SimpleOps.Global.ObtenerRutaImagenProducto(System.String)">
+            <summary>
+            Devuelve la ruta de la imagen del producto con la extensión que exista. Devuelve null si no existe ninguna imagen.
+            </summary>
+            <param name="referencia"></param>
+            <returns></returns>
         </member>
         <member name="M:SimpleOps.Global.CargarOpciones">
             <summary>
@@ -1548,6 +1558,12 @@
             Precio dado a cliente. Se diferencia de PrecioCliente en que la tabla Cotizaciones es un registro histórico mientras que la tabla PreciosClientes tiene solo los últimos precios.
             </summary>
         </member>
+        <member name="P:SimpleOps.Modelo.LíneaCotización.PrecioTexto">
+            <summary>
+            Se usa principalmente para pasar al procedimiento de generación de representación gráfica de documentos que no tiene
+            acceso a la función ATextoDinero().
+            </summary>
+        </member>
         <member name="T:SimpleOps.Modelo.LíneaNegocio">
             <summary>
             De producto.
@@ -2284,6 +2300,17 @@
             <param name="rutaCarpetaDestino"></param>
             <returns></returns>
         </member>
+        <member name="M:Vixark.General.CopiarArchivos(System.String,System.String,System.Boolean)">
+            <summary>
+            Copia todos los archivos que estén en <paramref name="rutaCarpetaOrigen"/> en <paramref name="rutaCarpetaDestino"/>. 
+            Si <paramref name="sobreescribir"/> es falso no se reemplazan los existentes con el mismo nombre en <paramref name="rutaCarpetaDestino"/>. 
+            Este procedimiento es útil para instaladores.
+            </summary>
+            <param name="rutaCarpetaOrigen"></param>
+            <param name="rutaCarpetaDestino"></param>
+            <param name="sobreescribir"></param>
+            <returns></returns>
+        </member>
         <member name="M:Vixark.General.Existe(Vixark.General.TipoRuta,System.String,System.String,System.String@,System.String)">
             <summary>
             Función que permite devolver un mensaje descriptivo sobre la no existencia o la falta de asignación del valor de la ruta de cierto archivo 
@@ -2312,6 +2339,28 @@
             </summary>
             <param name="ruta"></param>
             <param name="rutaZip"></param>
+        </member>
+        <member name="M:Vixark.General.RedimensionarImagen(System.String,System.String,System.Int32,System.Int32,System.Double,System.Int32)">
+            <summary>
+            Redimensiona una imagen al nuevo tamaño recortándola inteligentemente. El recorte inteligente detecta el color del fondo de la imagen
+            y encuentra cual es el rectángulo mínimo al que se puede recortar sin perder ninguna parte de la imagen, recorta la imagen a este 
+            rectángulo, la ajusta con fondos del color de fondo y la redimensiona al tamaño final requerido.
+            Tiene funcionamiento diferente cuando está desactivada la opción de compilación para permitir código no seguro y no está añadido el
+            símbolo de compilación condicional PermitirCódigoNoSeguro. En este caso el recorte de la imagen no es inteligente y la función
+            se limita a redimensionar la imagen y devolverla con el ancho nuevo manteniendo la relación de aspecto.
+            </summary>
+            <param name="archivoInicial"></param>
+            <param name="archivoFinal"></param>
+            <param name="anchoNuevo"></param>
+            <param name="altoNuevo"></param>
+            <param name="toleranciaDiferenciaColor">La tolerancia que permite en la diferencia del color de las 4 esquinas y en la detección del contorno 
+            del objeto sobre el fondo. Con las 4 esquinas se saca un promedio del color de fondo. 
+            Con este valor en 5 se empieza a notar la diferencia pero sigue siendo sutil. 
+            Si las imagenes están quedando recortadas descentradas, es porque el fondo tiene suciedad, en estos casos se puede considerar aumentar 
+            el valor de la tolerancia pero esto puede producir recortes incorrectos de algunas imagenes que se mezclan con el fondo.
+            Otra solución sería preprocesar las imagenes con un editor de imagenes para reducir la suciedad.</param>
+            <param name="margenRecorteImagen">Los pixeles de respiración que se le dejan a la imagen recortada a todos los lados. 
+            Es necesario usar un valor mayor que 2 siempre porque con 0 es muy justo donde va el cambio de color.</param>
         </member>
         <member name="M:Vixark.General.ObtenerPalabraNúmeroYGénero(System.String,System.String)">
             <summary>
@@ -2757,36 +2806,6 @@
             <summary>
             Versión de CopiarA usando objects en los casos que no se puede usar la versión genérica porque el objetoDestino es de solo lectura y 
             no se puede pasar con ref.
-            </summary>
-        </member>
-        <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
-            <summary>
-            GeneratedInternalTypeHelper
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateInstance(System.Type,System.Globalization.CultureInfo)">
-            <summary>
-            CreateInstance
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.GetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Globalization.CultureInfo)">
-            <summary>
-            GetPropertyValue
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.SetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Globalization.CultureInfo)">
-            <summary>
-            SetPropertyValue
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateDelegate(System.Type,System.Object,System.String)">
-            <summary>
-            CreateDelegate
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.AddEventHandler(System.Reflection.EventInfo,System.Object,System.Delegate)">
-            <summary>
-            AddEventHandler
             </summary>
         </member>
     </members>

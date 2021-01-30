@@ -1,0 +1,13 @@
+﻿@inherits SimpleOps.DocumentosGráficos.PlantillaBase<SimpleOps.DocumentosGráficos.DatosCotización>
+
+<h1>Título Página 2 del Catálogo</h1><p>Contenido de la página 2 del catálogo.</p>
+@{
+    var referencia2 = Model.Líneas[2].ProductoReferencia;
+}
+@referencia2<br />
+@Model.Líneas[2].ProductoDescripción<br />
+@Model.Líneas[2].PrecioBaseTexto<br />
+<img src="@Model.ImágenesProductosBase64[referencia2]" />
+
+<style>
+</style>

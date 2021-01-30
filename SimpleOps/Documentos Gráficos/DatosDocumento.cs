@@ -24,13 +24,17 @@ namespace SimpleOps.DocumentosGráficos {
 
         public string NombreDocumento { get; set; } = null!; // El nombre que va en el encabezado de la página. Nunca es vacío porque asigna en el constructor de cada documento heredado. Se usa el nombre redundante []Documento para darle más claridad cuando se escriba en la plantilla CSHTML. 
 
-        public string PrefijoNombreArchivo { get; set; } = ""; // Algunos documentos usan un prefijo adicional al nombre de archivo autogenerado con el código para evitar colisiones con otros almacenados en la misma carpeta, por ejemplo se usa NC para las notas crédito de ventas y texto vacío para las ventas.
+        public string PrefijoNombreArchivo { get; set; } = ""; // Algunos documentos usan un prefijo adicional al nombre de archivo autogenerado con el código para evitar colisiones con otros almacenados en la misma carpeta, por ejemplo se usa NC para las notas crédito de ventas y texto vacío para las ventas. El código de documento de las ventas ya puede traer su propio prefijo de facturación.
 
         public string? LogoBase64 { get; set; } // El logo principal del documento. Se debe pasar como Base64 porque el iText no soporta imagenes que estén relacionadas en el atributo src con rutas locales que contengan espacios en su nombre.
 
         public string? CertificadoBase64 { get; set; } // El logo del certificado de la empresa. Se debe pasar como Base64 porque el iText no soporta imagenes que estén relacionadas en el atributo src con rutas locales que contengan espacios en su nombre.
 
+        public Dictionary<string, string> ImágenesProductosBase64 { get; } = new Dictionary<string, string>(); // Las imagenes de los productos que están en la lista. Solo se usa get; por esta recomendación https://docs.microsoft.com/es-es/dotnet/fundamentals/code-analysis/quality-rules/ca2227?view=vs-2019 y aunque esta propiedad pertenece a un DTO no es una propiedad que se lea desde el otro objeto (Venta, Cotización, etc) si no que se construye con la información leída de él.
+
         public string? CódigoDocumento { get; set; } // El número o código (cuando el número lleva prefijo) del documento. Puede ser nulo para documentos sin código. Se usa el nombre redundante []Documento para darle más claridad cuando se escriba en la plantilla CSHTML. 
+
+        public string? NombreArchivoPropio { get; set; } // Si no se establece se obtiene automáticamente con el PrefijoNombreArchivo + CódigoDocumento.
 
         public string? Observación { get; set; }
 
@@ -42,8 +46,8 @@ namespace SimpleOps.DocumentosGráficos {
         /// un diccionario con como mínimo un marco. El documento tendrá un encabezado, un cuerpo que podrá ocupar varias páginas y finalmente habrá un pie de 
         /// página. Solo habrá un encabezado y un pie de página en todo el documento.<br/><br/>
         /// En el <see cref="Modo.PáginasIndependientes"/> se debe pasar al diccionario un marco y un ítem con nombre Página[Número] 
-        /// por cada página extra que tenga el documento, excepto la Página1 porque en esta se agrega el cuerpo. Cada página del 
-        /// documento tendrá su propio encabezado y pie de página.
+        /// por cada página extra que tenga el documento, excepto la Página1 porque en esta se agrega el cuerpo (VentaPdf.cshtml, CatálogoPdf.cshtml, etc).
+        /// Cada página del documento tendrá su propio encabezado y pie de página.
         /// </summary>
         public Modo ModoDocumento { get; set; } = Modo.CuerpoContinuo;
 
@@ -123,6 +127,8 @@ namespace SimpleOps.DocumentosGráficos {
         public int AnchoContenido => AnchoHoja - 2 * MargenHorizontal;
 
         public double AltoPie => RellenoSuperiorPie + LíneasTextoPie * 1.25 * TamañoLetraPie;
+
+        public string NombreArchivo => NombreArchivoPropio ?? $"{PrefijoNombreArchivo}{CódigoDocumento}";
 
         #endregion Propiedades Autocalculadas>
 

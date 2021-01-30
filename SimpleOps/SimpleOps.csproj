@@ -10,6 +10,8 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>Documentación\SimpleOps.xml</DocumentationFile>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DefineConstants>TRACE;PermitirCódigoNoSeguro</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,9 +30,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="10.0.0" />
-    <PackageReference Include="itext7" Version="7.1.12" />
-    <PackageReference Include="itext7.pdfhtml" Version="3.0.1" />
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="ColorMinePortable" Version="2.0.1" />
+    <PackageReference Include="itext7" Version="7.1.14" />
+    <PackageReference Include="itext7.pdfhtml" Version="3.0.3" />
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -42,10 +45,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.8" />
-    <PackageReference Include="QRCoder" Version="1.3.9" />
-    <PackageReference Include="RazorEngineCore" Version="2020.9.1" />
-    <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.11" />
+    <PackageReference Include="QRCoder" Version="1.4.1" />
+    <PackageReference Include="RazorEngineCore" Version="2020.10.1" />
+    <PackageReference Include="System.Drawing.Common" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>

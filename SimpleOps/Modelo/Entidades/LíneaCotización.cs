@@ -31,6 +31,17 @@ namespace SimpleOps.Modelo {
         #endregion Propiedades>
 
 
+        #region Propiedades Autocalculadas
+
+        /// <summary>
+        /// Se usa principalmente para pasar al procedimiento de generación de representación gráfica de documentos que no tiene
+        /// acceso a la función ATextoDinero().
+        /// </summary>
+        public string PrecioTexto => Precio.ATextoDinero(agregarMoneda: true);
+
+        #endregion Propiedades Autocalculadas>
+
+
         #region Constructores
 
         private LíneaCotización() { } // Solo para que EF Core no saque error.

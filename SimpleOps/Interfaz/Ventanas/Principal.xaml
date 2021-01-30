@@ -40,6 +40,7 @@
                                 <Setter Property="FontWeight" Value="SemiBold"/>
                             </Style>
                         </StackPanel.Resources>
+                        <Button Click="GenerarCatálogo_Clic" Content="Generar Catálogo" />
                         <Button Click="CargarDatosIniciales_Clic" Content="Cargar Datos Iniciales" />
                         <Button Click="ReiniciarBaseDatosSQLite_Clic" Content="Reiniciar Base de Datos" />
                         <Label Foreground="{StaticResource BrochaFrente200}">Facturación Electrónica</Label>

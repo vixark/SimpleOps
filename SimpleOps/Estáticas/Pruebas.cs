@@ -405,13 +405,13 @@ namespace SimpleOps {
 
             var cotización = new Cotización(cliente);
             cotización.Líneas = new List<LíneaCotización>() { 
-                new LíneaCotización(cotización, new Producto("Televisor"), 1200000),
-                new LíneaCotización(cotización, new Producto("Videoproyector"), 1400000),
-                new LíneaCotización(cotización, new Producto("Mueble"), 2000000),
-                new LíneaCotización(cotización, new Producto("Monitor"), 600000),
-                new LíneaCotización(cotización, new Producto("Escritorio"), 500000)
+                new LíneaCotización(cotización, new Producto("ZZTV30EJSO") { Descripción = "Televisor Pantalla Plana 30 pulgadas" }, 1200000),
+                new LíneaCotización(cotización, new Producto("ZZVP50EJSO") { Descripción = "Videoproyector Alto Brillo 50 pulgadas" }, 1400000),
+                new LíneaCotización(cotización, new Producto("ZZMP3EJSO") { Descripción = "Mueble para 3 Personas" }, 2000000),
+                new LíneaCotización(cotización, new Producto("ZZM14CEJSO") { Descripción = "Monitor de 14 pulgadas" }, 600000),
+                new LíneaCotización(cotización, new Producto("ZZEM2EJSO") { Descripción = "Escritorio de Madera de 2 m" }, 500000)
             };
-            CrearPdfCatálogo(cotización, out string rutaPdf);
+            CrearPdfCatálogo(cotización, out string rutaPdf, tamañoImagenes: 200);
             
         } // GeneraciónCatálogo>
 

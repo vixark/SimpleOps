@@ -40,41 +40,45 @@
 
     <div class="página@(i)">
 
-        <div class="cabeza fc">
+        @if (Model.NombreDocumento != "Catálogo") {
 
-            <table class="tb-cabeza">
-                <tr>
+            <div class="cabeza fc">
 
-                    <td>
-                        <div>
-                            <img class="logo" src="@Model.LogoBase64" />
-                        </div>
-                    </td>
+                <table class="tb-cabeza">
+                    <tr>
 
-                    <td class="tder">
+                        <td>
+                            <div>
+                                <img class="logo" src="@Model.LogoBase64" />
+                            </div>
+                        </td>
 
-                        <div>
-                            <span class="t18b fc-l100">@Model.NombreDocumento Electrónica de Venta</span>
-                        </div>
+                        <td class="tder">
 
-                        <div>
-                            <span class="t30b fc-l230">@Model.CódigoDocumento</span>
-                        </div>
+                            <div>
+                                <span class="t18b fc-l100">@Model.NombreDocumento Electrónica de Venta</span>
+                            </div>
 
-                    </td>
+                            <div>
+                                <span class="t30b fc-l230">@Model.CódigoDocumento</span>
+                            </div>
 
-                </tr>
-            </table>
+                        </td>
 
-        </div>
+                    </tr>
+                </table>
 
-        @if (Model.LíneaBajoCabeza) {<div class="l-cabeza"></div>}
+            </div>
+
+            @if (Model.LíneaBajoCabeza) { <div class="l-cabeza"></div> }
+
+        }
 
         <div class="cuerpo">
 
             @switch (i) {
                 case 1:
-                    @CrearCuerpo(); // Si está en modo CuerpoContinuo el contenido de este cuerpo puede ocupar varias páginas. Si está en modo PáginasIndependientes este cuerpo solo ocupará la página 1.
+                    @CrearCuerpo(); // Si está en modo CuerpoContinuo el contenido de este cuerpo puede ocupar varias páginas. Si está en modo PáginasIndependientes este cuerpo (VentaPdf.cshtml, CatálogoPdf.cshtml, etc) solo ocupará la página 1.
                     break;
                 default:
                     @Incluir("Página" + i, Model);
@@ -83,35 +87,39 @@
 
         </div>
 
-        <div class="pie fc tctr fc-l150 t@(Model.TamañoLetraPie)b">
+        @if (Model.NombreDocumento != "Catálogo") { 
+        
+            <div class="pie fc tctr fc-l150 t@(Model.TamañoLetraPie)b">
 
-            @(Model.ModoImpresión ? "<hr />" : "")
+                @(Model.ModoImpresión ? "<hr />" : "")
 
-            <div>
-                <span>@empresa.RazónSocial&nbsp;&nbsp;</span>
-                <span>@empresa.NitCompleto&nbsp;&nbsp;</span>
-                <span>@empresa.TipoContribuyenteTexto</span>
+                <div>
+                    <span>@empresa.RazónSocial&nbsp;&nbsp;</span>
+                    <span>@empresa.NitCompleto&nbsp;&nbsp;</span>
+                    <span>@empresa.TipoContribuyenteTexto</span>
+                </div>
+
+                <div>
+                    <span>Autorización de Facturación</span>
+                    <span>@empresa.NúmeroAutorizaciónFacturación</span>
+                    <span>del @empresa.PrimerNúmeroFacturaAutorizada al @empresa.ÚltimoNúmeroFacturaAutorizada</span>
+                    <span>hasta @empresa.FinAutorizaciónFacturación?.ToShortDateString()</span>
+                </div>
+
+                <div>
+                    <span>@empresa.TeléfonoPrincipal&nbsp;&nbsp;</span>
+                    <span>@empresa.DirecciónUbicaciónEfectiva&nbsp;&nbsp;</span>
+                    <span><a href="mailto:@(empresa.EmailVentas)" class="fc-l150">@empresa.EmailVentas</a>&nbsp;&nbsp;</span>
+                    <span><a href="@("https://" + empresa.SitioWeb)" class="fc-l150">@empresa.SitioWeb</a></span>
+                </div>
+
+                <div>
+                    <span>@empresa.MunicipioUbicaciónNombre - Colombia</span>
+                </div>
+
             </div>
 
-            <div>
-                <span>Autorización de Facturación</span>
-                <span>@empresa.NúmeroAutorizaciónFacturación</span>
-                <span>del @empresa.PrimerNúmeroFacturaAutorizada al @empresa.ÚltimoNúmeroFacturaAutorizada</span>
-                <span>hasta @empresa.FinAutorizaciónFacturación?.ToShortDateString()</span>
-            </div>
-
-            <div>
-                <span>@empresa.TeléfonoPrincipal&nbsp;&nbsp;</span>
-                <span>@empresa.DirecciónUbicaciónEfectiva&nbsp;&nbsp;</span>
-                <span><a href="mailto:@(empresa.EmailVentas)" class="fc-l150">@empresa.EmailVentas</a>&nbsp;&nbsp;</span>
-                <span><a href="@("https://" + empresa.SitioWeb)" class="fc-l150">@empresa.SitioWeb</a></span>
-            </div>
-
-            <div>
-                <span>@empresa.MunicipioUbicaciónNombre - Colombia</span>
-            </div>
-
-        </div>
+        }
 
     </div>
 

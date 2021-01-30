@@ -101,16 +101,18 @@ namespace SimpleOps.Interfaz {
             // LeerBaseDatosCompleta();
 
             #pragma warning disable CS0162 // Se detectó código inaccesible. Se omite la advertencia porque HabilitarPruebasUnitarias puede ser modificado por el usuario del código en Configuración.cs.
-            if (true) { // Poner en verdadero para realizar pruebas.
+            if (false) { // Poner en verdadero para realizar pruebas.
 
                 DocumentosElectrónicos(); // Prueba para ensayar todos los procedimientos relacionados con la facturación electrónica. No genera facturas electrónicas, las pruebas para generar facturas electrónicas se realizan con un botón.
                 // IntegraciónAplicacionesTerceros(); // Esta prueba se usa cuando se quiere simular el comportamiento de un programa tercero que genera archivos de comunicación .json con SimpleOps para el modo de integración de facturación electrónica. Si ya se dispone de un programa tercero generando correctamente los archivos, no es necesario activar esta línea.
-                GeneraciónCatálogo(); // Prueba para ensayar el procedimiento de generación automática de catálogos con precios.
 
             } else { _ = 0; } // Solo se usa esta línea para que no saque advertencia de supresión de CS0162 innecesaria.
             #pragma warning restore CS0162 
 
         } // Principal>
+
+
+        #region Eventos
 
 
         void CargarDatosIniciales_Clic(object sender, RoutedEventArgs e) {
@@ -153,6 +155,10 @@ namespace SimpleOps.Interfaz {
             MostrarInformación($"La clave técnica es:{DobleLínea}{Legal.Dian.ObtenerClaveTécnicaAmbienteProducción()}");
 
         private void HacerPruebasInternasFacturación_Clic(object sender, RoutedEventArgs e) => Facturación(pruebaHabilitación: false);
+
+        private void GenerarCatálogo_Clic(object sender, RoutedEventArgs e) => GeneraciónCatálogo();
+
+        #endregion Eventos>
 
 
     } // Principal>

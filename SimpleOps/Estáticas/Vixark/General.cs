@@ -26,6 +26,10 @@ using QRCoder;
 using System.Configuration;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using ColorMine.ColorSpaces;
+using ColorMine.ColorSpaces.Comparisons;
 // No puede llevar referencias a otras clases del proyecto en el que se está usando.
 
 
@@ -79,6 +83,10 @@ namespace Vixark {
         public static readonly ILoggerFactory FábricaRastreadores = LoggerFactory.Create(builder => { builder.AddDebug(); }); // Asigna los rastreadores que serán usados.
 
         public static readonly ILogger Rastreador = FábricaRastreadores.CreateLogger("Vixark");
+
+        public static string[] ExtensionesJpg = new string[] { ".jpg", ".jpeg", ".jpe", ".jif", ".jfif", ".jfi" }; // Posibles extensiones tomadas de https://blog.filestack.com/thoughts-and-knowledge/complete-image-file-extension-list/#jpg.
+
+        public static string[] ExtensionesPng = new string[] { ".png" };
 
         /// <summary>
         /// Doble Environment.NewLine. Útil para separar parrafos bloques de texto.
@@ -517,6 +525,25 @@ namespace Vixark {
         } // CopiarArchivo>
 
 
+        /// <summary>
+        /// Copia todos los archivos que estén en <paramref name="rutaCarpetaOrigen"/> en <paramref name="rutaCarpetaDestino"/>. 
+        /// Si <paramref name="sobreescribir"/> es falso no se reemplazan los existentes con el mismo nombre en <paramref name="rutaCarpetaDestino"/>. 
+        /// Este procedimiento es útil para instaladores.
+        /// </summary>
+        /// <param name="rutaCarpetaOrigen"></param>
+        /// <param name="rutaCarpetaDestino"></param>
+        /// <param name="sobreescribir"></param>
+        /// <returns></returns>
+        public static void CopiarArchivos(string rutaCarpetaOrigen, string rutaCarpetaDestino, bool sobreescribir) {
+
+            foreach (var rutaImagen in Directory.GetFiles(rutaCarpetaOrigen)) {
+                var rutaImagenNueva = Path.Combine(rutaCarpetaDestino, Path.GetFileName(rutaImagen));
+                if (sobreescribir || !File.Exists(rutaImagenNueva)) File.Copy(rutaImagen, rutaImagenNueva, overwrite: sobreescribir); 
+            }
+
+        } // CopiarArchivos>
+
+
         public static string ObtenerHashArchivo(string rutaArchivo) {
 
             using var FileCheck = File.OpenRead(rutaArchivo);
@@ -618,8 +645,8 @@ namespace Vixark {
 
                 var extensión = Path.GetExtension(rutaImagen).AMinúscula();
                 return extensión switch {
-                    ".png" => "data:image/png;base64," + base64,
-                    var e when e.EstáEn(".jpg", ".jpeg", ".jpe", ".jif", ".jfif", ".jfi") => "data:image/jpeg;base64," + base64, // Posibles extensiones tomadas de https://blog.filestack.com/thoughts-and-knowledge/complete-image-file-extension-list/#jpg.
+                    var e when e.EstáEn(ExtensionesPng) => "data:image/png;base64," + base64,
+                    var e when e.EstáEn(ExtensionesJpg) => "data:image/jpeg;base64," + base64,
                     _ => throw new Exception(CasoNoConsiderado(extensión))
                 };
 
@@ -640,7 +667,328 @@ namespace Vixark {
         } // ObtenerCódigoQRBase64>
 
 
-        #endregion
+        public static string[] ObtenerExtensionesImagenes() {
+
+            var extensionesImagenes = new string[ExtensionesJpg.Length + ExtensionesPng.Length];
+            ExtensionesJpg.CopyTo(extensionesImagenes, 0);
+            ExtensionesPng.CopyTo(extensionesImagenes, ExtensionesJpg.Length);
+            return extensionesImagenes;
+
+        } // ObtenerExtensionesImagenes>   
+
+
+        #region RedimensionarImagen()
+
+
+        /// <summary>
+        /// Redimensiona una imagen al nuevo tamaño recortándola inteligentemente. El recorte inteligente detecta el color del fondo de la imagen
+        /// y encuentra cual es el rectángulo mínimo al que se puede recortar sin perder ninguna parte de la imagen, recorta la imagen a este 
+        /// rectángulo, la ajusta con fondos del color de fondo y la redimensiona al tamaño final requerido.
+        /// Tiene funcionamiento diferente cuando está desactivada la opción de compilación para permitir código no seguro y no está añadido el
+        /// símbolo de compilación condicional PermitirCódigoNoSeguro. En este caso el recorte de la imagen no es inteligente y la función
+        /// se limita a redimensionar la imagen y devolverla con el ancho nuevo manteniendo la relación de aspecto.
+        /// </summary>
+        /// <param name="archivoInicial"></param>
+        /// <param name="archivoFinal"></param>
+        /// <param name="anchoNuevo"></param>
+        /// <param name="altoNuevo"></param>
+        /// <param name="toleranciaDiferenciaColor">La tolerancia que permite en la diferencia del color de las 4 esquinas y en la detección del contorno 
+        /// del objeto sobre el fondo. Con las 4 esquinas se saca un promedio del color de fondo. 
+        /// Con este valor en 5 se empieza a notar la diferencia pero sigue siendo sutil. 
+        /// Si las imagenes están quedando recortadas descentradas, es porque el fondo tiene suciedad, en estos casos se puede considerar aumentar 
+        /// el valor de la tolerancia pero esto puede producir recortes incorrectos de algunas imagenes que se mezclan con el fondo.
+        /// Otra solución sería preprocesar las imagenes con un editor de imagenes para reducir la suciedad.</param>
+        /// <param name="margenRecorteImagen">Los pixeles de respiración que se le dejan a la imagen recortada a todos los lados. 
+        /// Es necesario usar un valor mayor que 2 siempre porque con 0 es muy justo donde va el cambio de color.</param>
+        public static bool RedimensionarImagen(string archivoInicial, string archivoFinal, int anchoNuevo, int altoNuevo,
+            double toleranciaDiferenciaColor = 6, int margenRecorteImagen = 4) {
+
+            if (anchoNuevo <= 1 || altoNuevo <= 1 || anchoNuevo > 4000 || altoNuevo > 4000) return false;
+
+            using var imagenOriginalBitmap = new Bitmap(archivoInicial);
+            using var imagenOriginal = Image.FromFile(archivoInicial);
+
+            var anchoAnterior = imagenOriginal.Width;
+            var altoAnterior = imagenOriginal.Height;
+            var rectánguloRecorte = new Rectangle(0, 0, anchoAnterior, altoAnterior); // El valor por defecto es el valor que tomará cuando saque excepción el recortado inteligente o cuando esté deshabilitado PermitirCódigoNoSeguro.
+
+            #if PermitirCódigoNoSeguro // Desactivar eliminando esta variable en Propiedades > Compilación > Símbolos de compilación condicional. Al eliminarla este código se ignora en la compilación, se pierde la funcionalidad de recorte de imagenes inteligente y se puede compilar con la opción 'Permitir código no seguro' desactivada. 
+
+            try {
+
+                var colorFondo = ObtenerColorFondo(imagenOriginalBitmap, toleranciaDiferenciaColor);
+                if (ObtenerDistanciaEntreColores(colorFondo, Color.White) > toleranciaDiferenciaColor &&
+                    ObtenerDistanciaEntreColores(colorFondo, Color.Transparent) > toleranciaDiferenciaColor)
+                    throw new Exception("El color de fondo es muy diferente a blanco o transparente.");
+
+                rectánguloRecorte = ObtenerRecorteImagenAjustada(imagenOriginalBitmap, colorFondo, margenRecorteImagen, toleranciaDiferenciaColor);
+
+                #pragma warning disable CA1031 // No capture tipos de excepción generales. Se permite en este caso porque el código de recorte inteligente puede generar muchas excepciones y si no se puede cortar de esa manera se puede hacer de la manera básica.
+            } catch (Exception ex) { // Si sucede cualquier error en el código anterior se procede a recortar de manera básica la imagen.
+                #pragma warning restore CA1031
+                MostrarError($"No se pudo recortar inteligentemente la imagen {archivoInicial}, se recortó de manera básica.{DobleLínea}{ex.Message}");
+            }
+
+            #endif
+
+            double relación = 0;
+            int extraEspacioHorizontal = 0;
+            int extraEspacioVertical = 0;
+            int desfaceHorizontal;
+            int desfaceVertical;
+
+            if (rectánguloRecorte.Height / (double)rectánguloRecorte.Width > altoNuevo / (double)anchoNuevo) { // Si la relación alto/ancho del recorte es mayor que la de la imagen final, entonces se debe rellenar el recorte a los lados. Se debe usar el alto del recorte y un ancho apropiado.
+
+                relación = (double)altoNuevo / rectánguloRecorte.Height;
+                extraEspacioHorizontal = RedondearAEntero(((anchoNuevo - rectánguloRecorte.Width * relación) / 2));
+                desfaceHorizontal = RedondearAEntero(rectánguloRecorte.X * relación - extraEspacioHorizontal);
+                desfaceVertical = RedondearAEntero(rectánguloRecorte.Y * relación);
+
+            } else { // Si no, es al contrario.
+
+                relación = (double)anchoNuevo / rectánguloRecorte.Width;
+                extraEspacioVertical = RedondearAEntero(((altoNuevo - rectánguloRecorte.Height * relación) / 2));
+                desfaceHorizontal = RedondearAEntero(rectánguloRecorte.X * relación);
+                desfaceVertical = RedondearAEntero(rectánguloRecorte.Y * relación - extraEspacioVertical);
+
+            }
+
+            using var nuevaImagen = new Bitmap(anchoNuevo, altoNuevo);
+            using var gráfico = Graphics.FromImage(nuevaImagen);
+            gráfico.SmoothingMode = SmoothingMode.AntiAlias;
+            gráfico.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            gráfico.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+            using (var brochaFondo = new SolidBrush(Color.White)) {
+
+                gráfico.FillRectangle(brochaFondo, new Rectangle(0, 0, anchoNuevo, altoNuevo)); // Un cuadrado con el color de fondo inicial para el caso de las imagenes que traen transparencia.
+                gráfico.DrawImage(imagenOriginal, new Rectangle(-desfaceHorizontal, -desfaceVertical, RedondearAEntero(anchoAnterior * relación),
+                    RedondearAEntero(altoAnterior * relación)));
+                gráfico.FillRectangle(brochaFondo, new Rectangle(0, 0, anchoNuevo, extraEspacioVertical));
+                gráfico.FillRectangle(brochaFondo, new Rectangle(0, altoNuevo - extraEspacioVertical, anchoNuevo, extraEspacioVertical));
+                gráfico.FillRectangle(brochaFondo, new Rectangle(0, 0, extraEspacioHorizontal, altoNuevo));
+                gráfico.FillRectangle(brochaFondo, new Rectangle(anchoNuevo - extraEspacioHorizontal, 0, extraEspacioHorizontal, altoNuevo));
+
+            }
+
+            nuevaImagen.Save(archivoFinal, ImageFormat.Jpeg);
+            return true;
+
+        } // RedimensionarImagen>
+
+
+        #if PermitirCódigoNoSeguro // Desactivar eliminando esta variable en Propiedades > Compilación > Símbolos de compilación condicional. Al eliminarla todo este código se ignora en la compilación y se puede compilar con la opción 'Permitir código no seguro' desactivada. 
+         
+        public static double ObtenerDistanciaEntreColores(Color color1, Color color2) {
+
+            if (color1.A == 0 && color2.A == 0) return 0; // Únicamente en el caso del cero en alfa se puede asegurar que la distancia entre dos transparentes es cero. Si se necesitara hacer para otros niveles de alfa habría que buscar otra solución porque el procedimiento siguiente no tiene en cuenta los niveles alfa.
+
+            var rgb1 = new Rgb() { R = color1.R, G = color1.G, B = color1.B };
+            var xyz1 = rgb1.To<Xyz>();
+            var lab1 = xyz1.To<Lab>();
+
+            var rgb2 = new Rgb() { R = color2.R, G = color2.G, B = color2.B };
+            var xyz2 = rgb2.To<Xyz>();
+            var lab2 = xyz2.To<Lab>();
+
+            var cc = new CieDe2000Comparison();
+
+            return cc.Compare(lab1, lab2);
+
+        } // ObtenerDistanciaEntreColores>
+
+
+        private static int ObtenerCantidadBytesPorPixel(Bitmap bitmap) {
+
+            var bytesPorPixel = (int)bitmap.PixelFormat switch {
+                (int)PixelFormat.Format24bppRgb  => 3,
+                (int)PixelFormat.Format32bppArgb => 4,
+                (int)PixelFormat.Format32bppPArgb => 4,
+                (int)PixelFormat.Format32bppRgb => 4,
+                8207 => throw new Exception("El formato de imagen CMYK id 8207 no está soportado."), // CMYK https://stackoverflow.com/questions/4315335/how-to-identify-cmyk-images-using-c-sharp.
+                _ => throw new Exception("El formato de imagen no está soportado.")
+            };
+
+            var bytesPorPixel2 = Image.GetPixelFormatSize(bitmap.PixelFormat) / 8;
+            if (bytesPorPixel != bytesPorPixel2) throw new Exception("Inconsistencia entre los dos métodos para encontrar los bytes por pixel.");
+            return bytesPorPixel;
+
+        } // ObtenerCantidadBytesPorPixel>
+
+
+        private static bool TieneAlfa(Bitmap bitmap) => ((int)bitmap.PixelFormat) switch {
+                (int)PixelFormat.Format24bppRgb => false,
+                (int)PixelFormat.Format32bppArgb => true,
+                (int)PixelFormat.Format32bppPArgb => true,
+                (int)PixelFormat.Format32bppRgb => true,
+                8207 => throw new Exception("El formato de imagen CMYK id 8207 no está soportado."), // CMYK https://stackoverflow.com/questions/4315335/how-to-identify-cmyk-images-using-c-sharp.
+                _ => throw new Exception("El formato de imagen no está soportado."),
+            };
+
+
+        public static Color ObtenerColorPromedio(List<Color> colores) {
+
+            double R = 0;
+            double G = 0;
+            double B = 0;
+            foreach (var color in colores) {
+                R += color.R;
+                G += color.G;
+                B += color.B;
+            }
+            var cantidadColores = colores.Count;
+            return Color.FromArgb(RedondearAEntero(R / cantidadColores), RedondearAEntero(G / cantidadColores), RedondearAEntero(B / cantidadColores));
+
+        } // ObtenerColorPromedio>
+
+
+        private static unsafe bool EsColorDiferenteDeFondo(int anchoPaso, int bytesPorPixel, byte* p, int x, int y, Color colorFondo, 
+            double toleranciaDiferenciaColor) {
+
+            int índicePunto = (y * anchoPaso) + x * bytesPorPixel;
+            var color1 = Color.FromArgb(p[índicePunto + 2], p[índicePunto + 1], p[índicePunto]);
+            índicePunto = (y * anchoPaso) + (x + 1) * bytesPorPixel;
+            var color2 = Color.FromArgb(p[índicePunto + 2], p[índicePunto + 1], p[índicePunto]);
+            índicePunto = ((y + 1) * anchoPaso) + (x + 1) * bytesPorPixel;
+            var color3 = Color.FromArgb(p[índicePunto + 2], p[índicePunto + 1], p[índicePunto]);
+            índicePunto = ((y + 1) * anchoPaso) + x * bytesPorPixel;
+            var color4 = Color.FromArgb(p[índicePunto + 2], p[índicePunto + 1], p[índicePunto]);
+            var colorPromedio = ObtenerColorPromedio(new List<Color>() { color1, color2, color3, color4 }); // El color promedio de un cuadro de 2x2 pixeles alrededor del punto actual.
+            var distanciaPromedioFondo = ObtenerDistanciaEntreColores(colorPromedio, colorFondo);
+            return (distanciaPromedioFondo > toleranciaDiferenciaColor);
+
+        } // EsColorDiferenteDeFondo>
+
+
+        private static Rectangle ObtenerRecorteImagenAjustada(Bitmap bitmap, Color colorFondo, int margen, double toleranciaDiferenciaColor) {
+
+            int ancho = bitmap.Width;
+            int alto = bitmap.Height;
+            int bytesPorPixel = ObtenerCantidadBytesPorPixel(bitmap);
+            BitmapData datosBitmap = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
+            int anchoPaso = datosBitmap.Stride;
+            IntPtr escaneo0 = datosBitmap.Scan0;
+            var puntos = new List<System.Drawing.Point>();
+
+            unsafe {
+
+                byte* p = (byte*)(void*)escaneo0;
+
+                for (int y = 0; y < alto - 1; y += 2) { // Primer escaneo: De arriba hacia abajo haciendo líneas horizontales de la izquierda a la derecha.
+                    for (int x = 0; x < ancho - 1; x += 2) {
+                        if (EsColorDiferenteDeFondo(anchoPaso, bytesPorPixel, p, x, y, colorFondo, toleranciaDiferenciaColor)) {
+                            puntos.Add(new System.Drawing.Point() { X = x, Y = y });
+                            goto siguiente1;
+                        }
+                    }
+                }
+                siguiente1:;
+
+                for (int x = 0; x < ancho - 1; x += 2) { // Segundo escaneo: De la izquierda hacia la derecha haciendo líneas verticales de arriba a abajo.  
+                    for (int y = 0; y < alto - 1; y += 2) {
+                        if (EsColorDiferenteDeFondo(anchoPaso, bytesPorPixel, p, x, y, colorFondo, toleranciaDiferenciaColor)) {
+                            puntos.Add(new System.Drawing.Point() { X = x, Y = y });
+                            goto siguiente2;
+                        }
+                    }
+                }
+                siguiente2:;
+
+                for (int y = alto - 2; y >= 0; y += -2) { // Tercer escaneo: De abajo hacia arriba haciendo líneas horizontales de la izquierda a la derecha.
+                    for (int x = 0; x < ancho - 1; x += 2) {
+                        if (EsColorDiferenteDeFondo(anchoPaso, bytesPorPixel, p, x, y, colorFondo, toleranciaDiferenciaColor)) {
+                            puntos.Add(new System.Drawing.Point() { X = x, Y = y });
+                            goto siguiente3;
+                        }
+                    }
+                }
+                siguiente3:;
+
+                for (int x = ancho - 2; x >= 0; x += -2) { // Cuarto escaneo: De la derecha hacia la izquierda haciendo líneas verticales de arriba a abajo.
+                    for (int y = 0; y < alto - 1; y += 2) {
+                        if (EsColorDiferenteDeFondo(anchoPaso, bytesPorPixel, p, x, y, colorFondo, toleranciaDiferenciaColor)) {
+                            puntos.Add(new System.Drawing.Point() { X = x, Y = y });
+                            goto siguiente4;
+                        }
+                    }
+                }
+                siguiente4:;
+
+            }
+
+            bitmap.UnlockBits(datosBitmap);
+
+            var rectánguloRecorte = new Rectangle(new System.Drawing.Point(puntos[1].X, puntos[0].Y), 
+                new System.Drawing.Size(puntos[3].X - puntos[1].X, puntos[2].Y - puntos[0].Y));
+            rectánguloRecorte.Inflate(margen, margen);
+            if (rectánguloRecorte.Y < 0) rectánguloRecorte.Y = 0;
+            if (rectánguloRecorte.X < 0) rectánguloRecorte.X = 0;
+            if (rectánguloRecorte.Y + rectánguloRecorte.Height > alto) rectánguloRecorte.Height = alto - rectánguloRecorte.Y;
+            if (rectánguloRecorte.X + rectánguloRecorte.Width > ancho) rectánguloRecorte.Width = ancho - rectánguloRecorte.X;
+            return rectánguloRecorte;
+
+        } // ObtenerRecorteImagenAjustada>
+
+
+        private static Color ObtenerColorFondo(Bitmap bitmap, double toleranciaDiferenciaColor) { // Cálculado usando las 4 esquinas de la foto.
+
+            int ancho = bitmap.Width;
+            int alto = bitmap.Height;
+            int bytesPorPixel = ObtenerCantidadBytesPorPixel(bitmap);
+            bool tieneAlfa = TieneAlfa(bitmap);
+            BitmapData datosBmp = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
+            int stride = datosBmp.Stride;
+            IntPtr Scan0 = datosBmp.Scan0;
+            var colorFondo = Color.White;
+
+            unsafe {
+
+                byte* p = (byte*)(void*)Scan0;
+                int idx;
+                idx = (0 * stride) + 0 * bytesPorPixel;
+                var color1 = tieneAlfa ? Color.FromArgb(p[idx + 3], p[idx + 2], p[idx + 1], p[idx]) : Color.FromArgb(p[idx + 2], p[idx + 1], p[idx]);
+                idx = ((alto - 1) * stride) + 0 * bytesPorPixel;
+                var color2 = tieneAlfa ? Color.FromArgb(p[idx + 3], p[idx + 2], p[idx + 1], p[idx]) : Color.FromArgb(p[idx + 2], p[idx + 1], p[idx]);
+                idx = ((alto - 1) * stride) + (ancho - 1) * bytesPorPixel;
+                var color3 = tieneAlfa ? Color.FromArgb(p[idx + 3], p[idx + 2], p[idx + 1], p[idx]) : Color.FromArgb(p[idx + 2], p[idx + 1], p[idx]);
+                idx = (0 * stride) + (ancho - 1) * bytesPorPixel;
+                var color4 = tieneAlfa ? Color.FromArgb(p[idx + 3], p[idx + 2], p[idx + 1], p[idx]) : Color.FromArgb(p[idx + 2], p[idx + 1], p[idx]);
+
+                var distancia12 = ObtenerDistanciaEntreColores(color1, color2);
+                var distancia23 = ObtenerDistanciaEntreColores(color2, color3);
+                var distancia34 = ObtenerDistanciaEntreColores(color3, color4);
+                var distancia41 = ObtenerDistanciaEntreColores(color4, color1);
+
+                if (distancia12 != 0 || distancia23 != 0 | distancia34 != 0 | distancia41 != 0) {  // Tiene esquinas de colores diferentes. Se debe usar un promedio.
+
+                    if (distancia12 > toleranciaDiferenciaColor || distancia23 > toleranciaDiferenciaColor | distancia34 > toleranciaDiferenciaColor 
+                        | distancia41 > toleranciaDiferenciaColor) { // Tiene esquinas de colores muy diferentes, se debe lanzar excepción.
+                        throw new Exception("No se pudo obtener el color promedio del fondo porque los pixeles esquineros difieren mucho en color: " + 
+                            distancia12 + " " + distancia23 + " " + distancia34 + " " + distancia41);
+                    } else {
+                        colorFondo = ObtenerColorPromedio(new List<Color> { color1, color2, color3, color4 });
+                    }
+
+                } else {
+                    colorFondo = color1;
+                }
+
+            }
+
+            bitmap.UnlockBits(datosBmp);
+
+            return colorFondo;
+
+        } // ObtenerColorFondo>
+
+
+        #endif // PermitirCódigoNoSeguro>
+
+
+        #endregion RedimensionarImagen>
+
+
+        #endregion Imagenes>
 
 
         #region Textos, Formatos y Patrones
@@ -900,6 +1248,13 @@ namespace Vixark {
 
 
         #endregion Textos, Formatos y Patrones>
+
+
+        #region Matemáticas
+
+        public static int RedondearAEntero(double d) => (int)Math.Round(d, 0);
+
+        #endregion Matemáticas>
 
 
         #region Serialización JSON
@@ -1828,7 +2183,7 @@ namespace Vixark {
         public static MessageBoxResult MostrarInformación(string? mensaje) 
             => MostrarDiálogo(mensaje, "Información", MessageBoxButton.OK, MessageBoxImage.Information); // Por estandarización de la interfaz de los diálogos no se permite la personalización del título de estos diálogos. Si se necesita un diálogo con título especial usar MostrarDiálogo.
 
-        public static MessageBoxResult MostrarÉxito(string? mensaje) => MostrarDiálogo(mensaje, "Éxito", MessageBoxButton.OK, MessageBoxImage.Exclamation); // Por estandarización de la interfaz de los diálogos no se permite la personalización del título de estos diálogos. Si se necesita un diálogo con título especial usar MostrarDiálogo.
+        public static MessageBoxResult MostrarÉxito(string? mensaje) => MostrarDiálogo(mensaje, "Éxito", MessageBoxButton.OK, MessageBoxImage.Information); // Por estandarización de la interfaz de los diálogos no se permite la personalización del título de estos diálogos. Si se necesita un diálogo con título especial usar MostrarDiálogo.
 
         public static MessageBoxResult MostrarAdvertencia(string? mensaje) 
             => MostrarDiálogo(mensaje, "Advertencia", MessageBoxButton.OK, MessageBoxImage.Warning); // Por estandarización de la interfaz de los diálogos no se permite la personalización del título de estos diálogos. Si se necesita un diálogo con título especial usar MostrarDiálogo.
@@ -1842,7 +2197,7 @@ namespace Vixark {
         public static void SuspenderEjecuciónEnModoDesarrollo() {
 
             #if DEBUG
-            Debugger.Break();
+            Debugger.Break(); 
             #endif
 
         } // SuspenderEjecuciónEnModoDesarrollo>

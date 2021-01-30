@@ -140,7 +140,7 @@ namespace SimpleOps.Datos {
                 TipoContexto.Escritura => QueryTrackingBehavior.TrackAll,
                 TipoContexto.LecturaConRastreo => QueryTrackingBehavior.TrackAll,
                 _ => throw new Exception(CasoNoConsiderado(tipoContexto)),
-            };
+            }; // Si saca excepción en este punto se puede deber a que se actualizó el paquete Microsoft.Extensions.Configuration.Abstractions a una versión no soportada. Se debe reversar el paquete a la versión anterior y se corrige el problema. Ver https://stackoverflow.com/questions/64809716/could-not-load-file-or-assembly-microsoft-extensions-configuration-abstractions y https://github.com/dotnet/aspnetcore/issues/21033.
             TipoContexto = tipoContexto;
 
         } // Contexto>

@@ -78,7 +78,7 @@ namespace SimpleOps.DocumentosGráficos {
 
                 if (creado) AbrirArchivo(rutaPdf);
                 CopiarPlantillasARutaAplicación(sobreescribir: true); // En el modo desarrollo se intentará mantener sincronizadas las carpetas de plantillas en producción con la última versión de las plantillas en las carpetas de desarrollo. Justo antes del punto de interrupción a continuación es un buen lugar para hacerlo porque después de este el usuario del código puede suspender la ejecución. Esto reduce el rendimiento, pero es algo que solo se presenta en el modo desarrollo. No es completamente necesario actualizar las plantillas para que funcione en modo desarrollo porque estas son leídas directamente de las carpetas de plantillas de desarrollo, pero si es conveniente para mantener solo una versión de las plantillas en el computador y evitar confusiones.
-                SuspenderEjecuciónEnModoDesarrollo(); // Al estar detenida la ejecución en este punto se pueden editar los archivos de plantillas CSHTML, guardar el archivo de la plantilla, cerrar el último PDF creado si está abierto y reanudar ejecución para generar un nuevo PDF con los cambios realizados.
+                SuspenderEjecuciónEnModoDesarrollo(); // Al estar detenida la ejecución en este punto se pueden editar los archivos de plantillas CSHTML, guardar el archivo de la plantilla, cerrar el último PDF creado si está abierto (sin cerrar el Foxit Reader, dejando otro PDF cualquier abierto, para evitar error de Foxit Reader cuando se abre desde el código) y reanudar ejecución para generar un nuevo PDF con los cambios realizados.
                 goto otraVez;
 
             }
@@ -88,27 +88,36 @@ namespace SimpleOps.DocumentosGráficos {
         } // CrearPdf>
 
 
-        public static bool CrearPdfCatálogo(Cotización cotización, out string rutaPdf) {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cotización"></param>
+        /// <param name="rutaPdf"></param>
+        /// <param name="tamañoImagenes">Alto y ancho al que se redimensionarán las imagenes. Si es nulo, no se redimensionan. Redimensionar
+        /// las imagenes ayuda a que el tamaño final del PDF sea más pequeño y además las imagenes son recortadas inteligentemente (ajustadas a su
+        /// contenido) antes de ser redimensionadas, esto permite que todos las imagenes de los productos tengan un tamaño homogéneo independiente
+        /// de como estén en las imagenes originales.</param>
+        /// <returns></returns>
+        public static bool CrearPdfCatálogo(Cotización cotización, out string rutaPdf, int? tamañoImagenes) {
 
+            var rutasPáginasPlantilla = ObtenerRutasPáginasPlantilla(PlantillaDocumento.CatálogoPdf, omitirPrimera: true);
+                
             return CrearPdf(out rutaPdf, motorRazor => {
 
                 var cuerpo = File.ReadAllText(ObtenerRutaPlantilla(PlantillaDocumento.CatálogoPdf));
-                var partes = new Dictionary<string, string>() { 
-                    {"Marco", File.ReadAllText(ObtenerRutaPlantilla(PlantillaDocumento.MarcoPdf))},
-                    {"Página1", "<h1>Título Página 1 del Catálogo</h1><p>Contenido de la página 1 del catálogo.</p>" },
-                    {"Página2", "<h1>Título Página 2 del Catálogo</h1><p>Contenido de la página 2 del catálogo.</p>" },
-                    {"Página3", "<h1>Título Página 3 del Catálogo</h1><p>Contenido de la página 3 del catálogo.</p>" },
-                };
+                var partes = new Dictionary<string, string>() { {"Marco", File.ReadAllText(ObtenerRutaPlantilla(PlantillaDocumento.MarcoPdf))} };
+                foreach (var kvp in rutasPáginasPlantilla) {
+                    partes.Add($"Página{kvp.Key}", File.ReadAllText(kvp.Value));
+                }
                 return CompilarPlantilla<DatosCotización>(motorRazor, cuerpo, partes);
 
             }, plantillaCompilada => {
 
-                var datos = cotización.ObtenerDatos(new OpcionesDocumento());
-                var creado = CrearPdf(datos, plantillaCompilada, @"D:\", out string rutaPdfAux); // Pendiente: establecer ruta desde configuración. 
+                var datos = cotización.ObtenerDatos(new OpcionesDocumento(), TipoCotización.Catálogo, tamañoImagenes, rutasPáginasPlantilla.Count + 1); // Se suma uno para obtener las páginas porque en el diccionario rutasPáginasPlantilla se está omitiendo la primera página.
+                var creado = CrearPdf(datos, plantillaCompilada, ObtenerRutaCotizacionesDeHoy(), out string rutaPdfAux); 
                 return (creado, rutaPdfAux);
 
             });
-
 
         } // CrearPdfCatálogo>
 
@@ -159,11 +168,11 @@ namespace SimpleOps.DocumentosGráficos {
 
             rutaPdf = "";
             var html = plantillaCompilada.ObtenerHtml(datos);
-            if (ModoDesarrolloPlantillas) File.WriteAllText(Path.Combine(rutaCarpetaPdf, $"{datos.CódigoDocumento}.html"), html);
+            if (ModoDesarrolloPlantillas) File.WriteAllText(Path.Combine(rutaCarpetaPdf, $"{datos.NombreArchivo}.html"), html); // Se escribe en HTML para facilitar su revisión desde un explorador aunque pueda diferir un poco del diseño final en PDF.
 
             try {
 
-                rutaPdf = Path.Combine(rutaCarpetaPdf, $"{datos.PrefijoNombreArchivo}{datos.CódigoDocumento}{(modoImpresión ? "-I" : "")}.pdf");
+                rutaPdf = Path.Combine(rutaCarpetaPdf, $"{datos.NombreArchivo}{(modoImpresión ? "-I" : "")}.pdf");
                 using var escritorPdf = new PdfWriter(rutaPdf);
                 using var pdf = new PdfDocument(escritorPdf);
                 pdf.SetDefaultPageSize(iText.Kernel.Geom.PageSize.LETTER);
@@ -193,37 +202,15 @@ namespace SimpleOps.DocumentosGráficos {
             var mapeadorEmpresa = new Mapper(ConfiguraciónMapeadorEmpresa);
             datosVenta.Empresa = mapeadorEmpresa.Map<DatosEmpresa>(Empresa);
             datosVenta.Columnas = ObtenerOpcionesColumnas(datosVenta, líneas);
-            datosVenta.LogoBase64 = ObtenerBase64(Path.Combine(ObtenerRutaCarpetaImagenesPlantillas(),
+            datosVenta.LogoBase64 = ObtenerBase64(Path.Combine(ObtenerRutaImagenesPlantillas(),
                 opcionesDocumento.ModoImpresión ? NombreArchivoLogoEmpresaImpresión : NombreArchivoLogoEmpresa), paraHtml: true);
-            datosVenta.CertificadoBase64 = ObtenerBase64(Path.Combine(ObtenerRutaCarpetaImagenesPlantillas(),
+            datosVenta.CertificadoBase64 = ObtenerBase64(Path.Combine(ObtenerRutaImagenesPlantillas(),
                 opcionesDocumento.ModoImpresión ? NombreArchivoCertificadoEmpresaImpresión : NombreArchivoCertificadoEmpresa), paraHtml: true);
             datosVenta.TotalPáginas = ObtenerTotalPáginas(datosVenta, líneas);
             datosVenta.ModoImpresión = opcionesDocumento.ModoImpresión;
             datosVenta.MostrarInformaciónAdicional = opcionesDocumento.MostrarInformaciónAdicional;
 
         } // CompletarDatosVenta>
-
-
-        /// <summary>
-        /// Procedimiento común para las cotizaciones y catálogos que termina de completar el objeto de datos después de ser mapeado.
-        /// </summary>
-        /// <typeparam name="L"></typeparam>
-        /// <param name="opcionesDocumento"></param>
-        /// <param name="datosCotización"></param>
-        /// <param name="líneas"></param>
-        public static void CompletarDatosCotización<L>(OpcionesDocumento opcionesDocumento, DatosCotización datosCotización, List<L> líneas)
-            where L : LíneaCotización {
-
-            var mapeadorEmpresa = new Mapper(ConfiguraciónMapeadorEmpresa);
-            datosCotización.Empresa = mapeadorEmpresa.Map<DatosEmpresa>(Empresa);
-            datosCotización.Columnas = ObtenerOpcionesColumnas(datosCotización);
-            datosCotización.LogoBase64 = ObtenerBase64(Path.Combine(ObtenerRutaCarpetaImagenesPlantillas(),
-                opcionesDocumento.ModoImpresión ? NombreArchivoLogoEmpresaImpresión : NombreArchivoLogoEmpresa), paraHtml: true);
-            datosCotización.TotalPáginas = líneas.Count / 30; // Pendiente desarrollar para la cotización. El catálogo trae una cantidad de páginas fija establecida desde el diseño.
-            datosCotización.ModoImpresión = opcionesDocumento.ModoImpresión;
-            datosCotización.MostrarInformaciónAdicional = opcionesDocumento.MostrarInformaciónAdicional;
-
-        } // CompletarDatosCotización>
 
 
         private static OpcionesColumnas ObtenerOpcionesColumnas<T, M>(T datosDocumento, List<M> Líneas) 
@@ -240,7 +227,7 @@ namespace SimpleOps.DocumentosGráficos {
         } // ObtenerOpcionesColumnas>
 
 
-        private static OpcionesColumnas ObtenerOpcionesColumnas<T>(T datosDocumento) where T : DatosDocumento {
+        public static OpcionesColumnas ObtenerOpcionesColumnas<T>(T datosDocumento) where T : DatosDocumento {
 
             var columnas = new OpcionesColumnas();
             if (datosDocumento.Empresa == null) return columnas;

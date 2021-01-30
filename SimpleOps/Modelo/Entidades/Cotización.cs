@@ -7,8 +7,7 @@ using static Vixark.General;
 using static SimpleOps.DocumentosGráficos.DocumentosGráficos;
 using SimpleOps.DocumentosGráficos;
 using AutoMapper;
-
-
+using System.IO;
 
 namespace SimpleOps.Modelo {
 
@@ -45,12 +44,53 @@ namespace SimpleOps.Modelo {
         public override string ToString() => $"{ID} a {ATexto(Cliente, ClienteID)}";
 
 
-        public DatosCotización ObtenerDatos(OpcionesDocumento opcionesDocumento) {
+        public DatosCotización ObtenerDatos(OpcionesDocumento opcionesDocumento, TipoCotización tipoCotización, int? tamañoImagenes, 
+            int totalPáginasCatálogo = 1) {
 
             var mapeador = new Mapper(ConfiguraciónMapeadorCotización);
             var datos = mapeador.Map<DatosCotización>(this);
-            datos.NombreDocumento = "Cotización";
-            CompletarDatosCotización(opcionesDocumento, datos, Líneas);
+            datos.NombreDocumento = tipoCotización.ToString();
+
+            var mapeadorEmpresa = new Mapper(ConfiguraciónMapeadorEmpresa);
+            datos.Empresa = mapeadorEmpresa.Map<DatosEmpresa>(Empresa);
+            datos.Columnas = ObtenerOpcionesColumnas(datos);
+            datos.LogoBase64 = ObtenerBase64(Path.Combine(ObtenerRutaImagenesPlantillas(),
+                opcionesDocumento.ModoImpresión ? NombreArchivoLogoEmpresaImpresión : NombreArchivoLogoEmpresa), paraHtml: true);
+
+            (datos.ModoDocumento, datos.TotalPáginas) = tipoCotización switch {
+                TipoCotización.Catálogo => (DatosDocumento.Modo.PáginasIndependientes, totalPáginasCatálogo),
+                TipoCotización.Cotización => throw new NotImplementedException(), // Pendiente desarrollar para la cotización.
+                _ => throw new NotImplementedException(),
+            };
+
+            var rutaImagenesProductos = ObtenerRutaImagenesProductos();
+            foreach (var línea in Líneas) {
+
+                var rutaImagenProducto = ObtenerRutaImagenProducto(línea.Producto?.Referencia);
+                if (rutaImagenProducto != null) {
+
+                    if (tamañoImagenes != null) {
+
+                        var rutaImagenRedimensionada = Path.Combine(ObtenerRutaCarpeta(rutaImagenesProductos, ((int)tamañoImagenes).ATexto(),
+                            crearSiNoExiste: true), Path.GetFileName(rutaImagenProducto));
+                        if (RedimensionarImagen(rutaImagenProducto, rutaImagenRedimensionada, (int)tamañoImagenes, (int)tamañoImagenes)) {
+                            rutaImagenProducto = rutaImagenRedimensionada;
+                        } else {
+                            MostrarError($"No se pudo redimensionar la imagen {rutaImagenProducto}.");
+                        }
+
+                    }
+
+                    datos.ImágenesProductosBase64.Add(línea.Producto?.Referencia!, ObtenerBase64(rutaImagenProducto, paraHtml: true)); // Se asegura que Referencia no es nula porque ya encontró una imagen asociada a ella.
+
+                }
+
+            }
+
+            datos.ModoImpresión = opcionesDocumento.ModoImpresión;
+            datos.MostrarInformaciónAdicional = opcionesDocumento.MostrarInformaciónAdicional;
+            datos.NombreArchivoPropio = "Catálogo - " + Cliente?.Nombre;
+
             return datos;
 
         } // ObtenerDatos>
