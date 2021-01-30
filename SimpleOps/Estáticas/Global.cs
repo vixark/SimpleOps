@@ -161,7 +161,19 @@ namespace SimpleOps {
                 c.CreateMap<NotaCréditoVenta, Integración.DatosVenta>().ReverseMap();
             });
 
-       public static MapperConfiguration ConfiguraciónMapeadorCotización
+        public static MapperConfiguration ConfiguraciónMapeadorCotizaciónIntegración
+            = new MapperConfiguration(c => {
+                c.CreateMap<LíneaCotización, Integración.DatosLíneaProducto>();
+                c.CreateMap<Cotización, Integración.DatosCotización>();
+            });
+
+        public static MapperConfiguration ConfiguraciónMapeadorCotizaciónIntegraciónInverso
+            = new MapperConfiguration(c => {
+                c.CreateMap<LíneaCotización, Integración.DatosLíneaProducto>().ReverseMap();
+                c.CreateMap<Cotización, Integración.DatosCotización>().ReverseMap();
+            });
+
+        public static MapperConfiguration ConfiguraciónMapeadorCotización
             = new MapperConfiguration(c => {
                 c.CreateMap<LíneaCotización, DatosLíneaProducto>().ForMember(dlc => dlc.PrecioBaseTexto, m => m.MapFrom(lc => lc.PrecioTexto));
                 c.CreateMap<Cotización, DatosCotización>().ForMember(dc => dc.CódigoDocumento, m => m.MapFrom(v => v.ID));

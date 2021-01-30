@@ -401,7 +401,7 @@ namespace SimpleOps {
         public static void GeneraciónCatálogo() {
 
             var cliente = new Cliente("Distribuciones ABC", new Municipio("Bogotá", "Distrito Capital"), TipoCliente.Distribuidor) {
-                TipoEntidad = TipoEntidad.Empresa, Dirección = "Calle 80-100", Teléfono = "4589843", Identificación = "990986892" };
+                TipoEntidad = TipoEntidad.Empresa, Dirección = "Calle 80-100 68", Teléfono = "4589843", Identificación = "990986892" };
 
             var cotización = new Cotización(cliente);
             cotización.Líneas = new List<LíneaCotización>() { 
@@ -412,7 +412,7 @@ namespace SimpleOps {
                 new LíneaCotización(cotización, new Producto("ZZEM2EJSO") { Descripción = "Escritorio de Madera de 2 m" }, 500000)
             };
             CrearPdfCatálogo(cotización, out string rutaPdf, tamañoImagenes: 200);
-            
+
         } // GeneraciónCatálogo>
 
 

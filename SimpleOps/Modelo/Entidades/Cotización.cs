@@ -96,6 +96,15 @@ namespace SimpleOps.Modelo {
         } // ObtenerDatos>
 
 
+        public Integración.DatosCotización ObtenerDatosIntegración() {
+
+            var mapeador = new Mapper(ConfiguraciónMapeadorCotizaciónIntegración);
+            var datos = mapeador.Map<Integración.DatosCotización>(this);
+            return datos;
+
+        } // ObtenerDatosIntegración>
+
+
         #endregion Métodos y Funciones>
 
 

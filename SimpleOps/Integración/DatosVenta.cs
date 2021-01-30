@@ -12,7 +12,7 @@ namespace SimpleOps.Integración {
     class DatosVenta : DatosDocumento {
 
 
-        #region Propiedades Venta
+        #region Propiedades
 
         public string? OrdenCompraNúmero { get; set; }
 
@@ -24,7 +24,7 @@ namespace SimpleOps.Integración {
 
         public List<DatosLíneaProducto> Líneas { get; set; } = null!; // Nunca es nulo (podría ser lista vacía), solo es para que no saque advertencia.
 
-        #endregion Propiedades Venta>
+        #endregion Propiedades>
 
 
     } // DatosVenta>

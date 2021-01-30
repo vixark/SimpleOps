@@ -144,6 +144,20 @@ namespace SimpleOps.Integración {
                     ValidarCliente(notaCréditoVenta.Cliente);
                     ProcesarDocumentoCliente(notaCréditoVenta, ruta, "nota crédito");
 
+                } else if (documentoIntegración == DocumentoIntegración.Catálogo) {
+
+                    var datosCotización = Deserializar<DatosCotización>(File.ReadAllText(ruta));
+                    if (datosCotización == null) throw new Exception("El objeto datosCotización está vacío.");
+                    var mapeador = new Mapper(ConfiguraciónMapeadorCotizaciónIntegraciónInverso);
+                    var cotización = mapeador.Map<Cotización>(datosCotización);
+                    cotización.Líneas.ForEach(lc => lc.Cotización = cotización); // Necesario porque después de ser leídas por el Automapper no quedan automáticamente enlazadas.
+                    ValidarCliente(cotización.Cliente);
+                    if (CrearPdfCatálogo(cotización, out string rutaPdf, tamañoImagenes: datosCotización.TamañoImagenes)) {
+                        File.WriteAllText(ObtenerRutaCambiandoExtensión(ruta, "ok"), $"{rutaPdf}");
+                    } else {
+                        throw new Exception("No se pudo crear el PDF del catálogo.");
+                    }
+
                 } else {
                     throw new Exception(CasoNoConsiderado(documentoIntegración));
                 }
@@ -155,8 +169,8 @@ namespace SimpleOps.Integración {
                 try {
                     File.WriteAllText(ObtenerRutaCambiandoExtensión(ruta, "error"), ex.Message);
                 } catch (Exception ex2) {
-                    MostrarError($"Hubo un error en el procedimiento de facturación electrónica y no se pudo copiar el archivo de error. " +
-                                 $"Reinice {NombreAplicación} y su aplicación de facturación.{DobleLínea}{ex.Message}{DobleLínea}{ex2.Message}");
+                    MostrarError($"Hubo un error en el procedimiento de integración de SimpleOps con el programa tercero y no se pudo copiar el archivo de error. " +
+                                 $"Reinice {NombreAplicación} y su aplicación tercera.{DobleLínea}{ex.Message}{DobleLínea}{ex2.Message}");
                     throw;
                 }
 
