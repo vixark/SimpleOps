@@ -54,8 +54,18 @@ namespace SimpleOps.Modelo {
             var mapeadorEmpresa = new Mapper(ConfiguraciónMapeadorEmpresa);
             datos.Empresa = mapeadorEmpresa.Map<DatosEmpresa>(Empresa);
             datos.Columnas = ObtenerOpcionesColumnas(datos);
+
             datos.LogoBase64 = ObtenerBase64(Path.Combine(ObtenerRutaImagenesPlantillas(),
                 opcionesDocumento.ModoImpresión ? NombreArchivoLogoEmpresaImpresión : NombreArchivoLogoEmpresa), paraHtml: true);
+            datos.Logo2Base64 = ObtenerBase64(Path.Combine(ObtenerRutaImagenesPlantillas(), 
+                opcionesDocumento.ModoImpresión ? AgregarSufijo(NombreArchivoLogoEmpresaImpresión, "2") : AgregarSufijo(NombreArchivoLogoEmpresa,"2")), 
+                paraHtml: true);
+            datos.Logo3Base64 = ObtenerBase64(Path.Combine(ObtenerRutaImagenesPlantillas(),
+                opcionesDocumento.ModoImpresión ? AgregarSufijo(NombreArchivoLogoEmpresaImpresión, "3") : AgregarSufijo(NombreArchivoLogoEmpresa, "3")), 
+                paraHtml: true);
+            datos.Logo4Base64 = ObtenerBase64(Path.Combine(ObtenerRutaImagenesPlantillas(),
+                opcionesDocumento.ModoImpresión ? AgregarSufijo(NombreArchivoLogoEmpresaImpresión, "4") : AgregarSufijo(NombreArchivoLogoEmpresa, "4")),
+                paraHtml: true);
 
             (datos.ModoDocumento, datos.TotalPáginas) = tipoCotización switch {
                 TipoCotización.Catálogo => (DatosDocumento.Modo.PáginasIndependientes, totalPáginasCatálogo),

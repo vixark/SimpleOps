@@ -411,7 +411,7 @@ namespace SimpleOps {
                 new LíneaCotización(cotización, new Producto("ZZM14CEJSO") { Descripción = "Monitor de 14 pulgadas" }, 600000),
                 new LíneaCotización(cotización, new Producto("ZZEM2EJSO") { Descripción = "Escritorio de Madera de 2 m" }, 500000)
             };
-            CrearPdfCatálogo(cotización, out string rutaPdf, tamañoImagenes: 200);
+            CrearPdfCatálogo(cotización, out _, tamañoImagenes: 200);
 
         } // GeneraciónCatálogo>
 

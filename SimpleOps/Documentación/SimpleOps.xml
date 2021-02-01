@@ -2292,6 +2292,14 @@
             que se quiere borrar un archivo pero si por alguna razón este está bloqueado y no se puede borrar se puede dejar sin borrar.
             </summary>
         </member>
+        <member name="M:Vixark.General.AgregarSufijo(System.String,System.String)">
+            <summary>
+            Toma el nombre de un archivo y le agrega un sufijo (normalmente un número) para obtener un nuevo nombre de archivo. Útil para generar
+            copias de archivos o para obtener nombres de archivos numerados.
+            </summary>
+            <param name="nombreArchivo"></param>
+            <param name="sufijo"></param>
+        </member>
         <member name="M:Vixark.General.CopiarArchivo(System.String,System.String)">
             <summary>
             Copia un archivo sin generar excepciones y de una manera más clara y encapsulada que la función Move de .Net.
@@ -2806,6 +2814,36 @@
             <summary>
             Versión de CopiarA usando objects en los casos que no se puede usar la versión genérica porque el objetoDestino es de solo lectura y 
             no se puede pasar con ref.
+            </summary>
+        </member>
+        <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
+            <summary>
+            GeneratedInternalTypeHelper
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateInstance(System.Type,System.Globalization.CultureInfo)">
+            <summary>
+            CreateInstance
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.GetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            GetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.SetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            SetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateDelegate(System.Type,System.Object,System.String)">
+            <summary>
+            CreateDelegate
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.AddEventHandler(System.Reflection.EventInfo,System.Object,System.Delegate)">
+            <summary>
+            AddEventHandler
             </summary>
         </member>
     </members>

@@ -502,6 +502,16 @@ namespace Vixark {
 
 
         /// <summary>
+        /// Toma el nombre de un archivo y le agrega un sufijo (normalmente un número) para obtener un nuevo nombre de archivo. Útil para generar
+        /// copias de archivos o para obtener nombres de archivos numerados.
+        /// </summary>
+        /// <param name="nombreArchivo"></param>
+        /// <param name="sufijo"></param>
+        public static string AgregarSufijo(string nombreArchivo, string sufijo) 
+            => Path.GetFileNameWithoutExtension(nombreArchivo) + sufijo + Path.GetExtension(nombreArchivo);
+            
+
+        /// <summary>
         /// Copia un archivo sin generar excepciones y de una manera más clara y encapsulada que la función Move de .Net.
         /// </summary>
         /// <param name="rutaArchivo"></param>
@@ -639,6 +649,8 @@ namespace Vixark {
 
 
         public static string ObtenerBase64(string rutaImagen, bool paraHtml) {
+
+            if (!File.Exists(rutaImagen)) return "data:null";
 
             var base64 = Convert.ToBase64String(File.ReadAllBytes(rutaImagen));
             if (paraHtml) {
@@ -1446,9 +1458,9 @@ namespace Vixark {
         /// se podría hacer otro método con otro nombre. Una solución fácil es usar este método con un string y poner ! después de () 
         /// para informarle al compilador que se asegura que el resultado no será nulo.
         /// </summary>
-#pragma warning disable CA1308 // Normalizar las cadenas en mayúsculas
+        #pragma warning disable CA1308 // Normalizar las cadenas en mayúsculas
         public static string? AMinúscula(this string? texto) => texto?.ToLowerInvariant();
-#pragma warning restore CA1308 // Normalizar las cadenas en mayúsculas
+        #pragma warning restore CA1308 // Normalizar las cadenas en mayúsculas
 
         public static string ATexto(this bool booleano) => booleano ? "true" : "false";
 

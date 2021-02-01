@@ -28,6 +28,12 @@ namespace SimpleOps.DocumentosGráficos {
 
         public string? LogoBase64 { get; set; } // El logo principal del documento. Se debe pasar como Base64 porque el iText no soporta imagenes que estén relacionadas en el atributo src con rutas locales que contengan espacios en su nombre.
 
+        public string? Logo2Base64 { get; set; } // Un logo secundario del documento. Se debe pasar como Base64 porque el iText no soporta imagenes que estén relacionadas en el atributo src con rutas locales que contengan espacios en su nombre.
+
+        public string? Logo3Base64 { get; set; } // Un logo secundario del documento. Se debe pasar como Base64 porque el iText no soporta imagenes que estén relacionadas en el atributo src con rutas locales que contengan espacios en su nombre.
+
+        public string? Logo4Base64 { get; set; } // Un logo secundario del documento. Se debe pasar como Base64 porque el iText no soporta imagenes que estén relacionadas en el atributo src con rutas locales que contengan espacios en su nombre.
+
         public string? CertificadoBase64 { get; set; } // El logo del certificado de la empresa. Se debe pasar como Base64 porque el iText no soporta imagenes que estén relacionadas en el atributo src con rutas locales que contengan espacios en su nombre.
 
         public Dictionary<string, string> ImágenesProductosBase64 { get; } = new Dictionary<string, string>(); // Las imagenes de los productos que están en la lista. Solo se usa get; por esta recomendación https://docs.microsoft.com/es-es/dotnet/fundamentals/code-analysis/quality-rules/ca2227?view=vs-2019 y aunque esta propiedad pertenece a un DTO no es una propiedad que se lea desde el otro objeto (Venta, Cotización, etc) si no que se construye con la información leída de él.

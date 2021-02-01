@@ -63,9 +63,9 @@ namespace SimpleOps {
 
         public const string CarpetaCotizaciones = "Cotizaciones"; // Carpeta donde se almacena el PDF de las cotizaciones y catálogos realizados.
 
-        public const string NombreArchivoLogoEmpresa = "LogoEmpresa.png";
+        public const string NombreArchivoLogoEmpresa = "LogoEmpresa.png"; // El nombre del archivo del logo 2 y 3 se forman agregando 2 y 3 antes de la extensión de este nombre.
 
-        public const string NombreArchivoLogoEmpresaImpresión = "LogoEmpresaImpresión.png";
+        public const string NombreArchivoLogoEmpresaImpresión = "LogoEmpresaImpresión.png"; // El nombre del archivo del logo 2 y 3 se forman agregando 2 y 3 antes de la extensión de este nombre.
 
         public const string NombreArchivoCertificadoEmpresa = "Certificado.png";
 
