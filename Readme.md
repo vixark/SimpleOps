@@ -19,5 +19,5 @@ Actualmente <b>SimpleOps</b> está en desarrollo y aún no tiene interfaz gráfi
 Sigue <a href="https://htmlpreview.github.io/?https://github.com/vixark/SimpleOps/blob/master/SimpleOps/Gu%C3%ADas/Instalaci%C3%B3n%20y%20Habilitaci%C3%B3n%20Facturaci%C3%B3n%20Electr%C3%B3nica.html">esta guía</a> para conocer cómo instalar <b>SimpleOps</b> y cómo facturar electrónicamente.
 
 
-<h3>Reconocimientos</h3>
+<h3>Librerías de Terceros Usadas</h3>
 <b>Librería Firma Electrónica:</b> <a href="https://github.com/miguelhuertas/eFacturacionColombia_V2.Firma">eFacturacionColombia_V2.Firma</a> por <a href="https://github.com/miguelhuertas">Miguel Huertas</a>.
