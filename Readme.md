@@ -20,4 +20,4 @@ Sigue <a href="https://htmlpreview.github.io/?https://github.com/vixark/SimpleOp
 
 
 <h3>Librerías de Terceros Usadas</h3>
-<b>Librería Firma Electrónica:</b> <a href="https://github.com/miguelhuertas/eFacturacionColombia_V2.Firma">eFacturacionColombia_V2.Firma</a> por <a href="https://github.com/miguelhuertas">Miguel Huertas</a>.
+<b>Librería de Firma Electrónica:</b> <a href="https://github.com/miguelhuertas/eFacturacionColombia_V2.Firma">eFacturacionColombia_V2.Firma</a> por <a href="https://github.com/miguelhuertas">Miguel Huertas</a>.
