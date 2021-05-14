@@ -26,6 +26,7 @@ namespace SimpleOps {
     static class Global {
 
 
+
         #region Constantes
         // Configuraciones del comportamiento de SimpleOps que solo se pueden hacer desde este código. No estarán accesibles a los usuarios en Opciones. Las configuraciones que requieran ser modificadas más frecuentemente por los usuarios del código deben ir en Configuración.cs para evitar generarles conflictos de sincronización desde el repositorio cuando se realicen cambios en este archivo Global.cs.
 
@@ -53,9 +54,21 @@ namespace SimpleOps {
 
         public const string CarpetaPlantillas = "Plantillas Documentos";
 
-        public const string CarpetaImagenesPlantillas = "Imagenes"; // Es la misma para el modo desarrollo y producción (en la ruta de la aplicación).
+        public const string CarpetaCopiasSeguridadPlantillas = "Copias de Seguridad"; // Está dentro de CarpetaPlantillas.
 
-        public const string CarpetaImagenesProductos = "Productos"; // Está dentro de la CarpetaImagenesPlantillas y el nombre es el mismo para el modo desarrollo y producción (en la ruta de la aplicación).
+        public const string CarpetaImágenesPlantillas = "Imágenes"; // Tiene el mismo nombre para el modo desarrollo y producción.
+
+        public const string CarpetaProductos = "Productos"; // Tiene el mismo nombre para el modo desarrollo y producción.
+
+        public const string CarpetaProductosImágenes = "Imágenes"; // Está dentro de la CarpetaProductos y tiene el mismo nombre para el modo desarrollo y producción.
+
+        public const string CarpetaProductosInformación = "Información"; // Está dentro de la CarpetaProductos y tiene el mismo nombre para el modo desarrollo y producción.
+
+        public const string CarpetaProductosInformaciónImágenes = "Imágenes"; // Está dentro de la CarpetaProductosInformación y tiene el mismo nombre para el modo desarrollo y producción.
+
+        public const string CarpetaProductosInformaciónCompilados = "Compilados"; // Está dentro de la CarpetaProductosInformación y tiene el mismo nombre para el modo desarrollo y producción. En esta carpeta se almacenan los HTMLs compilados con información de de cada producto, que se pueden subir al servidor del sitio web o al servicio de CDN.
+
+        public const string CarpetaProductosInformaciónFragmentos = "Fragmentos"; // Está dentro de la CarpetaProductosInformación y tiene el mismo nombre para el modo desarrollo y producción. En esta carpeta se almacenan los textos planos o HTMLs con fragmentos de información que se pueden reutilizar en los archivos de información de los productos. Estos fragmentos se pueden cargar desde cada archivo de información con <object data="ArchivoAInsertar.html" data-tipoproducto="camiseta" data-marca="Gato"> para archivos de información en HTML y {TipoProducto=camiseta}{Marca=Gato}ArchivoAInsertar.txt para archivos de información en texto plano. Además, estos fragmentos permiten el uso de variables; siguiendo con el ejemplo anterior, si dentro del fragmento se agrega {marca}, este texto será reemplazado por Gato.
 
         public const string CarpetaPlantillasDesarrollo = "Plantillas";
 
@@ -63,15 +76,26 @@ namespace SimpleOps {
 
         public const string CarpetaCotizaciones = "Cotizaciones"; // Carpeta donde se almacena el PDF de las cotizaciones y catálogos realizados.
 
-        public const string NombreArchivoLogoEmpresa = "LogoEmpresa.png"; // El nombre del archivo del logo 2 y 3 se forman agregando 2 y 3 antes de la extensión de este nombre.
+        public const string ArchivoLogoEmpresa = "LogoEmpresa.png"; // El nombre del archivo del logo 2 y 3 se forman agregando 2 y 3 antes de la extensión de este nombre.
 
-        public const string NombreArchivoLogoEmpresaImpresión = "LogoEmpresaImpresión.png"; // El nombre del archivo del logo 2 y 3 se forman agregando 2 y 3 antes de la extensión de este nombre.
+        public const string ArchivoLogoExcel = "LogoExcel.png";
 
-        public const string NombreArchivoCertificadoEmpresa = "Certificado.png";
+        public const string ArchivoLogoEmpresaImpresión = "LogoEmpresaImpresión.png"; // El nombre del archivo del logo 2 y 3 se forman agregando 2 y 3 antes de la extensión de este nombre.
 
-        public const string NombreArchivoCertificadoEmpresaImpresión = "CertificadoImpresión.png";
+        public const string ArchivoLogoExcelImpresión = "LogoExcelImpresión.png"; 
+
+        public const string ArchivoCertificadoEmpresa = "Certificado.png";
+
+        public const string ArchivoCertificadoEmpresaImpresión = "CertificadoImpresión.png";
+
+        public const string ArchivoImagenProductoNoDisponible = "ImagenNoDisponible.jpg";
+
+        public static string TextoPruebas = AleatorizarTexto("Nlulyhkv'jvu'ZptwslVwz'o{{wA66zptwslvwz5ul{"); // Texto auxiliar aleatorio para algunas pruebas.
+
+        public const string TipoAtributoProductoLibre = "Libre"; // Se usa en algunos diccionarios, principalmente de manera interna. Si se agrega un tipo de atributo a la tabla TiposAtributosProductos con este nombre tanto los atributos clasificados con ese tipo como atributos libres que no están en la tabla AtributosProductos tendrán tipo de atributo el valor de TipoAtributoProductoLibre.
 
         #endregion
+
 
 
         #region Variables Constantes
@@ -85,12 +109,14 @@ namespace SimpleOps {
         #endregion Variables Constantes>
 
 
+
         #region Estados
         // Variables que pueden cambiar durante la ejecución.
 
         public static bool OperacionesEspecialesDatos = true; // Se establece en falso al iniciar el SimpleOps y habilita la generación de excepciones al asignar datos inválidos al modelo. Es verdadero durante migraciones de EF Core y durante la carga inicial de datos para evitar hacer algunas verificaciones y lanzar errores.
 
         public static Usuario UsuarioActual = new Usuario("David", "david@simpleops.net") { ID = 1 }; // Temporalmente mientras se implementa se usará usuario 1. Al implementar usuarios lo debería obtener de la base de datos.
+
 
         private static bool _ModoDesarrolloPlantillas = false;
         public static bool ModoDesarrolloPlantillas { // Se usa verdadero para permitir que los cambios que se hagan a los archivos CSHTML en la carpeta Plantillas sean copiados a la ruta de la aplicación y para habilitar algunas líneas de código que facilitan el desarrollo de estas plantillas. En producción se deben usar directamente los archivos en la ruta de la aplicación porque no se tienen los de desarrollo. Se usa cómo una variable de estado porque al ser algo más relacionado con el desarrollo y no la operación normal de parte de un usuario, no vale la pena generar cadenas de parámetros para llevar este valor de una manera más segura (sin problemas de estado) hasta las funciones que lo usan.
@@ -104,20 +130,25 @@ namespace SimpleOps {
 
                     var rutaDesarrollo = ObtenerRutaPlantillas(forzarRutaDesarrollo: true);
                     var rutaAplicación = ObtenerRutaPlantillas(forzarRutaAplicación: true);
+                    var rutaCopiasSeguridad = ObtenerRutaCarpeta(rutaAplicación, CarpetaCopiasSeguridadPlantillas, crearSiNoExiste: true);
+                    var rutaCopiaSeguridadHoy = ObtenerRutaCarpeta(rutaCopiasSeguridad, FechaActualNombresArchivos, crearSiNoExiste: true);
+                    var cantidadArchivosCopiados = CopiarArchivos(rutaAplicación, rutaCopiaSeguridadHoy, sobreescribir: false, "cshtml");
                     MostrarInformación($"Activado el modo de desarrollo de plantillas.{DobleLínea}Este modo suspende la ejecución del código después de " +
-                                       $"crear cada archivo PDF, permite la edición de los archivos CSHTML durante esta suspención y al reanudar genera " +
-                                       $"nuevamente el mismo archivo con los cambios realizados. Esto facilita la edición y desarrollo de archivos CSHTML. " +
-                                       $"Todos archivos de plantillas CSHTML serán copiados de '{rutaDesarrollo}' a '{rutaAplicación}' cada vez que se " +
-                                       $"genere un documento. Si has editado directamente los archivos en '{rutaAplicación}', has una copia de ellos " +
-                                       $"antes de continuar en este modo.");
+                        $"crear cada archivo PDF, permite la edición de los archivos CSHTML durante esta suspensión y al reanudar genera " +
+                        $"nuevamente el mismo archivo PDF con los cambios realizados en el CSHTML. Esto facilita la edición y desarrollo de archivos " +
+                        $"CSHTML.{DobleLínea}Todos archivos de plantillas CSHTML serán copiados de '{rutaDesarrollo}' a '{rutaAplicación}' cada vez que " +
+                        $"se genere un documento." + (cantidadArchivosCopiados == 0 ? "" : $"{DobleLínea}Para evitar la pérdida de datos accidental, " +
+                        $"se ha hecho una copia de seguridad de los archivos CSHTML en '{rutaAplicación}' en '{rutaCopiaSeguridadHoy}'."));
 
                 }
 
             }
 
-        } 
+        } // ModoDesarrolloPlantillas>
+
 
         #endregion Estados>
+
 
 
         #region Variables Calculadas en Inicio
@@ -125,11 +156,25 @@ namespace SimpleOps {
 
         public static List<int> MunicipiosConMensajería = new List<int>(); // Se actualiza al iniciar la aplicación y al realizar cambios en la tabla municipios.
 
+        public static Dictionary<string, string> AtributosProductosYTipos = new Dictionary<string, string>(); // La clave es cada uno de los atributos en la base de datos y el valor es su tipo. Se actualiza al iniciar la aplicación y al realizar cambios en las tablas AtributosProductos o TiposAtributosProductos. Se agregan todos los posibles valores de atributos de producto que serán relacionados con su tipo para filtros u otros usos, por rendimiento en esas aplicaciones se prefiere tener esta variable en caché. Los atributos toman estos valores preferiblemente, pero también pueden tomar valores libres, esto da flexibilidad de manejo al usuario del código y de la aplicación.
+
+        public static SortedDictionary<int, string> ÍndicesYAtributos = new SortedDictionary<int, string>(); // La clave es el ID de cada atributo en la base de datos. Se usa para tener una lista ordenada y poder obtener textos que denoten los rangos de atributos secuenciales, así: Talla 10 a 15. No se usa AtributosProductosYTipos para esto porque según la documentación los diccionarios no garantizan el orden de inserción de los elementos, aunque experimentalmente algunas personas dicen que si se mantiene si solo se realizan inserciones, se prefiere no correr el riesgo. Ver https://stackoverflow.com/questions/2722767/order-preserving-data-structures-in-c-sharp.
+
+        public static Dictionary<int, int> ÍndicesRangosTallasMediasNuméricas = new Dictionary<int, int>();
+
+        public static Dictionary<int, int> ÍndicesRangosDoblePasoEnSecuenciaTallaNumérica = new Dictionary<int, int>();
+
+        public static MapperConfiguration ConfiguraciónMapeadorEmpresa = new MapperConfiguration(c => c.CreateMap<OpcionesEmpresa, DatosEmpresa>());
+
+        public static iText.Html2pdf.ConverterProperties OpcionesConversiónPdf = new iText.Html2pdf.ConverterProperties(); // Se termina de configurar en IniciarVariablesGlobales().
+
+
         public static MapperConfiguration ConfiguraciónMapeadorVenta
             = new MapperConfiguration(c => {
                 c.CreateMap<LíneaVenta, DatosLíneaProducto>();
                 c.CreateMap<Venta, DatosVenta>().ForMember(vg => vg.CódigoDocumento, mce => mce.MapFrom(v => v.Código));
             });
+
 
         public static MapperConfiguration ConfiguraciónMapeadorVentaIntegración
             = new MapperConfiguration(c => {
@@ -137,11 +182,13 @@ namespace SimpleOps {
                 c.CreateMap<Venta, Integración.DatosVenta>();
             });
 
+
         public static MapperConfiguration ConfiguraciónMapeadorVentaIntegraciónInverso
             = new MapperConfiguration(c => {
                 c.CreateMap<LíneaVenta, Integración.DatosLíneaProducto>().ReverseMap();
                 c.CreateMap<Venta, Integración.DatosVenta>().ReverseMap();
             });
+
 
         public static MapperConfiguration ConfiguraciónMapeadorNotaCréditoVenta // Se crean mapeadores propios para las notas crédito para evitar complejizar con objetos genéricos estos objetos de AutoMapper.
             = new MapperConfiguration(c => {
@@ -149,11 +196,13 @@ namespace SimpleOps {
                 c.CreateMap<NotaCréditoVenta, DatosVenta>().ForMember(vg => vg.CódigoDocumento, mce => mce.MapFrom(v => v.Código));
             });
 
+
         public static MapperConfiguration ConfiguraciónMapeadorNotaCréditoVentaIntegración
             = new MapperConfiguration(c => {
                 c.CreateMap<LíneaNotaCréditoVenta, Integración.DatosLíneaProducto>();
                 c.CreateMap<NotaCréditoVenta, Integración.DatosVenta>();
             });
+
 
         public static MapperConfiguration ConfiguraciónMapeadorNotaCréditoVentaIntegraciónInverso
             = new MapperConfiguration(c => {
@@ -161,11 +210,13 @@ namespace SimpleOps {
                 c.CreateMap<NotaCréditoVenta, Integración.DatosVenta>().ReverseMap();
             });
 
+
         public static MapperConfiguration ConfiguraciónMapeadorCotizaciónIntegración
             = new MapperConfiguration(c => {
                 c.CreateMap<LíneaCotización, Integración.DatosLíneaProducto>();
                 c.CreateMap<Cotización, Integración.DatosCotización>();
             });
+
 
         public static MapperConfiguration ConfiguraciónMapeadorCotizaciónIntegraciónInverso
             = new MapperConfiguration(c => {
@@ -173,17 +224,17 @@ namespace SimpleOps {
                 c.CreateMap<Cotización, Integración.DatosCotización>().ReverseMap();
             });
 
+
         public static MapperConfiguration ConfiguraciónMapeadorCotización
             = new MapperConfiguration(c => {
                 c.CreateMap<LíneaCotización, DatosLíneaProducto>().ForMember(dlc => dlc.PrecioBaseTexto, m => m.MapFrom(lc => lc.PrecioTexto));
+                c.CreateMap<LíneaCotización, DatosLíneaProducto>().ForMember(dlc => dlc.PrecioBase, m => m.MapFrom(lc => lc.Precio));
                 c.CreateMap<Cotización, DatosCotización>().ForMember(dc => dc.CódigoDocumento, m => m.MapFrom(v => v.ID));
             });
 
-        public static MapperConfiguration ConfiguraciónMapeadorEmpresa = new MapperConfiguration(c => c.CreateMap<OpcionesEmpresa, DatosEmpresa>());
-
-        public static iText.Html2pdf.ConverterProperties OpcionesConversiónPdf = new iText.Html2pdf.ConverterProperties(); // Se termina de configurar en IniciarVariablesGlobales().
 
         #endregion Variables Calculadas en Inicio>
+
 
 
         #region Textos y Excepciones
@@ -193,8 +244,9 @@ namespace SimpleOps {
         #endregion Textos y Excepciones>
 
 
+
         #region Enumeraciones 
-        // Si la enumeración se usa en una propiedad de la base de datos se debe declarar byte si es posible y debe llevar los valores numéricos. Si se agregan nuevos elementos se debe agregar el detalle a la documentación de todas las propiedades de entidades de estos tipos de enumeraciones. Se hacen explícitos los valores para tener conciencia de estos y reducir la posibilidad de crear errores con los datos en la base de datos al añadir nuevos elementos. Cualquier nuevo elemento deberá ser añadido al final de la enumeración a no ser que hayan números libres intermedios. El primer elemento casi siempre debe ser Desconocido que es el equivalente en función a nulo.
+        // Si la enumeración se usa en una propiedad de la base de datos se debe declarar byte si es posible y debe llevar los valores numéricos. Si se agregan nuevos elementos se debe agregar el detalle a la documentación de todas las propiedades de entidades de estos tipos de enumeraciones. Se hacen explícitos los valores para tener conciencia de estos y reducir la posibilidad de crear errores con los datos en la base de datos al añadir nuevos elementos. Cualquier nuevo elemento deberá ser añadido al final de la enumeración a no ser que hayan números libres intermedios. El primer elemento casi siempre debe ser Desconocido que es el equivalente en función a nulo. Agregar las enumeraciones que caben en una línea al principio y las múltilínea después.
 
         public enum TipoEntidad : byte { Desconocido = 0, Empresa = 1, Persona = 2 } // No cambiar los nombres de las enumeración ni de los elementos porque estos se usan en los archivos de opciones JSON. Identificador de tipo de organización jurídica. Los valores deben ser coincidentes con numeral 13.2.3 de la guía de facturación electrónica de la DIAN. 1 Persona jurídica y asimiladas, 2 Persona natural.
 
@@ -202,9 +254,63 @@ namespace SimpleOps {
 
         public enum Prioridad : byte { Desconocida = 0, Ninguna = 1, MuyBaja = 10, Baja = 20, Media = 30, Alta = 40, MuyAlta = 50 } // No cambiar los nombres de las enumeración ni de los elementos porque estos se usan en los archivos de opciones JSON. Ninguna es necesario cuando no existe ninguna prioridad para el elemento y no debe ser tenido en cuenta. Si fuera necesario nuevos elementos de prioridad intermedia se pueden añadir entre los valores existentes.
 
+        public enum EstadoFactura : byte { PendientePago = 0, Pagada = 1, Anulada = 2 }
+
+        public enum EstadoSolicitudProducto : byte { Pendiente = 0, Cumplida = 1, Anulada = 2 }
+
+        public enum EstadoRemisión : byte { PendienteFacturación = 0, Facturada = 1, Anulada = 2, Descartada = 3 }
+
+        public enum EstadoMovimientoDinero : byte { Pendiente = 0, Procesado = 1, Dividido = 2, Anulado = 3 }
+
+        public enum EstadoComprobanteDinero : byte { Realizado = 0, ReportadoContabilidad = 1, Anulado = 2, AnuladoReportado = 3 }
+
+        public enum TipoCuentaBancaria : byte { Desconocida = 0, Ahorros = 1, Corriente = 2 }
+
+        [Flags] public enum TipoPermiso { Ninguno = -1, Lectura = 1, Modificación = 2, Inserción = 4, Eliminación = 8 }
+
+        public enum TipoMovimientoDinero { Ninguno, Ingreso, Egreso }
+
+        public enum LugarMovimientoDinero : byte { Desconocido = 0, Banco = 1, Caja = 2 }
+
+        public enum TipoCobro : byte { Desconocido = 0, Email = 1, Telefónico = 2, Personal = 3, AgenciaDeCobros = 4, Prejurídico = 5, Jurídico = 6, Otro = 255 } // Nuevos elementos se añaden antes de Otro.
+
+        public enum ModoImpuesto { Exento, Porcentaje, Unitario }
+
+        public enum ControlConcurrencia { Ninguno, Optimista, Pesimista, NoPermitido }
+
+        public enum TipoContexto { Lectura, Escritura, LecturaConRastreo }; // Se prefieren los términos Lectura y Escritura porque describen claramente la intención más común al crear el contexto y equivalen a NoTracking y Tracking respectivamente. Se añade LecturaConRastreo porque para poder usar la caché de las consultas se requiere activar el tracking entonces para mejorar el rendimiento de algunas consultas de solo lectura podrían iniciarse con TipoContexto.LecturaConRastreo. Esto es principalmente es para facilidad de revisión y lectura del código y para lanzar una excepción cuando se intente guardar cambios en contextos que sean de tipo lectura.
+
+        public enum BrochaInformativa { Éxito, Peligro, Alerta, Información, Indiferente }; // No cambiar los nombres de las enumeración ni de los elementos porque estos se usan en los archivos de opciones JSON.
+
+        public enum TamañoLetra { XS, S, M, L, XL }
+
+        public enum TipoImpuesto { IVA, INC, [Display(Name = "IVA e INC")] IVAeINC, [Display(Name = "No aplica")] NoAplica }; // Tomados de la tabla 13.2.6.2. del 'Anexo técnico de factura electrónica de venta validación previa.pdf' de la DIAN.
+        
+        public enum FormaPago { Contado = 1, Crédito = 2 } // Tomados del numeral 13.3.4.1 de la documentación de la DIAN para la facturación electrónica.
+
+        public enum TipoFacturaVenta { Venta = 1, Exportación = 2, ContingenciaFacturador = 3, ContingenciaDian = 4 };
+
+        public enum TipoDescuento { Comercial = 0, Condicionado = 1 }; // Tomados del numeral 13.3.7 de la documentación de la DIAN para la facturación electrónica.
+
+        public enum TipoDeclarante { Desconocido, Declarante, NoDeclarante }
+
+        public enum TipoProducto { Desconocido, Producto, Servicio };
+
+        public enum TipoFirma {[Display(Name = "fv")] Factura, [Display(Name = "nd")] NotaDébito, [Display(Name = "nc")] NotaCrédito, Evento }
+
+        public enum TipoReglaDian { Rechazo, Notificación }
+
+        public enum TipoCotización { Cotización, Catálogo }
+
+        public enum AmbienteFacturaciónElectrónica { Producción = 1, Pruebas = 2 }; // No cambiar los nombres de las enumeración ni de los elementos porque estos se usan en los archivos de opciones JSON. Tomados del numeral 13.1.1 de la documentación de la DIAN para la facturación electrónica: 1 Producción, 2 Pruebas. Se debe mantener el valor de cada enumeración igual al código en la tabla de la DIAN.
+
+        public enum RazónNotaDébito { Intereses = 1, Gastos = 2, AjustePrecio = 3, Otra = 4 } // Tomados del numeral 13.2.5. de la documentación de la DIAN para la facturación electrónica.
+
+
         public enum FormaEntrega : byte { // Virtual es útil para productos o servicios que se proveen sin necesidad de representación o presencia física. Cada vez que se añada un elemento se deben agregar los elementos necesarios en TipoClienteFormaEntrega.
             Desconocida = 0, Virtual = 1, PuntoVenta = 2, Mensajería = 3, Transportadora = 4, TransportadoraInternacional = 5, Otra = 255
         }
+
 
         public enum TipoClienteFormaEntrega { // No cambiar los nombres de las enumeración ni de los elementos porque estos se usan en los archivos de opciones JSON. Enumeración auxiliar para permitir la serialización del objeto OpcionesEmpresa.MínimosTransporteGratis. Al agregar un elemento aquí también agregarlo en OpcionesEmpresa.MínimosTransporteGratis y a ObtenerMínimoTransporteGratis().
             Desconocido_Desconocida, Consumidor_Desconocida, Distribuidor_Desconocida, GrandesContratos_Desconocida, Otro_Desconocida, // FormaEntrega = Desconocida.
@@ -217,29 +323,21 @@ namespace SimpleOps {
             Desconocido_Otra, Consumidor_Otra, Distribuidor_Otra, GrandesContratos_Otra, Otro_Otra, // FormaEntrega = Otra.
         }
 
-        public enum EstadoFactura : byte { PendientePago = 0, Pagada = 1, Anulada = 2 }
-
-        public enum EstadoSolicitudProducto : byte { Pendiente = 0, Cumplida = 1, Anulada = 2 }
 
         public enum EstadoOrdenCompra { // No cambiar los nombres de las enumeración ni de los elementos porque estos se usan en los archivos de opciones JSON. Lista: Ya está lista para facturación porque todos sus productos están en inventario y no hay problemas con las cuentas del cliente ni el tamaño de la orden. EsperandoProducto: Se está esperando que llegue producto pedido a un proveedor. EsperandoPago: Es de un cliente sin crédito y se está esperando su reporte de pago para poder facturar. CupoCréditoInsuficiente: Es de un cliente con crédito que alcanzó su cupo de crédito. BajoMonto: Su valor es menor al establecido en opciones. FacturasVencidas: Es de un cliente con crédito que tiene facturas vencidas sin pagar (Se usa vencidas aunque en la práctica son las vencidas después de cierto umbral porque comercialmente es aceptado vender a clientes con facturas moderadamente vencidas). PendientePedido: Al menos un producto de la orden de compra no está en inventario ni está en camino, se debe pedir a un proveedor.  
             Lista = 0, EsperandoProducto = 1, EsperandoPago = 2, CupoCréditoAlcanzado = 3, BajoMonto = 4, FacturasVencidas = 5, PendientePedido = 6 // No se usa desconocida porque nunca tomará ese estado. Todas inician con Lista y se modifican posteriormente.
         }
 
-        public enum EstadoRemisión : byte { PendienteFacturación = 0, Facturada = 1, Anulada = 2, Descartada = 3 }
-
-        public enum EstadoMovimientoDinero : byte { Pendiente = 0, Procesado = 1, Dividido = 2, Anulado = 3 }
-
-        public enum EstadoComprobanteDinero : byte { Realizado = 0, ReportadoContabilidad = 1, Anulado = 2, AnuladoReportado = 3 }
-
-        public enum TipoCuentaBancaria : byte { Desconocida = 0, Ahorros = 1, Corriente = 2 }
 
         public enum TipoContactoCliente : byte {  // Nuevos elementos podrían ser agregados entre los actuales, conservando los valores.
             Desconocido = 0, Comprador = 1, Almacenista = 2, Tesorería = 5, JefeCompras = 10, AltoDirectivo = 15, Gerente = 20, Propietario = 25, Otro = 255
         }
 
+
         public enum TipoContactoProveedor : byte { // Nuevos elementos podrían ser agregados entre los actuales, conservando los valores.
             Desconocido = 0, Vendedor = 1, Despachos = 2, Tesorería = 5, JefeVentas = 10, AltoDirectivo = 15, Gerente = 20, Propietario = 25, Otro = 255
         }
+
 
         public enum Unidad { // Aunque un nombre más apropiado sería TamañoPaquete se prefiere Unidad porque está más difundido así no sea del todo correcto porque Unidad se podría referir a cualquier unidad de medida, como metro, kilogramo, etc. En caso que se necesite usar esas unidades de medida se puede agregar una nueva enumeración con nombre UnidadFísica.
             Desconocida = 0, Unidad = 1, Par = 2, Trío = 3, Cuarteto = 4, Quinteto = 5, MediaDocena = 6, Septeto = 7, Octeto = 8, Decena = 10,
@@ -249,11 +347,6 @@ namespace SimpleOps {
             TripleMillar = 3000, CuatroMillares = 4000, Miríada = 10000, Millón = 1000000, Millardo = 1000000000
         }
 
-        [Flags] public enum TipoPermiso { Ninguno = -1, Lectura = 1, Modificación = 2, Inserción = 4, Eliminación = 8 }
-
-        public enum TipoMovimientoDinero { Ninguno, Ingreso, Egreso }
-
-        public enum LugarMovimientoDinero : byte { Desconocido = 0, Banco = 1, Caja = 2 }
 
         public enum Banco { // No cambiar los nombres de las enumeración ni de los elementos porque estos se usan en los archivos de opciones JSON. Nombres y códigos tomados de https://www.superfinanciera.gov.co/descargas/institucional/pubFile1004010/entidades_general.xls. El valor de la enumeración es el Tipo * 1000 + el Código, excepto para los tipo 1 que es directamente el código.
             Otro = -2, Ninguno = -1, Desconocido = 0, Bogotá = 1, Popular = 2, ItaúCorpbanca = 6, Bancolombia = 7, Citibank = 9, GNBSudameris = 12, BBVA = 13,
@@ -269,7 +362,6 @@ namespace SimpleOps {
             Daviplata = 1001551, Nequi = 1001507, FinanciamientoItau = 1001014 // Hay dudas sobre FinanciamientoItau que aparece en la lista de Bancolombia, podría coincidir con alguno de la lista de la superfinanciera pero no hay claridad.
         } // Otro es cuando el banco de la empresa no está en esta enumeración, no se podría usar para realizar pagos. Ninguno es para indicar que cierta entidad económica no tiene banco. Desconocido es para indicar que cierta entidad económica sí tiene banco pero aún no se conoce cuál es.
 
-        public enum TipoCobro : byte { Desconocido = 0, Email = 1, Telefónico = 2, Personal = 3, AgenciaDeCobros = 4, Prejurídico = 5, Jurídico = 6, Otro = 255 } // Nuevos elementos se añaden antes de Otro.
 
         [Flags] public enum TipoContribuyente { // No cambiar los nombres de las enumeración ni de los elementos porque estos se usan en los archivos de opciones JSON. Tomados de la tabla 13.2.6.1. del 'Anexo técnico de factura electrónica de venta validación previa.pdf' de la DIAN. Se usa en el primer elemento 'Ordinario' en vez de 'No aplica' y 'Retenedor IVA' en vez de 'Agente de Retención de IVA' porque se entienden más que como están en la tabla de la DIAN. Si se agregaran nuevos elementos que no constituyen una responsabilidad fiscal según la tabla 13.2.6.1. (como los de las responsabilidades de IVA) se deben omitir en Dian.ObtenerResponsabilidadFiscal().
             [Display(Name = "Ordinario")] Ordinario = 1, [Display(Name = "Gran Contribuyente")] GranContribuyente = 2, Autorretenedor = 4, // Ordinario es el que le aplica a una empresa que no se ha acogido a uno de los otros régimenes como Simple o Gran Contribuyente.
@@ -277,13 +369,13 @@ namespace SimpleOps {
             [Display(Name = "Responsable de IVA")] ResponsableIVA = 32, [Display(Name = "No Responsable de IVA")] NoResponsableIVA = 64 // Se complementa esta enumeración con las responsabilidades de IVA para forzar a realizar un manejo integrado en esta enumeración de todas las responsabilidades actuales y futuras. Tomadas de la tabla 'Modificación del anexo técnico (06-09-2019)' de la documentación de la DIAN para la facturación electrónica. ResponsableIVA es el equivalente al antiguo régimen común y NoResponsableIVA al antiguo régimen simplificado.
         }
 
+
         public enum TipoImpuestoConsumo : byte { // No cambiar los nombres de las enumeración ni de los elementos porque estos se usan en los archivos de opciones JSON. Tomados parcialmente de la tabla TipoTributo. Es el tipo que realmente se guarda en la base de datos. No se incluyen todos los tributos porque hay muchos que pueden confundir a los usuarios y sus nombres según deben enviarse a la DIAN no son muy claros. Se pueden incluir tantos impuestos al consumo como se deseen incluso si son del mismo tipo general porque estos serán relacionados con TipoTributo antes de enviar a la DIAN. General no tiene asociado una tasa automáticamente, se debe especificar por producto. Las opciones de para los que son INC (Hasta TelefoníaCelularYDatos) se tomaron de https://www.gerencie.com/que-es-el-impuesto-al-consumo.html.
             Desconocido = 0, General = 1, VehículosLujo = 2, Aeronaves = 3, Vehículos = 4, MotocicletasLujo = 5, Embarcaciones = 6,
             ServiciosRestaurante = 7, TelefoníaCelularYDatos = 8, BolsasPlásticas = 9, Carbono = 10, Combustibles = 11, DepartamentalNominal = 12,
             DepartamentalPorcentual = 13, SobretasaCombustibles = 14, Otro = 255
         }
 
-        public enum ModoImpuesto { Exento, Porcentaje, Unitario }
 
         public enum ConceptoRetención : byte { // No cambiar los nombres de las enumeración ni de los elementos porque estos se usan en los archivos de opciones JSON. Tomados de https://www.gerencie.com/tabla-de-retencion-en-la-fuente-2020.html.
             Desconocido = 0, Generales = 1, TarjetaDébitoOCrédito = 2, AgrícolasOPecuariosSinProcesamiento = 3, AgrícolasOPecuaríosConProcesamiento = 4,
@@ -295,15 +387,6 @@ namespace SimpleOps {
             RendimientosFinacierosRentaFija = 26, LoteríasRifasYApuestas = 27, ColocaciónIndependienteJuegosAzar = 28, ContratosConstruccionYUrbanización = 29
         }
 
-        public enum ControlConcurrencia { Ninguno, Optimista, Pesimista, NoPermitido }
-
-        public enum TipoContexto { Lectura, Escritura, LecturaConRastreo }; // Se prefieren los términos Lectura y Escritura porque describen claramente la intención más común al crear el contexto y equivalen a NoTracking y Tracking respectivamente. Se añade LecturaConRastreo porque para poder usar la caché de las consultas se requiere activar el tracking entonces para mejorar el rendimiento de algunas consultas de solo lectura podrían iniciarse con TipoContexto.LecturaConRastreo. Esto es principalmente es para facilidad de revisión y lectura del código y para lanzar una excepción cuando se intente guardar cambios en contextos que sean de tipo lectura.
-
-        public enum BrochaInformativa { Éxito, Peligro, Alerta, Información, Indiferente }; // No cambiar los nombres de las enumeración ni de los elementos porque estos se usan en los archivos de opciones JSON.
-
-        public enum TamañoLetra { XS, S, M, L, XL }
-
-        public enum TipoImpuesto { IVA, INC, [Display(Name = "IVA e INC")] IVAeINC, [Display(Name = "No aplica")] NoAplica }; // Tomados de la tabla 13.2.6.2. del 'Anexo técnico de factura electrónica de venta validación previa.pdf' de la DIAN.
 
         public enum TipoTributo { // Tomados de la tabla 13.2.2. del 'Anexo técnico de factura electrónica de venta validación previa.pdf' de la DIAN.
             IVA = 1, INC = 4, [Display(Name = "INC Bolsas")] Bolsas = 22, [Display(Name = "INCarbono")] Carbono = 23,
@@ -314,71 +397,65 @@ namespace SimpleOps {
             Sordicom = 26, [Display(Name = "IC Datos")] Datos = 30, Otro = 999
         }
 
-        public enum AmbienteFacturaciónElectrónica { Producción = 1, Pruebas = 2 }; // No cambiar los nombres de las enumeración ni de los elementos porque estos se usan en los archivos de opciones JSON. Tomados del numeral 13.1.1 de la documentación de la DIAN para la facturación electrónica: 1 Producción, 2 Pruebas. Se debe mantener el valor de cada enumeración igual al código en la tabla de la DIAN.
 
         public enum DocumentoIdentificación { // Tomados de la tabla 13.2.1 de la documentación de la DIAN para la facturación electrónica.
             RegistroCivil = 11, TarjetaIdentidad = 12, CédulaCiudadanía = 13, TarjetaExtranjería = 21, CédulaExtranjería = 22, Nit = 31, Pasaporte = 41,
             DocumentoIdentificaciónExtranjero = 42, NitOtroPaís = 50, Nuip = 91
         }
 
+
         public enum PagoTransporte {
             Desconocido, [Display(Name = "Transporte Gratis")] Gratis, [Display(Name = "Transporte Pago Contraentrega")] Contraentrega
         }
 
-        public enum FormaPago { Contado = 1, Crédito = 2 } // Tomados del numeral 13.3.4.1 de la documentación de la DIAN para la facturación electrónica.
 
         public enum TipoDocumentoElectrónico { // Ver lista de valores posibles en el numeral 13.1.3 de la documentación de la DIAN para la facturación electrónica.
             FacturaVenta = 1, FacturaExportación = 2, FacturaContingenciaFacturador = 3, FacturaContingenciaDian = 4, NotaCrédito = 91, NotaDébito = 92
         }
 
-        public enum TipoFacturaVenta { Venta = 1, Exportación = 2, ContingenciaFacturador = 3, ContingenciaDian = 4 };
-
-        public enum TipoDescuento { Comercial = 0, Condicionado = 1 }; // Tomados del numeral 13.3.7 de la documentación de la DIAN para la facturación electrónica.
 
         public enum TarifaIVA { // Tomados del numeral 13.3.9 de la documentación de la DIAN para la facturación electrónica.
             [Display(Name = "0 %")] Cero = 0, [Display(Name = "5 %")] Cinco = 5, [Display(Name = "16 %")] Dieciseis = 16,
             [Display(Name = "19 %")] Diecinueve = 19
-        };
+        }
+
 
         public enum TarifaINC { // Tomados del numeral 13.3.9 de la documentación de la DIAN para la facturación electrónica.
             [Display(Name = "0 %")] Cero = 0, [Display(Name = "2 %")] Dos = 2, [Display(Name = "4 %")] Cuatro = 4, [Display(Name = "8 %")] Ocho = 8,
             [Display(Name = "16 %")] Dieciseis = 16
-        };
+        }
 
-        public enum TipoDeclarante { Desconocido, Declarante, NoDeclarante }
-
-        public enum TipoProducto { Desconocido, Producto, Servicio };
-
-        public enum TipoFirma {[Display(Name = "fv")] Factura, [Display(Name = "nd")] NotaDébito, [Display(Name = "nc")] NotaCrédito, Evento }
 
         public enum BrochaTema { // Principalmente se usa para ser llamadas desde código. Según el tema de color actual toman valor diferente.
             [Display(Name = "BrochaFondo30")] Fondo, [Display(Name = "BrochaFrente200")] Texto, [Display(Name = "BrochaFrente220")] TextoTítulo
         }
 
-        public enum TipoReglaDian { Rechazo, Notificación }
-
-        public enum TipoCotización { Cotización, Catálogo }
 
         public enum RazónNotaCrédito { // Tomados del numeral 13.2.4. de la documentación de la DIAN para la facturación electrónica. AjustePrecio se supondrá que es para corrección de errores (hacia abajo) en el precio de algún producto y Descuento para descuentos acordados.
             [Display(Name = "Devolución Parcial")] DevoluciónParcial = 1, [Display(Name = "Anulación Factura")] AnulaciónFactura = 2, 
             [Display(Name = "Descuento")] Descuento = 3, [Display(Name = "Ajuste Precio")] AjustePrecio = 4, [Display(Name = "Otra")] Otra = 5 
         }
 
-        public enum RazónNotaDébito { Intereses = 1, Gastos = 2, AjustePrecio = 3, Otra = 4 } // Tomados del numeral 13.2.5. de la documentación de la DIAN para la facturación electrónica.
 
-        public enum PlantillaDocumento {
+        public enum PlantillaDocumento { // Las plantillas ListaProductos son auxiliares de uso interno dentro de otras plantillas. Existen 3 posibles lugares donde se podría presentar la información de los documentos: 1. PDF: Usualmente se envía por email y es la forma más común de compartir documentos. 2. Web: Se presentarían los documentos directamente en el sitio web. Estas plantillas se pueden realizar con tecnologías modernas de desarrollo web pues estarían diseñadas para presentarse en navegadores que lo más normal es que estén actualizados. 3. Email: El documento es directamente el contenido del email. Aunque se podrían usar las plantillas web para esto, es posible que los clientes de correo no soporten las tecnologías de desarrollo web más modernas, entonces se permite especificar un diseño HTML distinto para estos casos. Si no se desea mantener dos versiones de HTML diferentes (Web e Email), se puede desarrollar solo la versión Web, pero desarrollándola con tecnologías web compatibles con los clientes de correo.
             VentaPdf, ProformaPdf, NotaCréditoPdf, NotaDébitoPdf, CotizaciónPdf, PedidoPdf, ComprobanteEgresoPdf, CobroPdf, RemisiónPdf, CatálogoPdf,
-            MarcoPdf, ListaProductosPdf, VentaEmail, ProformaHtml, NotaCréditoEmail, NotaDébitoEmail, CotizaciónEmail, PedidoEmail, ComprobanteEgresoEmail, 
-            CobroEmail, RemisiónEmail, CatálogoEmail, MarcoEmail, ListaProductosEmail
+            MarcoPdf, FichaInformativaPdf, ListaProductosPdf,
+            VentaWeb, ProformaWeb, NotaCréditoWeb, NotaDébitoWeb, CotizaciónWeb, PedidoWeb, ComprobanteEgresoWeb, CobroWeb, RemisiónWeb, CatálogoWeb, 
+            MarcoWeb, FichaInformativaWeb, ListaProductosWeb,
+            VentaEmail, ProformaEmail, NotaCréditoEmail, NotaDébitoEmail, CotizaciónEmail, PedidoEmail, ComprobanteEgresoEmail, CobroEmail, RemisiónEmail, CatálogoEmail, 
+            MarcoEmail, FichaInformativaEmail, ListaProductosEmail
         }
+
 
         public enum DocumentoIntegración {
-            [Display(Name = "VT-")] Venta, [Display(Name = "NC-")] NotaCrédito, [Display(Name = "ND-")] NotaDébito,
-            [Display(Name = "CZ-")] Cotización, [Display(Name = "PD-")] Pedido, [Display(Name = "CE-")] ComprobanteEgreso, 
-            [Display(Name = "CB-")] Cobro, [Display(Name = "RS-")] Remisión, [Display(Name = "CT-")] Catálogo 
+            [Display(Name = "VT-")] Venta, [Display(Name = "NC-")] NotaCrédito, [Display(Name = "ND-")] NotaDébito, [Display(Name = "CZ-")] Cotización, 
+            [Display(Name = "PD-")] Pedido, [Display(Name = "CE-")] ComprobanteEgreso, [Display(Name = "CB-")] Cobro, [Display(Name = "RS-")] Remisión,
+            [Display(Name = "CT-")] Catálogo, [Display(Name = "FI-")] FichasInformativas // El documento de integración de fichas informativas se escribe en plural porque por lo general trae información para realizar fichas de varios productos.
         }
 
+
         #endregion Enumeraciones>
+
 
 
         #region Variables Autocalculadas
@@ -391,7 +468,9 @@ namespace SimpleOps {
 
         public static string AhoraNombresArchivos => AhoraUtcAjustado.ATexto(FormatoFechaHora).Reemplazar(":", "-");
 
-        public static string HoyNombresArchivos => AhoraUtcAjustado.ATexto(FormatoNúmeroMesDía);
+        public static string MesDíaActualNombresArchivos => AhoraUtcAjustado.ATexto(FormatoNúmeroMesDía);
+
+        public static string FechaActualNombresArchivos => AhoraUtcAjustado.ATexto(FormatoFecha);
 
         public static string RutaBaseDatosSQLite => Path.Combine(Path.Combine(Equipo.RutaAplicación, CarpetaDatos), ArchivoBaseDatosSQLite);
 
@@ -402,15 +481,16 @@ namespace SimpleOps {
         #endregion Variables Autocalculadas>
 
 
+
         #region Métodos y Funciones
 
         public static decimal? ObtenerSubtotal(decimal? precio, int cantidad) => precio == null ? null : precio * cantidad;
 
         public static decimal? ObtenerPorcentajeMargen(decimal venta, decimal costo) => venta == 0 ? (decimal?)null : (venta - costo) / (venta);
 
-        public static decimal? ObtenerPorcentajeGanancia(decimal venta, decimal costo) => costo == 0 ? (decimal?)null : (venta - costo) / (costo); // Término tomado de https://es.wikipedia.org/wiki/Margen_de_beneficio y https://es.wikipedia.org/wiki/Margen_de_ganancia.
+        public static decimal? ObtenerPorcentajeGanancia(decimal venta, decimal costo) => costo == 0 ? (decimal?)null : (venta - costo) / (costo); // Término de https://es.wikipedia.org/wiki/Margen_de_beneficio y https://es.wikipedia.org/wiki/Margen_de_ganancia.
 
-        public static decimal? ObtenerPorcentajeImpuesto(decimal? venta, decimal? impuesto) 
+        public static decimal? ObtenerPorcentajeImpuesto(decimal? venta, decimal? impuesto)
             => impuesto == null || venta == null || venta == 0 ? null : impuesto / venta;
 
         public static double? ObtenerGramos(double? kilogramos) => kilogramos * 1000;
@@ -426,6 +506,152 @@ namespace SimpleOps {
         public static Prioridad ObtenerPrioridadCliente(TipoCliente tipoCliente) => Empresa.PrioridadesClientes[tipoCliente];
 
         public static double ObtenerPorcentajeGananciaCliente(TipoCliente tipoCliente) => Empresa.PorcentajesGananciaClientes[tipoCliente];
+
+        public static string ObtenerRutaDatosJson() => ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaDatosJson, crearSiNoExiste: true);
+
+        public static string ObtenerRutaDocumentosElectrónicos()
+            => ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaDocumentosElectrónicos, crearSiNoExiste: true);
+
+        public static string ObtenerRutaCotizaciones() => ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaCotizaciones, crearSiNoExiste: true);
+
+        public static string ObtenerRutaDocumentosElectrónicosDeHoy() => ObtenerRutaDocumentosDeHoy(ObtenerRutaDocumentosElectrónicos());
+
+        public static string ObtenerRutaCotizacionesDeHoy() => ObtenerRutaDocumentosDeHoy(ObtenerRutaCotizaciones());
+
+        public static string ObtenerRutaDocumentosDeHoy(string rutaBase) => ObtenerRutaCarpeta(ObtenerRutaCarpeta(rutaBase, 
+            AhoraUtcAjustado.Year.ATexto(), crearSiNoExiste: true), MesDíaActualNombresArchivos, crearSiNoExiste: true);
+
+        public static string ObtenerRutaCopiasSeguridad() => ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaCopiasSeguridad, crearSiNoExiste: true);
+
+        public static string ObtenerRutaOpciones() => ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaOpciones, crearSiNoExiste: true);
+
+        public static string ObtenerRutaImágenesPlantillas() => ObtenerRutaCarpeta(ObtenerRutaPlantillas(forzarRutaAplicación: true, 
+            forzarRutaDesarrollo: false), CarpetaImágenesPlantillas, crearSiNoExiste: true); // No es necesario modificarlas desde el Visual Studio. Las plantillas si se manejan en ambos lugares porque si se requiere trabajar en ellas y se deben agregar al repositorio y también se requieren tener las propias por fuera del repositorio en la ruta de la aplicación.
+
+        public static string ObtenerRutaProductos() 
+            => Equipo.RutaProductos ?? ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaProductos, crearSiNoExiste: true);
+
+        public static string ObtenerRutaProductosDesarrollo() => ObtenerRutaCarpeta(RutaDesarrollo, CarpetaProductos, crearSiNoExiste: false);
+
+        public static string ObtenerRutaImágenesProductos() 
+            => ObtenerRutaCarpeta(ObtenerRutaProductos(), CarpetaProductosImágenes, crearSiNoExiste: true);
+
+        public static string? ObtenerRutaImagenProductoNoDisponible() 
+            => ObtenerRutaArchivo(ArchivoImagenProductoNoDisponible, ObtenerRutaImágenesProductos(), ExtensionesImágenes);
+
+        public static string ObtenerRutaInformaciónProductos() 
+            => ObtenerRutaCarpeta(ObtenerRutaProductos(), CarpetaProductosInformación, crearSiNoExiste: true);
+
+        public static string ObtenerRutaInformaciónImágenesProductos()
+            => ObtenerRutaCarpeta(ObtenerRutaInformaciónProductos(), CarpetaProductosInformaciónImágenes, crearSiNoExiste: true);
+
+        public static string ObtenerRutaInformaciónCompiladosProductos()
+            => ObtenerRutaCarpeta(ObtenerRutaInformaciónProductos(), CarpetaProductosInformaciónCompilados, crearSiNoExiste: true);
+
+        public static string ObtenerRutaInformaciónFragmentosProductos()
+            => ObtenerRutaCarpeta(ObtenerRutaInformaciónProductos(), CarpetaProductosInformaciónFragmentos, crearSiNoExiste: true);
+
+        public static string ObtenerRutaPlantillasAplicación() 
+            => Equipo.RutaPlantillasDocumentos ?? ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaPlantillas, crearSiNoExiste: true);
+
+        public static double? ObtenerPorcentajeIVAVenta(Cliente? cliente, Producto? producto) => (producto == null || cliente == null)
+            ? (double?)null : (cliente.Municipio?.PorcentajeIVAPropio ?? cliente?.PorcentajeIVAPropio ?? producto.PorcentajeIVA); // La máxima prioridad la tiene el municipio, principalmente se usa para municipios con PorcentajeIVAPropio = 0 para omitir el cobro de IVA para todos los clientes ubicados en ese municipio. Después el cliente, algunos clientes pueden ser exentos de IVA. En estos casos PorcentajeIVAPropio es 0 y será aplicado a todos los productos que se le venda. Y finalmente se evalua si el producto no tiene IVA por ser excento o excluído.
+
+        public static double? ObtenerPorcentajeIVACompra(Producto? producto) => producto == null
+            ? (double?)null : (Empresa.MunicipioFacturación.PorcentajeIVAPropio ?? (Empresa.ExentoIVA ? 0 : producto.PorcentajeIVA));
+
+        public static decimal? ObtenerIVAVenta(Cliente? cliente, MovimientoProducto? movimientoProducto) => (movimientoProducto?.Producto == null
+            || cliente == null) ? null : ((decimal?)ObtenerPorcentajeIVAVenta(cliente, movimientoProducto.Producto) * movimientoProducto.SubtotalBaseIVA);
+
+        public static decimal? ObtenerIVACompra(MovimientoProducto? movimientoProducto) => movimientoProducto?.Producto == null
+            ? null : (decimal?)ObtenerPorcentajeIVACompra(movimientoProducto.Producto) * movimientoProducto.SubtotalBaseIVA;
+
+        public static decimal ObtenerTarifaImpuestoPorcentual(decimal valorImpuesto, decimal subtotal) => Math.Round(100 * valorImpuesto / subtotal, 0);
+
+        public static bool EsPáginaExtra(string nombreArchivoPlantilla) 
+            => nombreArchivoPlantilla.FinalizaCon("Extra.cshtml") || nombreArchivoPlantilla.FinalizaCon("ExtraPropia.cshtml");
+
+        /// <summary>
+        /// Inicia algunas variables de Configuración.cs (configuración del usuario del código) que no se pueden iniciar en el cuerpo porque requieren unos pasos adicionales para establecer su valor. 
+        /// </summary>
+        public static void IniciarVariablesConfiguración() { } // IniciarVariablesConfiguración>
+
+
+        /// <summary>
+        /// Algunos objetos DTO, como los de DocumentosGráficos o Integración, tienen configuraciones globales que deben ser iniciadas desde otras variables,
+        /// usualmente desde OpcionesEmpresa. Se inician de esta manera para no agregar referencias a espacios de nombres que puedan interferir
+        /// en la generación de los PDF y para mantener el desacoplamiento entre estos objetos y el resto del código.
+        /// </summary>
+        public static void IniciarVariablesDTO() => OpcionesColumnas.AnchoTotalesFactura = Empresa.AnchoTotalesFactura;
+
+
+        /// <summary>
+        /// Inicia algunas variables que no se pueden iniciar en el cuerpo de la clase Global porque requieren unos pasos adicionales para establecer su valor.
+        /// </summary>
+        public static void IniciarVariablesGlobales() {
+            OpcionesConversiónPdf.SetFontProvider(new iText.Html2pdf.Resolver.Font.DefaultFontProvider(true, true, true)); // Necesario para poder usar la fuente Calibri, se podría tardar algunos segundos. Si llega a ser un problema de rendimiento revisar las opciones en SimpleOps.xlsx > Tareas > Rendimiento Generación de PDF.
+        } // IniciarVariablesGlobales>
+
+        public static bool UsarRutaPlantillasDesarrollo(bool forzarRutaAplicación = false, bool forzarRutaDesarrollo = false) 
+            => forzarRutaDesarrollo || (!forzarRutaAplicación && ModoDesarrolloPlantillas);
+
+        public static string ObtenerRutaPlantillas(bool forzarRutaAplicación = false, bool forzarRutaDesarrollo = false) {
+
+            if (UsarRutaPlantillasDesarrollo(forzarRutaAplicación, forzarRutaDesarrollo)) { // Para facilitar el desarrollo se devuelve directamente la ruta de la plantilla de desarrollo cuando no se esté forzando que la tome de la ruta de la aplicación (típicamente solo al iniciar cuando ReemplazarPlantillasDocumentos es verdadero).
+                return ObtenerRutaCarpeta(RutaDesarrollo, CarpetaPlantillasDesarrollo, crearSiNoExiste: false);
+            } else {
+                return ObtenerRutaPlantillasAplicación();
+            }
+
+        } // ObtenerRutaCarpetaPlantillas>
+
+
+        public static string ObtenerRutaPlantilla(PlantillaDocumento plantilla, bool forzarRutaAplicación = false, bool forzarRutaDesarrollo = false,
+            int númeroPágina = 1, bool extra = false) {
+
+            var rutaPlantilla = Path.Combine(ObtenerRutaPlantillas(forzarRutaAplicación, forzarRutaDesarrollo),
+                $"{plantilla}{(númeroPágina == 1 ? "" : númeroPágina.ATexto())}{(extra ? "Extra" : "")}.cshtml");
+
+            if (HabilitarPlantillasPropias && UsarRutaPlantillasDesarrollo(forzarRutaAplicación, forzarRutaDesarrollo)) {
+                var rutaPlantillaPropia = rutaPlantilla.Reemplazar(".cshtml", "Propia.cshtml");
+                if (File.Exists(rutaPlantillaPropia)) rutaPlantilla = rutaPlantillaPropia;
+            }
+
+            return rutaPlantilla;
+
+        } // ObtenerRutaPlantilla>
+
+
+        public static Dictionary<int, string> ObtenerRutasPáginasPlantilla(PlantillaDocumento plantilla, bool omitirPrimera,
+            bool forzarRutaAplicación = false, bool forzarRutaDesarrollo = false, int cantidadPáginasExtra = 0) {
+
+            var númeroPágina = 0;
+            bool existe = false;
+            var rutasPáginasPlantilla = new Dictionary<int, string>();
+
+            do {
+
+                númeroPágina++;
+                var rutaPlantilla = ObtenerRutaPlantilla(plantilla, forzarRutaAplicación, forzarRutaDesarrollo, númeroPágina);
+                existe = File.Exists(rutaPlantilla); // No importa que se repita File.Exists de ObtenerRutaPlantilla() si se está usando plantilla propia, no afecta en gran medida el rendimiento. Es necesario siempre calcular si existe o no la plantilla para poder salir del ciclo. Si llegar a afectar el rendimiento, habría que usar una variable de salida en el procedimiento reemplazarPorPlantillaPropia para indicar cuando se ha encontrado una plantilla propia y no se debe volver a verificar su existencia.
+                if (existe && (númeroPágina != 1 || !omitirPrimera)) rutasPáginasPlantilla.Add(númeroPágina, rutaPlantilla);
+
+            } while (existe);
+
+            if (plantilla == PlantillaDocumento.CatálogoPdf && cantidadPáginasExtra > 0) {
+
+                var rutaPlantillaExtra = ObtenerRutaPlantilla(plantilla, forzarRutaAplicación, forzarRutaDesarrollo, extra: true);
+                if (File.Exists(rutaPlantillaExtra)) {
+                    for (int p = 0; p < cantidadPáginasExtra; p++) {
+                        rutasPáginasPlantilla.Add(númeroPágina + p, rutaPlantillaExtra);
+                    }
+                }
+
+            }
+
+            return rutasPáginasPlantilla;
+
+        } // ObtenerRutasPáginasPlantilla>
 
 
         public static FormaEntrega ObtenerFormaEntrega(Municipio? municipio) {
@@ -457,84 +683,6 @@ namespace SimpleOps {
         } // ObtenerFormaEntrega>
 
 
-        public static string ObtenerRutaDatosJson() => ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaDatosJson, crearSiNoExiste: true);
-
-        public static string ObtenerRutaDocumentosElectrónicos()
-            => ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaDocumentosElectrónicos, crearSiNoExiste: true);
-
-        public static string ObtenerRutaCotizaciones() => ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaCotizaciones, crearSiNoExiste: true);
-
-        public static string ObtenerRutaDocumentosElectrónicosDeHoy() => ObtenerRutaDocumentosDeHoy(ObtenerRutaDocumentosElectrónicos());
-
-        public static string ObtenerRutaCotizacionesDeHoy() => ObtenerRutaDocumentosDeHoy(ObtenerRutaCotizaciones());
-
-        public static string ObtenerRutaDocumentosDeHoy(string rutaBase) => ObtenerRutaCarpeta(ObtenerRutaCarpeta(rutaBase, 
-            AhoraUtcAjustado.Year.ATexto(), crearSiNoExiste: true), HoyNombresArchivos, crearSiNoExiste: true);
-
-        public static string ObtenerRutaCopiasSeguridad() => ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaCopiasSeguridad, crearSiNoExiste: true);
-
-        public static string ObtenerRutaOpciones() => ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaOpciones, crearSiNoExiste: true);
-
-        public static string ObtenerRutaPlantilla(PlantillaDocumento plantilla, bool forzarRutaAplicación = false, bool forzarRutaDesarrollo = false, 
-            int númeroPágina = 1) => Path.Combine(ObtenerRutaPlantillas(forzarRutaAplicación, forzarRutaDesarrollo), 
-                $"{plantilla}{(númeroPágina == 1 ? "" : númeroPágina.ATexto())}.cshtml");
-
-        public static string ObtenerRutaImagenesPlantillas() => ObtenerRutaCarpeta(ObtenerRutaPlantillas(forzarRutaAplicación: true, 
-            forzarRutaDesarrollo: false), CarpetaImagenesPlantillas, crearSiNoExiste: true); // No es necesario modificarlas desde el Visual Studio. Las plantillas si se manejan en ambos lugares porque si se requiere trabajar en ellas y se deben agregar al repositorio y también se requieren tener las propias por fuera del repositorio en la ruta de la aplicación.
-
-        public static string ObtenerRutaImagenesProductos() 
-            => ObtenerRutaCarpeta(ObtenerRutaImagenesPlantillas(), CarpetaImagenesProductos, crearSiNoExiste: true); // No es necesario modificarlas desde el Visual Studio. Las plantillas si se manejan en ambos lugares porque si se requiere trabajar en ellas y se deben agregar al repositorio y también se requieren tener las propias por fuera del repositorio en la ruta de la aplicación.
-
-
-        /// <summary>
-        /// Devuelve la ruta de la imagen del producto con la extensión que exista. Devuelve null si no existe ninguna imagen.
-        /// </summary>
-        /// <param name="referencia"></param>
-        /// <returns></returns>
-        public static string? ObtenerRutaImagenProducto(string? referencia) {
-
-            if (referencia == null) return null;
-            foreach (var extensión in ObtenerExtensionesImagenes()) {
-                var rutaPosibleImagen = Path.Combine(ObtenerRutaImagenesProductos(), $"{referencia}{extensión}");
-                if (File.Exists(rutaPosibleImagen)) return rutaPosibleImagen;
-            }
-            return null;
-
-        } // ObtenerRutaImagenProducto>
-
-
-        public static string ObtenerRutaPlantillas(bool forzarRutaAplicación = false, bool forzarRutaDesarrollo = false) {
-
-            if (forzarRutaDesarrollo || (!forzarRutaAplicación && ModoDesarrolloPlantillas)) { // Para facilitar el desarrollo se devuelve directamente la ruta de la plantilla de desarrollo cuando no se esté forzando que la tome de la ruta de la aplicación (típicamente solo al iniciar cuando ReemplazarPlantillasDocumentos es verdadero).
-                return ObtenerRutaCarpeta(RutaDesarrollo, CarpetaPlantillasDesarrollo, crearSiNoExiste: false);
-            } else {
-                return ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaPlantillas, crearSiNoExiste: true);
-            }
-
-        } // ObtenerRutaCarpetaPlantillas>
-
-
-        public static Dictionary<int, string> ObtenerRutasPáginasPlantilla(PlantillaDocumento plantilla, bool omitirPrimera, bool forzarRutaAplicación = false, 
-            bool forzarRutaDesarrollo = false) {
-
-            var númeroPágina = 0;
-            bool existe;
-            var rutasPáginasPlantilla = new Dictionary<int, string>();
-
-            do {
-
-                númeroPágina++;
-                var rutaPlantilla = ObtenerRutaPlantilla(plantilla, forzarRutaAplicación, forzarRutaDesarrollo, númeroPágina);
-                existe = File.Exists(rutaPlantilla);
-                if (existe && (númeroPágina != 1 || !omitirPrimera)) rutasPáginasPlantilla.Add(númeroPágina, rutaPlantilla);
-
-            } while (existe);
-
-            return rutasPáginasPlantilla;
-
-        } // ObtenerRutasPáginasPlantilla>
-
-
         public static string ObtenerRutaOpciones<T>(T opciones) where T : class
             => opciones switch {
                 OpcionesEmpresa _ => Path.Combine(ObtenerRutaOpciones(), "Empresa.json"),
@@ -544,15 +692,17 @@ namespace SimpleOps {
             };
 
 
+        #pragma warning disable CS8524 // Se omite para que no obligue a usar el patrón de descarte _ => porque este oculta la advertencia CS8509 que es muy útil para detectar valores de la enumeración faltantes. No se omite a nivel global porque la desactivaría para los switchs que no tienen enumeraciones, ver https://github.com/dotnet/roslyn/issues/47066.
         public static DocumentoIdentificación ObtenerDocumentoIdentificación(TipoEntidad tipoEntidad)
             => tipoEntidad switch {
                 TipoEntidad.Desconocido => DocumentoIdentificación.CédulaCiudadanía,
                 TipoEntidad.Empresa => DocumentoIdentificación.Nit,
                 TipoEntidad.Persona => DocumentoIdentificación.CédulaCiudadanía,
-                _ => throw new Exception(CasoNoConsiderado(tipoEntidad))
             };
+        #pragma warning restore CS8524
 
 
+        #pragma warning disable CS8524 // Se omite para que no obligue a usar el patrón de descarte _ => porque este oculta la advertencia CS8509 que es muy útil para detectar valores de la enumeración faltantes. No se omite a nivel global porque la desactivaría para los switchs que no tienen enumeraciones, ver https://github.com/dotnet/roslyn/issues/47066.
         public static TipoTributo ObtenerTipoTributo(TipoImpuestoConsumo tipoImpuestoConsumo)
             => tipoImpuestoConsumo switch {
                 TipoImpuestoConsumo.Desconocido => throw new Exception("No se esperaba TipoImpuestoConsumo desconocido."),
@@ -571,30 +721,14 @@ namespace SimpleOps {
                 TipoImpuestoConsumo.DepartamentalPorcentual => TipoTributo.DepartamentalPorcentual,
                 TipoImpuestoConsumo.SobretasaCombustibles => TipoTributo.SobretasaCombustibles,
                 TipoImpuestoConsumo.Otro => TipoTributo.Otro,
-                _ => throw new Exception(CasoNoConsiderado(tipoImpuestoConsumo)),
             };
-
-
-        public static double? ObtenerPorcentajeIVAVenta(Cliente? cliente, Producto? producto) => (producto == null || cliente == null)
-            ? (double?)null : (cliente.Municipio?.PorcentajeIVAPropio ?? cliente?.PorcentajeIVAPropio ?? producto.PorcentajeIVA); // La máxima prioridad la tiene el municipio, principalmente se usa para municipios con PorcentajeIVAPropio = 0 para omitir el cobro de IVA para todos los clientes ubicados en ese municipio. Después el cliente, algunos clientes pueden ser exentos de IVA. En estos casos PorcentajeIVAPropio es 0 y será aplicado a todos los productos que se le venda. Y finalmente se evalua si el producto no tiene IVA por ser excento o excluído.
-
-        public static double? ObtenerPorcentajeIVACompra(Producto? producto) => producto == null
-            ? (double?)null : (Empresa.MunicipioFacturación.PorcentajeIVAPropio ?? (Empresa.ExentoIVA ? 0 : producto.PorcentajeIVA));
-
-        public static decimal? ObtenerIVAVenta(Cliente? cliente, MovimientoProducto? movimientoProducto)
-            => (movimientoProducto?.Producto == null || cliente == null)
-            ? null : ((decimal?)ObtenerPorcentajeIVAVenta(cliente, movimientoProducto.Producto) * movimientoProducto.SubtotalBaseIVA);
-
-        public static decimal? ObtenerIVACompra(MovimientoProducto? movimientoProducto) => movimientoProducto?.Producto == null
-            ? null : (decimal?)ObtenerPorcentajeIVACompra(movimientoProducto.Producto) * movimientoProducto.SubtotalBaseIVA;
-
-        public static decimal ObtenerTarifaImpuestoPorcentual(decimal valorImpuesto, decimal subtotal) => Math.Round(100 * valorImpuesto / subtotal, 0);
+        #pragma warning restore CS8524
 
 
         public static decimal ObtenerMínimoTransporteGratis(TipoCliente tipoCliente, Municipio? municipio) {
 
             var formaEntrega = ObtenerFormaEntrega(municipio);
-
+            #pragma warning disable CS8524 // Se omite para que no obligue a usar el patrón de descarte _ => porque este oculta la advertencia CS8509 que es muy útil para detectar valores de la enumeración faltantes. No se omite a nivel global porque la desactivaría para los switchs que no tienen enumeraciones, ver https://github.com/dotnet/roslyn/issues/47066.
             var tipoClienteFormaEntrega = formaEntrega switch {
                 FormaEntrega.Desconocida => tipoCliente switch {
                     TipoCliente.Desconocido => TipoClienteFormaEntrega.Desconocido_Desconocida,
@@ -602,7 +736,6 @@ namespace SimpleOps {
                     TipoCliente.Distribuidor => TipoClienteFormaEntrega.Distribuidor_Desconocida,
                     TipoCliente.GrandesContratos => TipoClienteFormaEntrega.GrandesContratos_Desconocida,
                     TipoCliente.Otro => TipoClienteFormaEntrega.Otro_Desconocida,
-                    _ => throw new Exception(CasoNoConsiderado(tipoCliente)),
                 },
                 FormaEntrega.Virtual => tipoCliente switch {
                     TipoCliente.Desconocido => TipoClienteFormaEntrega.Desconocido_Virtual,
@@ -610,7 +743,6 @@ namespace SimpleOps {
                     TipoCliente.Distribuidor => TipoClienteFormaEntrega.Distribuidor_Virtual,
                     TipoCliente.GrandesContratos => TipoClienteFormaEntrega.GrandesContratos_Virtual,
                     TipoCliente.Otro => TipoClienteFormaEntrega.Otro_Virtual,
-                    _ => throw new Exception(CasoNoConsiderado(tipoCliente)),
                 },
                 FormaEntrega.PuntoVenta => tipoCliente switch {
                     TipoCliente.Desconocido => TipoClienteFormaEntrega.Desconocido_PuntoVenta,
@@ -618,7 +750,6 @@ namespace SimpleOps {
                     TipoCliente.Distribuidor => TipoClienteFormaEntrega.Distribuidor_PuntoVenta,
                     TipoCliente.GrandesContratos => TipoClienteFormaEntrega.GrandesContratos_PuntoVenta,
                     TipoCliente.Otro => TipoClienteFormaEntrega.Otro_PuntoVenta,
-                    _ => throw new Exception(CasoNoConsiderado(tipoCliente)),
                 },
                 FormaEntrega.Mensajería => tipoCliente switch {
                     TipoCliente.Desconocido => TipoClienteFormaEntrega.Desconocido_Mensajería,
@@ -626,7 +757,6 @@ namespace SimpleOps {
                     TipoCliente.Distribuidor => TipoClienteFormaEntrega.Distribuidor_Mensajería,
                     TipoCliente.GrandesContratos => TipoClienteFormaEntrega.GrandesContratos_Mensajería,
                     TipoCliente.Otro => TipoClienteFormaEntrega.Otro_Mensajería,
-                    _ => throw new Exception(CasoNoConsiderado(tipoCliente)),
                 },
                 FormaEntrega.Transportadora => tipoCliente switch {
                     TipoCliente.Desconocido => TipoClienteFormaEntrega.Desconocido_Transportadora,
@@ -634,7 +764,6 @@ namespace SimpleOps {
                     TipoCliente.Distribuidor => TipoClienteFormaEntrega.Distribuidor_Transportadora,
                     TipoCliente.GrandesContratos => TipoClienteFormaEntrega.GrandesContratos_Transportadora,
                     TipoCliente.Otro => TipoClienteFormaEntrega.Otro_Transportadora,
-                    _ => throw new Exception(CasoNoConsiderado(tipoCliente)),
                 },
                 FormaEntrega.TransportadoraInternacional => tipoCliente switch {
                     TipoCliente.Desconocido => TipoClienteFormaEntrega.Desconocido_TransportadoraInternacional,
@@ -642,7 +771,6 @@ namespace SimpleOps {
                     TipoCliente.Distribuidor => TipoClienteFormaEntrega.Distribuidor_TransportadoraInternacional,
                     TipoCliente.GrandesContratos => TipoClienteFormaEntrega.GrandesContratos_TransportadoraInternacional,
                     TipoCliente.Otro => TipoClienteFormaEntrega.Otro_TransportadoraInternacional,
-                    _ => throw new Exception(CasoNoConsiderado(tipoCliente)),
                 },
                 FormaEntrega.Otra => tipoCliente switch {
                     TipoCliente.Desconocido => TipoClienteFormaEntrega.Desconocido_Otra,
@@ -650,10 +778,9 @@ namespace SimpleOps {
                     TipoCliente.Distribuidor => TipoClienteFormaEntrega.Distribuidor_Otra,
                     TipoCliente.GrandesContratos => TipoClienteFormaEntrega.GrandesContratos_Otra,
                     TipoCliente.Otro => TipoClienteFormaEntrega.Otro_Otra,
-                    _ => throw new Exception(CasoNoConsiderado(tipoCliente)),
                 },
-                _ => throw new Exception(CasoNoConsiderado(formaEntrega)),
             };
+            #pragma warning restore CS8524
 
             return Empresa.MínimosTransporteGratis[tipoClienteFormaEntrega];
 
@@ -693,15 +820,21 @@ namespace SimpleOps {
 
             foreach (var plantilla in ObtenerValores<PlantillaDocumento>()) {
 
-                var rutasPáginasDesarrollo = ObtenerRutasPáginasPlantilla(plantilla, omitirPrimera: false, forzarRutaDesarrollo: true);
-                var rutasPáginasAplicación = ObtenerRutasPáginasPlantilla(plantilla, omitirPrimera: false, forzarRutaAplicación: true);
-                foreach (var kvp in rutasPáginasDesarrollo) {
+                var rutasPáginasDesarrollo = ObtenerRutasPáginasPlantilla(plantilla, omitirPrimera: false, forzarRutaDesarrollo: true, 
+                    cantidadPáginasExtra: 1);
+                var rutasPáginasAplicación = ObtenerRutasPáginasPlantilla(plantilla, omitirPrimera: false, forzarRutaAplicación: true, 
+                    cantidadPáginasExtra: 1);
+                var páginasAplicación = rutasPáginasAplicación.Select(kv => Path.GetFileName(kv.Value).AMinúscula()).ToList();
 
-                    var rutaPáginaDesarrollo = kvp.Value;
-                    var númeroPáginaDesarrollo = kvp.Key;
-                    if (sobreescribir || !rutasPáginasAplicación.ContainsKey(númeroPáginaDesarrollo)) 
-                        File.Copy(rutaPáginaDesarrollo, ObtenerRutaPlantilla(plantilla, forzarRutaAplicación: true, númeroPágina: númeroPáginaDesarrollo), 
-                            overwrite: sobreescribir);
+                foreach (var kv in rutasPáginasDesarrollo) {
+
+                    var rutaPáginaDesarrollo = kv.Value;
+                    var númeroPáginaDesarrollo = kv.Key;
+                    var páginaExtra = EsPáginaExtra(rutaPáginaDesarrollo);
+                    var páginaDesarrollo = Path.GetFileName(rutaPáginaDesarrollo).AMinúscula()?.Reemplazar("propia.cshtml", ".cshtml");
+                    if (sobreescribir || !páginasAplicación.Contains(páginaDesarrollo)) 
+                        File.Copy(rutaPáginaDesarrollo, ObtenerRutaPlantilla(plantilla, forzarRutaAplicación: true, 
+                            númeroPágina: páginaExtra ? 1 : númeroPáginaDesarrollo, extra: páginaExtra), overwrite: sobreescribir);
 
                 }
 
@@ -716,13 +849,36 @@ namespace SimpleOps {
         public static void ConfigurarCarpetasYArchivos() {
 
             var carpetaPlantillasDesarrollo = ObtenerRutaCarpeta(RutaDesarrollo, CarpetaPlantillasDesarrollo, crearSiNoExiste: false);
-            var carpetaPlantillas = ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaPlantillas, crearSiNoExiste: true);
-            var carpetaImagenesDesarrollo = ObtenerRutaCarpeta(carpetaPlantillasDesarrollo, CarpetaImagenesPlantillas, crearSiNoExiste: false);
-            var carpetaImagenes = ObtenerRutaCarpeta(carpetaPlantillas, CarpetaImagenesPlantillas, crearSiNoExiste: true);
-            var carpetaImagenesProductosDesarrollo = ObtenerRutaCarpeta(carpetaImagenesDesarrollo, CarpetaImagenesProductos, crearSiNoExiste: false);
-            var carpetaImagenesProductos = ObtenerRutaCarpeta(carpetaImagenes, CarpetaImagenesProductos, crearSiNoExiste: true);
-            CopiarArchivos(carpetaImagenesDesarrollo, carpetaImagenes, sobreescribir: false); // Solo se copia la imagen si no está porque es posible que el usuario la haya personalizado.
-            CopiarArchivos(carpetaImagenesProductosDesarrollo, carpetaImagenesProductos, sobreescribir: false); // Solo se copia la imagen si no está porque es posible que el usuario la haya personalizado. Aunque las imagenes de ejemplo no serán útiles para el usuario si terminan en su carpeta se nombran iniciando con ZZ para que al menos aparezcan al final de la carpeta si el usuario usa orden alfabético. El usuario podría si quisiera modificar estos archivos para que sean imagenes en blanco y no le estorben visualmente y al ser archivos existentes no serían reemplazados por el código.
+            var carpetaPlantillas = ObtenerRutaPlantillasAplicación();
+
+            var carpetaImágenesDesarrollo = ObtenerRutaCarpeta(carpetaPlantillasDesarrollo, CarpetaImágenesPlantillas, crearSiNoExiste: false);
+            var carpetaImágenes = ObtenerRutaCarpeta(carpetaPlantillas, CarpetaImágenesPlantillas, crearSiNoExiste: true);
+
+            var carpetaProductosDesarrollo = ObtenerRutaProductosDesarrollo();
+            var carpetaProductos = ObtenerRutaProductos();
+
+            var carpetaImágenesProductosDesarrollo = ObtenerRutaCarpeta(carpetaProductosDesarrollo, CarpetaProductosImágenes, crearSiNoExiste: false);
+            var carpetaImágenesProductos = ObtenerRutaCarpeta(carpetaProductos, CarpetaProductosImágenes, crearSiNoExiste: true);
+
+            var carpetaInformaciónProductosDesarrollo 
+                = ObtenerRutaCarpeta(carpetaProductosDesarrollo, CarpetaProductosInformación, crearSiNoExiste: false);
+            var carpetaInformaciónProductos = ObtenerRutaCarpeta(carpetaProductos, CarpetaProductosInformación, crearSiNoExiste: true);
+
+            var carpetaInformaciónImágenesProductosDesarrollo 
+                = ObtenerRutaCarpeta(carpetaInformaciónProductosDesarrollo, CarpetaProductosInformaciónImágenes, crearSiNoExiste: false);
+            var carpetaInformaciónImágenesProductos 
+                = ObtenerRutaCarpeta(carpetaInformaciónProductos, CarpetaProductosInformaciónImágenes, crearSiNoExiste: true);
+
+            var carpetaInformaciónFragmentosProductosDesarrollo
+                = ObtenerRutaCarpeta(carpetaInformaciónProductosDesarrollo, CarpetaProductosInformaciónFragmentos, crearSiNoExiste: false);
+            var carpetaInformaciónFragmentosProductos
+                = ObtenerRutaCarpeta(carpetaInformaciónProductos, CarpetaProductosInformaciónFragmentos, crearSiNoExiste: true);
+
+            CopiarArchivos(carpetaImágenesDesarrollo, carpetaImágenes, sobreescribir: false); // Solo se copia la imagen si no está porque es posible que el usuario la haya personalizado.
+            CopiarArchivos(carpetaImágenesProductosDesarrollo, carpetaImágenesProductos, sobreescribir: false); // Solo se copia la imagen si no está porque es posible que el usuario la haya personalizado. Aunque las imágenes de ejemplo no serán útiles para el usuario, si terminan en su carpeta se nombran iniciando con ZZ para que al menos aparezcan al final de la carpeta ordenada alfabéticamente. El usuario podría modificar estos archivos para que sean imágenes en blanco y no le estorben visualmente y al ser archivos existentes no serían reemplazados por el código.
+            CopiarArchivos(carpetaInformaciónProductosDesarrollo, carpetaInformaciónProductos, sobreescribir: false);
+            CopiarArchivos(carpetaInformaciónImágenesProductosDesarrollo, carpetaInformaciónImágenesProductos, sobreescribir: false);
+            CopiarArchivos(carpetaInformaciónFragmentosProductosDesarrollo, carpetaInformaciónFragmentosProductos, sobreescribir: false);
 
             CopiarPlantillasARutaAplicación(sobreescribir: false);
                 
@@ -755,7 +911,8 @@ namespace SimpleOps {
 
                     File.Copy(rutaBaseDatosVacíaDesarrollo, RutaBaseDatosSQLite);
                     foreach (var rutaJson in Directory.GetFiles(rutaDatosJsonDesarrollo)) {
-                        File.Copy(rutaJson, Path.Combine(rutaDatosJson, Path.GetFileName(rutaJson)));
+                        var jsonDestino = Path.Combine(rutaDatosJson, Path.GetFileName(rutaJson));
+                        if (!File.Exists(jsonDestino)) File.Copy(rutaJson, jsonDestino);
                     }
                     var éxito = Contexto.CargarDatosIniciales(rutaDatosJson, out string error);
                     if (éxito) {
@@ -822,17 +979,8 @@ namespace SimpleOps {
         } // GuardarOpciones>
 
 
-        /// <summary>
-        /// Inicia algunas variables que no se pueden iniciar en el cuerpo de la clase Global porque requieren unos pasos adicionales para establecer su valor.
-        /// </summary>
-        public static void IniciarVariablesGlobales() {
-
-            OpcionesConversiónPdf.SetFontProvider(new iText.Html2pdf.Resolver.Font.DefaultFontProvider(true, true, true)); // Necesario para poder usar la fuente Calibri, se podría tardar algunos segundos. Si llega a ser un problema de rendimiento revisar las opciones en SimpleOps.xlsx > Tareas > Rendimiento Generación de PDF.
-
-        } // IniciarVariablesGlobales>
-
-
         #endregion Métodos y Funciones>
+
 
 
         #region Métodos y Funciones de Interfaz
@@ -865,6 +1013,7 @@ namespace SimpleOps {
 
 
         #endregion Métodos y Funciones de Interfaz>
+
 
 
     } // Global>

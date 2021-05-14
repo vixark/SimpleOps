@@ -290,10 +290,10 @@ namespace SimpleOps.Modelo {
 
                 var líneasPorClasificación = Líneas.GroupBy(d => obtenerPropiedad(d)).ToDictionary(g => g.Key, g => g.ToList()); // Puede ser ConceptoRetención o TipoProducto.
                 var retención = 0M;
-                foreach (var kvp in líneasPorClasificación) {
+                foreach (var kv in líneasPorClasificación) {
 
-                    var clasificación = kvp.Key;
-                    var líneasPorConcepto = kvp.Value;
+                    var clasificación = kv.Key;
+                    var líneasPorConcepto = kv.Value;
                     var reglas = obtenerReglas(clasificación);
                     var subtotalConcepto = líneasPorConcepto.Sum(d => d.SubtotalBase);
                     var baseCálculo = obtenerOtraBase == null ? subtotalConcepto : líneasPorConcepto.Sum(d => obtenerOtraBase(d));      
@@ -319,7 +319,8 @@ namespace SimpleOps.Modelo {
 
 
         /// <summary>
-        /// <para>Calcula todos los totales, impuestos y retenciones de la factura. Devuelve verdadero si el cálculo fue exitoso. Si se pasa <paramref name="cargarLíneas"/>, <paramref name="cargarEntidadEconómica"/> o <paramref name="cargarProductos"/> en verdadero 
+        /// <para>Calcula todos los totales, impuestos y retenciones de la factura. Devuelve verdadero si el cálculo fue exitoso. 
+        /// Si se pasa <paramref name="cargarLíneas"/>, <paramref name="cargarEntidadEconómica"/> o <paramref name="cargarProductos"/> en verdadero 
         /// se debe pasar un <paramref name="ctx"/> no nulo.</para>
         /// <para>Si se pasa <paramref name="cargarLíneas"/> en verdadero
         /// y <see cref="Factura{E, M}.Líneas"/> está vacío se consultará la base de datos para intentar llenarlos. Si se pasa 
@@ -483,6 +484,8 @@ namespace SimpleOps.Modelo {
             var textoImpuestoICA = (impuestoICA).ATexto(formatoNúmero);
             var textoAPagar = (SubtotalFinalConImpuestos - ObtenerAnticipo()).ATexto(formatoNúmero);
             if (EntidadEconómica == null) throw new Exception("No se ha cargado la entidad económica.");
+            if (this is NotaCréditoVenta && Prefijo == null) Prefijo = PrefijoNotasCréditoPredeterminado; // Es necesario establecer un prefijo obligatorio para las notas crédito por un error que presenta el servidor de la DIAN en 2021 con la aceptación de la numeración de estas si no llevan prefijo.
+            if (this is NotaDébitoVenta && Prefijo == null) Prefijo = PrefijoNotasDébitoPredeterminado; // Es necesario establecer un prefijo obligatorio para las notas débito por un error que presenta el servidor de la DIAN en 2021 con la aceptación de la numeración de estas si no llevan prefijo.
             var textoCude = $"{Código}{textoFechaFactura}{textoHoraFactura}{textoSubtotalBase}01{textoIVA}04{textoImpuestoConsumo}03{textoImpuestoICA}" + 
                             $"{textoAPagar}{Empresa.Nit}{EntidadEconómica.Identificación}{ObtenerClaveParaCude()}" + 
                             $"{Empresa.AmbienteFacturaciónElectrónica.AValor()}";
@@ -532,14 +535,15 @@ namespace SimpleOps.Modelo {
 
 
         private static ReglasImpuesto ObtenerReglasRetenciónIVA(double? porcentajeForzado, decimal? mínimoForzado, 
-            TipoContribuyente tipoContribuyenteComprador, TipoContribuyente tipoContribuyenteVendedor, TipoProducto tipoProducto) { // Tomado de https://dianhoy.com/reteiva-retencion-en-la-fuente-por-iva/ y https://www.gerencie.com/retencion-en-la-fuente-por-iva-reteiva.html. No tiene en cuenta el caso 'No residente o no domiciliado en el país'.
+            TipoContribuyente tipoContribuyenteComprador, TipoContribuyente tipoContribuyenteVendedor, TipoProducto tipoProducto) { // Ver https://dianhoy.com/reteiva-retencion-en-la-fuente-por-iva/ y https://www.gerencie.com/retencion-en-la-fuente-por-iva-reteiva.html. No tiene en cuenta el caso 'No residente o no domiciliado en el país'.
 
+            #pragma warning disable CS8524 // Se omite para que no obligue a usar el patrón de descarte _ => porque este oculta la advertencia CS8509 que es muy útil para detectar valores de la enumeración faltantes. No se omite a nivel global porque la desactivaría para los switchs que no tienen enumeraciones, ver https://github.com/dotnet/roslyn/issues/47066.
             var mínimo = tipoProducto switch {
                 TipoProducto.Desconocido => throw new Exception("No se esperaba tipoProducto = Desconocido."),
                 TipoProducto.Producto => Generales.MínimoUVTRetenciónIVAProductosLegal * Generales.UVT,
                 TipoProducto.Servicio => Generales.MínimoUVTRetenciónIVAServiciosLegal * Generales.UVT,
-                _ => throw new Exception(CasoNoConsiderado(tipoProducto)),
             };
+            #pragma warning restore CS8524
 
             double porcentaje;
             if (tipoContribuyenteVendedor.HasFlag(TipoContribuyente.ResponsableIVA)) {
@@ -573,12 +577,13 @@ namespace SimpleOps.Modelo {
 
             if (tipoContribuyenteVendedor.HasFlag(TipoContribuyente.Autorretenedor)) return new ReglasImpuesto((decimal)(porcentajeForzado ?? 0), mínimoForzado ?? 0);
 
+            #pragma warning disable CS8524 // Se omite para que no obligue a usar el patrón de descarte _ => porque este oculta la advertencia CS8509 que es muy útil para detectar valores de la enumeración faltantes. No se omite a nivel global porque la desactivaría para los switchs que no tienen enumeraciones, ver https://github.com/dotnet/roslyn/issues/47066.
             var tipoDeclarante = tipoEntidadVendedor switch { // Se usará la clasificación entre Empresa y Persona para diferenciar entre Declarante y No Declarante. No hay claridad completa sobre si esto es o no correcto, sobretodo en el caso de personas, pero es una aceptable aproximación. Esto es necesario porque la información más fácilmente disponible de las entidades económicas es el tipo de entidad.
                 TipoEntidad.Desconocido => TipoDeclarante.Desconocido,
                 TipoEntidad.Empresa => TipoDeclarante.Declarante,
                 TipoEntidad.Persona => TipoDeclarante.NoDeclarante,
-                _ => throw new Exception(CasoNoConsiderado(tipoEntidadVendedor)),
             };
+            #pragma warning restore CS8524
 
             var mínimo = 0M;
             var porcentaje = 0D;

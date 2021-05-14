@@ -26,17 +26,25 @@ namespace SimpleOps.DocumentosGráficos {
 
         public string PrefijoNombreArchivo { get; set; } = ""; // Algunos documentos usan un prefijo adicional al nombre de archivo autogenerado con el código para evitar colisiones con otros almacenados en la misma carpeta, por ejemplo se usa NC para las notas crédito de ventas y texto vacío para las ventas. El código de documento de las ventas ya puede traer su propio prefijo de facturación.
 
-        public string? LogoBase64 { get; set; } // El logo principal del documento. Se debe pasar como Base64 porque el iText no soporta imagenes que estén relacionadas en el atributo src con rutas locales que contengan espacios en su nombre.
+        public string? LogoBase64 { get; set; } // El logo principal del documento. Se debe pasar como Base64 porque el iText no soporta imágenes que estén relacionadas en el atributo src con rutas locales que contengan espacios en su nombre.
 
-        public string? Logo2Base64 { get; set; } // Un logo secundario del documento. Se debe pasar como Base64 porque el iText no soporta imagenes que estén relacionadas en el atributo src con rutas locales que contengan espacios en su nombre.
+        public string? Logo2Base64 { get; set; } // Un logo secundario del documento. Se debe pasar como Base64 porque el iText no soporta imágenes que estén relacionadas en el atributo src con rutas locales que contengan espacios en su nombre.
 
-        public string? Logo3Base64 { get; set; } // Un logo secundario del documento. Se debe pasar como Base64 porque el iText no soporta imagenes que estén relacionadas en el atributo src con rutas locales que contengan espacios en su nombre.
+        public string? Logo3Base64 { get; set; } // Un logo secundario del documento. Se debe pasar como Base64 porque el iText no soporta imágenes que estén relacionadas en el atributo src con rutas locales que contengan espacios en su nombre.
 
-        public string? Logo4Base64 { get; set; } // Un logo secundario del documento. Se debe pasar como Base64 porque el iText no soporta imagenes que estén relacionadas en el atributo src con rutas locales que contengan espacios en su nombre.
+        public string? Logo4Base64 { get; set; } // Un logo secundario del documento. Se debe pasar como Base64 porque el iText no soporta imágenes que estén relacionadas en el atributo src con rutas locales que contengan espacios en su nombre.
 
-        public string? CertificadoBase64 { get; set; } // El logo del certificado de la empresa. Se debe pasar como Base64 porque el iText no soporta imagenes que estén relacionadas en el atributo src con rutas locales que contengan espacios en su nombre.
+        public string? Logo5Base64 { get; set; } // Un logo secundario del documento. Se debe pasar como Base64 porque el iText no soporta imágenes que estén relacionadas en el atributo src con rutas locales que contengan espacios en su nombre.
 
-        public Dictionary<string, string> ImágenesProductosBase64 { get; } = new Dictionary<string, string>(); // Las imagenes de los productos que están en la lista. Solo se usa get; por esta recomendación https://docs.microsoft.com/es-es/dotnet/fundamentals/code-analysis/quality-rules/ca2227?view=vs-2019 y aunque esta propiedad pertenece a un DTO no es una propiedad que se lea desde el otro objeto (Venta, Cotización, etc) si no que se construye con la información leída de él.
+        public string? Logo6Base64 { get; set; } // Un logo secundario del documento. Se debe pasar como Base64 porque el iText no soporta imágenes que estén relacionadas en el atributo src con rutas locales que contengan espacios en su nombre.
+
+        public string? Logo7Base64 { get; set; } // Un logo secundario del documento. Se debe pasar como Base64 porque el iText no soporta imágenes que estén relacionadas en el atributo src con rutas locales que contengan espacios en su nombre.
+
+        public string? LogoExcelBase64 { get; set; } 
+
+        public string? CertificadoBase64 { get; set; } // El logo del certificado de la empresa. Se debe pasar como Base64 porque el iText no soporta imágenes que estén relacionadas en el atributo src con rutas locales que contengan espacios en su nombre.
+
+        public Dictionary<string, string> ImágenesProductosBase64 { get; } = new Dictionary<string, string>(); // Las imágenes de los productos que están en la lista. Solo se usa get; por esta recomendación https://docs.microsoft.com/es-es/dotnet/fundamentals/code-analysis/quality-rules/ca2227?view=vs-2019 y aunque esta propiedad pertenece a un DTO no es una propiedad que se lea desde el otro objeto (Venta, Cotización, etc) si no que se construye con la información leída de él.
 
         public string? CódigoDocumento { get; set; } // El número o código (cuando el número lleva prefijo) del documento. Puede ser nulo para documentos sin código. Se usa el nombre redundante []Documento para darle más claridad cuando se escriba en la plantilla CSHTML. 
 
@@ -78,14 +86,16 @@ namespace SimpleOps.DocumentosGráficos {
 
         public string? ClienteContactoFacturasEmail { get; set; }
 
+        public string? ClienteTipoClienteTexto { get; set; }
+
         #endregion Propiedades Cliente>
 
 
         #region Propiedades Diseño
 
-        public int AnchoHoja {get; set;} = 816; // 96 * 8.5.Tomado de https://stackoverflow.com/a/40032997/8330412.
+        public int AnchoHoja {get; set;} = 816; // 96 * 8.5. Ver https://stackoverflow.com/a/40032997/8330412.
 
-        public int AltoHoja { get; set; } = 1056; // 96 * 11. Tomado de https://stackoverflow.com/a/40032997/8330412.
+        public int AltoHoja { get; set; } = 1056; // 96 * 11. Ver https://stackoverflow.com/a/40032997/8330412.
 
         public int AnchoObservación { get; set; } = 350; // 350 para facturas, notas crédito y facturas proforma.
 
@@ -108,6 +118,8 @@ namespace SimpleOps.DocumentosGráficos {
         public int AltoCabeza { get; set; } = 120;
 
         public int AltoLogo { get; set; } = 65;
+
+        public string TextoPruebaColor { get; set; } = Global.TextoPruebas;
 
         public int RellenoSuperiorPie { get; set; } = 15;
 

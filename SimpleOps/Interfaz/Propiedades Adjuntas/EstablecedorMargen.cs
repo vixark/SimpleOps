@@ -13,7 +13,7 @@ namespace SimpleOps.Interfaz {
     /// <summary>
     /// Establece el margen de todos los controles hijos.
     /// </summary>
-    public static class EstablecedorMargen { // Tomado de https://web.archive.org/web/20120711175633/http://blogs.microsoft.co.il/blogs/eladkatz/archive/2011/05/29/what-is-the-easiest-way-to-set-spacing-between-items-in-stackpanel.aspx.
+    public static class EstablecedorMargen { // Ver https://web.archive.org/web/20120711175633/http://blogs.microsoft.co.il/blogs/eladkatz/archive/2011/05/29/what-is-the-easiest-way-to-set-spacing-between-items-in-stackpanel.aspx.
 
 
         #region Propiedades

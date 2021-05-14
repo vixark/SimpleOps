@@ -32,7 +32,7 @@ namespace SimpleOps.Modelo {
         public decimal ValorFacturas { get; set; } = 0; // Obligatorio.
 
         /// <summary>
-        /// El valor del comprobante que se usó para abonar al saldo a favor de la entidad económica. Si es negativo es el valor tomado del saldo pendiente de la entidad económica que se sumó al movimiento de dinero para cancelar las facturas.
+        /// El valor del comprobante que se usó para abonar al saldo a favor de la entidad económica. Si es negativo es la parte del saldo pendiente de la entidad económica que se sumó al movimiento de dinero para cancelar las facturas.
         /// </summary>
         public decimal Abono { get; set; } = 0; // Obligatorio.
 

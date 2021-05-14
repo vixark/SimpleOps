@@ -1,0 +1,32 @@
+Un monitor de computador (Talla 15)
+
+Es gris y tiene algunos años de uso. Se puede conectar a la torre y lograr un computador completo. Tiene un tamaño de pantalla de 14 pulgadas o 15, no es muy claro desde donde se mide. Es talla 15, solo apto para personas con esta talla de pantalón/camiseta.
+
+Es de una marca <i>china</i>, pero de buena calidad. Permite ver películas, series y jugar videojuegos. También permite desarrollar software si se tiene la paciencia para ello.
+
+Tiene las <b>tres B</b>:
+1. Bueno
+-    Bonito
+*Barato
+
+
+
+Foto
+
+html\pic_trulli.jpg
+(Pendiente cambiar por foto real del monitor)
+
+norma-monitor.jpg
+
+
+<p>Esto es un parrafo suelto que no quiero que sea título</p>
+
+<h3>Este es un título forzado así el texto sea más largo de 100 letras. Si fuera un texto de menos de 100 letras, se le asignaría automáticamente un título HTML h2.</h3>
+
+
+Imagen con ruta absoluta:
+https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png
+
+
+
+{autor=David}{hora=10 am}autor.txt

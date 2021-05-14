@@ -49,12 +49,15 @@ namespace SimpleOps.Datos {
         // Entidades Económicas>
 
         // Productos
+        public DbSet<TipoAtributoProducto> TiposAtributosProductos { get; set; } = null!;
+        public DbSet<AtributoProducto> AtributosProductos { get; set; } = null!;
         public DbSet<Categoría> Categorías { get; set; } = null!;
         public DbSet<Subcategoría> Subcategorías { get; set; } = null!;
         public DbSet<LíneaNegocio> LíneasNegocio { get; set; } = null!;
         public DbSet<Aplicación> Aplicaciones { get; set; } = null!;
         public DbSet<Material> Materiales { get; set; } = null!;
         public DbSet<Marca> Marcas { get; set; } = null!;
+        public DbSet<ProductoBase> ProductosBase { get; set; } = null!;
         public DbSet<Producto> Productos { get; set; } = null!;
         public DbSet<PrecioLista> ListasPrecios { get; set; } = null!;
         // Productos>
@@ -135,12 +138,13 @@ namespace SimpleOps.Datos {
         /// <param name="tipoContexto"></param>
         public Contexto(TipoContexto tipoContexto) {
 
+            #pragma warning disable CS8524 // Se omite para que no obligue a usar el patrón de descarte _ => porque este oculta la advertencia CS8509 que es muy útil para detectar valores de la enumeración faltantes. No se omite a nivel global porque la desactivaría para los switchs que no tienen enumeraciones, ver https://github.com/dotnet/roslyn/issues/47066.
             ChangeTracker.QueryTrackingBehavior = tipoContexto switch {
                 TipoContexto.Lectura => QueryTrackingBehavior.NoTracking,
                 TipoContexto.Escritura => QueryTrackingBehavior.TrackAll,
                 TipoContexto.LecturaConRastreo => QueryTrackingBehavior.TrackAll,
-                _ => throw new Exception(CasoNoConsiderado(tipoContexto)),
-            }; // Si saca excepción en este punto se puede deber a que se actualizó el paquete Microsoft.Extensions.Configuration.Abstractions a una versión no soportada. Se debe reversar el paquete a la versión anterior y se corrige el problema. Ver https://stackoverflow.com/questions/64809716/could-not-load-file-or-assembly-microsoft-extensions-configuration-abstractions y https://github.com/dotnet/aspnetcore/issues/21033.
+            }; // Si saca excepción en este punto, se puede deber a que se actualizó el paquete Microsoft.Extensions.Configuration.Abstractions a una versión no soportada. Se debe reversar el paquete a la versión anterior y se corrige el problema. Ver https://stackoverflow.com/questions/64809716/could-not-load-file-or-assembly-microsoft-extensions-configuration-abstractions y https://github.com/dotnet/aspnetcore/issues/21033.
+            #pragma warning restore CS8524
             TipoContexto = tipoContexto;
 
         } // Contexto>
@@ -175,6 +179,14 @@ namespace SimpleOps.Datos {
             constructor.Entity<Rol>().Property(r => r.Permisos).HasConversion(ConvertidorJSON<List<Permiso>>())
                 .Metadata.SetValueComparer(ComparadorJSON<List<Permiso>>()); // Es necesario establecer el comparador para permitir la actualización ver https://github.com/aspnet/EntityFramework.Docs/blob/master/entity-framework/core/modeling/value-conversions.md, https://github.com/aspnet/EntityFramework.Docs/issues/1986 y https://github.com/dotnet/efcore/issues/17471.
             constructor.Entity<Producto>().Property(p => p.ProductosAsociados).HasConversion(ConvertidorJSON<List<string>>())
+                .Metadata.SetValueComparer(ComparadorJSON<List<string>>());
+            constructor.Entity<Producto>().Property(p => p.Atributos).HasConversion(ConvertidorJSON<List<string>>())
+                .Metadata.SetValueComparer(ComparadorJSON<List<string>>());
+            constructor.Entity<ProductoBase>().Property(p => p.ProductosBaseAsociados).HasConversion(ConvertidorJSON<List<string>>())
+                .Metadata.SetValueComparer(ComparadorJSON<List<string>>());
+            constructor.Entity<ProductoBase>().Property(p => p.Características).HasConversion(ConvertidorJSON<List<string>>())
+                .Metadata.SetValueComparer(ComparadorJSON<List<string>>());
+            constructor.Entity<Producto>().Property(p => p.CaracterísticasEspecíficas).HasConversion(ConvertidorJSON<List<string>>())
                 .Metadata.SetValueComparer(ComparadorJSON<List<string>>());
             constructor.Entity<Cobro>().Property(c => c.NúmerosFacturas).HasConversion(ConvertidorJSON<List<string>>())
                 .Metadata.SetValueComparer(ComparadorJSON<List<string>>());
@@ -249,25 +261,30 @@ namespace SimpleOps.Datos {
             constructor.Entity<LíneaRemisión>().Ignore(dr => dr.PorcentajeDescuentoComercial).Ignore(dr => dr.MuestraGratis)
                 .Ignore(dr => dr.PorcentajeDescuentoCondicionado);
 
+            constructor.Entity<Producto>().Ignore(p => p.ImpuestoConsumoUnitarioPropio); // Por alguna razón no funciona el atributo [NotMapped] en esta propiedad.
+
             // Propiedades Ignoradas>
 
             // Única No Clave Principal
-            constructor.Entity<Producto>().HasIndex(c => c.Referencia).IsUnique();
+            constructor.Entity<Producto>().HasIndex(p => p.Referencia).IsUnique();
+            constructor.Entity<ProductoBase>().HasIndex(pb => pb.Referencia).IsUnique();
             constructor.Entity<Contacto>().HasIndex(c => c.Email).IsUnique();
             constructor.Entity<Cliente>().HasIndex(c => c.Nombre).IsUnique(); // No se crea índice para Identificación porque esta puede ser nula.
-            constructor.Entity<Proveedor>().HasIndex(c => c.Nombre).IsUnique(); // No se crea índice para Identificación porque esta puede ser nula.
+            constructor.Entity<Proveedor>().HasIndex(p => p.Nombre).IsUnique(); // No se crea índice para Identificación porque esta puede ser nula.
             constructor.Entity<Categoría>().HasIndex(c => c.Nombre).IsUnique();
-            constructor.Entity<Subcategoría>().HasIndex(c => c.Nombre).IsUnique();
-            constructor.Entity<LíneaNegocio>().HasIndex(c => c.Nombre).IsUnique();
-            constructor.Entity<Aplicación>().HasIndex(c => c.Nombre).IsUnique();
-            constructor.Entity<Material>().HasIndex(c => c.Nombre).IsUnique();
-            constructor.Entity<Marca>().HasIndex(c => c.Nombre).IsUnique();
-            constructor.Entity<Rol>().HasIndex(c => c.Nombre).IsUnique();
+            constructor.Entity<Subcategoría>().HasIndex(s => s.Nombre).IsUnique();
+            constructor.Entity<LíneaNegocio>().HasIndex(ln => ln.Nombre).IsUnique();
+            constructor.Entity<Aplicación>().HasIndex(a => a.Nombre).IsUnique();
+            constructor.Entity<Material>().HasIndex(m => m.Nombre).IsUnique();
+            constructor.Entity<Marca>().HasIndex(m => m.Nombre).IsUnique();
+            constructor.Entity<Rol>().HasIndex(r => r.Nombre).IsUnique();
             constructor.Entity<Campaña>().HasIndex(c => c.Nombre).IsUnique();
-            constructor.Entity<Usuario>().HasIndex(c => c.Nombre).IsUnique();
+            constructor.Entity<Usuario>().HasIndex(u => u.Nombre).IsUnique();
+            constructor.Entity<TipoAtributoProducto>().HasIndex(tap => tap.Nombre).IsUnique();
+            constructor.Entity<AtributoProducto>().HasIndex(ap => ap.Nombre).IsUnique();
             // Única No Clave Principal>
 
-            // Clave Doble Principal - Tomado de https://entityframeworkcore.com/knowledge-base/50398457/2-foreign-keys-as-primary-key-using-ef-core-2-0-code-first.
+            // Clave Doble Principal - Ver https://entityframeworkcore.com/knowledge-base/50398457/2-foreign-keys-as-primary-key-using-ef-core-2-0-code-first.
             constructor.Entity<PrecioCliente>().HasKey(pe => new { pe.ProductoID, pe.ClienteID });
             constructor.Entity<PrecioProveedor>().HasKey(pe => new { pe.ProductoID, pe.ProveedorID });
             constructor.Entity<ContactoCliente>().HasKey(cc => new { cc.ContactoID, cc.ClienteID });
@@ -295,7 +312,7 @@ namespace SimpleOps.Datos {
             // Unicidad de Pareja No Clave Principal>
 
             // Convenciones
-            foreach (var tipoEntidad in tiposEntidad) { // Cambia el comportamiento de cascada en eliminación a restringir. Es una medida adicional de protección porque de todas maneras no se va a permitir eliminación de filas. Tomado de https://stackoverflow.com/questions/46837617/where-are-entity-framework-core-conventions.
+            foreach (var tipoEntidad in tiposEntidad) { // Cambia el comportamiento de cascada en eliminación a restringir. Es una medida adicional de protección porque de todas maneras no se va a permitir eliminación de filas. Ver https://stackoverflow.com/questions/46837617/where-are-entity-framework-core-conventions.
                 tipoEntidad.GetForeignKeys().Where(fk => !fk.IsOwnership && fk.DeleteBehavior == DeleteBehavior.Cascade).ToList()
                     .ForEach(fk => fk.DeleteBehavior = DeleteBehavior.Restrict); // Equivalente en EF a modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>() y modelBuilder.Conventions.Remove<ManyToManyCascadeDeleteConvention>().
             }
@@ -423,70 +440,6 @@ namespace SimpleOps.Datos {
             }
 
         } // SolucionadorConflictos>
-
-
-        /// <summary>
-        /// Actualización de los municipios con mensajería y de los datos de los municipios de la empresa.
-        /// </summary>
-        public static void LeerMunicipiosDeInterés(Contexto ctx) {
-
-            var municipios = ctx.Municipios.Where(m => m.MensajeríaDisponible || m.ID == Empresa.MunicipioFacturaciónID 
-                || m.ID == Empresa.MunicipioUbicaciónEfectivoID).ToList(); // En una sola consulta a la base de datos obtiene los dos grupos de municipios de interés.
-
-            MunicipiosConMensajería = municipios.Where(m => m.MensajeríaDisponible).Select(m => m.ID).ToList();
-            if (municipios.Count > 0) { // Solo debe suceder si la base de datos no tiene municipios. 
-                municipios.Single(m => m.ID == Empresa.MunicipioFacturaciónID).CopiarA(ref Empresa.MunicipioFacturación!); // Siempre debe existir.
-                municipios.Single(m => m.ID == Empresa.MunicipioUbicaciónEfectivoID).CopiarA(ref Empresa.MunicipioUbicación!); // Siempre debe existir porque incluso en el caso que no haya MunicipioUbicaciónID se usa MunicipioFacturaciónID en su reemplazo.
-            } else {
-
-                if (ctx.Municipios.Any()) {
-                    throw new Exception($"No se esperaba que la tabla municipios tenga filas y en ellas no se encuentre alguno de los ids de " +
-                                        $"municipios de la empresa. MunicipioFacturaciónID: {Empresa.MunicipioFacturaciónID}. " +
-                                        $"MunicipioUbicaciónID: {Empresa.MunicipioUbicaciónEfectivoID}");
-                } else {
-                    throw new Exception($"No se esperaba que la tabla municipios no tenga filas."); // Se puede deber a un error en la creación automática de la base de datos SQLite (ver Global.ConfigurarCarpetasYArchivos()) o un problema con la base de datos SQL.
-                }
-
-            }
-
-        } // LeerMunicipiosDeInterés>
-
-
-        /// <summary>
-        /// Función equivalente sin pasar contexto para cuando no se tenga.
-        /// </summary>
-        public static void LeerMunicipiosDeInterés() {
-            using var ctx = new Contexto();
-            LeerMunicipiosDeInterés(ctx);
-        } // LeerMunicipiosDeInterés>
-
-
-        /// <summary>
-        /// Consulta las ordenes de compra pendientes y actualiza la FechaHoraCreación usando las líneas.
-        /// </summary>
-        public List<OrdenCompra> ObtenerOrdenesCompraPendientes() {
-
-            var ordenesCompra = OrdenesCompra.Where(oc => oc.Estado == EstadoSolicitudProducto.Pendiente).Include(oc => oc.Cliente).Include(oc => oc.Líneas).ToList();
-            foreach (var ordenCompra in ordenesCompra) {
-                if (ordenCompra.Líneas != null && ordenCompra.Líneas.Count > 0) ordenCompra.FechaHoraCreación = ordenCompra.Líneas.Min(ocd => ocd.FechaHoraCreación);
-            }
-            return ordenesCompra;
-
-        } // ObtenerOrdenesCompraPendientes>
-
-
-        /// <summary>
-        /// Consulta los pedidos pendientes y actualiza la FechaHoraCreación usando las líneas.
-        /// </summary>
-        public List<Pedido> ObtenerPedidosPendientes() {
-
-            var pedidos = Pedidos.Where(oc => oc.Estado == EstadoSolicitudProducto.Pendiente).Include(oc => oc.Proveedor).Include(oc => oc.Líneas).ToList();
-            foreach (var pedido in pedidos) {
-                if (pedido.Líneas != null && pedido.Líneas.Count > 0) pedido.FechaHoraCreación = pedido.Líneas.Min(ocd => ocd.FechaHoraCreación);
-            }
-            return pedidos;
-
-        } // ObtenerPedidosPendientes>
 
 
         /// <summary>
@@ -720,7 +673,7 @@ namespace SimpleOps.Datos {
 
                 if (mostrarError) {
                     MostrarErrorBloqueosExistentes(bloqueosExistentes, bloqueosVarias.Select(db => db.NombreEntidad).Distinct()
-                        .Select(ne => ObtenerNombreTabla(ne, this)).ToList().ATexto());
+                        .Select(ne => ObtenerNombreTabla(ne, this)).ToList().ATextoConComas());
                 }
                 return new ResultadoBloqueo(false, bloqueosExistentes);
 
@@ -742,7 +695,7 @@ namespace SimpleOps.Datos {
             var textoTabla = nombreTablas != null && nombreTablas.Contiene(",") ? "tablas" : "tabla";
             MostrarAdvertencia($"No se pudo realizar la acción porque {ObtenerPalabraNúmeroYGénero(textoTabla, "el")} {textoTabla} {nombreTablas} " + 
                 $"{ObtenerPalabraNúmeroYGénero(textoTabla, "está")} {ObtenerPalabraNúmeroYGénero(textoTabla, "bloqueado")} por " +
-                $"{bloqueosExistentes.Select(b => b.Usuario?.Nombre).Distinct().ToList().ATexto()}."); // Se refiere a acción y no a bloqueo porque normalmente el bloqueo se intenta hacer antes de realizar una acción.
+                $"{bloqueosExistentes.Select(b => b.Usuario?.Nombre).Distinct().ToList().ATextoConComas()}."); // Se refiere a acción y no a bloqueo porque normalmente el bloqueo se intenta hacer antes de realizar una acción.
 
         } // MostrarErrorBloqueosExistentes>
 
@@ -855,6 +808,7 @@ namespace SimpleOps.Datos {
                         "PreciosClientes" => ctx.PreciosClientes.Any(),
                         "PreciosProveedores" => ctx.PreciosProveedores.Any(),
                         "Productos" => ctx.Productos.Any(),
+                        "ProductosBase" => ctx.ProductosBase.Any(),
                         "Proveedores" => ctx.Proveedores.Any(),
                         "RecibosCaja" => ctx.RecibosCaja.Any(),
                         "ReferenciasClientes" => ctx.ReferenciasClientes.Any(),
@@ -867,6 +821,8 @@ namespace SimpleOps.Datos {
                         "Usuarios" => ctx.Usuarios.Any(),
                         "Ventas" => ctx.Ventas.Any(),
                         "Bloqueos" => ctx.Bloqueos.Any(),
+                        "AtributosProductos" => ctx.AtributosProductos.Any(),
+                        "TiposAtributosProductos" => ctx.TiposAtributosProductos.Any(),
                         _ => throw new Exception(CasoNoConsiderado(nombreTabla)) // Pendiente agregar entidad al switch.
                     };
 
@@ -917,6 +873,7 @@ namespace SimpleOps.Datos {
                         "PreciosClientes" => cargarJson<PrecioCliente>(nombreTabla),
                         "PreciosProveedores" => cargarJson<PrecioProveedor>(nombreTabla),
                         "Productos" => cargarJson<Producto>(nombreTabla),
+                        "ProductosBase" => cargarJson<ProductoBase>(nombreTabla),
                         "Proveedores" => cargarJson<Proveedor>(nombreTabla),
                         "RecibosCaja" => cargarJson<ReciboCaja>(nombreTabla),
                         "ReferenciasClientes" => cargarJson<ReferenciaCliente>(nombreTabla),
@@ -929,6 +886,8 @@ namespace SimpleOps.Datos {
                         "Usuarios" => cargarJson<Usuario>(nombreTabla),
                         "Ventas" => cargarJson<Venta>(nombreTabla),
                         "Bloqueos" => cargarJson<Bloqueo>(nombreTabla),
+                        "AtributosProductos" => cargarJson<AtributoProducto>(nombreTabla),
+                        "TiposAtributosProductos" => cargarJson<TipoAtributoProducto>(nombreTabla),
                         _ => throw new Exception(CasoNoConsiderado(nombreTabla)) // Pendiente agregar entidad al switch.
                     };
 
@@ -945,7 +904,7 @@ namespace SimpleOps.Datos {
                     var mensajeExcepciónInterna = ex.InnerException?.Message;
                     if (mensajeExcepciónInterna == "Cannot get the value of a token type 'String' as a number.") {
 
-                        var nombrePropiedad = ExtraerConPatrón(ex.Message, $@"({PatrónNombreVariable}+) \| LineNumber:", 1, out _);
+                        var nombrePropiedad = ExtraerConPatrónObsoleta(ex.Message, $@"({PatrónNombreVariable}+) \| LineNumber:", 1, out _);
                         error = $"No se pudo convertir un texto en número. Usualmente este problema sucede en la conversión de texto a decimal porque " +
                                 $"una propiedad de tipo decimal se guardó como texto en el JSON. Si este es el caso agrega {nombreTabla}.{nombrePropiedad}" +
                                 $" a la tabla 'Decimales Forzados' en 'Cargador Datos.xlsm > Procedimiento', genera el JSON actualizado de " +
@@ -954,7 +913,7 @@ namespace SimpleOps.Datos {
 
                     } else if (mensajeExcepciónInterna == "Cannot get the value of a token type 'Number' as a boolean.") {
 
-                        var nombrePropiedad = ExtraerConPatrón(ex.Message, $@"({PatrónNombreVariable}+) \| LineNumber:", 1, out _);
+                        var nombrePropiedad = ExtraerConPatrónObsoleta(ex.Message, $@"({PatrónNombreVariable}+) \| LineNumber:", 1, out _);
                         error = $"No se pudo convertir un número en un valor booleano. Usualmente este problema sucede porque una propiedad de tipo " +
                                 $"booleano se guardó como número en el JSON. Si este es el caso agrega {nombreTabla}.{nombrePropiedad} a la tabla " +
                                 $"'Booleanos Forzados' en 'Cargador Datos.xlsm > Procedimiento', genera el JSON actualizado de la tabla {nombreTabla} " +
@@ -964,7 +923,7 @@ namespace SimpleOps.Datos {
                     } else if (mensajeExcepciónInterna != null && mensajeExcepciónInterna.EmpiezaPor(ExcepciónSQLiteFallóRestricciónÚnica)) {
 
                         var nombreEntidadPropiedad
-                            = ExtraerConPatrón(mensajeExcepciónInterna, $@"constraint failed: ({PatrónNombreVariable}+\.{PatrónNombreVariable}+)", 1, out _);
+                            = ExtraerConPatrónObsoleta(mensajeExcepciónInterna, $@"constraint failed: ({PatrónNombreVariable}+\.{PatrónNombreVariable}+)", 1, out _);
                         error = $"No se ha podido agregar una fila porque tiene valores repetidos. Para intentar solucionar este problema:{DobleLínea}" +
                                 $"1. Verifica que la tabla {nombreTabla} no tenga datos preñadidos. Si los tiene, elimínalos e intenta nuevamente." +
                                 $"{NuevaLínea}2. Revisa los datos de la columna {nombreEntidadPropiedad} en el JSON, corrige los valores " +
@@ -997,7 +956,7 @@ namespace SimpleOps.Datos {
 
                     } else if (ex.Message.Contiene("The JSON value could not be converted to System.String")) {
 
-                        var nombrePropiedad = ExtraerConPatrón(ex.Message, @$"({PatrónNombreVariable}+)[0-9\[\]]+ \| LineNumber:", 1, out _);
+                        var nombrePropiedad = ExtraerConPatrónObsoleta(ex.Message, @$"({PatrónNombreVariable}+)[0-9\[\]]+ \| LineNumber:", 1, out _);
                         error = $"Un dato de la columna {nombreTabla}.{nombrePropiedad} no puede ser convertido a texto. Este error puede suceder si se " +
                                 $"trata de un dato de tipo JSON que se va a guardar en una columna de texto y no ha sido correctamente " +
                                 $"identificado como tal. Si este es el caso, agrega {nombreTabla}.{nombrePropiedad} a la tabla 'JSONs Forzados' en " +
@@ -1007,7 +966,7 @@ namespace SimpleOps.Datos {
 
                     } else if (ex.Message.Contiene("cannot be tracked because another instance with the key value")) {
 
-                        var parejaClave = ExtraerConPatrón(ex.Message, "key value '{(.+?)}' is", 1, out _);
+                        var parejaClave = ExtraerConPatrónObsoleta(ex.Message, "key value '{(.+?)}' is", 1, out _);
                         error = $"Una fila en la tabla {nombreTabla} contiene valores que forman una clave que ya se encuentra en la tabla. " +
                                 $"Elimina los valores {parejaClave} repetidos e intenta nuevamente.{DobleLínea}{ex.Message}";
                         return false;
@@ -1035,6 +994,159 @@ namespace SimpleOps.Datos {
 
 
         #endregion Métodos>
+
+
+        #region Métodos de Lectura de Datos
+
+
+        public static void CalcularVariablesEstáticas(Contexto ctx) {
+
+            LeerMunicipiosDeInterés(ctx);
+            CalcularAtributosProductosYTipos(ctx);
+
+        } // CalcularVariablesIniciales>
+
+
+        public static void CalcularAtributosProductosYTipos(Contexto ctx) {
+
+            var atributos = ctx.AtributosProductos.Include(ap => ap.Tipo).ToList();
+            foreach (var atributo in atributos) {
+                if (atributo.Tipo == null) throw new Exception("No se esperaba que el tipo del atributo fuera nulo.");
+                AtributosProductosYTipos.Add(atributo.Nombre, atributo.Tipo.Nombre);
+                ÍndicesYAtributos.Add(atributo.ID, atributo.Nombre);
+            }
+
+            foreach (var rango in Empresa.RangosTallasMediasNuméricas) {
+                ÍndicesRangosTallasMediasNuméricas.Add(Producto.ObtenerIDAtributo(rango.Key), Producto.ObtenerIDAtributo(rango.Value));
+            }
+
+            foreach (var rango in Empresa.RangosDoblePasoEnSecuenciaTallaNumérica) {
+                ÍndicesRangosDoblePasoEnSecuenciaTallaNumérica.Add(Producto.ObtenerIDAtributo(rango.Key), Producto.ObtenerIDAtributo(rango.Value));
+            }
+
+        } // CalcularAtributosProductosYTipos>
+
+
+        /// <summary>
+        /// Actualización de los municipios con mensajería y de los datos de los municipios de la empresa.
+        /// </summary>
+        public static void LeerMunicipiosDeInterés(Contexto ctx) {
+
+            var municipios = ctx.Municipios.Where(m => m.MensajeríaDisponible || m.ID == Empresa.MunicipioFacturaciónID
+                || m.ID == Empresa.MunicipioUbicaciónEfectivoID).ToList(); // En una sola consulta a la base de datos obtiene los dos grupos de municipios de interés.
+
+            MunicipiosConMensajería = municipios.Where(m => m.MensajeríaDisponible).Select(m => m.ID).ToList();
+            if (municipios.Count > 0) { // Solo debe suceder si la base de datos no tiene municipios. 
+                municipios.Single(m => m.ID == Empresa.MunicipioFacturaciónID).CopiarA(ref Empresa.MunicipioFacturación!); // Siempre debe existir.
+                municipios.Single(m => m.ID == Empresa.MunicipioUbicaciónEfectivoID).CopiarA(ref Empresa.MunicipioUbicación!); // Siempre debe existir porque incluso en el caso que no haya MunicipioUbicaciónID se usa MunicipioFacturaciónID en su reemplazo.
+            } else {
+
+                if (ctx.Municipios.Any()) {
+                    throw new Exception($"No se esperaba que la tabla municipios tenga filas y en ellas no se encuentre alguno de los ids de " +
+                                        $"municipios de la empresa. MunicipioFacturaciónID: {Empresa.MunicipioFacturaciónID}. " +
+                                        $"MunicipioUbicaciónID: {Empresa.MunicipioUbicaciónEfectivoID}");
+                } else {
+                    throw new Exception($"No se esperaba que la tabla municipios no tenga filas."); // Se puede deber a un error en la creación automática de la base de datos SQLite (ver Global.ConfigurarCarpetasYArchivos()) o a un problema con la base de datos SQL. Para SQLite usualmente se soluciona eliminando el archivo Datos.db en la carpeta de producción para que sea copiado desde la ruta de desarrollo y regenerado automáticamente.
+                }
+
+            }
+
+        } // LeerMunicipiosDeInterés>
+
+
+        /// <summary>
+        /// Función equivalente sin pasar contexto para cuando no se tenga.
+        /// </summary>
+        public static void LeerMunicipiosDeInterés() {
+            using var ctx = new Contexto();
+            LeerMunicipiosDeInterés(ctx);
+        } // LeerMunicipiosDeInterés>
+
+
+        /// <summary>
+        /// Consulta las ordenes de compra pendientes y actualiza la FechaHoraCreación usando las líneas.
+        /// </summary>
+        public List<OrdenCompra> ObtenerOrdenesCompraPendientes() {
+
+            var ordenesCompra
+                = OrdenesCompra.Where(oc => oc.Estado == EstadoSolicitudProducto.Pendiente).Include(oc => oc.Cliente).Include(oc => oc.Líneas).ToList();
+            foreach (var ordenCompra in ordenesCompra) {
+                if (ordenCompra.Líneas != null && ordenCompra.Líneas.Count > 0)
+                    ordenCompra.FechaHoraCreación = ordenCompra.Líneas.Min(ocd => ocd.FechaHoraCreación);
+            }
+            return ordenesCompra;
+
+        } // ObtenerOrdenesCompraPendientes>
+
+
+        /// <summary>
+        /// Consulta los pedidos pendientes y actualiza la FechaHoraCreación usando las líneas.
+        /// </summary>
+        public List<Pedido> ObtenerPedidosPendientes() {
+
+            var pedidos = Pedidos.Where(oc => oc.Estado == EstadoSolicitudProducto.Pendiente).Include(oc => oc.Proveedor).Include(oc => oc.Líneas).ToList();
+            foreach (var pedido in pedidos) {
+                if (pedido.Líneas != null && pedido.Líneas.Count > 0) pedido.FechaHoraCreación = pedido.Líneas.Min(ocd => ocd.FechaHoraCreación);
+            }
+            return pedidos;
+
+        } // ObtenerPedidosPendientes>
+
+
+        public List<Producto> ObtenerProductos() {
+
+            List<Producto> productos;
+            if (Empresa.HabilitarProductosBase) {
+
+                productos = Productos.Include(p => p.Base).ToList(); // Alrededor de 235 ms en modo lectura (100 ms más que !HabilitarProductosBase) y 450 ms en modo escritura (130 ms más que !HabilitarProductosBase).
+                var porcentajeConBase = Math.Round(productos.Sum(p => p.TieneBase ? 1D : 0D) / productos.Count, 1); // Solo se redondea a una pocisión decimal porque no se requiere mucha exactitud en este cálculo y para evitar escribir innecesariamente el archivo Empresa.json.
+                if (porcentajeConBase != Empresa.PorcentajeProductosConBase) {
+                    Empresa.PorcentajeProductosConBase = porcentajeConBase;
+                    GuardarOpciones(Empresa);
+                }
+
+            } else {
+                productos = Productos.ToList(); // Alrededor de 135 ms en modo lectura y 320 ms en modo escritura.
+            }
+            return productos;
+
+        } // ObtenerProductos>
+
+
+        public Producto? ObtenerProducto(string referencia) {
+
+            Producto? producto;
+            Producto? obtenerProductoConInclude() => Productos.Include(p => p.Base).Where(p => p.Referencia == referencia).FirstOrDefault();
+            Producto? obtenerProductoSinInclude() => Productos.Where(p => p.Referencia == referencia).FirstOrDefault();
+
+            if (Empresa.HabilitarProductosBase) {
+        
+                if (TipoContexto == TipoContexto.Lectura) {
+                    producto = obtenerProductoConInclude(); // Alrededor de 35 ms en modo lectura (para productos con base y productos sin base) y 110 ms en modo escritura para productos con base y 90 ms en modo escritura para productos sin base.
+                } else { // Modo escritura.
+
+                    var duraciónPromedioConInclude = 110 * Empresa.PorcentajeProductosConBase + 90 * (1 - Empresa.PorcentajeProductosConBase); // Es la duración promedio si se cargaran todos los productos uno a uno. Ver valores en la línea anterior.
+                    var duraciónPromedioSinInclude = 145 * Empresa.PorcentajeProductosConBase + 80 * (1 - Empresa.PorcentajeProductosConBase); // Ver valores en la línea después del else del siguiente condicional.
+
+                    if (duraciónPromedioConInclude < duraciónPromedioSinInclude) { // Alrededor de Empresa.PorcentajeProductosConBase en 20% se empieza a hacer más rápido en promedio el método sin include. En realidad no es una optimización muy grande, pero ya que el código está desarrollado se dejará porque no tiene ninguna desventaja dejarlo.
+                        producto = obtenerProductoConInclude();
+                    } else {
+                        producto = obtenerProductoSinInclude(); // Igual que !HabilitarProductosBase en modo escritura: 80 ms (para productos con base y productos sin base).
+                        if (producto?.TieneBase == true) this.CargarPropiedad(producto, p => p.Base); // Alrededor de 65 ms en modo escritura, 145 ms en total. CargarPropiedad solo funciona con rastreo: TipoContexto.Escritura y TipoContexto.LecturaConRastreo.
+                    }
+
+                }
+  
+            } else {
+                producto = obtenerProductoSinInclude(); // Alrededor de 30 ms en modo lectura y 80 ms en modo escritura.
+            }
+
+            return producto;
+
+        } // ObtenerProducto>
+
+
+        #endregion Métodos de Lectura de Datos>
 
 
     } // Contexto>

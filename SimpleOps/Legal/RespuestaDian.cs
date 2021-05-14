@@ -74,13 +74,13 @@ namespace SimpleOps.Legal {
                         var patrón = @"Regla: (.+?), (\bRechazo\b|\bNotificación\b): (.+)";
                         var textoError = nodoError.InnerText;
 
-                        var código = ExtraerConPatrón(textoError, patrón, 1, out int coincidenciasCódigo);
+                        var código = ExtraerConPatrónObsoleta(textoError, patrón, 1, out int coincidenciasCódigo);
                         if (coincidenciasCódigo == 0) { Error($"No se encontraron coincidencias para el código en {textoError}."); return; }
 
-                        var textoTipo = ExtraerConPatrón(textoError, patrón, 2, out int coincidenciasTipo);
+                        var textoTipo = ExtraerConPatrónObsoleta(textoError, patrón, 2, out int coincidenciasTipo);
                         if (coincidenciasTipo == 0) { Error($"No se encontraron coincidencias para el tipo en en {textoError}."); return; }
 
-                        var mensaje = ExtraerConPatrón(textoError, patrón, 3, out int coincidenciasMensaje);
+                        var mensaje = ExtraerConPatrónObsoleta(textoError, patrón, 3, out int coincidenciasMensaje);
                         if (coincidenciasMensaje == 0) { Error($"No se encontraron coincidencias para el mensaje en en {textoError}."); return; }
 
                         Errores.Add(new ReglaDian(código, textoTipo.AEnumeración<TipoReglaDian>(), mensaje));

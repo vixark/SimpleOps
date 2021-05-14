@@ -9,8 +9,8 @@ using SimpleOps.Datos;
 namespace SimpleOps.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20210115062815_Uno")]
-    partial class Uno
+    [Migration("20210430071155_uno")]
+    partial class uno
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -50,6 +50,45 @@ namespace SimpleOps.Migrations
                         .IsUnique();
 
                     b.ToTable("Aplicaciones");
+                });
+
+            modelBuilder.Entity("SimpleOps.Modelo.AtributoProducto", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ActualizadorID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CreadorID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("FechaHoraActualización")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FechaHoraCreación")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(50);
+
+                    b.Property<int>("TipoID")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("Nombre")
+                        .IsUnique();
+
+                    b.HasIndex("TipoID");
+
+                    b.ToTable("AtributosProductos");
                 });
 
             modelBuilder.Entity("SimpleOps.Modelo.Bloqueo", b =>
@@ -601,6 +640,9 @@ namespace SimpleOps.Migrations
                     b.Property<string>("FechaHoraCreación")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("Tipo")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("ID");
 
@@ -1789,7 +1831,23 @@ namespace SimpleOps.Migrations
                     b.Property<int>("ActualizadorID")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("AplicaciónID")
+                    b.Property<int?>("AplicaciónEspecíficaID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ArchivoImagenEspecífica")
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("ArchivoInformaciónEspecífica")
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("Atributos")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(500);
+
+                    b.Property<int?>("BaseID")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Cantidad")
@@ -1804,11 +1862,147 @@ namespace SimpleOps.Migrations
                     b.Property<int>("CantidadReservada")
                         .HasColumnType("INTEGER");
 
-                    b.Property<byte>("ConceptoRetenciónPropio")
+                    b.Property<string>("CaracterísticasEspecíficas")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(2000);
+
+                    b.Property<byte>("ConceptoRetenciónPropioEspecífico")
                         .HasColumnType("INTEGER");
 
                     b.Property<double?>("CostoUnitario")
                         .HasColumnType("REAL");
+
+                    b.Property<int>("CreadorID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("DescripciónEspecífica")
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(200);
+
+                    b.Property<bool?>("ExcluídoIVAEspecífico")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("FechaHoraActualización")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FechaHoraCreación")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool?>("FísicoEspecífico")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double?>("ImpuestoConsumoUnitarioPropioEspecífico")
+                        .HasColumnType("REAL");
+
+                    b.Property<int?>("LíneaNegocioEspecíficaID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("MarcaEspecíficaID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("MaterialEspecíficoID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double?>("PesoUnidadEmpaqueEspecífica")
+                        .HasColumnType("REAL");
+
+                    b.Property<double?>("PorcentajeAdicionalGananciaPropioEspecífico")
+                        .HasColumnType("REAL");
+
+                    b.Property<double?>("PorcentajeIVAPropioEspecífico")
+                        .HasColumnType("REAL");
+
+                    b.Property<double?>("PorcentajeImpuestoConsumoPropioEspecífico")
+                        .HasColumnType("REAL");
+
+                    b.Property<byte>("PrioridadWebPropiaEspecífica")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ProductosAsociados")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(500);
+
+                    b.Property<int?>("ProveedorPreferidoEspecíficoID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Referencia")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(30);
+
+                    b.Property<int?>("SubcategoríaEspecíficaID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("TieneBase")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<byte>("TipoImpuestoConsumoPropioEspecífico")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("UbicaciónAlmacén")
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(30);
+
+                    b.Property<int>("UnidadEmpaqueEspecífica")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("UnidadEspecífica")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("AplicaciónEspecíficaID");
+
+                    b.HasIndex("BaseID");
+
+                    b.HasIndex("LíneaNegocioEspecíficaID");
+
+                    b.HasIndex("MarcaEspecíficaID");
+
+                    b.HasIndex("MaterialEspecíficoID");
+
+                    b.HasIndex("ProveedorPreferidoEspecíficoID");
+
+                    b.HasIndex("Referencia")
+                        .IsUnique();
+
+                    b.HasIndex("SubcategoríaEspecíficaID");
+
+                    b.ToTable("Productos");
+                });
+
+            modelBuilder.Entity("SimpleOps.Modelo.ProductoBase", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ActualizadorID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("AplicaciónID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ArchivoImagen")
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("ArchivoInformación")
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("Características")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(2000);
+
+                    b.Property<byte>("ConceptoRetenciónPropio")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("CreadorID")
                         .HasColumnType("INTEGER");
@@ -1859,10 +2053,10 @@ namespace SimpleOps.Migrations
                     b.Property<byte>("PrioridadWebPropia")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("ProductosAsociados")
+                    b.Property<string>("ProductosBaseAsociados")
                         .IsRequired()
                         .HasColumnType("TEXT")
-                        .HasMaxLength(1000);
+                        .HasMaxLength(500);
 
                     b.Property<int?>("ProveedorPreferidoID")
                         .HasColumnType("INTEGER");
@@ -1877,10 +2071,6 @@ namespace SimpleOps.Migrations
 
                     b.Property<byte>("TipoImpuestoConsumoPropio")
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("UbicaciónAlmacén")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(30);
 
                     b.Property<int>("Unidad")
                         .HasColumnType("INTEGER");
@@ -1905,7 +2095,7 @@ namespace SimpleOps.Migrations
 
                     b.HasIndex("SubcategoríaID");
 
-                    b.ToTable("Productos");
+                    b.ToTable("ProductosBase");
                 });
 
             modelBuilder.Entity("SimpleOps.Modelo.Proveedor", b =>
@@ -2347,6 +2537,40 @@ namespace SimpleOps.Migrations
                     b.ToTable("Subcategorías");
                 });
 
+            modelBuilder.Entity("SimpleOps.Modelo.TipoAtributoProducto", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ActualizadorID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CreadorID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("FechaHoraActualización")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FechaHoraCreación")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(50);
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("Nombre")
+                        .IsUnique();
+
+                    b.ToTable("TiposAtributosProductos");
+                });
+
             modelBuilder.Entity("SimpleOps.Modelo.Usuario", b =>
                 {
                     b.Property<int>("ID")
@@ -2497,6 +2721,15 @@ namespace SimpleOps.Migrations
                     b.HasIndex("ReciboCajaID");
 
                     b.ToTable("Ventas");
+                });
+
+            modelBuilder.Entity("SimpleOps.Modelo.AtributoProducto", b =>
+                {
+                    b.HasOne("SimpleOps.Modelo.TipoAtributoProducto", "Tipo")
+                        .WithMany()
+                        .HasForeignKey("TipoID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("SimpleOps.Modelo.Bloqueo", b =>
@@ -2942,6 +3175,59 @@ namespace SimpleOps.Migrations
 
             modelBuilder.Entity("SimpleOps.Modelo.Producto", b =>
                 {
+                    b.HasOne("SimpleOps.Modelo.Aplicación", "AplicaciónEspecífica")
+                        .WithMany()
+                        .HasForeignKey("AplicaciónEspecíficaID");
+
+                    b.HasOne("SimpleOps.Modelo.ProductoBase", "Base")
+                        .WithMany()
+                        .HasForeignKey("BaseID");
+
+                    b.HasOne("SimpleOps.Modelo.LíneaNegocio", "LíneaNegocioEspecífica")
+                        .WithMany()
+                        .HasForeignKey("LíneaNegocioEspecíficaID");
+
+                    b.HasOne("SimpleOps.Modelo.Marca", "MarcaEspecífica")
+                        .WithMany()
+                        .HasForeignKey("MarcaEspecíficaID");
+
+                    b.HasOne("SimpleOps.Modelo.Material", "MaterialEspecífico")
+                        .WithMany()
+                        .HasForeignKey("MaterialEspecíficoID");
+
+                    b.HasOne("SimpleOps.Modelo.Proveedor", "ProveedorPreferidoEspecífico")
+                        .WithMany()
+                        .HasForeignKey("ProveedorPreferidoEspecíficoID");
+
+                    b.HasOne("SimpleOps.Modelo.Subcategoría", "SubcategoríaEspecífica")
+                        .WithMany()
+                        .HasForeignKey("SubcategoríaEspecíficaID");
+
+                    b.OwnsOne("SimpleOps.Modelo.Dimensión", "DimensiónUnidadEmpaqueEspecífica", b1 =>
+                        {
+                            b1.Property<int>("ProductoID")
+                                .HasColumnType("INTEGER");
+
+                            b1.Property<double>("Alto")
+                                .HasColumnType("REAL");
+
+                            b1.Property<double>("Ancho")
+                                .HasColumnType("REAL");
+
+                            b1.Property<double>("Largo")
+                                .HasColumnType("REAL");
+
+                            b1.HasKey("ProductoID");
+
+                            b1.ToTable("Productos");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProductoID");
+                        });
+                });
+
+            modelBuilder.Entity("SimpleOps.Modelo.ProductoBase", b =>
+                {
                     b.HasOne("SimpleOps.Modelo.Aplicación", "Aplicación")
                         .WithMany()
                         .HasForeignKey("AplicaciónID");
@@ -2968,7 +3254,7 @@ namespace SimpleOps.Migrations
 
                     b.OwnsOne("SimpleOps.Modelo.Dimensión", "DimensiónUnidadEmpaque", b1 =>
                         {
-                            b1.Property<int>("ProductoID")
+                            b1.Property<int>("ProductoBaseID")
                                 .HasColumnType("INTEGER");
 
                             b1.Property<double>("Alto")
@@ -2980,12 +3266,12 @@ namespace SimpleOps.Migrations
                             b1.Property<double>("Largo")
                                 .HasColumnType("REAL");
 
-                            b1.HasKey("ProductoID");
+                            b1.HasKey("ProductoBaseID");
 
-                            b1.ToTable("Productos");
+                            b1.ToTable("ProductosBase");
 
                             b1.WithOwner()
-                                .HasForeignKey("ProductoID");
+                                .HasForeignKey("ProductoBaseID");
                         });
                 });
 

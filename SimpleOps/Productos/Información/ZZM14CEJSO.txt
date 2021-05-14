@@ -1,0 +1,19 @@
+Un monitor de computador
+
+Es gris y tiene algunos años de uso. Se puede conectar a la torre y lograr un computador completo. Tiene un tamaño de pantalla de 14 pulgadas o 15, no es muy claro desde donde se mide. 
+
+Es de una marca <i>china</i>, pero de buena calidad. Permite ver películas, series y jugar videojuegos, también permite desarrollar software si se tiene el conocimiento y paciencia para ello.
+
+Tiene las <b>tres B</b>:
+- Bueno
+- Bonito
+- Barato
+
+Foto
+
+pic_trulli.jpg
+(Pendiente cambiar por foto real del monitor)
+
+
+
+{autor=David}{hora=10 am}autor.txt

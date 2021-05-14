@@ -5,14 +5,247 @@
     ClaveMarco = "Marco";
 }
 
-<h1>Título Página 1 del Catálogo</h1><p>Contenido de la página 1 del catálogo.</p>
-@{
-    var referencia1 = Model.Líneas[1].ProductoReferencia;
-}
-@referencia1<br />
-@Model.Líneas[1].ProductoDescripción<br />
-@Model.Líneas[1].PrecioBaseTexto<br />
-<img src="@Model.ImágenesProductosBase64[referencia1]" />
+
+<table width="100%">
+    <tr>
+        <td class="tctr">
+            <img style="width: 411px; margin-top: 53px; margin-left: 51px;" src="@Model.Logo2Base64" /><br />
+        </td>
+    </tr>
+
+    <tr>
+        <td height="212px">
+            <span style="font-size: 1px; color: white;">@Model.TextoPruebaColor</span>
+        </td>
+    </tr>
+
+    <tr>
+        <td height="640px" class="fc">
+            <table height="640px" width="100%" style="margin-right: 45px; margin-left: 45px; margin-top: 31px; ">
+                <tr>
+                    <td height="110px" class="tder">
+                        <div class="t53n fc-l255">Catálogo de Productos</div>
+                        <div class="t40n fc-l130" style="margin-top: 2px;">Distribuciones ABC 123</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td height="600px"></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
 
 <style>
+
+
+    /* <Colores - Este código puede ser copiado y reemplazado por un bloque con los colores personalizados. */
+
+    .celda { border-color: #D2D2D2; }
+
+    .bi-bl { border-color: #373334; color: #373334; } /* Botón importante blanco. */
+
+    .bi-c { color: white; background-color: #186ACE; } /* Botón importante a color. Normalmente es el mismo color de .fc o .fc2. */
+
+    .bi-blc { border-color: #186ACE; color: #186ACE; } /* Botón importante blanco con fondo y letras a color. Normalmente es el mismo color de .fc o fc2. */
+
+    .tít { color: #186ACE; } /* Normalmente es el mismo color de .fc o .fc2. */
+
+    .tít-gris { color: #454545; } /* Título importante color gris. */
+
+    .iprecio { color: #858585; } /* Texto auxiliar al precio. */
+
+    .t-alerta { color: #990000; }
+
+    .precio { color: #454545; }
+
+    /* Colores> */
+
+
+    /* <Código Personalizado - Código para elementos propios de cada usuario. */
+
+    /* Código Personalizado> */
+
+
+    .cuerpo { /* Elimina cualquier margen que traiga este elemento que principalmente se usa para documentos transaccionales. */
+        margin: 0px !important;
+    }
+    
+    table {
+        border-collapse: collapse;
+    }
+
+    .celda {
+        border-width: 1px;
+        vertical-align: top;
+    }
+
+    .celda2c { /* Ancho de celda de dos columnas del mismo ancho. */
+        width: 384px;
+    }
+
+    .celdas {
+        margin-right: 22px;
+        margin-left: 22px;
+    }
+
+    .bi-bl { /* Botón importante blanco. */
+        border-style: solid;
+        border-radius: 5px;
+        border-width: 1.5px;
+        font-weight: bold;
+        padding-top: 2px;
+        font-size: 10.5px;
+        margin-right: 4px;
+        text-align: center;
+        height: 35px;
+        width: 63px;
+    }
+
+    .bi-c { /* Botón importante a color. */
+        border-radius: 3px;
+        border-style: none;
+        font-weight: bold;
+        font-size: 18.5px;
+        text-align: center;
+        height: 24px;
+        width: 46px;
+    }
+
+    .bi-blc { /* Botón importante blanco con fondo y letras a color. */
+        border-radius: 5px;
+        border-width: 2.5px;
+        border-style: solid;
+        font-weight: bold;
+        font-size: 12px;
+        text-align: center;
+        padding-top: 4px;
+        height: 20px;
+        width: 107px;
+    }
+
+    .a-bi-blc {
+        text-decoration: none;
+    }
+
+    .tít {
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .tít-gris { /* Título importante color gris. */
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .tít-bref { /* Título que está justo debajo de la referencia con clase bi-c. */
+        margin-top: 5px;
+    }
+
+    .iprecio { /* Texto auxiliar al precio. */
+        font-size: 13.3px;
+        font-weight: bold;
+    }
+
+    .iprecio-xs {
+        font-size: 12px;
+    }
+
+    .tprecios { /* Tabla con precios. */
+        text-align: right;
+        width: 195px;
+        float: right;
+    }
+
+    .cnprecios {
+        width: 100%;
+    }
+
+    .fprecio td { /* Fila de tabla con precios. */
+        padding-bottom: 7px;
+    }
+
+    .t-alerta {
+        font-weight: bold;
+    }
+
+    .desc { /* Descripción. */
+        font-size: 13.3px;
+    }
+
+    .cn-desc {
+        vertical-align: top;
+    }
+
+    .precio {
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .a1 { /* Los bordes de a1-b1-c1/a2-b2-c2/a3-b3-c3 son los bordes aplicables para cuadrículas de 2x2 en adelante (en 2x2 se usan solo a y c). */
+        border-style: none solid solid none;
+    }
+
+    .b1 {
+        border-style: none solid solid solid;
+    }
+
+    .c1 {
+        border-style: none none solid solid;
+    }
+
+    .a2 {
+        border-style: solid solid solid none;
+    }
+
+    .b2 {
+        border-style: solid solid solid solid;
+    }
+
+    .c2 {
+        border-style: solid none solid solid;
+    }
+
+    .a3 {
+        border-style: solid solid none none;
+    }
+
+    .b3 {
+        border-style: solid solid none solid;
+    }
+
+    .c3 {
+        border-style: solid none none solid;
+    }
+
+    .a4 { /* Los bordes de a4-b4-c4 son bordes para cuadrículas de 1 fila x 2 columnas en adelante. */
+        border-style: none solid none none;
+    }
+
+    .b4 {
+        border-style: none solid none solid;
+    }
+
+    .c4 {
+        border-style: none none none solid;
+    }
+
+    .d1 { /* Los bordes d1-d2-d3 son para cuadrículas de 1 columna x 2 filas en adelante. */
+        border-style: none none solid none;
+    }
+
+    .d2 {
+        border-style: solid none solid none;
+    }
+
+    .d3 {
+        border-style: solid none none none;
+    }
+
+    .d4 { /* Una única fila y una única columna. No hay bordes. */
+        border-style: none none none none;
+    }
+
+
 </style>

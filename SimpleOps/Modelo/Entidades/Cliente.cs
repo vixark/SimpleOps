@@ -4,6 +4,7 @@ using System.Text;
 using static SimpleOps.Global;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Vixark;
 
 
 
@@ -184,6 +185,8 @@ namespace SimpleOps.Modelo {
         public double PorcentajeIVA => PorcentajeIVAPropio ?? Empresa.PorcentajeIVAPredeterminadoEfectivo; // Es solo para fines informativos porque al facturar se debe usar la función Global.ObtenerPorcentajeIVA().
 
         public bool ExentoIVA => PorcentajeIVA == 0; // Es solo para fines informativos porque al facturar se debe usar la función Global.ObtenerPorcentajeIVA().
+
+        public string TipoClienteTexto => TipoCliente.ATexto(); // Se usa principalmente para pasar al procedimiento de generación de representación gráfica de documentos.
 
         #endregion Propiedades Autocalculadas>
 

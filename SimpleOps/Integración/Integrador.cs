@@ -63,7 +63,7 @@ namespace SimpleOps.Integración {
 
         public Integrador() {
 
-            if (!Existe(TipoRuta.Carpeta, Equipo.RutaIntegración, "integración con programas terceros", out string? mensaje,
+            if (!ExisteRuta(TipoElementoRuta.Carpeta, Equipo.RutaIntegración, "integración con programas terceros", out string? mensaje,
                 "No funcionará la facturación electrónica ni la generación de catálogos desde programas terceros")) {
 
                 MostrarError(mensaje);
@@ -129,8 +129,11 @@ namespace SimpleOps.Integración {
 
                     var datosVenta = Deserializar<DatosVenta>(File.ReadAllText(ruta), Serialización.EnumeraciónEnTexto);
                     var mapeador = new Mapper(ConfiguraciónMapeadorVentaIntegraciónInverso);
-                    var venta = mapeador.Map<Venta>(datosVenta);
-                    venta.Líneas.ForEach(lv => lv.Venta = venta); // Necesario porque después de ser leídas por el Automapper no quedan automáticamente enlazadas.
+                    var venta = mapeador.Map<Venta>(datosVenta); // Se debe tener en cuenta que los productos base cargados desde el DTO datosVenta son diferentes objetos para cada producto, así originalmente sean el mismo. Esto significa que, por ejemplo, el cambio en la descripción de un producto base no afectaría los otros productos que tienen ese producto base. Si se necesitara este comportamiento habría que hacer un procesamiento posterior para unificarlos en un solo objeto.
+                    foreach (var l in venta.Líneas) {
+                        l.Venta = venta; // Necesario porque después de ser leídas por el Automapper no quedan automáticamente enlazadas.
+                        if (l.Producto?.TieneBase == false) l.Producto.Base = null; // Necesario porque el Automaper siempre crea el objeto Base.
+                    }
                     venta.ConsecutivoDianAnual = venta.Número - Empresa.PrimerNúmeroFacturaAutorizada + 1;
                     ValidarCliente(venta.Cliente);
                     ProcesarDocumentoCliente(venta, ruta, "factura");
@@ -140,19 +143,27 @@ namespace SimpleOps.Integración {
                     var datosNotaCrédito = Deserializar<DatosVenta>(File.ReadAllText(ruta), Serialización.EnumeraciónEnTexto);
                     var mapeador = new Mapper(ConfiguraciónMapeadorNotaCréditoVentaIntegraciónInverso);
                     var notaCréditoVenta = mapeador.Map<NotaCréditoVenta>(datosNotaCrédito);
-                    notaCréditoVenta.Líneas.ForEach(lv => lv.NotaCréditoVenta = notaCréditoVenta); // Necesario porque después de ser leídas por el Automapper no quedan automáticamente enlazadas.
+                    foreach (var l in notaCréditoVenta.Líneas) {
+                        l.NotaCréditoVenta = notaCréditoVenta; // Necesario porque después de ser leídas por el Automapper no quedan automáticamente enlazadas.
+                        if (l.Producto?.TieneBase == false) l.Producto.Base = null; // Necesario porque el Automaper siempre crea el objeto Base.
+                    }
+                    notaCréditoVenta.ConsecutivoDianAnual = notaCréditoVenta.Número;          
                     ValidarCliente(notaCréditoVenta.Cliente);
                     ProcesarDocumentoCliente(notaCréditoVenta, ruta, "nota crédito");
 
                 } else if (documentoIntegración == DocumentoIntegración.Catálogo) {
 
-                    var datosCotización = Deserializar<DatosCotización>(File.ReadAllText(ruta));
+                    var datosCotización = Deserializar<DatosCotización>(File.ReadAllText(ruta), Serialización.EnumeraciónEnTexto);
                     if (datosCotización == null) throw new Exception("El objeto datosCotización está vacío.");
                     var mapeador = new Mapper(ConfiguraciónMapeadorCotizaciónIntegraciónInverso);
                     var cotización = mapeador.Map<Cotización>(datosCotización);
-                    cotización.Líneas.ForEach(lc => lc.Cotización = cotización); // Necesario porque después de ser leídas por el Automapper no quedan automáticamente enlazadas.
+                    cotización.EstablecerTipo(TipoCotización.Catálogo); // Siempre se debe establecer el tipo después del mapeo para agregue los valores predeterminados de algunas propiedades si no fueron mapeadas y quedaron nulas.
+                    foreach (var l in cotización.Líneas) {
+                        l.Cotización = cotización; // Necesario porque después de ser leídas por el Automapper no quedan automáticamente enlazadas.
+                        if (l.Producto?.TieneBase == false) l.Producto.Base = null; // Necesario porque el Automaper siempre crea el objeto Base.
+                    }
                     ValidarCliente(cotización.Cliente);
-                    if (CrearPdfCatálogo(cotización, out string rutaPdf, tamañoImagenes: datosCotización.TamañoImagenes)) {
+                    if (CrearPdfCatálogo(cotización, out string rutaPdf)) {
                         File.WriteAllText(ObtenerRutaCambiandoExtensión(ruta, "ok"), $"{rutaPdf}");
                     } else {
                         throw new Exception("No se pudo crear el PDF del catálogo.");

@@ -1,0 +1,4 @@
+Autor:
+
+Redactado por {autor} a las {hora}.
+{Fecha=19/04/2021}no-borrar.html

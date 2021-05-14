@@ -24,7 +24,7 @@ namespace SimpleOps.Singleton {
 
 
         #region Patrón Singleton
-        // Tomado de https://csharpindepth.com/Articles/Singleton.
+        // Ver https://csharpindepth.com/Articles/Singleton.
 
         private static readonly Lazy<OpcionesEmpresa> DatosLazy = new Lazy<OpcionesEmpresa>(() => new OpcionesEmpresa());
 
@@ -156,6 +156,8 @@ namespace SimpleOps.Singleton {
 
         public bool GenerarPDFsAdicionalesImpresión { get; set; } = true; // Si es verdadero genera PDFs adicionales de la representación gráfica de los documentos electrónicos usando solo grises y un diseño que no contiene muchos fondos de un solo color. Estos son adecuados para ser impresos en impresoras blanco y negro, pero la generación del PDF adicional hace más lento el proceso de facturación electrónica.
 
+        public int AnchoTotalesFactura { get; set; } = 80; // Con 80 permite acomodar hasta 99 999 999 en los valores de las columnas Subtotal, Total, Consumo, IVA y en los valores de los totales de la factura: Subtotal, IVA, Impuesto Consumo, Descuento y Total. Con 90 permite hasta 999 999 999 sin que el valor quede muy cerca al de las otras columnas, pero se pierde un poco la alineación a la derecha entre los totales de la factura y los números de la última columna. 
+
         #endregion Variables Facturación Electrónica>
 
 
@@ -252,10 +254,138 @@ namespace SimpleOps.Singleton {
         /// </summary>
         public string? EnlaceWebADetalleProducto { get; set; } = null;
 
+        /// <summary>
+        /// Valor calculado a partir de la base de datos cuando se cargan todos los productos. Sirve para optimizar las consultas de productos
+        /// individuales, estimando la probabilidad de que el producto tenga base y por lo tanto se pueda usar un método de lectura de la 
+        /// base de datos optimizado.
+        /// </summary>
+        public double PorcentajeProductosConBase { get; set; } = 1;
+
+        /// <summary>
+        /// Cantidad de filas por página para las páginas extra del catálogo. Las páginas extra son las que no tienen diseño HTML personalizado. 
+        /// Todo el catálogo podría estar compuesto de solo páginas extra si no se desea realizar un diseño HTML propio. Este valor predeterminado
+        /// puede ser ignorado pasando su valor en el archivo de integración.
+        /// </summary>
+        public int CantidadFilasProductosPorPáginaExtraCatálogo { get; set; } = 4;
+
+        /// <summary>
+        /// Cantidad de columnas por página para las páginas extra del catálogo. Las páginas extra son las que no tienen diseño HTML personalizado. 
+        /// Todo el catálogo podría estar compuesto de solo páginas extra si no se desea realizar un diseño HTML propio. Este valor predeterminado
+        /// puede ser ignorado pasando su valor en el archivo de integración.
+        /// </summary>
+        public int CantidadColumnasProductosPorPáginaExtraCatálogo { get; set; } = 2;
+
+        /// <summary>
+        /// Si es 0, las páginas extra se insertan al final del documento. Si es 1, las páginas extra se insertan antes de la última página
+        /// para permitir que esta última página sea la contraportada del catálogo.
+        /// </summary>
+        public int ÍndiceInversoInserciónPáginasExtraCatálogo { get; set; } = 1;
+
+        /// <summary>
+        /// El tamaño al que se dimensionarán las imágenes originales para ser usadas en catálogos y cotizaciones. Entre más grande sea este valor, mejor 
+        /// calidad de imágenes tendrán los documentos gráficos, pero mayor será el tamaño del archivo.
+        /// </summary>
+        public int TamañoImágenesProductosCotizaciones { get; set; } = 200;
+
+        /// <summary>
+        /// El tamaño al que se dimensionarán las imágenes originales para ser usadas en las fichas informativas. Entre más grande sea este valor, mejor 
+        /// calidad de imágenes tendrán los documentos gráficos, pero mayor será el tamaño del archivo.
+        /// </summary>
+        public int TamañoImágenesProductosFichas { get; set; } = 600;
+
+        /// <summary>
+        /// Cantidad de filas por página para las páginas de las cotizaciones.
+        /// </summary>
+        public int CantidadFilasProductosPorPáginaCotización { get; set; } = 10;
+
+        /// <summary>
+        /// Cantidad de columnas por página para las páginas de las cotizaciones.
+        /// </summary>
+        public int CantidadColumnasProductosPorPáginaCotización { get; set; } = 2;
+
         #endregion Variables de Apariencia y Comportamiento>
 
 
-        #region Propiedades Autocalculadas>
+        #region Valores Predeterminados
+
+        /// <summary>
+        /// Se usa esta unidad cuando no se ha establecido su valor. Es necesario manejarla por aparte porque es necesario asignar el valor 
+        /// Unidad.Desconocida a Producto.UnidadEspecífica para que esta no reemplace la unidad del producto base.
+        /// </summary>
+        public Unidad UnidadPredeterminadaProducto = Unidad.Unidad;
+
+        /// <summary>
+        /// Se usa esta unidad cuando no se ha establecido su valor. Es necesario manejarla por aparte porque es necesario asignar el valor 
+        /// Unidad.Desconocida a Producto.UnidadEmpaqueEspecífica para que esta no reemplace la unidad de empaque en el producto base.
+        /// </summary>
+        public Unidad UnidadEmpaquePredeterminadaProducto = Unidad.Unidad;
+
+        /// <summary>
+        /// Determina si por defecto los productos son o no excluídos de IVA. Se usa este valor cuando no se ha establecido su valor. 
+        /// Es necesario manejarlo por aparte porque es necesario asignar el valor null a Producto.ExcluídoIVA para que este no reemplace 
+        /// el ExcluídoIVA del producto base.
+        /// </summary>
+        public bool ExcluídoIVAPredeterminadoProducto = false;
+
+        /// <summary>
+        /// Determina si por defecto los productos son o no físicos. Un producto físico es del que se puede mantener un inventario. Se usa este valor 
+        /// cuando no se ha establecido su valor. Es necesario manejarlo por aparte porque es necesario asignar el valor null a Producto.Físico 
+        /// para que este no reemplace el Físico del producto base.
+        /// </summary>
+        public bool FísicoPredeterminadoProducto = true;
+
+        /// <summary>
+        /// Al habilitar los productos base la tabla productos se divide en dos tablas: Productos y ProductosBase. Esto permite que algunos productos 
+        /// que solo difieran en ciertos atributos menores (talla, color, etc) puedan compartir un producto base y tomar de este los valores de algunas 
+        /// de sus propiedades comunes (marca, descripción, etc). Así se facilita el mantenimiento de los datos porque en caso de requerir un cambio 
+        /// solo se tendría que hacer en el producto base, pero reduce un poco el rendimiento de las consultas de productos a la base de datos. 
+        /// Si se identifican problemas de rendimiento y para el caso de uso particular no se necesitan los productos base, se se puede establecer 
+        /// este valor en falso. Después, en caso de necesitar la funcionalidad de productos base, se puede establecer en verdadero en cualquier momento.
+        /// Esta variable no afecta la estructura de la base de datos, solo afecta la manera en la que se hacen las consultas a ella y permite realizar 
+        /// algunas validaciones adicionales durante la ejecución.
+        /// </summary>
+        public bool HabilitarProductosBase = true;
+
+        /// <summary>
+        /// Si está habilitado el uso de los productos base y específicos y este valor es verdadero, se permitirá la asignación de atributos que no 
+        /// estén en la tabla AtributosProductos a los productos específicos. Si este valor es falso y se intenta agregar un atributo que no está en
+        /// la tabla AtributosProductos, el procedimiento fallará. Incluso si este valor es verdadero en la interfaz de usuario se sugerirá al 
+        /// usuario a no usar atributos libres, pero se le permite hacerlo. Si este valor está en falso, no estará disponible la función en la 
+        /// interfaz de usuario.
+        /// </summary>
+        public bool PermitirAtributosProductosLibres = true;
+
+        /// <summary>
+        /// Los atributos de estos tipos se resumen usando la palabra 'a' si están consecutivos.
+        /// </summary>
+        public List<string> TiposAtributosSecuenciales = new List<string> { "Talla Numérica", "Talla Alfabética", "Copa" };
+
+        /// <summary>
+        /// Los atributos de este tipo podrán contener finalización en ,5 o .5 para obtener tallas intermedias a las enteras y estas 
+        /// serán consideradas correctamente en la secuencia al igual que también lo serán los números enteros entre ellas. Por ejemplo,
+        /// si existen estos atributos de tipo Talla Numérica: 11, 11.5, 12, 12.5, 13, 13.5 y 14. Los siguientes grupos de atributos se resumirán
+        /// correctamente a rango completo: 12, 13, 14 => 12 a 14 y 12, 12.5, 13, 13.5, 14 => 12 a 14.
+        /// </summary>
+        public string NombreTipoAtributoTallaNumérica = "Talla Numérica";
+
+        /// <summary>
+        /// En los rangos en los que se permite el paso doble en la secuencia de atributos de talla numérica, el rango se considerará completo
+        /// incluso si salta 2 valores, así: 38, 40, 42, 44 => 38 a 44.
+        /// </summary>
+        public Dictionary<string, string> RangosDoblePasoEnSecuenciaTallaNumérica = new Dictionary<string, string> { { "Talla 0", "Talla 80" } }; // Si está el rango de Talla 0 a Talla 80, se permite doble paso en todas las tallas.
+
+        /// <summary>
+        /// Entre estos rangos las tallas númericas contienen tallas medias. Esta información es necesaria para permitir secuencias con pasos hasta de
+        /// a 2 en estos rangos o hasta de a 4 si también se está en un <see cref="RangosDoblePasoEnSecuenciaTallaNumérica"/>. 
+        /// Se establecen los rangos desde las tallas medias iniciales y finales de cada rango.
+        /// </summary>
+        public Dictionary<string, string> RangosTallasMediasNuméricas = new Dictionary<string, string> { { "Talla 0.5", "Talla 14.5" },
+            { "Talla 33.5", "Talla 44.5" } };
+
+        #endregion Valores Predeterminados>
+
+
+        #region Propiedades Autocalculadas
 
         [JsonIgnore]
         public string? DirecciónUbicaciónEfectiva => DirecciónUbicación ?? DirecciónFacturación;

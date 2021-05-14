@@ -35,6 +35,7 @@
     <div id="toc">
       <ul>
         <li class="table"><a href="#Aplicaciones">Aplicaciones</a></li>
+        <li class="table"><a href="#AtributosProductos">AtributosProductos</a></li>
         <li class="table"><a href="#Bloqueos">Bloqueos</a></li>
         <li class="table"><a href="#Campa%C3%B1as">Campañas</a></li>
         <li class="table"><a href="#Categor%C3%ADas">Categorías</a></li>
@@ -49,6 +50,7 @@
         <li class="table"><a href="#InformesPagos">InformesPagos</a></li>
         <li class="table"><a href="#InventariosConsignaci%C3%B3n">InventariosConsignación</a></li>
         <li class="table"><a href="#L%C3%ADneasCompras">LíneasCompras</a></li>
+        <li class="table"><a href="#L%C3%ADneasCotizaciones">LíneasCotizaciones</a></li>
         <li class="table"><a href="#L%C3%ADneasNegocio">LíneasNegocio</a></li>
         <li class="table"><a href="#L%C3%ADneasNotasCr%C3%A9ditoCompra">LíneasNotasCréditoCompra</a></li>
         <li class="table"><a href="#L%C3%ADneasNotasCr%C3%A9ditoVenta">LíneasNotasCréditoVenta</a></li>
@@ -73,6 +75,7 @@
         <li class="table"><a href="#PreciosClientes">PreciosClientes</a></li>
         <li class="table"><a href="#PreciosProveedores">PreciosProveedores</a></li>
         <li class="table"><a href="#Productos">Productos</a></li>
+        <li class="table"><a href="#ProductosBase">ProductosBase</a></li>
         <li class="table"><a href="#Proveedores">Proveedores</a></li>
         <li class="table"><a href="#RecibosCaja">RecibosCaja</a></li>
         <li class="table"><a href="#ReferenciasClientes">ReferenciasClientes</a></li>
@@ -82,6 +85,7 @@
         <li class="table"><a href="#RolesUsuarios">RolesUsuarios</a></li>
         <li class="table"><a href="#Sedes">Sedes</a></li>
         <li class="table"><a href="#Subcategor%C3%ADas">Subcategorías</a></li>
+        <li class="table"><a href="#TiposAtributosProductos">TiposAtributosProductos</a></li>
         <li class="table"><a href="#Usuarios">Usuarios</a></li>
         <li class="table"><a href="#Ventas">Ventas</a></li>
       </ul>
@@ -100,19 +104,19 @@
         <tbody>
           <tr>
             <td class="type">Database</td>
-            <td class="type">D:\Programas\SimpleOps\Datos.db</td>
+            <td class="type">D:\Programas\SimpleOps\Datos\Datos.db</td>
           </tr>
           <tr>
             <td class="type">ServerVersion</td>
-            <td class="type">3.30.1</td>
+            <td class="type">3.32.1</td>
           </tr>
           <tr>
             <td class="type">DatabaseSize</td>
-            <td class="type">18,527 MB</td>
+            <td class="type">772 KB</td>
           </tr>
           <tr>
             <td class="type">Created</td>
-            <td class="type">17/03/2020 3:34</td>
+            <td class="type">30/04/2021 2:19 AM</td>
           </tr>
         </tbody>
       </table>
@@ -169,6 +173,68 @@
             <td class="null">No</td>
             <td>
             </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="AtributosProductos"><a href="#toc" class="tocref">⇧</a>Table AtributosProductos</h2><div style="margin-bottom:20px">Cuando se usan , los atributos sirven para diferenciar productos que comparten el mismo producto base entre si.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_AtributosProductos"></span>ID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraCreación<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Nombre<td></td><td>50</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>TipoID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag" title="FK_AtributosProductos_0_0">R:  <a href="#TiposAtributosProductos">TiposAtributosProductos</a>.ID</span></td>
           </tr>
         </tbody>
       </table>
@@ -675,7 +741,7 @@
             <td><span class="flag" title="FK_Cobros_0_0">R:  <a href="#Clientes">Clientes</a>.ID</span></td>
           </tr>
           <tr>
-            <th>NúmerosFacturas<td>Prefijo + número de las facuras de ventas que fueron cobradas.</td><td>1000</td></th>
+            <th>NúmerosFacturas<td>Prefijo + número de las facturas de ventas que fueron cobradas.</td><td>1000</td></th>
             <td class="type">text</td>
             <td class="null">No</td>
             <td>
@@ -850,6 +916,13 @@
             </td>
           </tr>
           <tr>
+            <th>Cude<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
             <th>ProveedorID<td></td><td></td></th>
             <td class="type">bigint</td>
             <td class="null">No</td>
@@ -924,7 +997,7 @@
             </td>
           </tr>
           <tr>
-            <th>Abono<td>El valor del comprobante que se usó para abonar al saldo a favor de la entidad económica. Si es negativo es el valor tomado del saldo pendiente de la entidad económica que se sumó al movimiento de dinero para cancelar las facturas.</td><td></td></th>
+            <th>Abono<td>El valor del comprobante que se usó para abonar al saldo a favor de la entidad económica. Si es negativo es la parte del saldo pendiente de la entidad económica que se sumó al movimiento de dinero para cancelar las facturas.</td><td></td></th>
             <td class="type">real (53, 0)</td>
             <td class="null">No</td>
             <td>
@@ -1147,7 +1220,7 @@
       </table>
     </div>
     <div class="table">
-      <h2 id="Cotizaciones"><a href="#toc" class="tocref">⇧</a>Table Cotizaciones</h2><div style="margin-bottom:20px">Precio dado a cliente. Se diferencia de PrecioCliente en que la tabla Cotizaciones es un registro histórico mientras que la tabla PreciosClientes tiene solo los últimos precios.</div>
+      <h2 id="Cotizaciones"><a href="#toc" class="tocref">⇧</a>Table Cotizaciones</h2><div style="margin-bottom:20px">Ofrecimiento de precios de venta de varios productos a un cliente.</div>
       <table>
         <thead>
           <tr>
@@ -1179,20 +1252,14 @@
             </td>
           </tr>
           <tr>
-            <th>ProductoID<td></td><td></td></th>
-            <td class="type">bigint</td>
-            <td class="null">No</td>
-            <td><span class="flag" title="FK_Cotizaciones_0_0">R:  <a href="#Productos">Productos</a>.ID</span></td>
-          </tr>
-          <tr>
             <th>ClienteID<td></td><td></td></th>
             <td class="type">bigint</td>
             <td class="null">No</td>
-            <td><span class="flag" title="FK_Cotizaciones_1_0">R:  <a href="#Clientes">Clientes</a>.ID</span></td>
+            <td><span class="flag" title="FK_Cotizaciones_0_0">R:  <a href="#Clientes">Clientes</a>.ID</span></td>
           </tr>
           <tr>
-            <th>Precio<td></td><td></td></th>
-            <td class="type">real (53, 0)</td>
+            <th>Tipo<td>Cotización o Catálogo. Al usar Catálogo, permite registrar cuándo se le envió el catálogo a un cliente. En estos casos             puede ser vacío.</td><td></td></th>
+            <td class="type">bigint</td>
             <td class="null">No</td>
             <td>
             </td>
@@ -1385,6 +1452,40 @@
           </tr>
           <tr>
             <th>CostoUnitario<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="LíneasCotizaciones"><a href="#toc" class="tocref">⇧</a>Table LíneasCotizaciones</h2><div style="margin-bottom:20px">Precio dado a cliente. Se diferencia de PrecioCliente en que la tabla Cotizaciones es un registro histórico mientras que la tabla PreciosClientes tiene solo los últimos precios.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_LíneasCotizaciones_1"></span>ProductoID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_LíneasCotizaciones_0_0">R:  <a href="#Productos">Productos</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_LíneasCotizaciones_1"></span>CotizaciónID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_LíneasCotizaciones_1_0">R:  <a href="#Cotizaciones">Cotizaciones</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>Precio<td></td><td></td></th>
             <td class="type">real (53, 0)</td>
             <td class="null">No</td>
             <td>
@@ -2567,6 +2668,13 @@
             </td>
           </tr>
           <tr>
+            <th>Cude<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
             <th>ProveedorID<td></td><td></td></th>
             <td class="type">bigint</td>
             <td class="null">No</td>
@@ -2582,7 +2690,8 @@
             <th>Razón<td>DevoluciónParcial = 1, AnulaciónFactura = 2, Descuento = 3, AjustePrecio = 4, Otra = 5.</td><td></td></th>
             <td class="type">bigint</td>
             <td class="null">No</td>
-            <td><span class="flag">DEFAULT 0</span></td>
+            <td>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -2725,6 +2834,13 @@
             </td>
           </tr>
           <tr>
+            <th>Cude<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
             <th>ClienteID<td></td><td></td></th>
             <td class="type">bigint</td>
             <td class="null">No</td>
@@ -2740,7 +2856,8 @@
             <th>Razón<td>DevoluciónParcial = 1, AnulaciónFactura = 2, Descuento = 3, AjustePrecio = 4, Otra = 5.</td><td></td></th>
             <td class="type">bigint</td>
             <td class="null">No</td>
-            <td><span class="flag">DEFAULT 0</span></td>
+            <td>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -2883,6 +3000,13 @@
             </td>
           </tr>
           <tr>
+            <th>Cude<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
             <th>ProveedorID<td></td><td></td></th>
             <td class="type">bigint</td>
             <td class="null">No</td>
@@ -2898,7 +3022,8 @@
             <th>Razón<td>Intereses = 1, Gastos = 2, AjustePrecio = 3, Otra = 4.</td><td></td></th>
             <td class="type">bigint</td>
             <td class="null">No</td>
-            <td><span class="flag">DEFAULT 0</span></td>
+            <td>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -3041,6 +3166,13 @@
             </td>
           </tr>
           <tr>
+            <th>Cude<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
             <th>ClienteID<td></td><td></td></th>
             <td class="type">bigint</td>
             <td class="null">No</td>
@@ -3056,7 +3188,8 @@
             <th>Razón<td>Intereses = 1, Gastos = 2, AjustePrecio = 3, Otra = 4.</td><td></td></th>
             <td class="type">bigint</td>
             <td class="null">No</td>
-            <td><span class="flag">DEFAULT 0</span></td>
+            <td>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -3369,7 +3502,7 @@
       </table>
     </div>
     <div class="table">
-      <h2 id="Productos"><a href="#toc" class="tocref">⇧</a>Table Productos</h2><div style="margin-bottom:20px">Producto o servicio que la empresa vende.</div>
+      <h2 id="Productos"><a href="#toc" class="tocref">⇧</a>Table Productos</h2><div style="margin-bottom:20px">Producto o servicio que la empresa vende. Si tiene , se le llama Producto Específico.</div>
       <table>
         <thead>
           <tr>
@@ -3415,58 +3548,29 @@
             </td>
           </tr>
           <tr>
-            <th>Referencia<td></td><td>30</td></th>
+            <th>Referencia<td>Identificador único del producto en inventario. También llamado SKU.</td><td>30</td></th>
             <td class="type">text</td>
             <td class="null">No</td>
             <td>
             </td>
           </tr>
           <tr>
-            <th>Unidad<td>La unidad de venta del producto. Se escribe en campo Unidad de la factura. Desconocida = 0, Unidad = 1, Par = 2, Trío = 3, Cuarteto = 4, Quinteto = 5, MediaDocena = 6, Decena = 10,            Docena = 12, DocenaLarga = 13, Quincena = 15, Veintena = 20, DobleDocena = 24, CuartoDeCentena = 25, Treintena = 30, Cuarentena = 40,            CuatroDocenas = 48, MediaCentena = 50, OchoDecenas = 80, OchoDocenas = 96, DiezDocenas = 120, Centena = 100, Gruesa = 144,            DobleCentena = 200, VeinteDocenas = 240, TripleCentena = 300, CuatroCentenas = 400, MedioMillar = 500, Millar = 1000, DobleMillar = 2000,            TripleMillar = 3000, CuatroMillares = 4000, Miríada = 10000, Millón = 1000000, Millardo = 1000000000.</td><td></td></th>
+            <th>BaseID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_Productos_5_0">R:  <a href="#ProductosBase">ProductosBase</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>TieneBase<td>Permite identificar si un producto es independiente de los otros o tiene un producto base en común con otros mediante el cual comparten            características.</td><td></td></th>
             <td class="type">bigint</td>
             <td class="null">No</td>
             <td>
             </td>
           </tr>
           <tr>
-            <th>UnidadEmpaque<td>Permite ajustar los pedidos a los proveedores para que se hagan en unidades de empaque. Desconocida = 0, Unidad = 1, Par = 2, Trío = 3, Cuarteto = 4, Quinteto = 5, MediaDocena = 6, Decena = 10,            Docena = 12, DocenaLarga = 13, Quincena = 15, Veintena = 20, DobleDocena = 24, CuartoDeCentena = 25, Treintena = 30, Cuarentena = 40,            CuatroDocenas = 48, MediaCentena = 50, OchoDecenas = 80, OchoDocenas = 96, DiezDocenas = 120, Centena = 100, Gruesa = 144,            DobleCentena = 200, VeinteDocenas = 240, TripleCentena = 300, CuatroCentenas = 400, MedioMillar = 500, Millar = 1000, DobleMillar = 2000,            TripleMillar = 3000, CuatroMillares = 4000, Miríada = 10000, Millón = 1000000, Millardo = 1000000000.</td><td></td></th>
-            <td class="type">bigint</td>
-            <td class="null">No</td>
-            <td>
-            </td>
-          </tr>
-          <tr>
-            <th>PesoUnidadEmpaque<td>En kg. Se usa porque es unidad básica del sistema internacional.</td><td></td></th>
-            <td class="type">real (53, 0)</td>
-            <td class="null">Sí</td>
-            <td>
-            </td>
-          </tr>
-          <tr>
-            <th>DimensiónUnidadEmpaque_Alto<td></td><td></td></th>
-            <td class="type">real (53, 0)</td>
-            <td class="null">Sí</td>
-            <td>
-            </td>
-          </tr>
-          <tr>
-            <th>DimensiónUnidadEmpaque_Ancho<td></td><td></td></th>
-            <td class="type">real (53, 0)</td>
-            <td class="null">Sí</td>
-            <td>
-            </td>
-          </tr>
-          <tr>
-            <th>DimensiónUnidadEmpaque_Largo<td></td><td></td></th>
-            <td class="type">real (53, 0)</td>
-            <td class="null">Sí</td>
-            <td>
-            </td>
-          </tr>
-          <tr>
-            <th>Descripción<td></td><td>200</td></th>
+            <th>Atributos<td>que diferencian productos que comparten el mismo producto base. Por ejemplo, puede tener atributos Talla XL             y Verde. Los atributos se agregan al final de la descripción del producto base para formar la descripción del producto. Preferiblemente            no se debe modificar este objeto directamente, si no hacerlo mediante  y             para evitar duplicados y mantener estandarizados los valores mediante el uso            de los valores en la tabla AtributosProductos. No confundir con , las características pueden ser compartidas            por los productos que tienen el mismo producto base.</td><td>500</td></th>
             <td class="type">text</td>
-            <td class="null">Sí</td>
+            <td class="null">No</td>
             <td>
             </td>
           </tr>
@@ -3499,14 +3603,302 @@
             </td>
           </tr>
           <tr>
-            <th>Físico<td>Si es verdadero el producto existe en el mundo físico. Si es falso no maneja inventario como en el caso de de los servicios y productos virtuales.</td><td></td></th>
+            <th>CostoUnitario<td>El costo de compra por unidad y gastos asociados a su producción y obtención. Incluye costo de transporte. Si es nulo es desconocido.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>UbicaciónAlmacén<td>Texto que describe su ubicación en el almacén. Por ejemplo, A5-E3-S2 se puede usar para describir almacén 5, estantería 3 y sección 2.</td><td>30</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ProductosAsociados<td>Referencias de otros productos asociados, similares o recomendados alternativos al producto. Permite varias funciones en implementaciones             personalizadas.</td><td>500</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>UnidadEspecífica<td></td><td></td></th>
             <td class="type">bigint</td>
             <td class="null">No</td>
             <td>
             </td>
           </tr>
           <tr>
-            <th>CostoUnitario<td>El costo de compra por unidad y gastos asociados a su producción y obtención. Incluye costo de transporte. Si es nulo es desconocido.</td><td></td></th>
+            <th>UnidadEmpaqueEspecífica<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>PesoUnidadEmpaqueEspecífica<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>DimensiónUnidadEmpaqueEspecífica_Alto<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>DimensiónUnidadEmpaqueEspecífica_Ancho<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>DimensiónUnidadEmpaqueEspecífica_Largo<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>SubcategoríaEspecíficaID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_Productos_0_0">R:  <a href="#Subcategor%C3%ADas">Subcategorías</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>LíneaNegocioEspecíficaID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_Productos_4_0">R:  <a href="#L%C3%ADneasNegocio">LíneasNegocio</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>MarcaEspecíficaID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_Productos_3_0">R:  <a href="#Marcas">Marcas</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>MaterialEspecíficoID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_Productos_2_0">R:  <a href="#Materiales">Materiales</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>AplicaciónEspecíficaID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_Productos_6_0">R:  <a href="#Aplicaciones">Aplicaciones</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>FísicoEspecífico<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>PorcentajeIVAPropioEspecífico<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ExcluídoIVAEspecífico<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>PorcentajeImpuestoConsumoPropioEspecífico<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ImpuestoConsumoUnitarioPropioEspecífico<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>TipoImpuestoConsumoPropioEspecífico<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ConceptoRetenciónPropioEspecífico<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>PrioridadWebPropiaEspecífica<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ProveedorPreferidoEspecíficoID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_Productos_1_0">R:  <a href="#Proveedores">Proveedores</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>PorcentajeAdicionalGananciaPropioEspecífico<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>DescripciónEspecífica<td></td><td>200</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CaracterísticasEspecíficas<td></td><td>2000</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ArchivoImagenEspecífica<td></td><td>50</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ArchivoInformaciónEspecífica<td></td><td>50</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="ProductosBase"><a href="#toc" class="tocref">⇧</a>Table ProductosBase</h2><div style="margin-bottom:20px">Varias entidades de tipo  pueden contener características en común cómo             la marca, el material, especificaciones técnicas, etc. A estos productos se les asigna un  común y             estas características se manejan centralizadas en este producto base. Esto evita errores de escritura y la repetición de la información            en la tabla Productos. Los atributos en los que los productos que comparten el mismo producto base difieran            se manejan como una o varias columnas adicionales en la tabla producto (ver comentario en clase Producto).</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_ProductosBase"></span>ID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraCreación<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Referencia<td></td><td>30</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ProductosBaseAsociados<td>Referencias de otros productos base asociados, similares o recomendados alternativos. Permite varias funciones en implementaciones             personalizadas. Es una propiedad equivalente a Producto.ProductosAsociados, pero a nivel de productos base.</td><td>500</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Descripción<td></td><td>200</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Unidad<td>La unidad de venta del producto. Se escribe en campo Unidad de la factura. Desconocida = 0, Unidad = 1, Par = 2, Trío = 3, Cuarteto = 4, Quinteto = 5, MediaDocena = 6, Decena = 10,            Docena = 12, DocenaLarga = 13, Quincena = 15, Veintena = 20, DobleDocena = 24, CuartoDeCentena = 25, Treintena = 30, Cuarentena = 40,            CuatroDocenas = 48, MediaCentena = 50, OchoDecenas = 80, OchoDocenas = 96, DiezDocenas = 120, Centena = 100, Gruesa = 144,            DobleCentena = 200, VeinteDocenas = 240, TripleCentena = 300, CuatroCentenas = 400, MedioMillar = 500, Millar = 1000, DobleMillar = 2000,            TripleMillar = 3000, CuatroMillares = 4000, Miríada = 10000, Millón = 1000000, Millardo = 1000000000.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>UnidadEmpaque<td>Permite ajustar los pedidos a los proveedores para que se hagan en unidades de empaque. Desconocida = 0, Unidad = 1, Par = 2, Trío = 3, Cuarteto = 4, Quinteto = 5, MediaDocena = 6, Decena = 10,            Docena = 12, DocenaLarga = 13, Quincena = 15, Veintena = 20, DobleDocena = 24, CuartoDeCentena = 25, Treintena = 30, Cuarentena = 40,            CuatroDocenas = 48, MediaCentena = 50, OchoDecenas = 80, OchoDocenas = 96, DiezDocenas = 120, Centena = 100, Gruesa = 144,            DobleCentena = 200, VeinteDocenas = 240, TripleCentena = 300, CuatroCentenas = 400, MedioMillar = 500, Millar = 1000, DobleMillar = 2000,            TripleMillar = 3000, CuatroMillares = 4000, Miríada = 10000, Millón = 1000000, Millardo = 1000000000.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>PesoUnidadEmpaque<td>En kg.</td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>DimensiónUnidadEmpaque_Alto<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>DimensiónUnidadEmpaque_Ancho<td></td><td></td></th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>DimensiónUnidadEmpaque_Largo<td></td><td></td></th>
             <td class="type">real (53, 0)</td>
             <td class="null">Sí</td>
             <td>
@@ -3516,49 +3908,36 @@
             <th>SubcategoríaID<td></td><td></td></th>
             <td class="type">bigint</td>
             <td class="null">Sí</td>
-            <td><span class="flag" title="FK_Productos_0_0">R:  <a href="#Subcategor%C3%ADas">Subcategorías</a>.ID</span></td>
+            <td><span class="flag" title="FK_ProductosBase_0_0">R:  <a href="#Subcategor%C3%ADas">Subcategorías</a>.ID</span></td>
           </tr>
           <tr>
             <th>LíneaNegocioID<td></td><td></td></th>
             <td class="type">bigint</td>
             <td class="null">Sí</td>
-            <td><span class="flag" title="FK_Productos_4_0">R:  <a href="#L%C3%ADneasNegocio">LíneasNegocio</a>.ID</span></td>
+            <td><span class="flag" title="FK_ProductosBase_4_0">R:  <a href="#L%C3%ADneasNegocio">LíneasNegocio</a>.ID</span></td>
           </tr>
           <tr>
             <th>MarcaID<td></td><td></td></th>
             <td class="type">bigint</td>
             <td class="null">Sí</td>
-            <td><span class="flag" title="FK_Productos_3_0">R:  <a href="#Marcas">Marcas</a>.ID</span></td>
+            <td><span class="flag" title="FK_ProductosBase_3_0">R:  <a href="#Marcas">Marcas</a>.ID</span></td>
           </tr>
           <tr>
             <th>MaterialID<td></td><td></td></th>
             <td class="type">bigint</td>
             <td class="null">Sí</td>
-            <td><span class="flag" title="FK_Productos_2_0">R:  <a href="#Materiales">Materiales</a>.ID</span></td>
+            <td><span class="flag" title="FK_ProductosBase_2_0">R:  <a href="#Materiales">Materiales</a>.ID</span></td>
           </tr>
           <tr>
             <th>AplicaciónID<td></td><td></td></th>
             <td class="type">bigint</td>
             <td class="null">Sí</td>
-            <td><span class="flag" title="FK_Productos_5_0">R:  <a href="#Aplicaciones">Aplicaciones</a>.ID</span></td>
+            <td><span class="flag" title="FK_ProductosBase_5_0">R:  <a href="#Aplicaciones">Aplicaciones</a>.ID</span></td>
           </tr>
           <tr>
-            <th>PrioridadWebPropia<td>Desconocida = 0, Ninguna = 1, MuyBaja = 10, Baja = 20, Media = 30, Alta = 40, MuyAlta = 50. Si es desconocida se usan las reglas en opciones. Para implementaciones personalizadas. Establece la prioridad de los productos que se sincronizan con el sitio web. Si la prioridad es Ninguna no se sincroniza con el sitio web.</td><td></td></th>
+            <th>Físico<td>Si es verdadero el producto existe en el mundo físico. Si es falso no maneja inventario como en el caso de de los servicios y             productos virtuales.</td><td></td></th>
             <td class="type">bigint</td>
             <td class="null">No</td>
-            <td>
-            </td>
-          </tr>
-          <tr>
-            <th>ProveedorPreferidoID<td></td><td></td></th>
-            <td class="type">bigint</td>
-            <td class="null">Sí</td>
-            <td><span class="flag" title="FK_Productos_1_0">R:  <a href="#Proveedores">Proveedores</a>.ID</span></td>
-          </tr>
-          <tr>
-            <th>UbicaciónAlmacén<td>Texto que describe su ubicación en el almacén. Por ejemplo, A5-E3-S2 se puede usar para describir almacén 5, estantería 3 y sección 2.</td><td>30</td></th>
-            <td class="type">text</td>
-            <td class="null">Sí</td>
             <td>
             </td>
           </tr>
@@ -3598,23 +3977,50 @@
             </td>
           </tr>
           <tr>
-            <th>ProductosAsociados<td>Referencias de otros productos asociados o similares o recomendados alternativos al producto. Son agregados a la cotización cuando se agrega el producto. Además permite otras funciones en implementaciones personalizadas al sincronizar con el sitio web.</td><td>1000</td></th>
-            <td class="type">text</td>
+            <th>ConceptoRetenciónPropio<td>Si es nulo se usa el  de opciones. Es el concepto de retención aplicable             a este producto según la tabla de retención en la fuente. Al establecer este concepto también se está estableciendo si el producto es un             Producto o Servicio, información que se usa en otros lugares, como en el cálculo del mínimo para la retención del IVA.            Desconocido = 0, Generales = 1, TarjetaDébitoOCrédito = 2, AgrícolasOPecuariosSinProcesamiento = 3, AgrícolasOPecuaríosConProcesamiento = 4,             CaféPergaminoOCereza = 5, CombustiblesDerivadosPetróleo = 6, ActivosFijosPersonasNaturales = 7, Vehículos = 8, BienesRaícesVivienda = 9,             BienesRaícesNoVivienda = 10, ServiciosGenerales = 11, EmolumentosEclesiásticos = 12, TransporteCarga = 13,             TransporteNacionalTerrestrePasajeros = 14, TransporteNacionalAéreoOMarítimoPasajeros = 15, ServiciosPorEmpresasTemporales = 16,             ServiciosPorEmpresasVigilanciaYAseo = 16, SaludPorIPS = 17, HotelesYRestaurantes = 18, ArrendamientoBienesMuebles = 19,             ArrendamientoBienesInmuebles = 20, OtrosIngresosTributarios = 21, HonorariosYComisiones = 22, LicenciamientoSoftware = 23, Intereses = 24,             RendimientosFinacierosRentaFija = 25, LoteríasRifasYApuestas = 26, ColocaciónIndependienteJuegosAzar = 27, ContratosConstruccionYUrbanización = 28.</td><td></td></th>
+            <td class="type">bigint</td>
             <td class="null">No</td>
             <td>
             </td>
           </tr>
           <tr>
-            <th>PorcentajeAdicionalGananciaPropio<td>Si es nulo se usan las reglas en opciones. El porcentaje de ganancia que se le sumará al porcentaje de ganancia del cliente para obtener el porcentaje de ganancia total. El porcentaje de ganancia total se le aplica a los costos de los productos para obtener sus precios de venta. Es útil cuando no se quieren usar las listas de precios o cuando el producto no está en ellas.</td><td></td></th>
+            <th>PrioridadWebPropia<td>Desconocida = 0, Ninguna = 1, MuyBaja = 10, Baja = 20, Media = 30, Alta = 40, MuyAlta = 50. Si es desconocida se usan las reglas en opciones.            Para implementaciones personalizadas. Establece la prioridad de los productos que se sincronizan con el sitio web.             Si la prioridad es Ninguna no se sincroniza con el sitio web.</td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ProveedorPreferidoID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_ProductosBase_1_0">R:  <a href="#Proveedores">Proveedores</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>PorcentajeAdicionalGananciaPropio<td>Si es nulo se usan las reglas en opciones. El porcentaje de ganancia que se le sumará al porcentaje de ganancia del cliente para obtener             el porcentaje de ganancia total. El porcentaje de ganancia total se le aplica a los costos de los productos para obtener sus precios             de venta. Es útil cuando no se quieren usar las listas de precios o cuando el producto no está en ellas.</td><td></td></th>
             <td class="type">real (53, 0)</td>
             <td class="null">Sí</td>
             <td>
             </td>
           </tr>
           <tr>
-            <th>ConceptoRetenciónPropio<td>Si es nulo se usa el  de opciones. Es el concepto de retención aplicable             a este producto según la tabla de retención en la fuente. Al establecer este concepto también se está estableciendo si el producto es un             Producto o Servicio, información que se usa en otros lugares, como en el cálculo del mínimo para la retención del IVA.            Desconocido = 0, Generales = 1, TarjetaDébitoOCrédito = 2, AgrícolasOPecuariosSinProcesamiento = 3, AgrícolasOPecuaríosConProcesamiento = 4,             CaféPergaminoOCereza = 5, CombustiblesDerivadosPetróleo = 6, ActivosFijosPersonasNaturales = 7, Vehículos = 8, BienesRaícesVivienda = 9,             BienesRaícesNoVivienda = 10, ServiciosGenerales = 11, EmolumentosEclesiásticos = 12, TransporteCarga = 13,             TransporteNacionalTerrestrePasajeros = 14, TransporteNacionalAéreoOMarítimoPasajeros = 15, ServiciosPorEmpresasTemporales = 16,             ServiciosPorEmpresasVigilanciaYAseo = 16, SaludPorIPS = 17, HotelesYRestaurantes = 18, ArrendamientoBienesMuebles = 19,             ArrendamientoBienesInmuebles = 20, OtrosIngresosTributarios = 21, HonorariosYComisiones = 22, LicenciamientoSoftware = 23, Intereses = 24,             RendimientosFinacierosRentaFija = 25, LoteríasRifasYApuestas = 26, ColocaciónIndependienteJuegosAzar = 27, ContratosConstruccionYUrbanización = 28.</td><td></td></th>
-            <td class="type">bigint</td>
+            <th>Características<td>Lista con las características principales del producto que serán usadas en el catálogo autogenerado, en las fichas técnicas autogeneradas             y en el sitio web. Estas características normalmente son especificaciones adicionales que no se encuentran en la descripción ni en los             atributos, pero podrían mencionarlos para ampliarlos un poco. No deben ser textos muy largos, deben ser poder ser leídos en unos pocos             segundos y obtener una idea más completa que la que provee la descripción sobre el producto. No confundir con los atributos,            las características pueden ser compartidas por todos los productos que compartan el mismo producto base, mientras los atributos son            los que los diferencian entre si.</td><td>2000</td></th>
+            <td class="type">text</td>
             <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ArchivoImagen<td>Nombre del archivo de la imagen del producto. Si no se especifica, el nombre del archivo será la referencia.            La extensión del nombre del archivo de imagen se puede usar u omitir en el valor de esta propiedad.</td><td>50</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ArchivoInformación<td>Nombre del archivo con la información completa del producto. Si no se especifica, el nombre del archivo será la referencia.            El contenido del archivo puede ser un texto plano o HTML y su extensión puede ser .txt, .html o .htm.             La extensión se puede usar u omitir en el valor de esta propiedad, SimpleOps buscará el que coincida.</td><td>50</td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
             <td>
             </td>
           </tr>
@@ -3889,7 +4295,7 @@
             </td>
           </tr>
           <tr>
-            <th>Abono<td>El valor del comprobante que se usó para abonar al saldo a favor de la entidad económica. Si es negativo es el valor tomado del saldo pendiente de la entidad económica que se sumó al movimiento de dinero para cancelar las facturas.</td><td></td></th>
+            <th>Abono<td>El valor del comprobante que se usó para abonar al saldo a favor de la entidad económica. Si es negativo es la parte del saldo pendiente de la entidad económica que se sumó al movimiento de dinero para cancelar las facturas.</td><td></td></th>
             <td class="type">real (53, 0)</td>
             <td class="null">No</td>
             <td>
@@ -4384,6 +4790,62 @@
       </table>
     </div>
     <div class="table">
+      <h2 id="TiposAtributosProductos"><a href="#toc" class="tocref">⇧</a>Table TiposAtributosProductos</h2><div style="margin-bottom:20px">Cuando se usan , los  sirven para diferenciar productos que comparten el mismo producto             base entre si. Estos pueden ser clasificados por  para efectos de presentación al usuario.</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name<th>Documentación</th><th>Largo Máximo</th></th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_TiposAtributosProductos"></span>ID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>CreadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ActualizadorID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraCreación<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Nombre<td></td><td>50</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
       <h2 id="Usuarios"><a href="#toc" class="tocref">⇧</a>Table Usuarios</h2><div style="margin-bottom:20px">Persona autorizada para usar SimpleOps.</div>
       <table>
         <thead>
@@ -4605,6 +5067,13 @@
             </td>
           </tr>
           <tr>
+            <th>Cude<td></td><td></td></th>
+            <td class="type">text</td>
+            <td class="null">Sí</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
             <th>ClienteID<td></td><td></td></th>
             <td class="type">bigint</td>
             <td class="null">No</td>
@@ -4661,6 +5130,6 @@
     </div>
     <div class="footer">
                     Generated by <a href="http://SqlDbDoc.codeplex.com/">DB&gt;doc</a> and <a href="https://github.com/ErikEJ/SqlCeToolbox">SQLite/SQL Server Compact Toolbox</a> on
-                    June 15, 2020, 23:03:27</div>
+                    April 30, 2021, 07:22:48</div>
   </body>
 </html>

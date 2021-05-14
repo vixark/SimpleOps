@@ -14,7 +14,6 @@ using System.Text;
 using static Vixark.General;
 using static SimpleOps.Global;
 using AutoMapper;
-using static SimpleOps.Configuración;
 
 
 
@@ -44,7 +43,7 @@ namespace SimpleOps.DocumentosGráficos {
             where T : class {
 
             static void configurarOpciones(IRazorEngineCompilationOptionsBuilder opciones) 
-                => opciones.AddAssemblyReferenceByName("System.Collections"); // Se intentó agregar para habilitar System.Math opciones.AddAssemblyReferenceByName("System.Runtime.Extensions"); , pero parece que es necesario hacer otros pasos https://stackoverflow.com/questions/19736600/the-name-math-does-not-exist-in-the-current-context. Por el momento mejor se prefiere evitar el uso de System.Math para no agregar ensamblados solo para algo que se puede hacer desde el la clase Datos[]. Esta línea se usó opciones.AddUsing("SimpleOps.DocumentosGráficos"); para intentar agregar este espacio de nombres para evitar el error en compilación de la plantilla si no se usaba, pero resultó que al añadirlo sacaba error de compilación si en la plantilla se usaba también @using SimpleOps.DocumentosGráficos, así que se prefirió mantener el espacio de nombres, pero en la plantilla siempre se deben llamar las clases y métodos de este espacio de nombres con su nombre completo SimpleOps.DocumentosGráficos.[].
+                => opciones.AddAssemblyReferenceByName("System.Collections"); // Se intentó agregar para habilitar System.Math opciones.AddAssemblyReferenceByName("System.Runtime.Extensions"); , pero parece que es necesario hacer otros pasos https://stackoverflow.com/questions/19736600/the-name-math-does-not-exist-in-the-current-context. Por el momento mejor se prefiere evitar el uso de System.Math para no agregar ensamblados solo para algo que se puede hacer desde la clase Datos[]. Si algun objeto referenciado en estos ensamblados no compila, puede ser necesario agregar la directiva @using así el compilador no la exija. Por ejemplo, se usa @using System.Collections.Generic para poder usar List<string> en el código sin que saque error. O se usa @using SimpleOps.DocumentosGráficos para poder llamar a funciones en la clase DatosDocumento.
             return new PlantillaCompilada<T>(motorRazor.Compile<PlantillaBase<T>>(cuerpo, o => configurarOpciones(o)),
                    partes.ToDictionary(k => k.Key, v => motorRazor.Compile<PlantillaBase<T>>(v.Value, o => configurarOpciones(o))));
 
@@ -77,7 +76,7 @@ namespace SimpleOps.DocumentosGráficos {
             if (ModoDesarrolloPlantillas) {
 
                 if (creado) AbrirArchivo(rutaPdf);
-                CopiarPlantillasARutaAplicación(sobreescribir: true); // En el modo desarrollo se intentará mantener sincronizadas las carpetas de plantillas en producción con la última versión de las plantillas en las carpetas de desarrollo. Justo antes del punto de interrupción a continuación es un buen lugar para hacerlo porque después de este el usuario del código puede suspender la ejecución. Esto reduce el rendimiento, pero es algo que solo se presenta en el modo desarrollo. No es completamente necesario actualizar las plantillas para que funcione en modo desarrollo porque estas son leídas directamente de las carpetas de plantillas de desarrollo, pero si es conveniente para mantener solo una versión de las plantillas en el computador y evitar confusiones.
+                CopiarPlantillasARutaAplicación(sobreescribir: true); // En el modo desarrollo se intentará mantener sincronizadas las carpetas de plantillas en producción con la última versión de las plantillas en las carpetas de desarrollo. Justo antes del punto de interrupción a continuación es un buen lugar para hacerlo porque después de este, el usuario del código puede suspender la ejecución. Esto reduce el rendimiento, pero es algo que solo se presenta en el modo desarrollo. No es completamente necesario actualizar las plantillas para que funcione en modo desarrollo porque estas son leídas directamente de las carpetas de plantillas de desarrollo, pero si es conveniente para mantener solo una versión de las plantillas en el computador y evitar confusiones.
                 SuspenderEjecuciónEnModoDesarrollo(); // Al estar detenida la ejecución en este punto se pueden editar los archivos de plantillas CSHTML, guardar el archivo de la plantilla, cerrar el último PDF creado si está abierto (sin cerrar el Foxit Reader, dejando otro PDF cualquier abierto, para evitar error de Foxit Reader cuando se abre desde el código) y reanudar ejecución para generar un nuevo PDF con los cambios realizados.
                 goto otraVez;
 
@@ -93,27 +92,48 @@ namespace SimpleOps.DocumentosGráficos {
         /// </summary>
         /// <param name="cotización"></param>
         /// <param name="rutaPdf"></param>
-        /// <param name="tamañoImagenes">Alto y ancho al que se redimensionarán las imagenes. Si es nulo, no se redimensionan. Redimensionar
-        /// las imagenes ayuda a que el tamaño final del PDF sea más pequeño y además las imagenes son recortadas inteligentemente (ajustadas a su
-        /// contenido) antes de ser redimensionadas, esto permite que todos las imagenes de los productos tengan un tamaño homogéneo independiente
-        /// de como estén en las imagenes originales.</param>
         /// <returns></returns>
-        public static bool CrearPdfCatálogo(Cotización cotización, out string rutaPdf, int? tamañoImagenes) {
+        public static bool CrearPdfCatálogo(Cotización cotización, out string rutaPdf) {
 
-            var rutasPáginasPlantilla = ObtenerRutasPáginasPlantilla(PlantillaDocumento.CatálogoPdf, omitirPrimera: true);
-                
+            if (cotización.Tipo != TipoCotización.Catálogo) 
+                throw new Exception("No se esperaba que la cotización no fuera de tipo Catálogo en CrearPdfCatálogo()");
+
+            var cantidadPáginasExtra = (int)Math.Ceiling((double)cotización.ReferenciasProductosPáginasExtra.Count / 
+                ((cotización.CantidadFilasProductos ?? 1) * (cotización.CantidadColumnasProductos ?? 1))); 
+            var rutasPáginasPlantilla = ObtenerRutasPáginasPlantilla(PlantillaDocumento.CatálogoPdf, omitirPrimera: true, 
+                cantidadPáginasExtra: cantidadPáginasExtra);
+            var cantidadPáginasConPlantillaPropia = rutasPáginasPlantilla.Count - cantidadPáginasExtra;
+            var índiceInversoInserciónPáginasExtra = cotización.ÍndiceInversoInserciónPáginasExtra ?? 0;
+            var númeroInserciónPáginasExtra = cantidadPáginasConPlantillaPropia - índiceInversoInserciónPáginasExtra + 1;
+            var desfaceNúmeroPáginaExtra = cantidadPáginasConPlantillaPropia == 0 ? 1 : 0; // Las páginas del catálogo inician en la página 2, la 1 siempre es omitida porque se considera que es el marco. Por esto, cuando no hay páginas con plantilla propia se debe establecer un desface a las páginas extra de 1 para que inicien en 2.
+
             return CrearPdf(out rutaPdf, motorRazor => {
 
                 var cuerpo = File.ReadAllText(ObtenerRutaPlantilla(PlantillaDocumento.CatálogoPdf));
-                var partes = new Dictionary<string, string>() { {"Marco", File.ReadAllText(ObtenerRutaPlantilla(PlantillaDocumento.MarcoPdf))} };
-                foreach (var kvp in rutasPáginasPlantilla) {
-                    partes.Add($"Página{kvp.Key}", File.ReadAllText(kvp.Value));
+                var partes = new Dictionary<string, string> { {"Marco", File.ReadAllText(ObtenerRutaPlantilla(PlantillaDocumento.MarcoPdf))} };
+              
+                foreach (var kv in rutasPáginasPlantilla) {
+
+                    if (EsPáginaExtra(kv.Value)) {
+                        partes.Add($"Página{kv.Key - índiceInversoInserciónPáginasExtra + desfaceNúmeroPáginaExtra}", // El número de la página extra insertada se reduce por el índice inverso de inserción porque entre más alto este número más hacia el inicio del documento quedarán las páginas extra.
+                            File.ReadAllText(kv.Value).Reemplazar("36923463", $"{kv.Key - cantidadPáginasConPlantillaPropia - 1}")); // Reemplazar directamente en el texto leído el número de la página en la plantilla CatálogoPdfExtra.cshtml (36923463) por el número correcto, no es la solución más elegante, pero funciona razonablemente bien para poder lograr diferenciar en que número de página de CatálogoPdfExtra se encuentra y poder mostrar los productos extra apropiados.
+                    } else {
+                        if (kv.Key <= númeroInserciónPáginasExtra) partes.Add($"Página{kv.Key}", File.ReadAllText(kv.Value));
+                    } 
+
                 }
+
+                foreach (var kv in rutasPáginasPlantilla) {
+                    if (kv.Key > númeroInserciónPáginasExtra && !EsPáginaExtra(kv.Value)) // Inserta las páginas posteriores a la página extra. Normalmente solo es la contraportada cuando índiceInversoInserciónPáginasExtra = 1.
+                        partes.Add($"Página{kv.Key + cantidadPáginasExtra}", File.ReadAllText(kv.Value)); // El número de las páginas posterior a la inserción de las páginas extra se incrementa en la cantidad de páginas extra insertadas.
+                }
+
                 return CompilarPlantilla<DatosCotización>(motorRazor, cuerpo, partes);
 
             }, plantillaCompilada => {
 
-                var datos = cotización.ObtenerDatos(new OpcionesDocumento(), TipoCotización.Catálogo, tamañoImagenes, rutasPáginasPlantilla.Count + 1); // Se suma uno para obtener las páginas porque en el diccionario rutasPáginasPlantilla se está omitiendo la primera página.
+                var datos = cotización.ObtenerDatos(new OpcionesDocumento(), PlantillaDocumento.CatálogoPdf, rutasPáginasPlantilla.Count + 1); // Se suma uno para obtener las páginas porque en el diccionario rutasPáginasPlantilla se está omitiendo la primera página.
+                datos.TítuloPáginasExtra = cantidadPáginasConPlantillaPropia == 0 ? "Productos" : "Otros Productos";
                 var creado = CrearPdf(datos, plantillaCompilada, ObtenerRutaCotizacionesDeHoy(), out string rutaPdfAux); 
                 return (creado, rutaPdfAux);
 
@@ -131,7 +151,7 @@ namespace SimpleOps.DocumentosGráficos {
             return CrearPdf(out rutaPdf, motorRazor => {
 
                 var cuerpo = File.ReadAllText(ObtenerRutaPlantilla(PlantillaDocumento.VentaPdf));
-                var partes = new Dictionary<string, string>() {
+                var partes = new Dictionary<string, string> {
                     {"Marco", File.ReadAllText(ObtenerRutaPlantilla(PlantillaDocumento.MarcoPdf))},
                     {"Lista", File.ReadAllText(ObtenerRutaPlantilla(PlantillaDocumento.ListaProductosPdf))},
                 };
@@ -141,7 +161,7 @@ namespace SimpleOps.DocumentosGráficos {
 
                 bool crearPdf(bool modoImpresión, out string rutaPdfAux) {
 
-                    var opciones = new OpcionesDocumento() {
+                    var opciones = new OpcionesDocumento {
                         ModoImpresión = modoImpresión, MostrarInformaciónAdicional = documento.MostrarInformaciónAdicional
                     };
                     var datos = documento switch {
@@ -202,10 +222,10 @@ namespace SimpleOps.DocumentosGráficos {
             var mapeadorEmpresa = new Mapper(ConfiguraciónMapeadorEmpresa);
             datosVenta.Empresa = mapeadorEmpresa.Map<DatosEmpresa>(Empresa);
             datosVenta.Columnas = ObtenerOpcionesColumnas(datosVenta, líneas);
-            datosVenta.LogoBase64 = ObtenerBase64(Path.Combine(ObtenerRutaImagenesPlantillas(),
-                opcionesDocumento.ModoImpresión ? NombreArchivoLogoEmpresaImpresión : NombreArchivoLogoEmpresa), paraHtml: true);
-            datosVenta.CertificadoBase64 = ObtenerBase64(Path.Combine(ObtenerRutaImagenesPlantillas(),
-                opcionesDocumento.ModoImpresión ? NombreArchivoCertificadoEmpresaImpresión : NombreArchivoCertificadoEmpresa), paraHtml: true);
+            datosVenta.LogoBase64 = ObtenerBase64(Path.Combine(ObtenerRutaImágenesPlantillas(),
+                opcionesDocumento.ModoImpresión ? ArchivoLogoEmpresaImpresión : ArchivoLogoEmpresa), paraHtml: true);
+            datosVenta.CertificadoBase64 = ObtenerBase64(Path.Combine(ObtenerRutaImágenesPlantillas(),
+                opcionesDocumento.ModoImpresión ? ArchivoCertificadoEmpresaImpresión : ArchivoCertificadoEmpresa), paraHtml: true);
             datosVenta.TotalPáginas = ObtenerTotalPáginas(datosVenta, líneas);
             datosVenta.ModoImpresión = opcionesDocumento.ModoImpresión;
             datosVenta.MostrarInformaciónAdicional = opcionesDocumento.MostrarInformaciónAdicional;
@@ -289,6 +309,52 @@ namespace SimpleOps.DocumentosGráficos {
             return (int)Math.Ceiling((altoCabezaYLínea + altoCuerpo + altoPie) / datosDocumento.AltoHoja);
 
         } // ObtenerTotalPáginas>
+
+
+        #pragma warning disable CS8524 // Se omite para que no obligue a usar el patrón de descarte _ => porque este oculta la advertencia CS8509 que es muy útil para detectar valores de la enumeración faltantes. No se omite a nivel global porque la desactivaría para los switchs que no tienen enumeraciones, ver https://github.com/dotnet/roslyn/issues/47066.
+        public static int ObtenerTamañoPredeterminadoImágenesProductos(PlantillaDocumento plantillaDocumento) =>
+            plantillaDocumento switch {
+                PlantillaDocumento.VentaPdf => throw new Exception($"No se ha especificado un tamaño de imagen para {plantillaDocumento.ATexto()}"),
+                PlantillaDocumento.ProformaPdf => throw new Exception($"No se ha especificado un tamaño de imagen para {plantillaDocumento.ATexto()}"),
+                PlantillaDocumento.NotaCréditoPdf => throw new Exception($"No se ha especificado un tamaño de imagen para {plantillaDocumento.ATexto()}"),
+                PlantillaDocumento.NotaDébitoPdf => throw new Exception($"No se ha especificado un tamaño de imagen para {plantillaDocumento.ATexto()}"),
+                PlantillaDocumento.CotizaciónPdf => Empresa.TamañoImágenesProductosCotizaciones,
+                PlantillaDocumento.PedidoPdf => throw new Exception($"No se ha especificado un tamaño de imagen para {plantillaDocumento.ATexto()}"),
+                PlantillaDocumento.ComprobanteEgresoPdf => throw new Exception($"No se ha especificado un tamaño de imagen para {plantillaDocumento.ATexto()}"),
+                PlantillaDocumento.CobroPdf => throw new Exception($"No se ha especificado un tamaño de imagen para {plantillaDocumento.ATexto()}"),
+                PlantillaDocumento.RemisiónPdf => throw new Exception($"No se ha especificado un tamaño de imagen para {plantillaDocumento.ATexto()}"),
+                PlantillaDocumento.CatálogoPdf => Empresa.TamañoImágenesProductosCotizaciones,
+                PlantillaDocumento.MarcoPdf => throw new Exception($"No se ha especificado un tamaño de imagen para {plantillaDocumento.ATexto()}"),
+                PlantillaDocumento.FichaInformativaPdf => Empresa.TamañoImágenesProductosFichas,
+                PlantillaDocumento.VentaEmail => throw new Exception($"No se ha especificado un tamaño de imagen para {plantillaDocumento.ATexto()}"),
+                PlantillaDocumento.ProformaEmail => throw new Exception($"No se ha especificado un tamaño de imagen para {plantillaDocumento.ATexto()}"),
+                PlantillaDocumento.NotaCréditoEmail => throw new Exception($"No se ha especificado un tamaño de imagen para {plantillaDocumento.ATexto()}"),
+                PlantillaDocumento.NotaDébitoEmail => throw new Exception($"No se ha especificado un tamaño de imagen para {plantillaDocumento.ATexto()}"),
+                PlantillaDocumento.CotizaciónEmail => Empresa.TamañoImágenesProductosCotizaciones,
+                PlantillaDocumento.PedidoEmail => throw new Exception($"No se ha especificado un tamaño de imagen para {plantillaDocumento.ATexto()}"),
+                PlantillaDocumento.ComprobanteEgresoEmail => throw new Exception($"No se ha especificado un tamaño de imagen para {plantillaDocumento.ATexto()}"),
+                PlantillaDocumento.CobroEmail => throw new Exception($"No se ha especificado un tamaño de imagen para {plantillaDocumento.ATexto()}"),
+                PlantillaDocumento.RemisiónEmail => throw new Exception($"No se ha especificado un tamaño de imagen para {plantillaDocumento.ATexto()}"),
+                PlantillaDocumento.CatálogoEmail => Empresa.TamañoImágenesProductosCotizaciones,
+                PlantillaDocumento.MarcoEmail => throw new Exception($"No se ha especificado un tamaño de imagen para {plantillaDocumento.ATexto()}"),
+                PlantillaDocumento.FichaInformativaEmail => Empresa.TamañoImágenesProductosFichas,
+                PlantillaDocumento.VentaWeb => throw new Exception($"No se ha especificado un tamaño de imagen para {plantillaDocumento.ATexto()}"),
+                PlantillaDocumento.ProformaWeb => throw new Exception($"No se ha especificado un tamaño de imagen para {plantillaDocumento.ATexto()}"),
+                PlantillaDocumento.NotaCréditoWeb => throw new Exception($"No se ha especificado un tamaño de imagen para {plantillaDocumento.ATexto()}"),
+                PlantillaDocumento.NotaDébitoWeb => throw new Exception($"No se ha especificado un tamaño de imagen para {plantillaDocumento.ATexto()}"),
+                PlantillaDocumento.CotizaciónWeb => Empresa.TamañoImágenesProductosCotizaciones,
+                PlantillaDocumento.PedidoWeb => throw new Exception($"No se ha especificado un tamaño de imagen para {plantillaDocumento.ATexto()}"),
+                PlantillaDocumento.ComprobanteEgresoWeb => throw new Exception($"No se ha especificado un tamaño de imagen para {plantillaDocumento.ATexto()}"),
+                PlantillaDocumento.CobroWeb => throw new Exception($"No se ha especificado un tamaño de imagen para {plantillaDocumento.ATexto()}"),
+                PlantillaDocumento.RemisiónWeb => throw new Exception($"No se ha especificado un tamaño de imagen para {plantillaDocumento.ATexto()}"),
+                PlantillaDocumento.CatálogoWeb => Empresa.TamañoImágenesProductosCotizaciones,
+                PlantillaDocumento.MarcoWeb => throw new Exception($"No se ha especificado un tamaño de imagen para {plantillaDocumento.ATexto()}"),
+                PlantillaDocumento.FichaInformativaWeb => Empresa.TamañoImágenesProductosFichas,
+                PlantillaDocumento.ListaProductosPdf => throw new Exception($"No se ha especificado un tamaño de imagen para {plantillaDocumento.ATexto()}"),
+                PlantillaDocumento.ListaProductosWeb => throw new Exception($"No se ha especificado un tamaño de imagen para {plantillaDocumento.ATexto()}"),
+                PlantillaDocumento.ListaProductosEmail => throw new Exception($"No se ha especificado un tamaño de imagen para {plantillaDocumento.ATexto()}"),
+            };
+        #pragma warning restore CS8524
 
 
         #endregion Métodos y Funciones>

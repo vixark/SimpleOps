@@ -14,6 +14,7 @@ using System.IO;
 using RazorEngineCore;
 using SimpleOps.DocumentosGráficos;
 using static SimpleOps.DocumentosGráficos.DocumentosGráficos;
+using AutoMapper;
 
 
 
@@ -22,6 +23,27 @@ namespace SimpleOps {
 
 
     static class Pruebas {
+
+
+        /// <summary>
+        /// Ejecuta algunas pruebas seleccionadas. Se pueden activar o desactivar con comentarios.
+        /// </summary>
+        public static void Ejecutar() {
+
+            // LeerBaseDatosCompleta();
+            // DocumentosElectrónicos(); // Prueba para ensayar todos los procedimientos relacionados con la facturación electrónica. No genera facturas electrónicas, las pruebas para generar facturas electrónicas se realizan con un botón.
+            // ConflictosConcurrencia();
+            // ConsultasVarias();
+            // InserciónEntidadesRelacionadas();
+            // RendimientoConsultasLectura();
+            // GeneraciónCatálogo();
+            // IntegraciónAplicacionesTerceros();
+            // ImágenesEInformaciónProductos();
+            ProductosYProductosBase();
+            AtributosProductos();
+            ConsolidaciónAtributosProductoBase();
+
+        } // Ejecutar>
 
 
         public static void LeerBaseDatosCompleta() {
@@ -65,7 +87,8 @@ namespace SimpleOps {
             var pedidos = ctx.Pedidos.ToList();
             var preciosClientes = ctx.PreciosClientes.ToList();
             var preciosProveedores = ctx.PreciosProveedores.ToList();
-            var productos = ctx.Productos.ToList();
+            var productosBase = ctx.ProductosBase.ToList();
+            var productos = ctx.Productos.Include(p => p.Base).ToList();
             var proveedores = ctx.Proveedores.ToList();
             var recibosCaja = ctx.RecibosCaja.ToList();
             var referenciasClientes = ctx.ReferenciasClientes.ToList();
@@ -82,7 +105,6 @@ namespace SimpleOps {
 
 
         public static void ConflictosConcurrencia() {
-
 
             // Conflicto de Actualización
             using var ctx = new Contexto(TipoContexto.Escritura);
@@ -198,6 +220,236 @@ namespace SimpleOps {
         } // ConsultasVarias>
 
 
+        public static void AtributosProductos() {
+
+            var productoBase = new ProductoBase("CMS") { Descripción = "Camiseta manga corta con cuello", Físico = false };
+            var producto = new Producto("CMSARM", productoBase, 
+                new List<string> { "Amarilla", "Rojo Oscuro", "Talla M", "Cuello Reforzado" }); 
+            if (!producto.AgregarAtributo("Azul")) MostrarError("No se esperaba que no se pudiera eliminar el atributo Azul.");
+            if (producto.EliminarAtributo("Amarillito")) MostrarError("No se esperaba que se pudiera eliminar el atributo amarillito.");
+            if (!producto.AgregarAtributo("talla s")) MostrarError("No se esperaba que no se pudiera agregar el atributo Talla S.");
+            if (producto.AgregarAtributo("Talla s")) MostrarError("No se esperaba que se pudiera agregar el atributo Talla S.");
+            if (!producto.EliminarAtributo("Talla M")) MostrarError("No se esperaba que no se pudiera eliminar el atributo Talla M.");
+            if (!producto.EliminarAtributo("Rojo Oscuro")) MostrarError("No se esperaba que no se pudiera eliminar el atributo Rojo Oscuro.");
+            if (!producto.TieneAtributo("Talla S")) MostrarError("No se esperaba que no tuviera el atributo Talla S.");
+            if (producto.AgregarAtributo("Cuello reforzado")) MostrarError("No se esperaba que se pudiera agregar el atributo Cuello Reforzado.");
+            if (!producto.AgregarAtributo("Cosida a Mano")) MostrarError("No se esperaba que no se pudiera agregar el atributo Cosido a Mano.");
+            if (Producto.ObtenerTipoAtributo("talla 50") != "Talla Numérica")
+                MostrarError("No se esperaba que el tipo atributo de Talla 50 no fuera Talla Numérica.");
+            if (Producto.ObtenerTipoAtributo("talle 50") == "Talla Numérica")
+                MostrarError("No se esperaba que el tipo atributo de Talle 50 fuera Talla Numérica.");
+            producto.Atributos.Add("cuello reforzado"); // Se agrega de esta manera para generar un duplicado de atributo libre.
+            producto.Atributos.Add("Talla S"); // Se agrega de esta manera para generar un duplicado de atributo.
+            if (producto.ObtenerAtributosNoRepetidos().Count == producto.Atributos.Count)
+                MostrarError("No se esperaba que ObtenerAtributos() tuviera la misma cantidad de elementos que Atributos.");
+            if (producto.AgregarAtributo("Cuello de Tortuga", permitirAtributosLibres: false)) 
+                MostrarError("No se esperaba poder agregar el atributo Cuello de Tortuga no permitiendo los atributos libres.");
+
+            var clasificaciónAtributosRepetidos = producto.ClasificarAtributos(permitirRepetidos: true);
+            var clasificaciónAtributosNoRepetidos = producto.ClasificarAtributos(permitirRepetidos: false);
+            if (clasificaciónAtributosNoRepetidos[TipoAtributoProductoLibre].Count 
+                == clasificaciónAtributosRepetidos[TipoAtributoProductoLibre].Count)
+                    MostrarError("No se esperaba que clasificaciónAtributosNoRepetidos y clasificaciónAtributosRepetidos tuvieran la misma cantidad " +
+                                 "de elementos.");
+            if (clasificaciónAtributosNoRepetidos["Talla Alfabética"].Count == clasificaciónAtributosRepetidos["Talla Alfabética"].Count)
+                MostrarError("No se esperaba que clasificaciónANLRepetidos y clasificaciónANLNoRepetidos tuvieran la misma cantidad de elementos.");
+
+            var diccPrueba = new Dictionary<string, int>() { { "a", 1 }, { "b", 2 }, { "c", 3 } };
+            var valorA = diccPrueba.ObtenerValor("A");
+            if (valorA == null) MostrarError("No se esperaba no encontrar el valor de A.");
+            var valorG = diccPrueba.ObtenerValor("G");
+            if (valorG != null) MostrarError("No se esperaba encontrar el valor de G.");
+            var valorA2 = diccPrueba.ObtenerValor("A", ignorarCapitalización: false);
+            if (valorA2 != null) MostrarError("No se esperaba encontrar el valor de A sin ignorar la capitalización.");
+            if (!diccPrueba.ContieneClave("a", ignorarCapitalización: true)) MostrarError("No se esperaba no encontrar el valor de a.");
+            if (diccPrueba.ContieneClave("A", ignorarCapitalización: false)) 
+                MostrarError("No se esperaba encontrar el valor de A sin ignorar la capitalización.");
+            if (diccPrueba.ContieneClave("G", ignorarCapitalización: false)) MostrarError("No se esperaba encontrar el valor de G.");
+
+            var claves = diccPrueba.Keys.ToList();
+            var claveA = claves.ObtenerValorCapitalizaciónCorrecta("A");
+            if (claveA != "a") MostrarError("No se esperaba no encontrar la capitalización a correcta de la clave.");
+
+        } // AtributosProductos>
+
+
+        public static void ConsolidaciónAtributosProductoBase() {
+
+            var b = new ProductoBase("CM");
+            var c = new Cotización(new Cliente("Distribuciones ABC", new Municipio("Bogotá", "Distrito Capital"), TipoCliente.Consumidor));
+            c.Líneas.Add(new LíneaCotización(c, new Producto("1", b, new List<string> { "Azul", "Roja", "Talla L", "Extra Suave" }), 82800) { }); // Azul, Roja, Talla L, Extra Suave 82 800.
+            c.Líneas.Add(new LíneaCotización(c, new Producto("2", b, new List<string> { "Azul", "Talla XL", "Extra Suave" }), 82800) { }); // Azul, Talla XL, Extra Suave 82 800.
+            c.Líneas.Add(new LíneaCotización(c, new Producto("3", b, new List<string> { "Verde", "Talla M", "Extra Suave" }), 82800) { }); // Verde, Talla M, Extra Suave 82 800.
+            c.Líneas.Add(new LíneaCotización(c, new Producto("4", b, new List<string> { "Verde", "Talla L", "Extra Suave" }), 82800) { }); // Verde, Talla L, Extra Suave 82 800.
+            c.Líneas.Add(new LíneaCotización(c, new Producto("5", b, new List<string> { "Azul", "Talla M", "Extra Suave" }), 82800) { }); // Azul, Talla M, Extra Suave 82 800.
+            c.Líneas.Add(new LíneaCotización(c, new Producto("6", b, new List<string> { "Azul", "Talla XXL", "Extra Suave" }), 93500) { }); // Azul, Talla XXL, Extra Suave 93 500.
+            c.Líneas.Add(new LíneaCotización(c, new Producto("7", b, new List<string> { "Azul", "Talla 3XL", "Extra Suave" }), 82800) { }); // Azul, Talla 3XL, Extra Suave 82 800.
+            c.Líneas.Add(new LíneaCotización(c, new Producto("8", b, new List<string> { "Azul", "Talla XS", "Extra Suave" }), 82800) { }); // Azul, Talla XS, Extra Suave 82 800.
+            c.Líneas.Add(new LíneaCotización(c, new Producto("9", b, new List<string> { "Azul", "Talla XXL", "Estándar" }), 65500) { }); // Azul, Talla XXL, Estándar 65 500.
+            c.Líneas.Add(new LíneaCotización(c, new Producto("10", b, new List<string> { "Azul", "Talla L", "Estándar" }), 60000) { }); // Azul, Talla L, Estándar 60 000.
+            c.Líneas.Add(new LíneaCotización(c, new Producto("11", b, new List<string> { "Azul", "Talla M", "Estándar" }), 60000) { }); // Azul, Talla M, Estándar 60 000.
+            c.Líneas.Add(new LíneaCotización(c, new Producto("12", b, new List<string> { "Verde", "Talla M", "Estándar" }), 60000) { }); // Verde, Talla M, Estándar 60 000.
+            c.Líneas.Add(new LíneaCotización(c, new Producto("13", b, new List<string> { "Roja", "Talla M", "Estándar" }), 60000) { }); // Roja, Talla M, Estándar 60 000.
+            c.Líneas.Add(new LíneaCotización(c, new Producto("14", b, new List<string> { "Roja", "Talla M", "Estándar", "Copa C" }), 60000) { }); // Roja, Talla M, Estándar, Copa C 60 000.
+            c.Líneas.Add(new LíneaCotización(c, new Producto("15", b, new List<string> { "Roja", "Talla M", "Estándar", "Copa B" }), 60000) { }); // Roja, Talla M, Estándar, Copa B 60 000.
+            c.Líneas.Add(new LíneaCotización(c, new Producto("16", b, new List<string> { "Roja", "Talla M", "Estándar", "Copa A" }), 60000) { }); // Roja, Talla M, Estándar, Copa A 60 000.
+            c.Líneas.Add(new LíneaCotización(c, new Producto("17", b, new List<string> { "Roja", "Verde", "Talla M", "Estándar", "Copa DD" }), 60000) { }); // Roja, Verde, Talla M, Estándar, Copa DD 60 000.
+
+            var dp = c.ObtenerDatos(new OpcionesDocumento(), PlantillaDocumento.CatálogoPdf).DatosProductos["CM"];
+            if (dp.Atributos[0] != "Azul, Roja, Verde, Azul+Roja y Roja+Verde") 
+                MostrarError("No coincidió el atributo 0 en DatosProductoBase().");
+            if (dp.Atributos[1] != "Copa A a C y DD") MostrarError("No coincidió el atributo 1 en DatosProductoBase().");
+           
+            var cuenta = 0;
+            foreach (var kv in dp.Precios) {
+
+                var atributos = kv.Key;
+                var precio = kv.Value;
+                switch (cuenta) {
+                    case 0:
+                        if (precio != 60000) MostrarError($"No coincidió el precio id {cuenta} en DatosProductoBase().");
+                        if (atributos[0] != "Talla M y L") MostrarError($"No coincidió el atributo 0 precio id {cuenta} en DatosProductoBase().");
+                        if (atributos[1] != "Estándar") MostrarError($"No coincidió el atributo 1 precio id {cuenta} en DatosProductoBase().");
+                        break;
+                    case 1:
+                        if (precio != 82800) MostrarError($"No coincidió el precio id {cuenta} en DatosProductoBase().");
+                        if (atributos[0] != "Talla XS, M a XL y 3XL") MostrarError($"No coincidió el atributo 0 precio id {cuenta} en DatosProductoBase().");
+                        if (atributos[1] != "Extra Suave") MostrarError($"No coincidió el atributo 1 precio id {cuenta} en DatosProductoBase().");
+                        break;
+                    case 2:
+                        if (precio != 65500) MostrarError($"No coincidió el precio id {cuenta} en DatosProductoBase()");
+                        if (atributos[0] != "Talla XXL") MostrarError($"No coincidió el atributo 0 precio id {cuenta} en DatosProductoBase().");
+                        if (atributos[1] != "Estándar") MostrarError($"No coincidió el atributo 1 precio id {cuenta} en DatosProductoBase().");
+                        break;
+                    case 3:
+                        if (precio != 93500) MostrarError($"No coincidió el precio id {cuenta} en DatosProductoBase().");
+                        if (atributos[0] != "Talla XXL") MostrarError($"No coincidió el atributo 0 precio id {cuenta} en DatosProductoBase().");
+                        if (atributos[1] != "Extra Suave") MostrarError($"No coincidió el atributo 1 precio id {cuenta} en DatosProductoBase().");
+                        break;
+                    default:
+                        MostrarError($"No se esperaba un producto id {cuenta} en DatosProductoBase().");
+                        break;
+                }
+                cuenta++;
+
+            }
+
+            var atributos2 = new List<string> { "talla especial   de 40", "tallA especial 40   de 50", "Talla especial de 55" };
+            var atributos2Resumidos = atributos2.ATextoConComas(resumir: true);
+            if (atributos2Resumidos != "talla especial de 40, 40 de 50 y de 55") 
+                MostrarError($"Falló el procedimiento de ATextoConComas(resumir: true) para atributos2Resumidos.");
+
+            var atributos3 = new List<string> { "talla 8", "talla 9", "" };
+            var atributos3Resumidos = atributos3.ATextoConComas(resumir: true);
+            if (atributos3Resumidos != "talla 8, talla 9 y ")
+                MostrarError($"Falló el procedimiento de ATextoConComas(resumir: true) para atributos3Resumidos.");
+
+            var b2 = new ProductoBase("CM");
+            var c2 = new Cotización(new Cliente("Distribuciones ABC", new Municipio("Bogotá", "Distrito Capital"), TipoCliente.Consumidor));
+            c2.Líneas.Add(new LíneaCotización(c, new Producto("1", b2, new List<string> { "Azul", "Talla 12" }), 82800) { });
+            c2.Líneas.Add(new LíneaCotización(c, new Producto("2", b2, new List<string> { "Azul", "Talla 12.5" }), 82800) { });
+            c2.Líneas.Add(new LíneaCotización(c, new Producto("3", b2, new List<string> { "Azul", "Talla 13" }), 82800) { });
+            c2.Líneas.Add(new LíneaCotización(c, new Producto("4", b2, new List<string> { "Azul", "Talla 13.5" }), 82800) { });
+            c2.Líneas.Add(new LíneaCotización(c, new Producto("5", b2, new List<string> { "Azul", "Talla 14" }), 82800) { });
+            c2.Líneas.Add(new LíneaCotización(c, new Producto("6", b2, new List<string> { "Azul", "Talla 16" }), 82800) { }); // Justo para ser considerado secuencia.
+            c2.Líneas.Add(new LíneaCotización(c, new Producto("7", b2, new List<string> { "Verde", "Talla 17" }), 82800) { }); 
+            c2.Líneas.Add(new LíneaCotización(c, new Producto("8", b2, new List<string> { "Azul", "Talla 20" }), 82800) { });
+            c2.Líneas.Add(new LíneaCotización(c, new Producto("9", b2, new List<string> { "Azul", "Talla 21" }), 82800) { });
+            c2.Líneas.Add(new LíneaCotización(c, new Producto("10", b2, new List<string> { "Azul", "Talla 22" }), 82800) { });
+            c2.Líneas.Add(new LíneaCotización(c, new Producto("11", b2, new List<string> { "Azul", "Talla 29" }), 82800) { });
+            c2.Líneas.Add(new LíneaCotización(c, new Producto("12", b2, new List<string> { "Azul", "Talla 30" }), 82800) { });
+            c2.Líneas.Add(new LíneaCotización(c, new Producto("13", b2, new List<string> { "Azul", "Talla 32" }), 82800) { });
+            c2.Líneas.Add(new LíneaCotización(c, new Producto("14", b2, new List<string> { "Azul", "Talla 34" }), 82800) { }); // Justo para ser considerado secuencia.
+            c2.Líneas.Add(new LíneaCotización(c, new Producto("15", b2, new List<string> { "Azul", "Talla 34.5" }), 82800) { });
+            c2.Líneas.Add(new LíneaCotización(c, new Producto("16", b2, new List<string> { "Azul", "Talla 36.5" }), 82800) { }); // Justo para ser considerado secuencia.
+            c2.Líneas.Add(new LíneaCotización(c, new Producto("17", b2, new List<string> { "Azul", "Talla 42" }), 82800) { }); // Justo para no ser considerado secuencia.
+            c2.Líneas.Add(new LíneaCotización(c, new Producto("18", b2, new List<string> { "Azul", "Talla 44" }), 82800) { });
+            c2.Líneas.Add(new LíneaCotización(c, new Producto("19", b2, new List<string> { "Azul", "Talla 44.5" }), 82800) { });
+            c2.Líneas.Add(new LíneaCotización(c, new Producto("20", b2, new List<string> { "Azul", "Talla 47" }), 82800) { }); // Justo para no ser considerado secuencia.
+            c2.Líneas.Add(new LíneaCotización(c, new Producto("21", b2, new List<string> { "Azul", "Talla 50" }), 82800) { });
+            c2.Líneas.Add(new LíneaCotización(c, new Producto("22", b2, new List<string> { "Azul", "Talla 51" }), 82800) { });
+            c2.Líneas.Add(new LíneaCotización(c, new Producto("23", b2, new List<string> { "Azul", "Talla 53" }), 82800) { });
+            var dp2 = c2.ObtenerDatos(new OpcionesDocumento(), PlantillaDocumento.CatálogoPdf).DatosProductos["CM"];
+            if (dp2.Atributos[1] != "Talla 12 a 17, 20 a 22, 29 a 36.5, 42 a 44.5, 47 y 50 a 53")
+                MostrarError($"Falló el procedimiento de ObtenerDatos() para dp2.");
+
+            var b3 = new ProductoBase("CM");
+            var c3 = new Cotización(new Cliente("Distribuciones ABC", new Municipio("Bogotá", "Distrito Capital"), TipoCliente.Consumidor));
+            c3.Líneas.Add(new LíneaCotización(c, new Producto("1", b3, new List<string> { "Azul", "Talla 13.5" }), 82800) { });
+            c3.Líneas.Add(new LíneaCotización(c, new Producto("2", b3, new List<string> { "Azul", "Talla 16" }), 82800) { }); // Justo para no ser considerado secuencia.
+            c3.Líneas.Add(new LíneaCotización(c, new Producto("3", b3, new List<string> { "Verde", "Talla 17" }), 82800) { });
+            c3.Líneas.Add(new LíneaCotización(c, new Producto("4", b3, new List<string> { "Verde", "Talla 18" }), 82800) { });
+            c3.Líneas.Add(new LíneaCotización(c, new Producto("5", b3, new List<string> { "Azul", "Talla 29" }), 82800) { });
+            c3.Líneas.Add(new LíneaCotización(c, new Producto("6", b3, new List<string> { "Azul", "Talla 30" }), 82800) { });
+            c3.Líneas.Add(new LíneaCotización(c, new Producto("7", b3, new List<string> { "Azul", "Talla 31" }), 82800) { });
+            c3.Líneas.Add(new LíneaCotización(c, new Producto("8", b3, new List<string> { "Azul", "Talla 34" }), 82800) { }); // Justo para no ser considerado secuencia.
+            c3.Líneas.Add(new LíneaCotización(c, new Producto("9", b3, new List<string> { "Azul", "Talla 34.5" }), 82800) { });
+            c3.Líneas.Add(new LíneaCotización(c, new Producto("10", b3, new List<string> { "Azul", "Talla 37" }), 82800) { }); // Justo para no ser considerado secuencia.
+            c3.Líneas.Add(new LíneaCotización(c, new Producto("11", b3, new List<string> { "Azul", "Talla 38" }), 82800) { });
+            c3.Líneas.Add(new LíneaCotización(c, new Producto("12", b3, new List<string> { "Azul", "Talla 39" }), 82800) { });
+            c3.Líneas.Add(new LíneaCotización(c, new Producto("13", b3, new List<string> { "Azul", "Talla 42" }), 82800) { }); // Justo para no ser considerado secuencia.
+            c3.Líneas.Add(new LíneaCotización(c, new Producto("14", b3, new List<string> { "Azul", "Talla 43.5" }), 82800) { });
+            c3.Líneas.Add(new LíneaCotización(c, new Producto("15", b3, new List<string> { "Azul", "Talla 45" }), 82800) { }); // Justo para ser considerado secuencia.
+            c3.Líneas.Add(new LíneaCotización(c, new Producto("16", b3, new List<string> { "Azul", "Talla 46" }), 82800) { });
+            var dp3 = c3.ObtenerDatos(new OpcionesDocumento(), PlantillaDocumento.CatálogoPdf).DatosProductos["CM"];
+            if (dp3.Atributos[1] != "Talla 13.5, 16 a 18, 29 a 31, 34, 34.5, 37 a 39 y 42 a 46")
+                MostrarError($"Falló el procedimiento de ObtenerDatos() para dp3.");
+
+            var b4 = new ProductoBase("CM");
+            var c4 = new Cotización(new Cliente("Distribuciones ABC", new Municipio("Bogotá", "Distrito Capital"), TipoCliente.Consumidor));
+            c4.Líneas.Add(new LíneaCotización(c, new Producto("1", b4, new List<string> { "Azul", "Talla 8" }), 82800) { });
+            c4.Líneas.Add(new LíneaCotización(c, new Producto("2", b4, new List<string> { "Azul", "Talla 10" }), 82800) { }); 
+            c4.Líneas.Add(new LíneaCotización(c, new Producto("3", b4, new List<string> { "Verde", "Talla 11" }), 82800) { });
+            c4.Líneas.Add(new LíneaCotización(c, new Producto("4", b4, new List<string> { "Verde", "Talla 13" }), 82800) { });
+            c4.Líneas.Add(new LíneaCotización(c, new Producto("5", b4, new List<string> { "Azul", "Talla 14" }), 82800) { });
+            c4.Líneas.Add(new LíneaCotización(c, new Producto("6", b4, new List<string> { "Azul", "Talla 15" }), 82800) { });
+            c4.Líneas.Add(new LíneaCotización(c, new Producto("7", b4, new List<string> { "Azul", "Talla 31" }), 82800) { });
+            c4.Líneas.Add(new LíneaCotización(c, new Producto("8", b4, new List<string> { "Azul", "Talla 34" }), 82800) { }); 
+            c4.Líneas.Add(new LíneaCotización(c, new Producto("9", b4, new List<string> { "Azul", "Talla 36" }), 82800) { });
+            c4.Líneas.Add(new LíneaCotización(c, new Producto("10", b4, new List<string> { "Azul", "Talla 38" }), 82800) { });
+            c4.Líneas.Add(new LíneaCotización(c, new Producto("11", b4, new List<string> { "Azul", "Talla 42" }), 82800) { });
+            c4.Líneas.Add(new LíneaCotización(c, new Producto("12", b4, new List<string> { "Azul", "Talla 43" }), 82800) { });
+            c4.Líneas.Add(new LíneaCotización(c, new Producto("13", b4, new List<string> { "Azul", "Talla 44" }), 82800) { });
+            c4.Líneas.Add(new LíneaCotización(c, new Producto("14", b4, new List<string> { "Azul", "Talla 46" }), 82800) { });
+
+            Empresa.RangosDoblePasoEnSecuenciaTallaNumérica = new Dictionary<string, string> { { "Talla 30", "Talla 50" } };
+            ÍndicesRangosDoblePasoEnSecuenciaTallaNumérica.Clear();
+            foreach (var rango in Empresa.RangosDoblePasoEnSecuenciaTallaNumérica) {
+                ÍndicesRangosDoblePasoEnSecuenciaTallaNumérica.Add(Producto.ObtenerIDAtributo(rango.Key), Producto.ObtenerIDAtributo(rango.Value));
+            }
+            var dp4 = c4.ObtenerDatos(new OpcionesDocumento(), PlantillaDocumento.CatálogoPdf).DatosProductos["CM"];
+            Empresa.RangosDoblePasoEnSecuenciaTallaNumérica = new Dictionary<string, string> { { "Talla 0", "Talla 80" } }; // Se devuelve al valor predeterminado.
+            ÍndicesRangosDoblePasoEnSecuenciaTallaNumérica.Clear();
+            foreach (var rango in Empresa.RangosDoblePasoEnSecuenciaTallaNumérica) {
+                ÍndicesRangosDoblePasoEnSecuenciaTallaNumérica.Add(Producto.ObtenerIDAtributo(rango.Key), Producto.ObtenerIDAtributo(rango.Value));
+            }
+            if (dp4.Atributos[1] != "Talla 8, 10, 11, 13 a 15, 31, 34 a 38 y 42 a 46")
+                MostrarError($"Falló el procedimiento de ObtenerDatos() para dp4.");
+
+        } // ConsolidaciónAtributosProductoBase>
+
+
+        public static void ImágenesEInformaciónProductos() {
+
+            var ZZM14CEJSO = new ProductoBase("ZZM14CEJSO") { Descripción = "Monitor de Computador Usado" };
+            var ZZM14CEJSOT15 = new Producto("ZZM14CEJSOT15", ZZM14CEJSO, new List<string> { "Talla 15" });
+            _ = ZZM14CEJSOT15.ObtenerInformaciónHtml(codificarImágenes: false, rutaCarpetaImágenes: "https://www.w3schools.com"); // Se puede usar https://www.w3schools.com y https://www.w3schools.com/. Para visualizar el resultado, se puede dar suspender la ejecución, poner el mouse encima de la variable y en la lupa darle clic en Visualizador HTML.
+            _ = ZZM14CEJSOT15.ObtenerInformaciónHtml(codificarImágenes: true); // Las imágenes que se usan en los archivos de información normalmente no son las imágenes de los productos por que estas se agregan a las fichas técnicas y a las páginas web de producto desde otro lugar. Desde la plantilla CSHTML para la ficha técnica y desde el código de la web para la página de la web. Las imágenes a incluir en los archivos de información son auxiliares y se guardan predeterminadamente en SimpleOps/Productos/Información/Imágenes/.
+
+            var TV30EJSO = new Producto("TV30EJSO") { DescripciónBase = "Televisor de Vanguardia", ArchivoInformaciónEspecífica = "zzTV30EJSO" }; // Se establece manualmente el archivo de información solo para probar la funcionalidad de poder establecerlo sin extensión.
+            _ = TV30EJSO.ObtenerInformaciónHtml(codificarImágenes: false);
+
+            var muebleBase = new ProductoBase("MBASE") { ArchivoImagen = "zzEM2EJSO" };
+            var EM2EJSO = new Producto("EM2EJSO", muebleBase, new List<string> { "Café" });
+            var rutaImagenEM2EJSO = EM2EJSO.ObtenerRutaImagen();
+
+            AbrirArchivo(rutaImagenEM2EJSO);
+            AbrirArchivo(Path.Combine(ObtenerRutaInformaciónCompiladosProductos(), @$"{ZZM14CEJSOT15.Referencia}{".html"}"));
+            AbrirArchivo(Path.Combine(ObtenerRutaInformaciónCompiladosProductos(), @$"{TV30EJSO.ArchivoInformaciónEspecífica}{".html"}"));
+
+        } // ImágenesEInformaciónProductos>
+
+
         public static void InserciónEntidadesRelacionadas() {
 
             var milisegundoActual = AhoraUtcAjustado.Millisecond;
@@ -239,6 +491,8 @@ namespace SimpleOps {
             var milisegundoActual = AhoraUtcAjustado.Millisecond;
             using var ctx = new Contexto(TipoContexto.LecturaConRastreo); // Se inicia como contexto de LecturaConRastreo para poder realizar las pruebas con y sin AsNoTracking().
             var ventasPorSubtotal = ctx.Ventas.OrderByDescending(v => v.Subtotal).ToList(); // Una consulta cualquiera para que el contexto se inicie.
+
+            #if true
 
             // Rendimiento 1 Entidad - Probar cada línea en una ejecución de SimpleOps independiente.
             var clienteCompleto = ctx.Clientes.Skip(milisegundoActual).First(); // 76 milisegundos en promedio.
@@ -288,10 +542,10 @@ namespace SimpleOps {
             // Rendimiento 1 Entidad con 1 Hijo>
 
             // Conclusiones
-            // 1. Si se necesita la entidad y sus hijos para ser modificados se debe usar el método normal con Include.
-            // 2. Si se necesita la entidad para ser modificada y a veces sus hijos se pueden cargar la entidad sin Include y usar los métodos CargarLista 
+            // 1. Si se necesita la entidad y sus hijos para ser modificados, se debe usar el método normal (Tracking) con Include.
+            // 2. Si se necesita la entidad para ser modificada y a veces sus hijos, se puede cargar la entidad sin Include y usar los métodos CargarLista 
             //    y CargarPropiedad dentro de un condicional.
-            // 3. Si se necesita la entidad o la entidad y sus hijos para solo lectura se debe usar Include + AsNoTracking.
+            // 3. Si se necesita la entidad o la entidad y sus hijos para solo lectura,  se debe usar Include + AsNoTracking.
             // 4. Si se tienen muchos hijos (más de 3 niveles) se deberá comparar el rendimiento de Include + AsNoTracking con Tipo Anónimo + AsNoTracking 
             //    y consultas por separado similar a como funciona CargarPropiedad y CargarLista pero adaptado a la estructura más compleja.	
             // 5. Agregar segundos AsNoTracking después de Include no cambia el rendimiento. Esto pasa porque AsNoTracking es una configuración 
@@ -300,9 +554,88 @@ namespace SimpleOps {
             //    Ver https://dotnetcultist.com/maximizing-entity-framework-core-query-performance/.
             // Conclusiones>
 
+            #endif
+
+            var productos = ctx.ObtenerProductos();
+            var producto1 = ctx.ObtenerProducto("+");
+            var producto2 = ctx.ObtenerProducto("0..");
+
+            // Conclusiones Producto
+            // 1. Si se necesita el producto y su base para ser modificados, se debe usar el método normal (Tracking) con Include si más del 20% de los productos tienen base. Si no se debe usar el método normal sin include + un condicional para CargarPropiedad.
+            // 2. Si se necesita el producto o el producto y su base para solo lectura, se debe usar Include + AsNoTracking.
+            // Conclusiones Producto>
+
         } // RendimientoConsultasLectura>
 
 
+        public static void ProductosYProductosBase() {
+
+            var milisegundoActual = AhoraUtcAjustado.Millisecond + 3;
+            using var ctx = new Contexto(TipoContexto.LecturaConRastreo); // Se inicia como contexto de LecturaConRastreo para poder realizar las pruebas con y sin AsNoTracking().
+            var ventasPorSubtotal = ctx.Ventas.OrderByDescending(v => v.Subtotal).ToList(); // Una consulta cualquiera para que el contexto se inicie.
+
+            var producto0 = ctx.Productos.Skip(0).First();
+            var productoN = ctx.Productos.Skip(milisegundoActual).First();
+
+            var producto0ConBase = ctx.Productos.Include(p => p.Base).Skip(0).First();
+            var producto1ConBase = ctx.Productos.Include(p => p.Base).Skip(1).First();
+            var producto2ConBase = ctx.Productos.Include(p => p.Base).Skip(2).First();
+            if (producto0ConBase.BaseID == producto1ConBase.BaseID && producto0ConBase.BaseID == producto2ConBase.BaseID && producto0ConBase.Base != null
+                && producto1ConBase.Base != null && producto2ConBase.Base != null) {
+
+                producto1ConBase.Base.Descripción = "pju";
+                if (!producto0ConBase.Descripción.EmpiezaPor("pju")) MostrarError("Error prueba.");
+
+                if (producto2ConBase.DescripciónEspecífica != null) {
+                    if (producto2ConBase.Descripción.EmpiezaPor("pju")) MostrarError("Error prueba.");
+                }
+
+                producto1ConBase.UnidadEspecífica = Unidad.Desconocida;
+                if (producto2ConBase.UnidadEspecífica == Unidad.Desconocida) {
+                    if (producto1ConBase.Unidad != producto2ConBase.Unidad) MostrarError("Error prueba.");
+                }
+
+                producto2ConBase.PorcentajeIVAPropioEspecífico = 0.05;
+                producto1ConBase.Base.PorcentajeIVAPropio = 0.15;
+                if (producto2ConBase.PorcentajeIVA != 0.05) MostrarError("Error prueba.");
+                if (producto0ConBase.PorcentajeIVA != 0.15) MostrarError("Error prueba.");
+
+            }
+
+            var productoNConBase = ctx.Productos.Include(p => p.Base).Skip(milisegundoActual).First();
+            if (productoNConBase.Base != null) {
+                productoNConBase.Base.Descripción = "Descripción del Producto N";
+            } else {
+                productoNConBase.DescripciónEspecífica = "Descripción del Producto N";
+            }
+            if (!productoNConBase.TieneBase && productoNConBase.DescripciónEspecífica != "Descripción del Producto N") MostrarError("Error prueba.");
+
+            #region Modificación Propiedades Base y Específicas
+            var camisetaBase = new ProductoBase("CMS") { ID = 1, Descripción = "Camiseta Manga Corta", PorcentajeIVAPropio = 0.05 };
+            var camisetaXXL = new Producto("CMSAXXL", camisetaBase, new List<string> { "Azul", "Talla XXL" });
+            var sacóExcepción = false;
+            try {
+                camisetaXXL!.PesoUnidadEmpaque = 50;
+                #pragma warning disable CA1031 // No capture tipos de excepción generales.
+            } catch (Exception) {
+                #pragma warning restore CA1031 // No capture tipos de excepción generales.
+                sacóExcepción = true;
+            }
+            if (!sacóExcepción) MostrarError("No se esperaba que la línea camisetaXXL!.PesoUnidadEmpaque = 50; no sacara excepción.");
+            if (camisetaXXL.PesoUnidadEmpaque != null) MostrarError("No se esperaba que camisetaXXL.PesoUnidadEmpaque no fuera nula.");
+            camisetaXXL!.Base!.PesoUnidadEmpaque = 50;
+            if (camisetaXXL.PesoUnidadEmpaque != 50) MostrarError("No se esperaba que camisetaXXL.PesoUnidadEmpaque != 50.");
+            camisetaXXL!.PesoUnidadEmpaqueEspecífica = 55;
+            if (camisetaXXL.PesoUnidadEmpaque != 55) MostrarError("No se esperaba que camisetaXXL.PesoUnidadEmpaque != 55.");
+            #endregion Modificación Propiedades Base y Específicas>
+
+        } // ProductosYProductosBase>
+
+
+        /// <summary>
+        /// Esta prueba se usa cuando se quiere simular el comportamiento de un programa tercero que genera archivos de comunicación .json con SimpleOps
+        /// para el modo de integración de facturación electrónica.
+        /// </summary>
         public static void IntegraciónAplicacionesTerceros() {
 
             var número = Empresa.PróximoNúmeroDocumentoElectrónicoPruebas; // Se almacena en esta variable temporal y después se guardan las opciones para evitar posibles problemas de concurrencia.
@@ -403,17 +736,102 @@ namespace SimpleOps {
             var cliente = new Cliente("Distribuciones ABC", new Municipio("Bogotá", "Distrito Capital"), TipoCliente.Distribuidor) {
                 TipoEntidad = TipoEntidad.Empresa, Dirección = "Calle 80-100 68", Teléfono = "4589843", Identificación = "990986892" };
 
-            var cotización = new Cotización(cliente);
-            cotización.Líneas = new List<LíneaCotización>() { 
-                new LíneaCotización(cotización, new Producto("ZZTV30EJSO") { Descripción = "Televisor Pantalla Plana 30 pulgadas" }, 1200000),
-                new LíneaCotización(cotización, new Producto("ZZVP50EJSO") { Descripción = "Videoproyector Alto Brillo 50 pulgadas" }, 1400000),
-                new LíneaCotización(cotización, new Producto("ZZMP3EJSO") { Descripción = "Mueble para 3 Personas" }, 2000000),
-                new LíneaCotización(cotización, new Producto("ZZM14CEJSO") { Descripción = "Monitor de 14 pulgadas" }, 600000),
-                new LíneaCotización(cotización, new Producto("ZZEM2EJSO") { Descripción = "Escritorio de Madera de 2 m" }, 500000)
+            var CM = new ProductoBase("ZZCM") { Descripción = "Camiseta de Algodón Suave" };
+
+            var cotización = new Cotización(cliente, TipoCotización.Catálogo);
+            cotización.Líneas = new List<LíneaCotización> { 
+                new LíneaCotización(cotización, new Producto("ZZTV30EJSO") { DescripciónBase = "Televisor Pantalla Plana 30 pulgadas" }, 1200000),
+                new LíneaCotización(cotización, new Producto("ZZVP50EJSO") { DescripciónBase = "Videoproyector Alto Brillo 50 pulgadas" }, 1400000),
+                new LíneaCotización(cotización, new Producto("ZZMP3EJSO") { DescripciónBase = "Mueble para 3 Personas" }, 2000000),
+                new LíneaCotización(cotización, new Producto("ZZM14CEJSO") { DescripciónBase = "Monitor de 14 pulgadas" }, 600000),
+                new LíneaCotización(cotización, new Producto("ZZEM2EJSO") { DescripciónBase = "Escritorio de Madera de 2 m" }, 500000),
+                new LíneaCotización(cotización, new Producto("ZZCMAM", CM, new List<string> { "Azul", "Talla M" }) 
+                    { ArchivoImagenEspecífica = "ZZCMA" }, 54000),
+                new LíneaCotización(cotización, new Producto("ZZCMAL", CM, new List<string> { "Azul", "Talla L" }) 
+                    { ArchivoImagenEspecífica = "ZZCMA" }, 54000),
+                new LíneaCotización(cotización, new Producto("ZZCMAXL", CM, new List<string> { "Azul", "Talla XL" }) 
+                    { ArchivoImagenEspecífica = "ZZCMA" }, 54000),
+                new LíneaCotización(cotización, new Producto("ZZCMAXXL", CM, new List<string> { "Azul", "Talla XXL" })
+                    { ArchivoImagenEspecífica = "ZZCMA" }, 64000),
+                new LíneaCotización(cotización, new Producto("ZZCMVS", CM, new List<string> { "Verde", "Talla S" })
+                    { ArchivoImagenEspecífica = "ZZCMV" }, 54000),
+                new LíneaCotización(cotización, new Producto("ZZCMVM", CM, new List<string> { "Verde", "Talla M" }) 
+                    { ArchivoImagenEspecífica = "ZZCMV" }, 54000),
+                new LíneaCotización(cotización, new Producto("ZZCMVXL", CM, new List<string> { "Verde", "Talla XL" }) 
+                    { ArchivoImagenEspecífica = "ZZCMV" }, 54000),
+                new LíneaCotización(cotización, new Producto("ZZCMRL", CM, new List<string> { "Roja", "Talla L" }) 
+                    { ArchivoImagenEspecífica = "ZZCMR" }, 54000),
+                new LíneaCotización(cotización, new Producto("ZZCMRXL", CM, new List<string> { "Roja", "Talla XL" })
+                    { ArchivoImagenEspecífica = "ZZCMR" }, 54000),
+                new LíneaCotización(cotización, new Producto("ZZCMRXXL", CM, new List<string> { "Roja", "Talla XXL" })
+                    { ArchivoImagenEspecífica = "ZZCMR" }, 64000),
             };
-            CrearPdfCatálogo(cotización, out _, tamañoImagenes: 200);
+
+            foreach (var línea in cotización.Líneas) {
+
+                var producto = línea.Producto;
+                if (producto == null) continue;
+                if (producto.TieneBase && producto.Base != null) {
+                    cotización.ReferenciasProductosPáginasExtra.Agregar(producto.Base.Referencia, permitirRepetidos: false);         
+                }
+                cotización.ReferenciasProductosPáginasExtra.Add(producto.Referencia);
+
+            }
+
+            cotización.ÍndiceInversoInserciónPáginasExtra = 1; // Para que deje una página al final para la contraportada.
+
+            CrearPdfCatálogo(cotización, out string ruta);
 
         } // GeneraciónCatálogo>
+
+
+        public static void GeneraciónCatálogoIntegración() {
+
+            var rutaIntegración = "";
+            if (!string.IsNullOrEmpty(Equipo.RutaIntegración)) rutaIntegración = ObtenerRutaCarpeta(Equipo.RutaIntegración, "", crearSiNoExiste: true);
+            var rutaArchivoPrueba = Path.Combine(rutaIntegración, "CT-Prueba.json");
+            if (File.Exists(rutaArchivoPrueba)) {
+
+                OperacionesEspecialesDatos = true; // Necesario para evitar el mensaje de error al escribir Cliente.ContactoFacturas.Email en el mapeo inverso hacia el objeto venta.
+                try {
+
+                    var datosCotización = Deserializar<Integración.DatosCotización>(File.ReadAllText(rutaArchivoPrueba), Serialización.EnumeraciónEnTexto);
+                    if (datosCotización == null) throw new Exception("El objeto datosCotización está vacío.");
+                    var mapeador = new Mapper(ConfiguraciónMapeadorCotizaciónIntegraciónInverso);
+                    var cotización = mapeador.Map<Cotización>(datosCotización);
+                    cotización.EstablecerTipo(TipoCotización.Catálogo); // Siempre se debe establecer el tipo después del mapeo para agregue los valores predeterminados de algunas propiedades si no fueron mapeadas y quedaron nulas.
+                    foreach (var l in cotización.Líneas) {
+                        l.Cotización = cotización; // Necesario porque después de ser leídas por el Automapper no quedan automáticamente enlazadas.
+                        if (l.Producto?.TieneBase == false) l.Producto.Base = null; // Necesario porque el Automaper siempre crea el objeto Base.
+                    }
+                    CrearPdfCatálogo(cotización, out string ruta);
+
+                #pragma warning disable CA1031 // No capture tipos de excepción generales. Se acepta porque se el error se informa al usuario.
+                } catch (Exception ex) {
+                #pragma warning restore CA1031
+
+                    MostrarError(@$"Ocurrió un error creando el catálogo desde el archivo de prueba '{Equipo.RutaIntegración}\CT-Prueba.json'." +
+                                 @$"{DobleLínea}{ex.Message}");
+                } finally {
+                    OperacionesEspecialesDatos = false;
+                }
+  
+            } else { // Si no existe el archivo de prueba, se generará un catálogo con una prueba genérica.
+
+                MostrarInformación(@$"Para crear un catálogo a partir de un archivo JSON de prueba, creálo en '{Equipo.RutaIntegración}\CT-Prueba.json'." +
+                                   @$"{DobleLínea}Se creará un catálogo con datos de prueba.");
+                GeneraciónCatálogo();
+
+            }
+
+        } // GeneraciónCatálogoIntegración>
+
+
+        public static void GeneraciónFichasInformativasIntegración() {
+
+
+
+        } // GeneraciónFichasInformativasIntegración>
 
 
         public static void GeneraciónPdf() {
@@ -421,14 +839,14 @@ namespace SimpleOps {
             // Prueba del Motor de Razor para la Generación de HTML
             var motorRazor = new RazorEngine();
             var cuerpo = @"@{ ClaveMarco = ""Marco""; } <C <h1>@Model.CódigoDocumento</h1> @Incluir(""Lista"", Model) C>";
-            var partes = new Dictionary<string, string>() {
+            var partes = new Dictionary<string, string> {
                 {"Marco", @"<M Encab. @CrearCuerpo() CUFE: @Model.Cude PieP. @Incluir(""Firma"", Model) M>"},
                 {"Lista", @"@{ ClaveMarco = ""MarcoLista""; } <L  1. 2. 3. 4 L>"},
                 {"MarcoLista", "<ML Cliente: <h2>@Model.ClienteNombre</h2> @CrearCuerpo() ML>"},
                 {"Firma", @"<F Atentamente, Vixark F>"},
             };
             var plantillaCompilada = CompilarPlantilla<DatosVenta>(motorRazor, cuerpo, partes);
-            var html = plantillaCompilada.ObtenerHtml(new DatosVenta() { Cude = "AFJ451MN", CódigoDocumento = "123", ClienteNombre = "Ópticas", 
+            var html = plantillaCompilada.ObtenerHtml(new DatosVenta { Cude = "AFJ451MN", CódigoDocumento = "123", ClienteNombre = "Ópticas", 
                 Observación = "" });
             if (html != "<M Encab.  <C <h1>123</h1> <ML Cliente: <h2>Ópticas</h2>  <L  1. 2. 3. 4 L> ML> C> CUFE: AFJ451MN PieP. <F Atentamente, Vixark F> M>") 
                 MostrarError("Falló la generación del HTML para la generación del PDF.");
@@ -789,7 +1207,7 @@ namespace SimpleOps {
             var venta = new Venta(cliente) { DescuentoComercial = 70800, DescuentoCondicionado = 59000 };
             var fracción = 0.8M;
 
-            venta.Líneas = new List<LíneaVenta>() {
+            venta.Líneas = new List<LíneaVenta> {
                 { new LíneaVenta(new Producto("Base para TV"), venta, 3, 300000, 300000M * fracción) },
                 { new LíneaVenta(new Producto("Antena (regalo)"), venta, 1, 100000, 100000M * fracción) { MuestraGratis = true } },
                 { new LíneaVenta(new Producto("TV"), venta, 1, 1400000, 1400000 * fracción) },
@@ -853,24 +1271,33 @@ namespace SimpleOps {
                 Observación = "Una nota informativa."
             };
 
+            var camisetaBase = new ProductoBase("CMS") { ID = 1, Descripción = "Camiseta Manga Corta", PorcentajeIVAPropio = 0.05 };
+
             venta.Líneas = new List<LíneaVenta> {
-                new LíneaVenta(new Producto("AOHV84-225") { Descripción = "Lente de Contacto HV8400 (Indicado para personas zurdas)", Unidad = Unidad.Par }, venta,
-                    cantidad: 5, precio: 12600.06M, costo: 12600 * fracciónCosto),
-                new LíneaVenta(new Producto("BOIVA16") { PorcentajeIVAPropio = 0.16,  Descripción = "16% IVA de Bolsa" }, venta,
+                new LíneaVenta(new Producto("AOHV84-225") { DescripciónBase = "Lente de Contacto HV8400 (Indicado para personas zurdas)",
+                    Unidad = Unidad.Par }, venta, cantidad: 5, precio: 12600.06M, costo: 12600 * fracciónCosto),
+                new LíneaVenta(new Producto("BOIVA16") { PorcentajeIVAPropio = 0.16,  DescripciónBase = "16% IVA de Bolsa" }, venta,
                     cantidad: 1, precio: 187.50M, costo: 187.50M * fracciónCosto ) { MuestraGratis = true },
-                new LíneaVenta(new Producto("PAPA") { Descripción = "Papa Campesina Calidad AAA", PorcentajeIVAPropio = 0.05 }, venta,
+                new LíneaVenta(new Producto("PAPA") { DescripciónBase = "Papa Campesina Calidad AAA", PorcentajeIVAPropio = 0.05 }, venta,
                     cantidad: 20, precio: 1500, costo: 1500 * fracciónCosto),
-                new LíneaVenta(new Producto("YUCA") { Descripción = "Yuca Alta Calidad", PorcentajeIVAPropio = 0.05 }, venta,
+                new LíneaVenta(new Producto("YUCA") { DescripciónBase = "Yuca Alta Calidad", PorcentajeIVAPropio = 0.05 }, venta,
                     cantidad: 10, precio: 2000, costo: 2000 * fracciónCosto),
                 //new LíneaVenta(new Producto("datos celular") { TipoImpuestoConsumoPropio = TipoImpuestoConsumo.TelefoníaCelularYDatos,
                 //    Descripción = "D. datos" }, venta, cantidad: 2, precio: 60000, costo: 60000 * fracciónCosto), // Desactivado porque saca un error atípico que no tienen otros impuestos al consumo. Posiblemente es un error del servidor de la DIAN.
                 new LíneaVenta(new Producto("ALM") { TipoImpuestoConsumoPropio = TipoImpuestoConsumo.ServiciosRestaurante, ExcluídoIVA = true,
-                    Descripción = "Almuerzo Completo con Carne y Ensalada con Yuca Papa" }, venta, cantidad: 3, precio: 25000, costo: 25000 * fracciónCosto),
+                    DescripciónBase = "Almuerzo Completo con Carne y Ensalada con Yuca Papa" }, venta, cantidad: 3, precio: 25000, 
+                    costo: 25000 * fracciónCosto),
                 new LíneaVenta(new Producto("CENA") { TipoImpuestoConsumoPropio = TipoImpuestoConsumo.ServiciosRestaurante, ExcluídoIVA = true,
-                    Descripción = "Cena Completa con Jugo y Postre" }, venta, cantidad: 3, precio: 15000, costo: 15000 * fracciónCosto),
+                    DescripciónBase = "Cena Completa con Jugo y Postre" }, venta, cantidad: 3, precio: 15000, costo: 15000 * fracciónCosto),
                 //new LíneaVenta(new Producto("Bolsa IC Bolsas") { TipoImpuestoConsumoPropio = TipoImpuestoConsumo.BolsasPlásticas,
                 //    Descripción = "Bolsa Empaque", ExcluídoIVA = true }, venta, cantidad: 3, precio: 150, costo: 50 * fracciónCosto )
                 //    { MuestraGratis = true }, // Desactivado porque saca un error relacionado con el CUFE que solo aparece cuando se establece TipoImpuestoConsumo.BolsasPlásticas: Rechazo FAD06: Valor del CUFE no está calculado correctamente.
+                new LíneaVenta(new Producto("CMSRS", camisetaBase, new List<string> { "Roja", "Talla S" }), 
+                    venta, 2, 50990, 40000),
+                new LíneaVenta(new Producto("CMSVL", camisetaBase, new List<string> { "Verde", "Talla L" }) { 
+                    UnidadEspecífica = Unidad.Docena }, venta, 3, 51990, 42000),
+                new LíneaVenta(new Producto("CMSAXXL", camisetaBase, new List<string> { "Azul", "Talla XXL" }) {
+                    PorcentajeIVAPropioEspecífico = 0.16 }, venta, 1, 51990, 42000),
             };
 
             venta.Remisiones = new List<Remisión> { new Remisión(1000, cliente) { ID = 123456, FechaHoraCreación = new DateTime(2019, 06, 19) } };
@@ -899,25 +1326,33 @@ namespace SimpleOps {
                 ConsecutivoDianAnual = 50 + númeroFactura, Observación = "Alguna observación sobre la venta"
             };
 
-            venta.Líneas = new List<LíneaVenta> { 
-                new LíneaVenta(new Producto("R1") { Descripción = "Producto 1", ExcluídoIVA = todosExcluídosIVA || unoExcluídoIVA }, 
+            var camisetaBase = new ProductoBase("CMS") { ID = 1, Descripción = "Camiseta Manga Corta", PorcentajeIVAPropio = 0.05 };
+
+            venta.Líneas = new List<LíneaVenta> {
+                new LíneaVenta(new Producto("R1") { DescripciónBase = "Producto 1", ExcluídoIVA = todosExcluídosIVA || unoExcluídoIVA },
                     venta, cantidad: cantidad, precio: precio, costo: precio * 0.8M),
-                new LíneaVenta(new Producto("R2") { Descripción = "Producto 2", ExcluídoIVA = todosExcluídosIVA },
+                new LíneaVenta(new Producto("R2") { DescripciónBase = "Producto 2", ExcluídoIVA = todosExcluídosIVA },
                     venta, cantidad: cantidad + 5, precio: precio + 2000, costo: precio * 0.8M),
-                new LíneaVenta(new Producto("R3") { Descripción = "Producto 3", ExcluídoIVA = todosExcluídosIVA, 
-                    TipoImpuestoConsumoPropio = unoConINC ? TipoImpuestoConsumo.ServiciosRestaurante : TipoImpuestoConsumo.Desconocido }, 
+                new LíneaVenta(new Producto("R3") { DescripciónBase = "Producto 3", ExcluídoIVA = todosExcluídosIVA,
+                    TipoImpuestoConsumoPropio = unoConINC ? TipoImpuestoConsumo.ServiciosRestaurante : TipoImpuestoConsumo.Desconocido },
                     venta, cantidad: cantidad + 10, precio: precio + 3000, costo: precio * 0.8M),
-                new LíneaVenta(new Producto("R4") { Descripción = "Producto 4", ExcluídoIVA = todosExcluídosIVA || unoConINCyExcluídoIVA,
+                new LíneaVenta(new Producto("R4") { DescripciónBase = "Producto 4", ExcluídoIVA = todosExcluídosIVA || unoConINCyExcluídoIVA,
                     TipoImpuestoConsumoPropio = unoConINCyExcluídoIVA ? TipoImpuestoConsumo.ServiciosRestaurante : TipoImpuestoConsumo.Desconocido },
                     venta, cantidad: cantidad + 15, precio: precio + 4000, costo: precio * 0.8M),
-                new LíneaVenta(new Producto("R5") { Descripción = "Producto 5", PorcentajeIVAPropio = unoExentoIVA ? 0 : (double?)null },
+                new LíneaVenta(new Producto("R5") { DescripciónBase = "Producto 5", PorcentajeIVAPropio = unoExentoIVA ? 0 : (double?)null },
                     venta, cantidad: cantidad + 5, precio: precio + 2000, costo: precio * 0.8M),
+                new LíneaVenta(new Producto("CMSRS", camisetaBase, new List<string> { "Roja", "Talla S" }) {
+                    DescripciónEspecífica = "Camiseta Roja Talla S en Promoción ¡Extra Económica!" }, venta, cantidad + 2, precio + 1000, precio * 0.8M),
+                new LíneaVenta(new Producto("CMSVL", camisetaBase, new List<string> { "Verde", "Talla L", "Extra Suave" }) 
+                    { UnidadEspecífica = Unidad.Docena}, venta, 1, 12 * (precio + 1400), 12 * (precio * 0.8M)),
+                new LíneaVenta(new Producto("CMSAXXL", camisetaBase, new List<string> { "Azul", "Talla XXL" }) { 
+                    PorcentajeIVAPropioEspecífico = 0.16 }, venta, cantidad, precio + 1300, precio * 0.8M),
             };
 
             if (pruebaIntegración) {
 
                 var datos = venta.ObtenerDatosIntegración();
-                if (!Existe(TipoRuta.Carpeta, Equipo.RutaIntegración, "integración con programas terceros", out string? mensajeExiste))
+                if (!ExisteRuta(TipoElementoRuta.Carpeta, Equipo.RutaIntegración, "integración con programas terceros", out string? mensajeExiste))
                     throw new Exception(mensajeExiste); // No es un código que normalmente vaya a ejecutar un usuario entonces con la excepción basta.
                 File.WriteAllText(Path.Combine(Equipo.RutaIntegración!, $"{DocumentoIntegración.Venta.ATexto()}{AhoraNombresArchivos}.json"), // Se usa ! porque en la línea anterior saca exepción si RutaIntegración es nula.
                     Serializar(datos, Serialización.EnumeraciónEnTexto));
@@ -945,14 +1380,14 @@ namespace SimpleOps {
                 FechaHora = AhoraUtcAjustado, Número = númeroNotaCrédito, ConsecutivoDianAnual = 50 + númeroNotaCrédito, 
                 Razón = RazónNotaCrédito.DevoluciónParcial, Observación = "Devolución por mala calidad."
             };
-            notaCrédito.Líneas = new List<LíneaNotaCréditoVenta>() {
-                new LíneaNotaCréditoVenta(new Producto("AOHV84-225") { Descripción = "Articulo 1 Prueba" }, notaCrédito, 1, 12600.06M, 10000),
+            notaCrédito.Líneas = new List<LíneaNotaCréditoVenta> {
+                new LíneaNotaCréditoVenta(new Producto("AOHV84-225") { DescripciónBase = "Articulo 1 Prueba" }, notaCrédito, 1, 12600.06M, 10000),
             };
 
             if (pruebaIntegración) {
 
                 var datos = notaCrédito.ObtenerDatosIntegración();
-                if (!Existe(TipoRuta.Carpeta, Equipo.RutaIntegración, "integración con programas terceros", out string? mensajeExiste))
+                if (!ExisteRuta(TipoElementoRuta.Carpeta, Equipo.RutaIntegración, "integración con programas terceros", out string? mensajeExiste))
                     throw new Exception(mensajeExiste); // No es un código que normalmente vaya a ejecutar un usuario entonces con la excepción basta.
                 File.WriteAllText(Path.Combine(Equipo.RutaIntegración!, $"{DocumentoIntegración.NotaCrédito.ATexto()}{AhoraNombresArchivos}.json"), // Se usa ! porque en la línea anterior saca exepción si RutaIntegración es nula.
                     Serializar(datos, Serialización.EnumeraciónEnTexto));
@@ -975,8 +1410,8 @@ namespace SimpleOps {
                 FechaHora = AhoraUtcAjustado, Número = númeroNotaDébito, ConsecutivoDianAnual = 50 + númeroNotaDébito,
                 Razón = RazónNotaDébito.Intereses, Observación = "Intereses de factura F568798."
             };
-            notaDébito.Líneas = new List<LíneaNotaDébitoVenta>() {
-                new LíneaNotaDébitoVenta(new Producto("INT6") { Descripción = "Interés de 6 meses de mora" }, notaDébito, 1, 77600, 0),
+            notaDébito.Líneas = new List<LíneaNotaDébitoVenta> {
+                new LíneaNotaDébitoVenta(new Producto("INT6") { DescripciónBase = "Interés de 6 meses de mora" }, notaDébito, 1, 77600, 0),
             };
 
             return CrearYEnviarDocumentoElectrónico(notaDébito, out mensaje, out _, pruebaHabilitación);

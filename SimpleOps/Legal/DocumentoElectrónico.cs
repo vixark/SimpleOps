@@ -66,13 +66,14 @@ namespace SimpleOps.Legal {
             (Documento, CódigoFacturaContingencia, FechaFacturaContingencia) = (documento, códigoFacturaContingencia, fechaFacturaContingencia);
             Tipo = documento switch {
                 Venta _ =>
+                    #pragma warning disable CS8524 // Se omite para que no obligue a usar el patrón de descarte _ => porque este oculta la advertencia CS8509 que es muy útil para detectar valores de la enumeración faltantes. No se omite a nivel global porque la desactivaría para los switchs que no tienen enumeraciones, ver https://github.com/dotnet/roslyn/issues/47066.
                     tipoFactura switch {
                         TipoFacturaVenta.Venta => TipoDocumentoElectrónico.FacturaVenta,
                         TipoFacturaVenta.ContingenciaDian => TipoDocumentoElectrónico.FacturaContingenciaDian,
                         TipoFacturaVenta.ContingenciaFacturador => TipoDocumentoElectrónico.FacturaContingenciaFacturador,
                         TipoFacturaVenta.Exportación => TipoDocumentoElectrónico.FacturaExportación,
-                        _ => throw new Exception(CasoNoConsiderado(tipoFactura))
                     },
+                    #pragma warning restore CS8524
                 NotaCréditoVenta _ => TipoDocumentoElectrónico.NotaCrédito,
                 NotaDébitoVenta _ => TipoDocumentoElectrónico.NotaDébito,
                 _ => throw new Exception(CasoNoConsiderado(documento.GetType().ToString()))
@@ -82,6 +83,7 @@ namespace SimpleOps.Legal {
             Cude = documento.Cude!; // Se asegura que no es nulo porque si se ejecutó CalcularTodo() antes de iniciar el envío del documento electrónico.
             RutaDocumentosElectrónicosHoy = ObtenerRutaDocumentosElectrónicosDeHoy();
 
+            #pragma warning disable CS8524 // Se omite para que no obligue a usar el patrón de descarte _ => porque este oculta la advertencia CS8509 que es muy útil para detectar valores de la enumeración faltantes. No se omite a nivel global porque la desactivaría para los switchs que no tienen enumeraciones, ver https://github.com/dotnet/roslyn/issues/47066.
             TipoFirma = Tipo switch {
                 TipoDocumentoElectrónico.FacturaVenta => TipoFirma.Factura,
                 TipoDocumentoElectrónico.FacturaExportación => TipoFirma.Factura,
@@ -89,8 +91,8 @@ namespace SimpleOps.Legal {
                 TipoDocumentoElectrónico.FacturaContingenciaDian => TipoFirma.Factura,
                 TipoDocumentoElectrónico.NotaCrédito => TipoFirma.NotaCrédito,
                 TipoDocumentoElectrónico.NotaDébito => TipoFirma.NotaDébito,
-                _ => throw new Exception(CasoNoConsiderado(Tipo)),
             };
+            #pragma warning restore CS8524
 
         } // DocumentoElectrónico>
 
@@ -111,7 +113,7 @@ namespace SimpleOps.Legal {
         /// <summary>
         /// Devuelve verdadero si se creo exitosamente.
         /// </summary>
-        public bool Crear(out string? mensaje) {  // En los comentarios de cada elemento se indica su código en la documentación de la DIAN y su obligatoriedad o no y la cantidad permitida. Por ejemplo, 2..5 significa obligatorio 2 y 5 máximos, 0..3 significa que no es obligatorio y que pueden ser hasta 3 elementos. En los casos que aplique se valida su tamaño en la asignación del valor usando las restricciones provistas por la documentación de la DIAN y la función Dian.Validar().
+        public bool Crear(out string? mensaje) { // En los comentarios de cada elemento se indica su código en la documentación de la DIAN y su obligatoriedad o no y la cantidad permitida. Por ejemplo, 2..5 significa obligatorio 2 y 5 máximos, 0..3 significa que no es obligatorio y que pueden ser hasta 3 elementos. En los casos que aplique se valida su tamaño en la asignación del valor usando las restricciones provistas por la documentación de la DIAN y la función Dian.Validar().
 
             mensaje = null;
 
@@ -137,7 +139,7 @@ namespace SimpleOps.Legal {
                 return Falso(out mensaje, "No se han cargado todos los productos de las líneas de la factura");
             if (Documento.Líneas.Any(d => d.Producto?.Descripción == null)) 
                 return Falso(out mensaje, "No se ha establecido la descripción para al menos un producto.");
-            if (!Existe(TipoRuta.Archivo, Equipo.RutaCertificado, "certificado de firma digital", out string? mensajeExiste)) 
+            if (!ExisteRuta(TipoElementoRuta.Archivo, Equipo.RutaCertificado, "certificado de firma digital", out string? mensajeExiste)) 
                 return Falso(out mensaje, mensajeExiste);
             if (Documento.ConsecutivoDianAnual == null) return Falso(out mensaje, $"El consecutivo de la DIAN anual no puede ser nulo.");
             // Verificaciones>
@@ -700,8 +702,8 @@ namespace SimpleOps.Legal {
                     CorporateRegistrationScheme = new CorporateRegistrationSchemeType { // 0..1 FAJ49. Grupo de información de registro del emisor. 
                         ID = new IDType { 
                             Value = Validar((venta != null ? Empresa.PrefijoFacturas : 
-                                (notaCrédito != null ? PrefijoNotasCrédito : 
-                                    (notaDébito != null ? PrefijoNotasDébito : ""))), "1..6") 
+                                (notaCrédito != null ? PrefijoNotasCréditoPredeterminado : 
+                                    (notaDébito != null ? PrefijoNotasDébitoPredeterminado : ""))), "1..6") 
                         }, // ID: 0..1 FAJ50, prefijo de la facturación usada para el punto de venta. Aunque es opcional agrega para evitar que reporte notificación. Dice que el tamaño debe ser 6 pero claramente es incorrecto porque los prefijos pueden ser de menor tamaño, se valida con 1..6.
                         // Name = new NameType1 { Value = } // Name: 0..1 FAJ51 T9 Número de matrícula mercantil. Al ser opcional y al no haber claridad a que se refiere se omite.
                     }    
@@ -888,10 +890,12 @@ namespace SimpleOps.Legal {
 
 
             #region Datos Impuestos 
+
             document.TaxTotal = obtenerTaxTotales(Documento.Líneas, out bool éxitoTaxTotales, out string? mensajeTaxTotales, 
                 AgrupaciónTaxTotales.Tarifa);
             if (!éxitoTaxTotales) return Falso(out mensaje, mensajeTaxTotales);
             // document.WithholdingTaxTotal = new TaxTotalType[1] { obtenerTaxTotal(, TipoTributo.RetenciónRenta) }; // 0..N FAT01. Incluye FAT02, FAT03, FAT04, FAT05, FAT06, FAT07, FAT08, FAT09, FAT10, FAT11, FAT12 y FAT13. Grupo de campos para información relacionada con los tributos retenidos. Se usa para los casos que la empresa sea autorretenedor según la documentación de la DIAN. Sin embargo no se agregará por 4 razones: 1. El público objetivo de SimpleOps es improbable que sea autorretenedor. 2. Aún si alguno lo fuera este elemento no es de utilidad para el cliente pues los valores autorretenidos son importantes solo para la empresa y su declaración de impuestos, el cliente lo único que debe saber es que no debe aplicar retenciones. 3 el elemento es opcional, entonces para la DIAN tampoco es importante. 4. Es extraño lo de la autorretención, se supone que cuando un facturador es autorretenedor esto implica que el cliente no le debe aplicar ninguna retención al pagarle la factura, entonces si para los autorretenedores las retenciones son cero, ¿Qué se supone que se informaría aquí?
+           
             #endregion Datos Impuestos>
 
 
@@ -918,6 +922,7 @@ namespace SimpleOps.Legal {
 
             if (venta != null || notaCrédito != null) document.LegalMonetaryTotal = legalMonetaryTotal; // 1..1 FAU01 y CAU01.
             if (notaDébito != null) document.RequestedMonetaryTotal = legalMonetaryTotal; // 1..1 DAU01.
+            
             #endregion Datos Totales>
 
 
@@ -1049,6 +1054,7 @@ namespace SimpleOps.Legal {
             if (venta != null) document.InvoiceLine = lines;
             if (notaCrédito != null) document.CreditNoteLine = lines;
             if (notaDébito != null) document.DebitNoteLine = lines;
+
             #endregion Líneas>
 
 
@@ -1095,6 +1101,7 @@ namespace SimpleOps.Legal {
                                           "'identarXml = false'.");
 
             }
+
             #endregion Escritura XML>
 
 
@@ -1130,7 +1137,7 @@ namespace SimpleOps.Legal {
         /// </summary>
         public bool Firmar() {
 
-            if (!Existe(TipoRuta.Archivo, Equipo.RutaCertificado, "certificado de firma digital", out string? mensaje)) throw new Exception(mensaje); // Se maneja como excepción porque no debería llegar a este punto sin este archivo.
+            if (!ExisteRuta(TipoElementoRuta.Archivo, Equipo.RutaCertificado, "certificado de firma digital", out string? mensaje)) throw new Exception(mensaje); // Se maneja como excepción porque no debería llegar a este punto sin este archivo.
 
             var informaciónInicio = new ProcessStartInfo(RutaFirmador) {
                 Arguments = @$"""{Equipo.RutaCertificado}"" {Equipo.ClaveCertificado} ""{ObtenerRuta(firmado: false)}"" ""{Ruta}"" " +

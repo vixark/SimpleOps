@@ -51,7 +51,7 @@ namespace SimpleOps.Legal {
 
         public const string VersiónUBL = "UBL 2.1"; // Versión base de UBL usada para crear este perfil
 
-        public const string CódigoFacturaEstándar = "10"; //  Indicador del tipo de operación. Rechazo: Si contiene un valor distinto a los definidos en el grupo en el numeral 13.1.5.1: 10 Estandar (Valor predeterminado), 09 AIU, 11 Mandatos. SimpleOps no implementa aún AIU ni mandatos. 
+        public const string CódigoFacturaEstándar = "10"; // Indicador del tipo de operación. Rechazo: Si contiene un valor distinto a los definidos en el grupo en el numeral 13.1.5.1: 10 Estandar (Valor predeterminado), 09 AIU, 11 Mandatos. SimpleOps no implementa aún AIU ni mandatos. 
 
         public const string CódigoNotaCréditoConFactura = "20";
 
@@ -83,15 +83,15 @@ namespace SimpleOps.Legal {
 
         public const string ApellidoUsuarioFinal = "final";
 
-        public const string CódigoMedioPagoPorDefinir = "ZZZ"; // Tomado de la tabla 13.3.4.2.
+        public const string CódigoMedioPagoPorDefinir = "ZZZ"; // Ver la tabla 13.3.4.2.
 
-        public const string CódigoPrecioReferencia = "01"; // Tomado de la tabla 13.3.8.
+        public const string CódigoPrecioReferencia = "01"; // Ver la tabla 13.3.8.
 
-        public const string CódigoEstándarAdopciónContribuyente = "999"; // Tomado de la tabla 6.3.5.
+        public const string CódigoEstándarAdopciónContribuyente = "999"; // Ver la tabla 6.3.5.
 
-        public const string PrefijoNotasDébito = "ND"; // No hay claridad sobre los prefijos de notas débito sobre si se deben solicitar, si pueden ser únicos o si se pueden omitir. Ante la ausencia de información se usarán los que se usan en los XMLs de ejemplo.
+        public const string PrefijoNotasDébitoPredeterminado = "ND"; // No hay claridad sobre los prefijos de notas débito sobre si se deben solicitar, si pueden ser únicos o si se pueden omitir. Ante la ausencia de información se usarán los que se usan en los XMLs de ejemplo. 
 
-        public const string PrefijoNotasCrédito = "NC"; // No hay claridad sobre los prefijos de notas crédito sobre si se deben solicitar, si pueden ser únicos o si se pueden omitir. Ante la ausencia de información se usarán los que se usan en los XMLs de ejemplo.
+        public const string PrefijoNotasCréditoPredeterminado = "NC"; // No hay claridad sobre los prefijos de notas crédito sobre si se deben solicitar, si pueden ser únicos o si se pueden omitir. Ante la ausencia de información se usarán los que se usan en los XMLs de ejemplo. En febrero de 2021 aparentemente se presentó un cambio en la validación de las notas crédito en la DIAN que causaba que números válidos de notas crédito fueran rechazadas por supuestamente ya haber sido procesadas anteriormente. Este error presuntamente es causado por la colisión en los servidores de la DIAN de la numeración de las notas crédito y las facturas. Esto se pudo comprobar al realizar una nota crédito con un número muy grande que fue correctamente aceptada por el servidor de la DIAN. Para solucionar el problema sin generar posibles conflictos adicionales ni soluciones atípicas (como incrementar en un número muy grande la numeración de todas las notas crédito) se aplicará siempre de manera obligatoria este prefijo a todas las notas crédito que no tengan asignado otro prefijo.
 
 
         public static Dictionary<string, string> CódigosDepartamentos = new Dictionary<string, string> { // Tomados del 'Anexo técnico de factura electrónica de venta validación previa.pdf' de la DIAN. Departamentos (ISO 3166-2:CO). Se manejan en un diccionario por facilidad y para no tener que crear una nueva tabla en la base de datos o agregarlo a cada municipio. Es inncesario para estos datos tan estáticos. Se agregan en minúscula para facilitar su uso al buscar un departamento que tenga cualquier capitalización.
@@ -253,7 +253,7 @@ namespace SimpleOps.Legal {
 
         public static string ObtenerCódigoTipoTributo(TipoTributo tipoTributo) => tipoTributo == TipoTributo.Otro ? "ZZ" : tipoTributo.AValor(2);
 
-        public static string ObtenerCódigoUnidad(Unidad unidad) => CódigosUnidades.ObtenerValorObjeto(unidad) ?? "PA"; // Tomado de la documentación de la DIAN. También se podría usar PK: Paquete, BX: Caja, CA: Caja o CR: Caja.
+        public static string ObtenerCódigoUnidad(Unidad unidad) => CódigosUnidades.ObtenerValorObjeto(unidad) ?? "PA"; // Ver la documentación de la DIAN. También se podría usar PK: Paquete, BX: Caja, CA: Caja o CR: Caja.
 
         public static string FechaATexto(DateTime fecha) => fecha.ATexto(FormatoFecha);
 
@@ -304,7 +304,7 @@ namespace SimpleOps.Legal {
 
                 if (restricción0.NoContiene(" p ")) {
 
-                    if (elemento0.Contiene(".") && CoincideConPatrón(elemento0, PatrónNúmeroPuntoDecimal)) return false; // Si el elemento si tiene punto y además coincide con patrón de únicamente números asumirá que es un decimal y por lo tanto es incorrecto porque la restricción no especifica ningún decimal.         
+                    if (elemento0.Contiene(".") && Coincide(elemento0, PatrónNúmeroPuntoDecimal)) return false; // Si el elemento si tiene punto y además coincide con patrón de únicamente números, asumirá que es un decimal y por lo tanto es incorrecto porque la restricción no especifica ningún decimal.         
                     if (restricción0.Contiene("..")) {
 
                         var partesRestricción = restricción0.Split("..");
@@ -496,9 +496,8 @@ namespace SimpleOps.Legal {
 
                 return mensajeRespuesta switch {
                     "a:InvalidSecurity" => Falso(out mensaje, "Sucedió un error de verificación de seguridad en el servidor de la DIAN. " +
-                                                              "Usualmente esto indica un problema " +
-                                                             $"con la firma electrónica, con las horas o un mensaje XML mal formado.{DobleLínea}" +
-                                                             $"{excepciónWeb.Message}{DobleLínea}Estado: {respuesta.StatusCode}."),
+                                                             $"Usualmente esto indica un problema con la firma electrónica, con las horas o un mensaje " +
+                                                             $"XML mal formado.{DobleLínea}{excepciónWeb.Message}{DobleLínea}Estado: {respuesta.StatusCode}."),
                     "a:InternalServiceFault" => Falso(out mensaje, $"Error interno de servicio del servidor de la DIAN. Puede suceder cuando se especifica " +
                                                                    $"una operación diferente en el XML y en el encabezado de la solicitud POST.{DobleLínea}" + 
                                                                    $"{excepciónWeb.Message}{DobleLínea}Estado: {respuesta.StatusCode}."),
@@ -527,7 +526,7 @@ namespace SimpleOps.Legal {
             mensaje = null;
             string? sobreFirmado = null;
             respuestaXml = null;
-            if (!Existe(TipoRuta.Archivo, Equipo.RutaCertificado, "certificado de firma digital", out string? mensajeExiste)) 
+            if (!ExisteRuta(TipoElementoRuta.Archivo, Equipo.RutaCertificado, "certificado de firma digital", out string? mensajeExiste)) 
                 return Falso(out mensaje, mensajeExiste);
 
             try {
@@ -564,7 +563,7 @@ namespace SimpleOps.Legal {
                             @"<ds:DigestMethod Algorithm=""http://www.w3.org/2001/04/xmlenc#sha256""></ds:DigestMethod>" +
                             $@"<ds:DigestValue>{wsaToDigerido}</ds:DigestValue>" +
                         "</ds:Reference>" +
-                    "</ds:SignedInfo>"; // En el XML sugerido por la DIAN (tomado desde SoapUI) debería tener el elemento ds:Signed sin espacios de nombres (<ds:SignedInfo>), pero se encontró que así la firma resulta incorrecta y el servidor la rechaza. Se usa entonces con todos los espacios de nombres completos aunque esto pueda ser una infracción al estándar del XML Oasis porque estos espacios de nombres también se agregan al soap:Evelope, pero se acepta porque lo importante es que es aprobado por la DIAN. En el XML original los elementos ec:InclusiveNamespaces, ds:SignatureMethod, ec:InclusiveNamespaces y ds:DigestMethod se usan con autocierre (<.../>) pero para la firma se requieren como elementos completos (<...></...>). Si fuera necesario usar una versión de este elemento para calcular la firma y otra para agregar en el sobre firmado, se puede hacer.
+                    "</ds:SignedInfo>"; // En el XML sugerido por la DIAN (desde SoapUI) debería tener el elemento ds:Signed sin espacios de nombres (<ds:SignedInfo>), pero se encontró que así la firma resulta incorrecta y el servidor la rechaza. Se usa entonces con todos los espacios de nombres completos aunque esto pueda ser una infracción al estándar del XML Oasis porque estos espacios de nombres también se agregan al soap:Evelope, pero se acepta porque lo importante es que es aprobado por la DIAN. En el XML original los elementos ec:InclusiveNamespaces, ds:SignatureMethod, ec:InclusiveNamespaces y ds:DigestMethod se usan con autocierre (<.../>) pero para la firma se requieren como elementos completos (<...></...>). Si fuera necesario usar una versión de este elemento para calcular la firma y otra para agregar en el sobre firmado, se puede hacer.
 
                 var utf8 = new UTF8Encoding();
                 var firma = Convert.ToBase64String(((RSACng)certificado.PrivateKey).SignData(utf8.GetBytes(signedInfo), HashAlgorithmName.SHA256,

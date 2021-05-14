@@ -49,6 +49,8 @@ namespace SimpleOps.Integración {
 
         public TipoEntidad ClienteTipoEntidad { get; set; }
 
+        public TipoCliente ClienteTipoCliente { get; set; }
+
         public string? ClienteIdentificación { get; set; }
 
         #endregion Propiedades Cliente>

@@ -1,0 +1,5 @@
+﻿[
+{"ID": 1, "CreadorID": 2, "ActualizadorID": 2, "FechaHoraCreación": "1899-12-30T00:00:00", "FechaHoraActualización": "1899-12-30T00:00:00", "Nombre": "Talla Numérica"}, 
+{"ID": 2, "CreadorID": 2, "ActualizadorID": 2, "FechaHoraCreación": "1899-12-30T00:00:00", "FechaHoraActualización": "1899-12-30T00:00:00", "Nombre": "Talla Alfabética"}, 
+{"ID": 3, "CreadorID": 2, "ActualizadorID": 2, "FechaHoraCreación": "1899-12-30T00:00:00", "FechaHoraActualización": "1899-12-30T00:00:00", "Nombre": "Color"}, 
+{"ID": 4, "CreadorID": 2, "ActualizadorID": 2, "FechaHoraCreación": "1899-12-30T00:00:00", "FechaHoraActualización": "1899-12-30T00:00:00", "Nombre": "Copa"}]

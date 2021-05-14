@@ -14,7 +14,7 @@ namespace Vixark {
     /// <summary>
     /// Clase auxiliar que permite serializar a JSON diccionarios con claves enumeraciones.
     /// </summary>
-    class FábricaConvertidorDiccionarioClaveEnumeración : JsonConverterFactory { // Tomado de https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-converters-how-to#support-dictionary-with-non-string-key.
+    class FábricaConvertidorDiccionarioClaveEnumeración : JsonConverterFactory { // Ver https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-converters-how-to#support-dictionary-with-non-string-key.
 
 
         #region Métodos y Funciones
@@ -111,13 +111,13 @@ namespace Vixark {
             public override void Write(Utf8JsonWriter writer, Dictionary<TKey, TValue> dictionary, JsonSerializerOptions options) {
 
                 writer.WriteStartObject();
-                foreach (KeyValuePair<TKey, TValue> kvp in dictionary) {
+                foreach (KeyValuePair<TKey, TValue> kv in dictionary) {
 
-                    writer.WritePropertyName(kvp.Key.ToString());
+                    writer.WritePropertyName(kv.Key.ToString());
                     if (_valueConverter != null) {
-                        _valueConverter.Write(writer, kvp.Value, options);
+                        _valueConverter.Write(writer, kv.Value, options);
                     } else {
-                        JsonSerializer.Serialize(writer, kvp.Value, options);
+                        JsonSerializer.Serialize(writer, kv.Value, options);
                     }
 
                 }

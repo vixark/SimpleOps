@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SimpleOps.Migrations
 {
-    public partial class Uno : Migration
+    public partial class uno : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -172,6 +172,23 @@ namespace SimpleOps.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "TiposAtributosProductos",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    CreadorID = table.Column<int>(nullable: false),
+                    ActualizadorID = table.Column<int>(nullable: false),
+                    FechaHoraCreación = table.Column<string>(nullable: false),
+                    FechaHoraActualización = table.Column<string>(nullable: false),
+                    Nombre = table.Column<string>(maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TiposAtributosProductos", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Usuarios",
                 columns: table => new
                 {
@@ -270,6 +287,30 @@ namespace SimpleOps.Migrations
                         name: "FK_Proveedores_Municipios_MunicipioID",
                         column: x => x.MunicipioID,
                         principalTable: "Municipios",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AtributosProductos",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    CreadorID = table.Column<int>(nullable: false),
+                    ActualizadorID = table.Column<int>(nullable: false),
+                    FechaHoraCreación = table.Column<string>(nullable: false),
+                    FechaHoraActualización = table.Column<string>(nullable: false),
+                    Nombre = table.Column<string>(maxLength: 50, nullable: false),
+                    TipoID = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AtributosProductos", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_AtributosProductos_TiposAtributosProductos_TipoID",
+                        column: x => x.TipoID,
+                        principalTable: "TiposAtributosProductos",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -467,7 +508,7 @@ namespace SimpleOps.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Productos",
+                name: "ProductosBase",
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
@@ -477,71 +518,68 @@ namespace SimpleOps.Migrations
                     FechaHoraCreación = table.Column<string>(nullable: false),
                     FechaHoraActualización = table.Column<string>(nullable: false),
                     Referencia = table.Column<string>(maxLength: 30, nullable: false),
+                    ProductosBaseAsociados = table.Column<string>(maxLength: 500, nullable: false),
+                    Descripción = table.Column<string>(maxLength: 200, nullable: true),
                     Unidad = table.Column<int>(nullable: false),
                     UnidadEmpaque = table.Column<int>(nullable: false),
                     PesoUnidadEmpaque = table.Column<double>(nullable: true),
                     DimensiónUnidadEmpaque_Alto = table.Column<double>(nullable: true),
                     DimensiónUnidadEmpaque_Ancho = table.Column<double>(nullable: true),
                     DimensiónUnidadEmpaque_Largo = table.Column<double>(nullable: true),
-                    Descripción = table.Column<string>(maxLength: 200, nullable: true),
-                    Cantidad = table.Column<int>(nullable: false),
-                    CantidadMínima = table.Column<int>(nullable: false),
-                    CantidadMáxima = table.Column<int>(nullable: false),
-                    CantidadReservada = table.Column<int>(nullable: false),
-                    Físico = table.Column<bool>(nullable: false),
-                    CostoUnitario = table.Column<double>(nullable: true),
                     SubcategoríaID = table.Column<int>(nullable: true),
                     LíneaNegocioID = table.Column<int>(nullable: true),
                     MarcaID = table.Column<int>(nullable: true),
                     MaterialID = table.Column<int>(nullable: true),
                     AplicaciónID = table.Column<int>(nullable: true),
-                    PrioridadWebPropia = table.Column<byte>(nullable: false),
-                    ProveedorPreferidoID = table.Column<int>(nullable: true),
-                    UbicaciónAlmacén = table.Column<string>(maxLength: 30, nullable: true),
+                    Físico = table.Column<bool>(nullable: false),
                     PorcentajeIVAPropio = table.Column<double>(nullable: true),
                     ExcluídoIVA = table.Column<bool>(nullable: false),
                     PorcentajeImpuestoConsumoPropio = table.Column<double>(nullable: true),
                     ImpuestoConsumoUnitarioPropio = table.Column<double>(nullable: true),
                     TipoImpuestoConsumoPropio = table.Column<byte>(nullable: false),
-                    ProductosAsociados = table.Column<string>(maxLength: 1000, nullable: false),
+                    ConceptoRetenciónPropio = table.Column<byte>(nullable: false),
+                    PrioridadWebPropia = table.Column<byte>(nullable: false),
+                    ProveedorPreferidoID = table.Column<int>(nullable: true),
                     PorcentajeAdicionalGananciaPropio = table.Column<double>(nullable: true),
-                    ConceptoRetenciónPropio = table.Column<byte>(nullable: false)
+                    Características = table.Column<string>(maxLength: 2000, nullable: false),
+                    ArchivoImagen = table.Column<string>(maxLength: 50, nullable: true),
+                    ArchivoInformación = table.Column<string>(maxLength: 50, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Productos", x => x.ID);
+                    table.PrimaryKey("PK_ProductosBase", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Productos_Aplicaciones_AplicaciónID",
+                        name: "FK_ProductosBase_Aplicaciones_AplicaciónID",
                         column: x => x.AplicaciónID,
                         principalTable: "Aplicaciones",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Productos_LíneasNegocio_LíneaNegocioID",
+                        name: "FK_ProductosBase_LíneasNegocio_LíneaNegocioID",
                         column: x => x.LíneaNegocioID,
                         principalTable: "LíneasNegocio",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Productos_Marcas_MarcaID",
+                        name: "FK_ProductosBase_Marcas_MarcaID",
                         column: x => x.MarcaID,
                         principalTable: "Marcas",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Productos_Materiales_MaterialID",
+                        name: "FK_ProductosBase_Materiales_MaterialID",
                         column: x => x.MaterialID,
                         principalTable: "Materiales",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Productos_Proveedores_ProveedorPreferidoID",
+                        name: "FK_ProductosBase_Proveedores_ProveedorPreferidoID",
                         column: x => x.ProveedorPreferidoID,
                         principalTable: "Proveedores",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Productos_Subcategorías_SubcategoríaID",
+                        name: "FK_ProductosBase_Subcategorías_SubcategoríaID",
                         column: x => x.SubcategoríaID,
                         principalTable: "Subcategorías",
                         principalColumn: "ID",
@@ -645,7 +683,8 @@ namespace SimpleOps.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     CreadorID = table.Column<int>(nullable: false),
                     FechaHoraCreación = table.Column<string>(nullable: false),
-                    ClienteID = table.Column<int>(nullable: false)
+                    ClienteID = table.Column<int>(nullable: false),
+                    Tipo = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -759,6 +798,280 @@ namespace SimpleOps.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Productos",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    CreadorID = table.Column<int>(nullable: false),
+                    ActualizadorID = table.Column<int>(nullable: false),
+                    FechaHoraCreación = table.Column<string>(nullable: false),
+                    FechaHoraActualización = table.Column<string>(nullable: false),
+                    Referencia = table.Column<string>(maxLength: 30, nullable: false),
+                    BaseID = table.Column<int>(nullable: true),
+                    TieneBase = table.Column<bool>(nullable: false),
+                    Atributos = table.Column<string>(maxLength: 500, nullable: false),
+                    Cantidad = table.Column<int>(nullable: false),
+                    CantidadMínima = table.Column<int>(nullable: false),
+                    CantidadMáxima = table.Column<int>(nullable: false),
+                    CantidadReservada = table.Column<int>(nullable: false),
+                    CostoUnitario = table.Column<double>(nullable: true),
+                    UbicaciónAlmacén = table.Column<string>(maxLength: 30, nullable: true),
+                    ProductosAsociados = table.Column<string>(maxLength: 500, nullable: false),
+                    UnidadEspecífica = table.Column<int>(nullable: false),
+                    UnidadEmpaqueEspecífica = table.Column<int>(nullable: false),
+                    PesoUnidadEmpaqueEspecífica = table.Column<double>(nullable: true),
+                    DimensiónUnidadEmpaqueEspecífica_Alto = table.Column<double>(nullable: true),
+                    DimensiónUnidadEmpaqueEspecífica_Ancho = table.Column<double>(nullable: true),
+                    DimensiónUnidadEmpaqueEspecífica_Largo = table.Column<double>(nullable: true),
+                    SubcategoríaEspecíficaID = table.Column<int>(nullable: true),
+                    LíneaNegocioEspecíficaID = table.Column<int>(nullable: true),
+                    MarcaEspecíficaID = table.Column<int>(nullable: true),
+                    MaterialEspecíficoID = table.Column<int>(nullable: true),
+                    AplicaciónEspecíficaID = table.Column<int>(nullable: true),
+                    FísicoEspecífico = table.Column<bool>(nullable: true),
+                    PorcentajeIVAPropioEspecífico = table.Column<double>(nullable: true),
+                    ExcluídoIVAEspecífico = table.Column<bool>(nullable: true),
+                    PorcentajeImpuestoConsumoPropioEspecífico = table.Column<double>(nullable: true),
+                    ImpuestoConsumoUnitarioPropioEspecífico = table.Column<double>(nullable: true),
+                    TipoImpuestoConsumoPropioEspecífico = table.Column<byte>(nullable: false),
+                    ConceptoRetenciónPropioEspecífico = table.Column<byte>(nullable: false),
+                    PrioridadWebPropiaEspecífica = table.Column<byte>(nullable: false),
+                    ProveedorPreferidoEspecíficoID = table.Column<int>(nullable: true),
+                    PorcentajeAdicionalGananciaPropioEspecífico = table.Column<double>(nullable: true),
+                    DescripciónEspecífica = table.Column<string>(maxLength: 200, nullable: true),
+                    CaracterísticasEspecíficas = table.Column<string>(maxLength: 2000, nullable: false),
+                    ArchivoImagenEspecífica = table.Column<string>(maxLength: 50, nullable: true),
+                    ArchivoInformaciónEspecífica = table.Column<string>(maxLength: 50, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Productos", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Productos_Aplicaciones_AplicaciónEspecíficaID",
+                        column: x => x.AplicaciónEspecíficaID,
+                        principalTable: "Aplicaciones",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Productos_ProductosBase_BaseID",
+                        column: x => x.BaseID,
+                        principalTable: "ProductosBase",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Productos_LíneasNegocio_LíneaNegocioEspecíficaID",
+                        column: x => x.LíneaNegocioEspecíficaID,
+                        principalTable: "LíneasNegocio",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Productos_Marcas_MarcaEspecíficaID",
+                        column: x => x.MarcaEspecíficaID,
+                        principalTable: "Marcas",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Productos_Materiales_MaterialEspecíficoID",
+                        column: x => x.MaterialEspecíficoID,
+                        principalTable: "Materiales",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Productos_Proveedores_ProveedorPreferidoEspecíficoID",
+                        column: x => x.ProveedorPreferidoEspecíficoID,
+                        principalTable: "Proveedores",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Productos_Subcategorías_SubcategoríaEspecíficaID",
+                        column: x => x.SubcategoríaEspecíficaID,
+                        principalTable: "Subcategorías",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Compras",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    ActualizadorID = table.Column<int>(nullable: false),
+                    FechaHoraActualización = table.Column<string>(nullable: false),
+                    CreadorID = table.Column<int>(nullable: false),
+                    Número = table.Column<int>(nullable: false),
+                    Prefijo = table.Column<string>(maxLength: 10, nullable: true),
+                    FechaHora = table.Column<string>(nullable: false),
+                    DescuentoCondicionado = table.Column<double>(nullable: false),
+                    DescuentoComercial = table.Column<double>(nullable: false),
+                    Subtotal = table.Column<double>(nullable: false),
+                    IVA = table.Column<double>(nullable: false),
+                    ImpuestoConsumo = table.Column<double>(nullable: false),
+                    RetenciónFuente = table.Column<double>(nullable: false),
+                    RetenciónIVA = table.Column<double>(nullable: false),
+                    RetenciónICA = table.Column<double>(nullable: false),
+                    RetencionesExtra = table.Column<double>(nullable: false),
+                    Estado = table.Column<byte>(nullable: false),
+                    ConsecutivoDianAnual = table.Column<int>(nullable: true),
+                    Cude = table.Column<string>(maxLength: 96, nullable: true),
+                    ProveedorID = table.Column<int>(nullable: false),
+                    ComprobanteEgresoID = table.Column<int>(nullable: true),
+                    PedidoID = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Compras", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Compras_ComprobantesEgresos_ComprobanteEgresoID",
+                        column: x => x.ComprobanteEgresoID,
+                        principalTable: "ComprobantesEgresos",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Compras_Pedidos_PedidoID",
+                        column: x => x.PedidoID,
+                        principalTable: "Pedidos",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Compras_Proveedores_ProveedorID",
+                        column: x => x.ProveedorID,
+                        principalTable: "Proveedores",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MovimientosBancarios",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    ActualizadorID = table.Column<int>(nullable: false),
+                    FechaHoraActualización = table.Column<string>(nullable: false),
+                    CreadorID = table.Column<int>(nullable: false),
+                    FechaHora = table.Column<string>(nullable: false),
+                    Valor = table.Column<double>(nullable: false),
+                    ReciboCajaID = table.Column<int>(nullable: true),
+                    ComprobanteEgresoID = table.Column<int>(nullable: true),
+                    Observaciones = table.Column<string>(maxLength: 500, nullable: true),
+                    Estado = table.Column<byte>(nullable: false),
+                    Banco = table.Column<int>(nullable: false),
+                    OtroNúmeroCuenta = table.Column<string>(maxLength: 30, nullable: true),
+                    Sucursal = table.Column<string>(maxLength: 50, nullable: true),
+                    Descripción = table.Column<string>(maxLength: 100, nullable: true),
+                    Referencia = table.Column<string>(maxLength: 100, nullable: true),
+                    PadreID = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MovimientosBancarios", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_MovimientosBancarios_ComprobantesEgresos_ComprobanteEgresoID",
+                        column: x => x.ComprobanteEgresoID,
+                        principalTable: "ComprobantesEgresos",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_MovimientosBancarios_MovimientosBancarios_PadreID",
+                        column: x => x.PadreID,
+                        principalTable: "MovimientosBancarios",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_MovimientosBancarios_RecibosCaja_ReciboCajaID",
+                        column: x => x.ReciboCajaID,
+                        principalTable: "RecibosCaja",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MovimientosEfectivo",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    ActualizadorID = table.Column<int>(nullable: false),
+                    FechaHoraActualización = table.Column<string>(nullable: false),
+                    CreadorID = table.Column<int>(nullable: false),
+                    FechaHora = table.Column<DateTime>(nullable: false),
+                    Valor = table.Column<double>(nullable: false),
+                    ReciboCajaID = table.Column<int>(nullable: true),
+                    ComprobanteEgresoID = table.Column<int>(nullable: true),
+                    Observaciones = table.Column<string>(maxLength: 500, nullable: true),
+                    Estado = table.Column<byte>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MovimientosEfectivo", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_MovimientosEfectivo_ComprobantesEgresos_ComprobanteEgresoID",
+                        column: x => x.ComprobanteEgresoID,
+                        principalTable: "ComprobantesEgresos",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_MovimientosEfectivo_RecibosCaja_ReciboCajaID",
+                        column: x => x.ReciboCajaID,
+                        principalTable: "RecibosCaja",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrdenesCompra",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    ActualizadorID = table.Column<int>(nullable: false),
+                    FechaHoraActualización = table.Column<string>(nullable: false),
+                    CreadorID = table.Column<int>(nullable: false),
+                    ContactoID = table.Column<int>(nullable: true),
+                    Estado = table.Column<byte>(nullable: false),
+                    Observaciones = table.Column<string>(maxLength: 500, nullable: true),
+                    ClienteID = table.Column<int>(nullable: false),
+                    Número = table.Column<string>(maxLength: 30, nullable: false),
+                    SedeID = table.Column<int>(nullable: true),
+                    EnviadaProforma = table.Column<bool>(nullable: false),
+                    Remisionar = table.Column<bool>(nullable: false),
+                    SincronizadaWeb = table.Column<bool>(nullable: false),
+                    Prioridad = table.Column<byte>(nullable: false),
+                    InformePagoID = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrdenesCompra", x => x.ID);
+                    table.UniqueConstraint("AK_OrdenesCompra_Número_ClienteID", x => new { x.Número, x.ClienteID });
+                    table.ForeignKey(
+                        name: "FK_OrdenesCompra_Clientes_ClienteID",
+                        column: x => x.ClienteID,
+                        principalTable: "Clientes",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_OrdenesCompra_Contactos_ContactoID",
+                        column: x => x.ContactoID,
+                        principalTable: "Contactos",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_OrdenesCompra_InformesPagos_InformePagoID",
+                        column: x => x.InformePagoID,
+                        principalTable: "InformesPagos",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_OrdenesCompra_Sedes_SedeID",
+                        column: x => x.SedeID,
+                        principalTable: "Sedes",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "InventariosConsignación",
                 columns: table => new
                 {
@@ -782,6 +1095,31 @@ namespace SimpleOps.Migrations
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_InventariosConsignación_Productos_ProductoID",
+                        column: x => x.ProductoID,
+                        principalTable: "Productos",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LíneasCotizaciones",
+                columns: table => new
+                {
+                    ProductoID = table.Column<int>(nullable: false),
+                    CotizaciónID = table.Column<int>(nullable: false),
+                    Precio = table.Column<double>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LíneasCotizaciones", x => new { x.CotizaciónID, x.ProductoID });
+                    table.ForeignKey(
+                        name: "FK_LíneasCotizaciones_Cotizaciones_CotizaciónID",
+                        column: x => x.CotizaciónID,
+                        principalTable: "Cotizaciones",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_LíneasCotizaciones_Productos_ProductoID",
                         column: x => x.ProductoID,
                         principalTable: "Productos",
                         principalColumn: "ID",
@@ -959,211 +1297,6 @@ namespace SimpleOps.Migrations
                         name: "FK_ReferenciasProveedores_Proveedores_ProveedorID",
                         column: x => x.ProveedorID,
                         principalTable: "Proveedores",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Compras",
-                columns: table => new
-                {
-                    ID = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    ActualizadorID = table.Column<int>(nullable: false),
-                    FechaHoraActualización = table.Column<string>(nullable: false),
-                    CreadorID = table.Column<int>(nullable: false),
-                    Número = table.Column<int>(nullable: false),
-                    Prefijo = table.Column<string>(maxLength: 10, nullable: true),
-                    FechaHora = table.Column<string>(nullable: false),
-                    DescuentoCondicionado = table.Column<double>(nullable: false),
-                    DescuentoComercial = table.Column<double>(nullable: false),
-                    Subtotal = table.Column<double>(nullable: false),
-                    IVA = table.Column<double>(nullable: false),
-                    ImpuestoConsumo = table.Column<double>(nullable: false),
-                    RetenciónFuente = table.Column<double>(nullable: false),
-                    RetenciónIVA = table.Column<double>(nullable: false),
-                    RetenciónICA = table.Column<double>(nullable: false),
-                    RetencionesExtra = table.Column<double>(nullable: false),
-                    Estado = table.Column<byte>(nullable: false),
-                    ConsecutivoDianAnual = table.Column<int>(nullable: true),
-                    Cude = table.Column<string>(maxLength: 96, nullable: true),
-                    ProveedorID = table.Column<int>(nullable: false),
-                    ComprobanteEgresoID = table.Column<int>(nullable: true),
-                    PedidoID = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Compras", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_Compras_ComprobantesEgresos_ComprobanteEgresoID",
-                        column: x => x.ComprobanteEgresoID,
-                        principalTable: "ComprobantesEgresos",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Compras_Pedidos_PedidoID",
-                        column: x => x.PedidoID,
-                        principalTable: "Pedidos",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Compras_Proveedores_ProveedorID",
-                        column: x => x.ProveedorID,
-                        principalTable: "Proveedores",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "LíneasCotizaciones",
-                columns: table => new
-                {
-                    ProductoID = table.Column<int>(nullable: false),
-                    CotizaciónID = table.Column<int>(nullable: false),
-                    Precio = table.Column<double>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_LíneasCotizaciones", x => new { x.CotizaciónID, x.ProductoID });
-                    table.ForeignKey(
-                        name: "FK_LíneasCotizaciones_Cotizaciones_CotizaciónID",
-                        column: x => x.CotizaciónID,
-                        principalTable: "Cotizaciones",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_LíneasCotizaciones_Productos_ProductoID",
-                        column: x => x.ProductoID,
-                        principalTable: "Productos",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "MovimientosBancarios",
-                columns: table => new
-                {
-                    ID = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    ActualizadorID = table.Column<int>(nullable: false),
-                    FechaHoraActualización = table.Column<string>(nullable: false),
-                    CreadorID = table.Column<int>(nullable: false),
-                    FechaHora = table.Column<string>(nullable: false),
-                    Valor = table.Column<double>(nullable: false),
-                    ReciboCajaID = table.Column<int>(nullable: true),
-                    ComprobanteEgresoID = table.Column<int>(nullable: true),
-                    Observaciones = table.Column<string>(maxLength: 500, nullable: true),
-                    Estado = table.Column<byte>(nullable: false),
-                    Banco = table.Column<int>(nullable: false),
-                    OtroNúmeroCuenta = table.Column<string>(maxLength: 30, nullable: true),
-                    Sucursal = table.Column<string>(maxLength: 50, nullable: true),
-                    Descripción = table.Column<string>(maxLength: 100, nullable: true),
-                    Referencia = table.Column<string>(maxLength: 100, nullable: true),
-                    PadreID = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MovimientosBancarios", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_MovimientosBancarios_ComprobantesEgresos_ComprobanteEgresoID",
-                        column: x => x.ComprobanteEgresoID,
-                        principalTable: "ComprobantesEgresos",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_MovimientosBancarios_MovimientosBancarios_PadreID",
-                        column: x => x.PadreID,
-                        principalTable: "MovimientosBancarios",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_MovimientosBancarios_RecibosCaja_ReciboCajaID",
-                        column: x => x.ReciboCajaID,
-                        principalTable: "RecibosCaja",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "MovimientosEfectivo",
-                columns: table => new
-                {
-                    ID = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    ActualizadorID = table.Column<int>(nullable: false),
-                    FechaHoraActualización = table.Column<string>(nullable: false),
-                    CreadorID = table.Column<int>(nullable: false),
-                    FechaHora = table.Column<DateTime>(nullable: false),
-                    Valor = table.Column<double>(nullable: false),
-                    ReciboCajaID = table.Column<int>(nullable: true),
-                    ComprobanteEgresoID = table.Column<int>(nullable: true),
-                    Observaciones = table.Column<string>(maxLength: 500, nullable: true),
-                    Estado = table.Column<byte>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MovimientosEfectivo", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_MovimientosEfectivo_ComprobantesEgresos_ComprobanteEgresoID",
-                        column: x => x.ComprobanteEgresoID,
-                        principalTable: "ComprobantesEgresos",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_MovimientosEfectivo_RecibosCaja_ReciboCajaID",
-                        column: x => x.ReciboCajaID,
-                        principalTable: "RecibosCaja",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "OrdenesCompra",
-                columns: table => new
-                {
-                    ID = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    ActualizadorID = table.Column<int>(nullable: false),
-                    FechaHoraActualización = table.Column<string>(nullable: false),
-                    CreadorID = table.Column<int>(nullable: false),
-                    ContactoID = table.Column<int>(nullable: true),
-                    Estado = table.Column<byte>(nullable: false),
-                    Observaciones = table.Column<string>(maxLength: 500, nullable: true),
-                    ClienteID = table.Column<int>(nullable: false),
-                    Número = table.Column<string>(maxLength: 30, nullable: false),
-                    SedeID = table.Column<int>(nullable: true),
-                    EnviadaProforma = table.Column<bool>(nullable: false),
-                    Remisionar = table.Column<bool>(nullable: false),
-                    SincronizadaWeb = table.Column<bool>(nullable: false),
-                    Prioridad = table.Column<byte>(nullable: false),
-                    InformePagoID = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_OrdenesCompra", x => x.ID);
-                    table.UniqueConstraint("AK_OrdenesCompra_Número_ClienteID", x => new { x.Número, x.ClienteID });
-                    table.ForeignKey(
-                        name: "FK_OrdenesCompra_Clientes_ClienteID",
-                        column: x => x.ClienteID,
-                        principalTable: "Clientes",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_OrdenesCompra_Contactos_ContactoID",
-                        column: x => x.ContactoID,
-                        principalTable: "Contactos",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_OrdenesCompra_InformesPagos_InformePagoID",
-                        column: x => x.InformePagoID,
-                        principalTable: "InformesPagos",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_OrdenesCompra_Sedes_SedeID",
-                        column: x => x.SedeID,
-                        principalTable: "Sedes",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -1679,6 +1812,17 @@ namespace SimpleOps.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_AtributosProductos_Nombre",
+                table: "AtributosProductos",
+                column: "Nombre",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AtributosProductos_TipoID",
+                table: "AtributosProductos",
+                column: "TipoID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Bloqueos_UsuarioID",
                 table: "Bloqueos",
                 column: "UsuarioID");
@@ -1966,29 +2110,34 @@ namespace SimpleOps.Migrations
                 column: "ProveedorID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Productos_AplicaciónID",
+                name: "IX_Productos_AplicaciónEspecíficaID",
                 table: "Productos",
-                column: "AplicaciónID");
+                column: "AplicaciónEspecíficaID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Productos_LíneaNegocioID",
+                name: "IX_Productos_BaseID",
                 table: "Productos",
-                column: "LíneaNegocioID");
+                column: "BaseID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Productos_MarcaID",
+                name: "IX_Productos_LíneaNegocioEspecíficaID",
                 table: "Productos",
-                column: "MarcaID");
+                column: "LíneaNegocioEspecíficaID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Productos_MaterialID",
+                name: "IX_Productos_MarcaEspecíficaID",
                 table: "Productos",
-                column: "MaterialID");
+                column: "MarcaEspecíficaID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Productos_ProveedorPreferidoID",
+                name: "IX_Productos_MaterialEspecíficoID",
                 table: "Productos",
-                column: "ProveedorPreferidoID");
+                column: "MaterialEspecíficoID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Productos_ProveedorPreferidoEspecíficoID",
+                table: "Productos",
+                column: "ProveedorPreferidoEspecíficoID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Productos_Referencia",
@@ -1997,8 +2146,44 @@ namespace SimpleOps.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Productos_SubcategoríaID",
+                name: "IX_Productos_SubcategoríaEspecíficaID",
                 table: "Productos",
+                column: "SubcategoríaEspecíficaID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductosBase_AplicaciónID",
+                table: "ProductosBase",
+                column: "AplicaciónID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductosBase_LíneaNegocioID",
+                table: "ProductosBase",
+                column: "LíneaNegocioID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductosBase_MarcaID",
+                table: "ProductosBase",
+                column: "MarcaID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductosBase_MaterialID",
+                table: "ProductosBase",
+                column: "MaterialID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductosBase_ProveedorPreferidoID",
+                table: "ProductosBase",
+                column: "ProveedorPreferidoID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductosBase_Referencia",
+                table: "ProductosBase",
+                column: "Referencia",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductosBase_SubcategoríaID",
+                table: "ProductosBase",
                 column: "SubcategoríaID");
 
             migrationBuilder.CreateIndex(
@@ -2095,6 +2280,12 @@ namespace SimpleOps.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_TiposAtributosProductos_Nombre",
+                table: "TiposAtributosProductos",
+                column: "Nombre",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Usuarios_Nombre",
                 table: "Usuarios",
                 column: "Nombre",
@@ -2123,6 +2314,9 @@ namespace SimpleOps.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "AtributosProductos");
+
             migrationBuilder.DropTable(
                 name: "Bloqueos");
 
@@ -2193,6 +2387,9 @@ namespace SimpleOps.Migrations
                 name: "RolesUsuarios");
 
             migrationBuilder.DropTable(
+                name: "TiposAtributosProductos");
+
+            migrationBuilder.DropTable(
                 name: "Cotizaciones");
 
             migrationBuilder.DropTable(
@@ -2223,6 +2420,21 @@ namespace SimpleOps.Migrations
                 name: "Ventas");
 
             migrationBuilder.DropTable(
+                name: "ProductosBase");
+
+            migrationBuilder.DropTable(
+                name: "ComprobantesEgresos");
+
+            migrationBuilder.DropTable(
+                name: "Pedidos");
+
+            migrationBuilder.DropTable(
+                name: "OrdenesCompra");
+
+            migrationBuilder.DropTable(
+                name: "RecibosCaja");
+
+            migrationBuilder.DropTable(
                 name: "Aplicaciones");
 
             migrationBuilder.DropTable(
@@ -2238,21 +2450,6 @@ namespace SimpleOps.Migrations
                 name: "Subcategorías");
 
             migrationBuilder.DropTable(
-                name: "ComprobantesEgresos");
-
-            migrationBuilder.DropTable(
-                name: "Pedidos");
-
-            migrationBuilder.DropTable(
-                name: "OrdenesCompra");
-
-            migrationBuilder.DropTable(
-                name: "RecibosCaja");
-
-            migrationBuilder.DropTable(
-                name: "Categorías");
-
-            migrationBuilder.DropTable(
                 name: "InformesPagos");
 
             migrationBuilder.DropTable(
@@ -2260,6 +2457,9 @@ namespace SimpleOps.Migrations
 
             migrationBuilder.DropTable(
                 name: "Proveedores");
+
+            migrationBuilder.DropTable(
+                name: "Categorías");
 
             migrationBuilder.DropTable(
                 name: "Clientes");

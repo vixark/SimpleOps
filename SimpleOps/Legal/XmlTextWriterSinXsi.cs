@@ -14,7 +14,7 @@ namespace SimpleOps.Legal {
     /// <summary>
     /// XmlTextWriter personalizado que omite la escritura de los atributos con nombre en AtributosAOmitir.
     /// </summary>
-    class XmlTextWriterSinXsi : XmlTextWriter { // Tomado de https://stackoverflow.com/questions/7656557/remove-xsitype-from-generated-xml-when-serializing.
+    class XmlTextWriterSinXsi : XmlTextWriter { // Ver https://stackoverflow.com/questions/7656557/remove-xsitype-from-generated-xml-when-serializing.
 
 
         #region Variables y Campos

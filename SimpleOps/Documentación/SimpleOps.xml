@@ -45,26 +45,6 @@
             <param name="otroUsuarioID"></param>
             <returns></returns>
         </member>
-        <member name="M:SimpleOps.Datos.Contexto.LeerMunicipiosDeInterés(SimpleOps.Datos.Contexto)">
-            <summary>
-            Actualización de los municipios con mensajería y de los datos de los municipios de la empresa.
-            </summary>
-        </member>
-        <member name="M:SimpleOps.Datos.Contexto.LeerMunicipiosDeInterés">
-            <summary>
-            Función equivalente sin pasar contexto para cuando no se tenga.
-            </summary>
-        </member>
-        <member name="M:SimpleOps.Datos.Contexto.ObtenerOrdenesCompraPendientes">
-            <summary>
-            Consulta las ordenes de compra pendientes y actualiza la FechaHoraCreación usando las líneas.
-            </summary>
-        </member>
-        <member name="M:SimpleOps.Datos.Contexto.ObtenerPedidosPendientes">
-            <summary>
-            Consulta los pedidos pendientes y actualiza la FechaHoraCreación usando las líneas.
-            </summary>
-        </member>
         <member name="M:SimpleOps.Datos.Contexto.GuardarCambios">
             <summary>
             Siempre se debe usar este método en vez de SaveChanges porque implementa el control de concurrencia.
@@ -126,6 +106,26 @@
             <param name="error"></param>
             <returns></returns>
         </member>
+        <member name="M:SimpleOps.Datos.Contexto.LeerMunicipiosDeInterés(SimpleOps.Datos.Contexto)">
+            <summary>
+            Actualización de los municipios con mensajería y de los datos de los municipios de la empresa.
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Datos.Contexto.LeerMunicipiosDeInterés">
+            <summary>
+            Función equivalente sin pasar contexto para cuando no se tenga.
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Datos.Contexto.ObtenerOrdenesCompraPendientes">
+            <summary>
+            Consulta las ordenes de compra pendientes y actualiza la FechaHoraCreación usando las líneas.
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Datos.Contexto.ObtenerPedidosPendientes">
+            <summary>
+            Consulta los pedidos pendientes y actualiza la FechaHoraCreación usando las líneas.
+            </summary>
+        </member>
         <member name="P:SimpleOps.DocumentosGráficos.DatosDocumento.ModoDocumento">
             <summary>
             En el <see cref="F:SimpleOps.DocumentosGráficos.DatosDocumento.Modo.CuerpoContinuo"/> se debe pasar a 
@@ -135,6 +135,61 @@
             En el <see cref="F:SimpleOps.DocumentosGráficos.DatosDocumento.Modo.PáginasIndependientes"/> se debe pasar al diccionario un marco y un ítem con nombre Página[Número] 
             por cada página extra que tenga el documento, excepto la Página1 porque en esta se agrega el cuerpo (VentaPdf.cshtml, CatálogoPdf.cshtml, etc).
             Cada página del documento tendrá su propio encabezado y pie de página.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.DocumentosGráficos.DatosLíneaProducto">
+            <summary>
+            DTO de lectura. Adecuado solo para escribir desde Producto a DatosLíneaProducto. Si se requiere un DTO para escribir en ambas direcciones se 
+            puede usar <see cref="T:SimpleOps.Integración.DatosLíneaProducto"/>.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.DocumentosGráficos.DatosLíneaProducto.ProductoDescripción">
+            <summary>
+            Descripción del producto completa incluyendo los atributos. Para cambiarla, cambia <see cref="P:SimpleOps.Modelo.Producto.DescripciónBase"/>
+            y <see cref="P:SimpleOps.Modelo.Producto.Atributos"/> en el <see cref="T:SimpleOps.Modelo.Producto"/> de origen.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.DocumentosGráficos.DatosProducto">
+            <summary>
+            Encapsula información de un producto o producto base para ser usada en un documento gráfico. Se puede usar para el catálogo, cotizaciones, 
+            sitio web y fichas técnicas. Es útil para consolidar la información de todos los productos específicos en un producto base y para proveer 
+            textos formateados para las características y atributos.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.DocumentosGráficos.DatosProducto.Atributos">
+            <summary>
+            Si es un producto base, estos atributos son los que están en productos que no difieren en precio. Si difieren en precio, estos atributos
+            se agregan en <see cref="P:SimpleOps.DocumentosGráficos.DatosProducto.Precios"/>.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.DocumentosGráficos.DatosProducto.Precios">
+            <summary>
+            Contiene los precios aplicables al producto. Es útil en el caso de productos base porque permite mostrar precios diferentes para productos 
+            específicos con mismo producto base. En estos casos, las claves del diccionario son el resumen de los atributos que difieren en precio.
+            En el caso de productos específicos, la clave puede ser cualquier valor pues no se muestra y el valor es el único precio a mostrar para 
+            el producto.
+            </summary>    
+        </member>
+        <member name="P:SimpleOps.DocumentosGráficos.DatosProducto.RutaInformaciónHtml">
+            <summary>
+            Alternativa a <see cref="P:SimpleOps.DocumentosGráficos.DatosProducto.InformaciónHtml"/> que especifica una ruta en vez de contener el texto de información completo.
+            Es útil para servir el archivo desde un CDN al sitio web.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.DocumentosGráficos.DatosProducto.ReferenciaImagenBase64">
+            <summary>
+            La referencia que se usará al buscar la imagen en el diccionario ImágenesProductosBase64.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.DocumentosGráficos.DatosProducto.ImagenBase64">
+            <summary>
+            Si no se dispone del diccionario DatosDocumento.ImágenesProductosBase64, se puede usar esta variable para codificar la imagen en base 64.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.DocumentosGráficos.DatosProducto.RutaImagen">
+            <summary>
+            Alternativa a <see cref="P:SimpleOps.DocumentosGráficos.DatosProducto.ReferenciaImagenBase64"/> y <see cref="P:SimpleOps.DocumentosGráficos.DatosProducto.ImagenBase64"/> que especifica una ruta en vez de contener la imagen 
+            codificada en Base 64. Es útil para servir el archivo desde un CDN al sitio web.
             </summary>
         </member>
         <member name="T:SimpleOps.DocumentosGráficos.DocumentosGráficos">
@@ -153,16 +208,12 @@
             <param name="partes"></param>
             <returns></returns>
         </member>
-        <member name="M:SimpleOps.DocumentosGráficos.DocumentosGráficos.CrearPdfCatálogo(SimpleOps.Modelo.Cotización,System.String@,System.Nullable{System.Int32})">
+        <member name="M:SimpleOps.DocumentosGráficos.DocumentosGráficos.CrearPdfCatálogo(SimpleOps.Modelo.Cotización,System.String@)">
             <summary>
             
             </summary>
             <param name="cotización"></param>
             <param name="rutaPdf"></param>
-            <param name="tamañoImagenes">Alto y ancho al que se redimensionarán las imagenes. Si es nulo, no se redimensionan. Redimensionar
-            las imagenes ayuda a que el tamaño final del PDF sea más pequeño y además las imagenes son recortadas inteligentemente (ajustadas a su
-            contenido) antes de ser redimensionadas, esto permite que todos las imagenes de los productos tengan un tamaño homogéneo independiente
-            de como estén en las imagenes originales.</param>
             <returns></returns>
         </member>
         <member name="M:SimpleOps.DocumentosGráficos.DocumentosGráficos.CompletarDatosVenta``1(SimpleOps.DocumentosGráficos.OpcionesDocumento,SimpleOps.DocumentosGráficos.DatosVenta,System.Collections.Generic.List{``0})">
@@ -225,12 +276,13 @@
         </member>
         <member name="T:SimpleOps.Configuración">
             <summary>
-            Variables globales estáticas que permiten ejecutar y configurar SimpleOps más fácilmente en otros equipos y
-            permiten la actualización desde el repositorio minimizando la cantidad de conflictos. Como es una clase que 
-            pocas veces se va a modificar desde el desarrollo, puede ser modificada por los usuarios del código para 
-            configurar las rutas de instalación y desarrollo y otras configuraciones sin necesidad de tenerlas que cambiar 
-            nuevamente cada vez que se actualice el código desde el repositorio, cómo si puede suceder si estos valores
-            se guardaran en Global.cs u OpcionesEmpresa.cs.
+            Constantes globales que permiten configurar SimpleOps en equipos diferentes manteniendo estas configuraciones al actualizar el código 
+            desde repositorio. Como es una clase que pocas veces se va a modificar desde el desarrollo, puede ser modificada por los usuarios del código 
+            para configurar las rutas de instalación y desarrollo y otras configuraciones sin necesidad de tenerlas que cambiar nuevamente cada vez que se 
+            actualice el código desde el repositorio, cómo sí podría suceder si se guardaran en Global.cs, OpcionesEmpresa.cs u OpcionesEquipo.cs. 
+            Estas configuraciones solo son de interés para el instalador, el usuario del código o el desarrollador. No se deben agregar configuraciones que 
+            el usuario del programa quisiera cambiar en algún momento (estas deben ir en OpcionesEmpresa.cs u OpcionesEquipo.cs). Tampoco se deben agregar 
+            configuraciones que el usuario del código podría modificar, pero no es usual (estas deben ir en Global.cs).
             </summary>
         </member>
         <member name="T:SimpleOps.Global">
@@ -238,12 +290,22 @@
             Métodos, funciones y constantes estáticas de uso global para todo SimpleOps. Se diferencian de Vixark.General porque son propias del funcionamiento de SimpleOps y no de uso general compartido con otros proyectos.
             </summary>
         </member>
-        <member name="M:SimpleOps.Global.ObtenerRutaImagenProducto(System.String)">
+        <member name="M:SimpleOps.Global.IniciarVariablesConfiguración">
             <summary>
-            Devuelve la ruta de la imagen del producto con la extensión que exista. Devuelve null si no existe ninguna imagen.
+            Inicia algunas variables de Configuración.cs (configuración del usuario del código) que no se pueden iniciar en el cuerpo porque requieren unos pasos adicionales para establecer su valor. 
             </summary>
-            <param name="referencia"></param>
-            <returns></returns>
+        </member>
+        <member name="M:SimpleOps.Global.IniciarVariablesDTO">
+            <summary>
+            Algunos objetos DTO, como los de DocumentosGráficos o Integración, tienen configuraciones globales que deben ser iniciadas desde otras variables,
+            usualmente desde OpcionesEmpresa. Se inician de esta manera para no agregar referencias a espacios de nombres que puedan interferir
+            en la generación de los PDF y para mantener el desacoplamiento entre estos objetos y el resto del código.
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Global.IniciarVariablesGlobales">
+            <summary>
+            Inicia algunas variables que no se pueden iniciar en el cuerpo de la clase Global porque requieren unos pasos adicionales para establecer su valor.
+            </summary>
         </member>
         <member name="M:SimpleOps.Global.CargarOpciones">
             <summary>
@@ -258,11 +320,6 @@
         <member name="M:SimpleOps.Global.CargarOpciones``1(``0@,Vixark.General.Serialización)">
             <summary>
             Carga un tipo de opciones desde un archivo JSON. Si no existe lo crea usando los valores predeterminados.
-            </summary>
-        </member>
-        <member name="M:SimpleOps.Global.IniciarVariablesGlobales">
-            <summary>
-            Inicia algunas variables que no se pueden iniciar en el cuerpo de la clase Global porque requieren unos pasos adicionales para establecer su valor.
             </summary>
         </member>
         <member name="T:SimpleOps.Singleton.OpcionesEmpresa">
@@ -296,6 +353,128 @@
             el texto de UY597 en la factura electrónica que dirigirá a https://ejemplo.com/Producto.aspx?Ref=UY597.
             </summary>
         </member>
+        <member name="P:SimpleOps.Singleton.OpcionesEmpresa.PorcentajeProductosConBase">
+            <summary>
+            Valor calculado a partir de la base de datos cuando se cargan todos los productos. Sirve para optimizar las consultas de productos
+            individuales, estimando la probabilidad de que el producto tenga base y por lo tanto se pueda usar un método de lectura de la 
+            base de datos optimizado.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Singleton.OpcionesEmpresa.CantidadFilasProductosPorPáginaExtraCatálogo">
+            <summary>
+            Cantidad de filas por página para las páginas extra del catálogo. Las páginas extra son las que no tienen diseño HTML personalizado. 
+            Todo el catálogo podría estar compuesto de solo páginas extra si no se desea realizar un diseño HTML propio. Este valor predeterminado
+            puede ser ignorado pasando su valor en el archivo de integración.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Singleton.OpcionesEmpresa.CantidadColumnasProductosPorPáginaExtraCatálogo">
+            <summary>
+            Cantidad de columnas por página para las páginas extra del catálogo. Las páginas extra son las que no tienen diseño HTML personalizado. 
+            Todo el catálogo podría estar compuesto de solo páginas extra si no se desea realizar un diseño HTML propio. Este valor predeterminado
+            puede ser ignorado pasando su valor en el archivo de integración.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Singleton.OpcionesEmpresa.ÍndiceInversoInserciónPáginasExtraCatálogo">
+            <summary>
+            Si es 0, las páginas extra se insertan al final del documento. Si es 1, las páginas extra se insertan antes de la última página
+            para permitir que esta última página sea la contraportada del catálogo.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Singleton.OpcionesEmpresa.TamañoImágenesProductosCotizaciones">
+            <summary>
+            El tamaño al que se dimensionarán las imágenes originales para ser usadas en catálogos y cotizaciones. Entre más grande sea este valor, mejor 
+            calidad de imágenes tendrán los documentos gráficos, pero mayor será el tamaño del archivo.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Singleton.OpcionesEmpresa.TamañoImágenesProductosFichas">
+            <summary>
+            El tamaño al que se dimensionarán las imágenes originales para ser usadas en las fichas informativas. Entre más grande sea este valor, mejor 
+            calidad de imágenes tendrán los documentos gráficos, pero mayor será el tamaño del archivo.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Singleton.OpcionesEmpresa.CantidadFilasProductosPorPáginaCotización">
+            <summary>
+            Cantidad de filas por página para las páginas de las cotizaciones.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Singleton.OpcionesEmpresa.CantidadColumnasProductosPorPáginaCotización">
+            <summary>
+            Cantidad de columnas por página para las páginas de las cotizaciones.
+            </summary>
+        </member>
+        <member name="F:SimpleOps.Singleton.OpcionesEmpresa.UnidadPredeterminadaProducto">
+            <summary>
+            Se usa esta unidad cuando no se ha establecido su valor. Es necesario manejarla por aparte porque es necesario asignar el valor 
+            Unidad.Desconocida a Producto.UnidadEspecífica para que esta no reemplace la unidad del producto base.
+            </summary>
+        </member>
+        <member name="F:SimpleOps.Singleton.OpcionesEmpresa.UnidadEmpaquePredeterminadaProducto">
+            <summary>
+            Se usa esta unidad cuando no se ha establecido su valor. Es necesario manejarla por aparte porque es necesario asignar el valor 
+            Unidad.Desconocida a Producto.UnidadEmpaqueEspecífica para que esta no reemplace la unidad de empaque en el producto base.
+            </summary>
+        </member>
+        <member name="F:SimpleOps.Singleton.OpcionesEmpresa.ExcluídoIVAPredeterminadoProducto">
+            <summary>
+            Determina si por defecto los productos son o no excluídos de IVA. Se usa este valor cuando no se ha establecido su valor. 
+            Es necesario manejarlo por aparte porque es necesario asignar el valor null a Producto.ExcluídoIVA para que este no reemplace 
+            el ExcluídoIVA del producto base.
+            </summary>
+        </member>
+        <member name="F:SimpleOps.Singleton.OpcionesEmpresa.FísicoPredeterminadoProducto">
+            <summary>
+            Determina si por defecto los productos son o no físicos. Un producto físico es del que se puede mantener un inventario. Se usa este valor 
+            cuando no se ha establecido su valor. Es necesario manejarlo por aparte porque es necesario asignar el valor null a Producto.Físico 
+            para que este no reemplace el Físico del producto base.
+            </summary>
+        </member>
+        <member name="F:SimpleOps.Singleton.OpcionesEmpresa.HabilitarProductosBase">
+            <summary>
+            Al habilitar los productos base la tabla productos se divide en dos tablas: Productos y ProductosBase. Esto permite que algunos productos 
+            que solo difieran en ciertos atributos menores (talla, color, etc) puedan compartir un producto base y tomar de este los valores de algunas 
+            de sus propiedades comunes (marca, descripción, etc). Así se facilita el mantenimiento de los datos porque en caso de requerir un cambio 
+            solo se tendría que hacer en el producto base, pero reduce un poco el rendimiento de las consultas de productos a la base de datos. 
+            Si se identifican problemas de rendimiento y para el caso de uso particular no se necesitan los productos base, se se puede establecer 
+            este valor en falso. Después, en caso de necesitar la funcionalidad de productos base, se puede establecer en verdadero en cualquier momento.
+            Esta variable no afecta la estructura de la base de datos, solo afecta la manera en la que se hacen las consultas a ella y permite realizar 
+            algunas validaciones adicionales durante la ejecución.
+            </summary>
+        </member>
+        <member name="F:SimpleOps.Singleton.OpcionesEmpresa.PermitirAtributosProductosLibres">
+            <summary>
+            Si está habilitado el uso de los productos base y específicos y este valor es verdadero, se permitirá la asignación de atributos que no 
+            estén en la tabla AtributosProductos a los productos específicos. Si este valor es falso y se intenta agregar un atributo que no está en
+            la tabla AtributosProductos, el procedimiento fallará. Incluso si este valor es verdadero en la interfaz de usuario se sugerirá al 
+            usuario a no usar atributos libres, pero se le permite hacerlo. Si este valor está en falso, no estará disponible la función en la 
+            interfaz de usuario.
+            </summary>
+        </member>
+        <member name="F:SimpleOps.Singleton.OpcionesEmpresa.TiposAtributosSecuenciales">
+            <summary>
+            Los atributos de estos tipos se resumen usando la palabra 'a' si están consecutivos.
+            </summary>
+        </member>
+        <member name="F:SimpleOps.Singleton.OpcionesEmpresa.NombreTipoAtributoTallaNumérica">
+            <summary>
+            Los atributos de este tipo podrán contener finalización en ,5 o .5 para obtener tallas intermedias a las enteras y estas 
+            serán consideradas correctamente en la secuencia al igual que también lo serán los números enteros entre ellas. Por ejemplo,
+            si existen estos atributos de tipo Talla Numérica: 11, 11.5, 12, 12.5, 13, 13.5 y 14. Los siguientes grupos de atributos se resumirán
+            correctamente a rango completo: 12, 13, 14 => 12 a 14 y 12, 12.5, 13, 13.5, 14 => 12 a 14.
+            </summary>
+        </member>
+        <member name="F:SimpleOps.Singleton.OpcionesEmpresa.RangosDoblePasoEnSecuenciaTallaNumérica">
+            <summary>
+            En los rangos en los que se permite el paso doble en la secuencia de atributos de talla numérica, el rango se considerará completo
+            incluso si salta 2 valores, así: 38, 40, 42, 44 => 38 a 44.
+            </summary>
+        </member>
+        <member name="F:SimpleOps.Singleton.OpcionesEmpresa.RangosTallasMediasNuméricas">
+            <summary>
+            Entre estos rangos las tallas númericas contienen tallas medias. Esta información es necesaria para permitir secuencias con pasos hasta de
+            a 2 en estos rangos o hasta de a 4 si también se está en un <see cref="F:SimpleOps.Singleton.OpcionesEmpresa.RangosDoblePasoEnSecuenciaTallaNumérica"/>. 
+            Se establecen los rangos desde las tallas medias iniciales y finales de cada rango.
+            </summary>
+        </member>
         <member name="P:SimpleOps.Singleton.OpcionesEmpresa.Nombre">
             <summary>
             El nombre de la empresa. Se usa el nombre comercial si no es nulo, si es nulo se usa la razón social.
@@ -312,13 +491,25 @@
         </member>
         <member name="T:SimpleOps.Singleton.OpcionesGenerales">
             <summary>
-            Opciones, datos y configuraciones generales modificables por la empresa usuaria de SimpleOps. Inician en valores predeterminados que no se tendrían 
-            que modificar para los escenarios más comunes. Suelen ser valores válidos para todas las empresas en Colombia. Son comunes a todos los usuarios de 
-            SimpleOps de la misma empresa. Si la empresa no modifica el valor de alguna propiedad (las modificadas se escriben en GeneralesPropias.json) se usará
-            el valor en Generales.json. Las Generales.json tienen la ventaja de ser actualizadas automáticamente cada año o cada que hay un cambio externo, por 
-            ejemplo en la legislación. Sus valores siempre se cargan al iniciar desde Generales.json. Los valores iniciales en código solo sirven para autogenerar 
-            el archivo Generales.json cuando no exista y para evitar tener que declarar las propiedades permitiendo valores nulos. Su modificación está 
-            restringida por roles.
+            Configuraciones generales modificables por la empresa usuaria de SimpleOps. Inician en valores predeterminados que ninguna empresa tendría que 
+            modificar para los escenarios más comunes y/o que sus valores pueden cambiar de manera global para todas las empresas de Colombia. Suelen ser 
+            valores válidos para todas las empresas en Colombia. Si la empresa no modifica el valor de alguna propiedad (las modificadas se escriben en 
+            GeneralesPropias.json), se usará el valor en Generales.json. Las Generales.json tienen la ventaja de ser actualizadas automáticamente cada año 
+            o cada que hay un cambio externo, por ejemplo en la legislación. Sus valores siempre se cargan al iniciar desde Generales.json. Los valores 
+            iniciales en código solo sirven para autogenerar el archivo Generales.json cuando no exista y para evitar tener que declarar las propiedades 
+            permitiendo valores nulos. Su modificación está restringida por roles. En términos generales pocas configuraciones van aquí, ante de agregar 
+            una configuración asegurarse de que se cumplen las condiciones, de lo contrario lo más normal es que vaya en OpcionesEmpresa.cs.
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Pruebas.Ejecutar">
+            <summary>
+            Ejecuta algunas pruebas seleccionadas. Se pueden activar o desactivar con comentarios.
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Pruebas.IntegraciónAplicacionesTerceros">
+            <summary>
+            Esta prueba se usa cuando se quiere simular el comportamiento de un programa tercero que genera archivos de comunicación .json con SimpleOps
+            para el modo de integración de facturación electrónica.
             </summary>
         </member>
         <member name="M:SimpleOps.Pruebas.Habilitación">
@@ -326,6 +517,16 @@
             Se envían los documentos como pruebas de habilitación a la DIAN y automáticamente se activa la facturación electrónica para la empresa y 
             esta ya no podrá facturar por el método tradicional. Solo se debe hacer cuando la empresa esté completamente segura que procederá a la migración
             y seguirá facturando electrónicamente.
+            </summary>
+        </member>
+        <member name="T:SimpleOps.Integración.DatosLíneaProducto">
+            <summary>
+            DTO adecuado para escribir en ambas direcciones: desde DatosLíneaProducto a Producto y desde Producto a DatosLíneaProducto.
+            Tiene el inconveniente que cuando se escriben propiedades de un producto desde DatosLíneaProducto los productos base que sean
+            comunes a varios productos se crean como productos base independientes. Esto significa que si después de escrito, se hace
+            un cambio en la descripción de un producto base esto no afectaría la descripción de otros productos que originalmente tenían ese producto base. 
+            Si se necesitara este comportamiento habría que hacer un procesamiento posterior a la escritura para unificar los productos base comunes en un 
+            solo objeto.
             </summary>
         </member>
         <member name="T:SimpleOps.Integración.Integrador">
@@ -571,7 +772,9 @@
         </member>
         <member name="T:SimpleOps.Modelo.Actualizable">
             <summary>
-            Entidad que admite cambios después de creada. Se rastrea la fecha de actualización, el actualizador y el creador, pero no deja un rastro independiente de fecha de creación. Es útil para entidades que ya disponen de propiedades asociadas a su creación (como Factura) o entidades donde no es tan necesario disponer de esta información porque basta con el rastro de actualización (que se también se escribe en la creación).
+            Entidad que admite cambios después de creada. Se rastrea la fecha de actualización, el actualizador y el creador, pero no deja un rastro 
+            independiente de fecha de creación. Es útil para entidades que ya disponen de propiedades asociadas a su creación (como Factura) o entidades 
+            donde no es tan necesario disponer de esta información porque basta con el rastro de actualización (que se también se escribe en la creación).
             </summary>
         </member>
         <member name="T:SimpleOps.Modelo.ComprobanteDinero">
@@ -591,7 +794,7 @@
         </member>
         <member name="P:SimpleOps.Modelo.ComprobanteDinero.Abono">
             <summary>
-            El valor del comprobante que se usó para abonar al saldo a favor de la entidad económica. Si es negativo es el valor tomado del saldo pendiente de la entidad económica que se sumó al movimiento de dinero para cancelar las facturas.
+            El valor del comprobante que se usó para abonar al saldo a favor de la entidad económica. Si es negativo es la parte del saldo pendiente de la entidad económica que se sumó al movimiento de dinero para cancelar las facturas.
             </summary>
         </member>
         <member name="P:SimpleOps.Modelo.ComprobanteDinero.Estado">
@@ -897,7 +1100,8 @@
         </member>
         <member name="M:SimpleOps.Modelo.Factura`2.CalcularTodo(SimpleOps.Datos.Contexto,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
             <summary>
-            <para>Calcula todos los totales, impuestos y retenciones de la factura. Devuelve verdadero si el cálculo fue exitoso. Si se pasa <paramref name="cargarLíneas"/>, <paramref name="cargarEntidadEconómica"/> o <paramref name="cargarProductos"/> en verdadero 
+            <para>Calcula todos los totales, impuestos y retenciones de la factura. Devuelve verdadero si el cálculo fue exitoso. 
+            Si se pasa <paramref name="cargarLíneas"/>, <paramref name="cargarEntidadEconómica"/> o <paramref name="cargarProductos"/> en verdadero 
             se debe pasar un <paramref name="ctx"/> no nulo.</para>
             <para>Si se pasa <paramref name="cargarLíneas"/> en verdadero
             y <see cref="P:SimpleOps.Modelo.Factura`2.Líneas"/> está vacío se consultará la base de datos para intentar llenarlos. Si se pasa 
@@ -1136,7 +1340,8 @@
         </member>
         <member name="T:SimpleOps.Modelo.Rastreable">
             <summary>
-            Entidad que admite cambios después de creada. Se hace rastreo completo del creador, actualizador, fecha de creación y fecha de actualización. Es útil para entidades que sus datos cambian frecuentemente y que se necesita disponer de la información del creador y la fecha de creación.
+            Entidad que admite cambios después de creada. Se hace rastreo completo del creador, actualizador, fecha de creación y fecha de actualización. 
+            Es útil para entidades que sus datos cambian frecuentemente y que se necesita disponer de la información del creador y la fecha de creación.
             </summary>
         </member>
         <member name="T:SimpleOps.Modelo.ReferenciaEntidadEconómica">
@@ -1246,6 +1451,18 @@
             </summary>
         </member>
         <member name="P:SimpleOps.Modelo.Aplicación.Nombre">
+            <MaxLength>50</MaxLength>
+        </member>
+        <member name="T:SimpleOps.Modelo.AtributoProducto">
+            <summary>
+            Cuando se usan <see cref="T:SimpleOps.Modelo.ProductoBase"/>, los atributos sirven para diferenciar productos que comparten el mismo producto base entre si.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.AtributoProducto.Nombre">
+            <summary>
+            Cómo el nombre del atributo se usa para diferenciar productos específicos entre sí en los documentos gráficos, este debe ser descriptivo 
+            por si mismo sin necesidad del tipo de atribruto. Por ejemplo, un nombre de atributo correcto es "Talla 10", en vez de "10".
+            </summary>
             <MaxLength>50</MaxLength>
         </member>
         <member name="T:SimpleOps.Modelo.Bloqueo">
@@ -1508,6 +1725,55 @@
             <summary>
             Ofrecimiento de precios de venta de varios productos a un cliente.
             </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Cotización.Tipo">
+            <summary>
+            Cotización o Catálogo. Al usar Catálogo, permite registrar cuándo se le envió el catálogo a un cliente. En estos casos <see cref="P:SimpleOps.Modelo.Cotización.Líneas"/>
+            puede ser vacío.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Cotización.CondicionesComerciales">
+            <summary>
+            Un texto libre que contiene las condiciones comerciales de la cotización. No se almacena en la base de datos para evitar crezca de tamaño 
+            innecesariamente. Se usa como almacenamiento intermedio y queda escrita en el PDF de la cotización o catálogo.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Cotización.EnlaceDescargaXlsx">
+            <summary>
+            Enlace que apunta a un archivo XLSX (archivo de Excel) que contiene la lista de los precios cotizados para que el cliente pueda 
+            analizar la cotización más fácilmente. No se almacena en la base de datos para evitar crezca de tamaño 
+            innecesariamente. Se usa como almacenamiento intermedio para ser usada en el PDF de la cotización o catálogo.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Cotización.TamañoImágenes">
+            <summary>
+            Alto y ancho al que se redimensionarán las imágenes. Si es nulo, no se redimensionan. Redimensionar
+            las imágenes ayuda a que el tamaño final del PDF sea más pequeño y además las imágenes son recortadas inteligentemente (ajustadas a su
+            contenido) antes de ser redimensionadas, esto permite que todas las imágenes de los productos tengan un tamaño homogéneo independiente
+            de como estén recortadas las imágenes originales.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Cotización.ReferenciasProductosPáginasExtra">
+            <summary>
+            Referencias de los productos que se añadirán a las páginas extra del catálogo. Estas referencias pueden ser de productos base o de productos 
+            específicos. Si se da el caso que un producto base tiene la misma referencia que uno específico, se prefiere el base. 
+            En el caso de catálogos sin páginas personalizadas (CatálogoPdf2.cshtml, CatálogoPdf3.cshtml, etc), las páginas extra son las únicas
+            páginas del catálogo.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Cotización.ÍndiceInversoInserciónPáginasExtra">
+            <summary>
+            Si es cero, las páginas extra se insertan al final del documento. Si es 1 las páginas extra se insertan antes de la última página 
+            para permitir que esta última página sea la contraportada del catálogo. Si es cualquier otro valor, las páginas extra se insertan 
+            justo antes de ese número de páginas finales personalizadas (CatálogoPdf2.cshtml, CatálogoPdf3.cshtml, etc).
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Modelo.Cotización.EstablecerTipo(SimpleOps.Global.TipoCotización)">
+            <summary>
+            Al establecer tipo se debe usar este método para cambiar también los valores predeterminados de algunas propiedades.
+            Se debe llamar siempre después de mapear el objeto.
+            </summary>
+            <param name="tipo"></param>
         </member>
         <member name="T:SimpleOps.Modelo.InformePago">
             <summary>
@@ -1826,42 +2092,36 @@
         </member>
         <member name="T:SimpleOps.Modelo.Producto">
             <summary>
-            Producto o servicio que la empresa vende.
+            Producto o servicio que la empresa vende. Si tiene <see cref="P:SimpleOps.Modelo.Producto.Base"/>, se le llama Producto Específico.
             </summary>
         </member>
         <member name="P:SimpleOps.Modelo.Producto.Referencia">
             <MaxLength>30</MaxLength>
-        </member>
-        <member name="P:SimpleOps.Modelo.Producto.Unidad">
             <summary>
-            La unidad de venta del producto. Se escribe en campo Unidad de la factura. Desconocida = 0, Unidad = 1, Par = 2, Trío = 3, Cuarteto = 4, Quinteto = 5, MediaDocena = 6, Decena = 10,
-            Docena = 12, DocenaLarga = 13, Quincena = 15, Veintena = 20, DobleDocena = 24, CuartoDeCentena = 25, Treintena = 30, Cuarentena = 40,
-            CuatroDocenas = 48, MediaCentena = 50, OchoDecenas = 80, OchoDocenas = 96, DiezDocenas = 120, Centena = 100, Gruesa = 144,
-            DobleCentena = 200, VeinteDocenas = 240, TripleCentena = 300, CuatroCentenas = 400, MedioMillar = 500, Millar = 1000, DobleMillar = 2000,
-            TripleMillar = 3000, CuatroMillares = 4000, Miríada = 10000, Millón = 1000000, Millardo = 1000000000.
+            Identificador único del producto en inventario. También llamado SKU.
             </summary>
         </member>
-        <member name="P:SimpleOps.Modelo.Producto.UnidadEmpaque">
+        <member name="P:SimpleOps.Modelo.Producto.Base">
             <summary>
-            Permite ajustar los pedidos a los proveedores para que se hagan en unidades de empaque. Desconocida = 0, Unidad = 1, Par = 2, Trío = 3, Cuarteto = 4, Quinteto = 5, MediaDocena = 6, Decena = 10,
-            Docena = 12, DocenaLarga = 13, Quincena = 15, Veintena = 20, DobleDocena = 24, CuartoDeCentena = 25, Treintena = 30, Cuarentena = 40,
-            CuatroDocenas = 48, MediaCentena = 50, OchoDecenas = 80, OchoDocenas = 96, DiezDocenas = 120, Centena = 100, Gruesa = 144,
-            DobleCentena = 200, VeinteDocenas = 240, TripleCentena = 300, CuatroCentenas = 400, MedioMillar = 500, Millar = 1000, DobleMillar = 2000,
-            TripleMillar = 3000, CuatroMillares = 4000, Miríada = 10000, Millón = 1000000, Millardo = 1000000000.
+            El producto base con el que este producto comparte varias características comunes. 
             </summary>
         </member>
-        <member name="P:SimpleOps.Modelo.Producto.PesoUnidadEmpaque">
+        <member name="P:SimpleOps.Modelo.Producto.TieneBase">
             <summary>
-            En kg. Se usa porque es unidad básica del sistema internacional.
+            Permite identificar si un producto es independiente de los otros o tiene un producto base en común con otros mediante el cual comparten
+            características. 
             </summary>
         </member>
-        <member name="P:SimpleOps.Modelo.Producto.DimensiónUnidadEmpaque">
+        <member name="P:SimpleOps.Modelo.Producto.Atributos">
             <summary>
-            En m x m x m. Se usa m porque es unidad básica del sistema internacional.
+            <see cref="T:SimpleOps.Modelo.AtributoProducto"/> que diferencian productos que comparten el mismo producto base. Por ejemplo, puede tener atributos Talla XL 
+            y Verde. Los atributos se agregan al final de la descripción del producto base para formar la descripción del producto. Preferiblemente
+            no se debe modificar este objeto directamente, si no hacerlo mediante <see cref="M:SimpleOps.Modelo.Producto.AgregarAtributo(System.String,System.Nullable{System.Boolean})" /> y
+            <see cref="M:SimpleOps.Modelo.Producto.EliminarAtributo(System.String)"/> para evitar duplicados y mantenerlos con la capitalización correcta de la tabla AtributosProductos. 
+            No se debe confundir con <see cref="P:SimpleOps.Modelo.Producto.Características"/>, las características normalmente se agregan al producto base y pueden ser compartidas
+            por los productos específicos que tienen el mismo producto base.
             </summary>
-        </member>
-        <member name="P:SimpleOps.Modelo.Producto.Descripción">
-            <MaxLength>200</MaxLength>
+            <MaxLength>500</MaxLength>
         </member>
         <member name="P:SimpleOps.Modelo.Producto.Cantidad">
             <summary>
@@ -1883,14 +2143,50 @@
             Cantidad reservada por ordenes de compra activas.
             </summary>
         </member>
-        <member name="P:SimpleOps.Modelo.Producto.Físico">
-            <summary>
-            Si es verdadero el producto existe en el mundo físico. Si es falso no maneja inventario como en el caso de de los servicios y productos virtuales.
-            </summary>
-        </member>
         <member name="P:SimpleOps.Modelo.Producto.CostoUnitario">
             <summary>
             El costo de compra por unidad y gastos asociados a su producción y obtención. Incluye costo de transporte. Si es nulo es desconocido.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.UbicaciónAlmacén">
+            <summary>
+            Texto que describe su ubicación en el almacén. Por ejemplo, A5-E3-S2 se puede usar para describir almacén 5, estantería 3 y sección 2.
+            </summary>
+            <MaxLength>30</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.ProductosAsociados">
+            <summary>
+            Referencias de otros productos asociados, similares o recomendados alternativos al producto. Permite varias funciones en implementaciones 
+            personalizadas.
+            </summary>
+            <MaxLength>500</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.Unidad">
+            <summary>
+            La unidad de venta del producto. Se escribe en campo Unidad de la factura. Desconocida = 0, Unidad = 1, Par = 2, Trío = 3, Cuarteto = 4, Quinteto = 5, MediaDocena = 6, Decena = 10,
+            Docena = 12, DocenaLarga = 13, Quincena = 15, Veintena = 20, DobleDocena = 24, CuartoDeCentena = 25, Treintena = 30, Cuarentena = 40,
+            CuatroDocenas = 48, MediaCentena = 50, OchoDecenas = 80, OchoDocenas = 96, DiezDocenas = 120, Centena = 100, Gruesa = 144,
+            DobleCentena = 200, VeinteDocenas = 240, TripleCentena = 300, CuatroCentenas = 400, MedioMillar = 500, Millar = 1000, DobleMillar = 2000,
+            TripleMillar = 3000, CuatroMillares = 4000, Miríada = 10000, Millón = 1000000, Millardo = 1000000000.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.UnidadEmpaque">
+            <summary>
+            Permite ajustar los pedidos a los proveedores para que se hagan en unidades de empaque. Desconocida = 0, Unidad = 1, Par = 2, Trío = 3, Cuarteto = 4, Quinteto = 5, MediaDocena = 6, Decena = 10,
+            Docena = 12, DocenaLarga = 13, Quincena = 15, Veintena = 20, DobleDocena = 24, CuartoDeCentena = 25, Treintena = 30, Cuarentena = 40,
+            CuatroDocenas = 48, MediaCentena = 50, OchoDecenas = 80, OchoDocenas = 96, DiezDocenas = 120, Centena = 100, Gruesa = 144,
+            DobleCentena = 200, VeinteDocenas = 240, TripleCentena = 300, CuatroCentenas = 400, MedioMillar = 500, Millar = 1000, DobleMillar = 2000,
+            TripleMillar = 3000, CuatroMillares = 4000, Miríada = 10000, Millón = 1000000, Millardo = 1000000000.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.PesoUnidadEmpaque">
+            <summary>
+            En kg.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.DimensiónUnidadEmpaque">
+            <summary>
+            En m x m x m.
             </summary>
         </member>
         <member name="P:SimpleOps.Modelo.Producto.Subcategoría">
@@ -1913,21 +2209,11 @@
             El uso principal que se le da.
             </summary>
         </member>
-        <member name="P:SimpleOps.Modelo.Producto.PrioridadWebPropia">
+        <member name="P:SimpleOps.Modelo.Producto.Físico">
             <summary>
-            Desconocida = 0, Ninguna = 1, MuyBaja = 10, Baja = 20, Media = 30, Alta = 40, MuyAlta = 50. Si es desconocida se usan las reglas en opciones. Para implementaciones personalizadas. Establece la prioridad de los productos que se sincronizan con el sitio web. Si la prioridad es Ninguna no se sincroniza con el sitio web.
+            Si es verdadero el producto existe en el mundo físico. Si es falso no maneja inventario como en el caso de de los servicios y 
+            productos virtuales.
             </summary>
-        </member>
-        <member name="P:SimpleOps.Modelo.Producto.ProveedorPreferido">
-            <summary>
-            El proveedor, que independiente de cualquier otra regla, será el que se use en la programación de sus pedidos.
-            </summary>
-        </member>
-        <member name="P:SimpleOps.Modelo.Producto.UbicaciónAlmacén">
-            <summary>
-            Texto que describe su ubicación en el almacén. Por ejemplo, A5-E3-S2 se puede usar para describir almacén 5, estantería 3 y sección 2.
-            </summary>
-            <MaxLength>30</MaxLength>
         </member>
         <member name="P:SimpleOps.Modelo.Producto.PorcentajeIVAPropio">
             <summary>
@@ -1962,17 +2248,6 @@
             DepartamentalPorcentual = 6, SobretasaCombustibles = 7, TelefoníaCelularYDatos = 8, Otro = 255.
             </summary>
         </member>
-        <member name="P:SimpleOps.Modelo.Producto.ProductosAsociados">
-            <summary>
-            Referencias de otros productos asociados o similares o recomendados alternativos al producto. Son agregados a la cotización cuando se agrega el producto. Además permite otras funciones en implementaciones personalizadas al sincronizar con el sitio web.
-            </summary>
-            <MaxLength>1000</MaxLength>
-        </member>
-        <member name="P:SimpleOps.Modelo.Producto.PorcentajeAdicionalGananciaPropio">
-            <summary>
-            Si es nulo se usan las reglas en opciones. El porcentaje de ganancia que se le sumará al porcentaje de ganancia del cliente para obtener el porcentaje de ganancia total. El porcentaje de ganancia total se le aplica a los costos de los productos para obtener sus precios de venta. Es útil cuando no se quieren usar las listas de precios o cuando el producto no está en ellas.
-            </summary>
-        </member>
         <member name="P:SimpleOps.Modelo.Producto.ConceptoRetenciónPropio">
             <summary>
             <para>Si es nulo se usa el <see cref="P:SimpleOps.Singleton.OpcionesEmpresa.ConceptoRetenciónPredeterminado"/> de opciones. Es el concepto de retención aplicable 
@@ -1985,6 +2260,86 @@
             ServiciosPorEmpresasVigilanciaYAseo = 16, SaludPorIPS = 17, HotelesYRestaurantes = 18, ArrendamientoBienesMuebles = 19, 
             ArrendamientoBienesInmuebles = 20, OtrosIngresosTributarios = 21, HonorariosYComisiones = 22, LicenciamientoSoftware = 23, Intereses = 24, 
             RendimientosFinacierosRentaFija = 25, LoteríasRifasYApuestas = 26, ColocaciónIndependienteJuegosAzar = 27, ContratosConstruccionYUrbanización = 28.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.PrioridadWebPropia">
+            <summary>
+            Desconocida = 0, Ninguna = 1, MuyBaja = 10, Baja = 20, Media = 30, Alta = 40, MuyAlta = 50. Si es desconocida se usan las reglas en opciones.
+            Para implementaciones personalizadas. Establece la prioridad de los productos que se sincronizan con el sitio web. 
+            Si la prioridad es Ninguna no se sincroniza con el sitio web.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.ProveedorPreferido">
+            <summary>
+            El proveedor, que independiente de cualquier otra regla, será el que se use en la programación de sus pedidos.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.PorcentajeAdicionalGananciaPropio">
+            <summary>
+            Si es nulo se usan las reglas en opciones. El porcentaje de ganancia que se le sumará al porcentaje de ganancia del cliente para obtener 
+            el porcentaje de ganancia total. El porcentaje de ganancia total se le aplica a los costos de los productos para obtener sus precios 
+            de venta. Es útil cuando no se quieren usar las listas de precios o cuando el producto no está en ellas.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.DescripciónEspecífica">
+            <MaxLength>200</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.DescripciónBase">
+            <summary>
+            Esta propiedad devuelve la descripción de productos sin producto base o la descripción del producto base de productos con producto 
+            base. Por ejemplo, si el valor de Producto.Base.Descripción es "Camiseta 3 Botones", este será el valor devuelto por esta función
+            para todos los productos específicos derivados de ese producto base.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.CaracterísticasEspecíficas">
+            <MaxLength>2000</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.Características">
+            <summary>
+            Lista con las características principales del producto que serán usadas en el catálogo autogenerado, en las fichas técnicas autogeneradas 
+            y en el sitio web. Estas características normalmente son especificaciones adicionales que no se encuentran en la descripción ni en los 
+            atributos, pero podrían mencionarlos para ampliarlos un poco. No deben ser textos muy largos, deben ser poder ser leídos en unos pocos 
+            segundos y obtener una idea más completa que la que provee la descripción sobre el producto. No confundir con <see cref="P:SimpleOps.Modelo.Producto.Atributos"/>,
+            las características pueden ser compartidas por todos los productos que compartan el mismo producto base, mientras los atributos son
+            los que los diferencian entre si.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.ArchivoImagenEspecífica">
+            <MaxLength>50</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.ArchivoImagen">
+            <summary>
+            Nombre del archivo de la imagen del producto. Si no se especifica, el nombre del archivo será la referencia.
+            La extensión del nombre del archivo de imagen se puede usar u omitir en el valor de esta propiedad. 
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.ArchivoInformaciónEspecífica">
+            <MaxLength>50</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.ArchivoInformación">
+            <summary>
+            Nombre del archivo con la información completa del producto. Si no se especifica, el nombre del archivo será la referencia.
+            El contenido del archivo puede ser un texto plano o HTML y su extensión puede ser .txt, .html o .htm. 
+            La extensión se puede usar u omitir en el valor de esta propiedad, SimpleOps buscará el que coincida. 
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Modelo.Producto.#ctor(System.String,SimpleOps.Modelo.ProductoBase,System.Collections.Generic.List{System.String})">
+            <summary>
+            Permite la creación de un producto usando como base un producto base existente con el que comparte los valores de las propiedades
+            en este producto base con otros productos. En los atributos se pasan los elementos que diferencian al producto que se está creando de los 
+            otros productos que comparten el mismo producto base. Por ejemplo, el producto base puede tener descripción "Camiseta Manga Corta" que es compartida
+            por todos los productos que lo tienen de base y el producto que se está creando puede ser "Camiseta Manga Corta Roja Talla M", por lo tanto se 
+            pasaría en los atributos una lista con AtributoProducto.TallaM y AtributoProducto.Roja.
+            </summary>
+            <param name="referencia"></param>
+            <param name="base">Producto base que comparte propiedades con el producto a crear y otros.</param>
+            <param name="atributos">Lista de atributos que diferencian el producto a crear de los otros que comparten el mismo producto base.</param>
+        </member>
+        <member name="P:SimpleOps.Modelo.Producto.Descripción">
+            <summary>
+            Si el producto tiene atributos, la descripción del producto se obtiene automáticamente con la descripción del producto base 
+            más los atributos separados por espacio. Es posible agregar atributos a un producto que no tenga producto base, pero
+            no es lo usual. Si deseas modificar la descripción asigna el valor de <see cref="P:SimpleOps.Modelo.Producto.DescripciónBase"/> y/o de <see cref="P:SimpleOps.Modelo.Producto.Atributos"/>.
             </summary>
         </member>
         <member name="P:SimpleOps.Modelo.Producto.CantidadDisponible">
@@ -2007,6 +2362,233 @@
             Se usa principalmente para pasar al procedimiento de generación de representación gráfica de documentos que no tiene
             acceso a la función ATextoDinero()
             </summary>
+        </member>
+        <member name="M:SimpleOps.Modelo.Producto.UsarPropiedadesBase(System.Boolean)">
+            <summary>
+            Devuelve verdadero para usar el producto base para obtener valor de la propiedad si la propiedad específica no es nula
+            y falso para obtenerlo siempre de la propiedad específica. 
+            Se debe pasar el parámetro <paramref name="escritura"/> en verdadero cuando se quiera hacer una escritura del valor
+            para controlar el caso no deseado en el que se esté intentando modificar el valor del producto base desde el producto.
+            </summary>
+        </member>
+        <member name="M:SimpleOps.Modelo.Producto.ObtenerInformaciónHtml(System.Boolean,System.String,System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            Lee el archivo de información (plano o HTML) y devuelve un texto HTML. Si se dejan <paramref name="rutaCarpetaFragmentos"/> y 
+            <paramref name="rutaCarpetaImágenes"/> en nulo, se usarán las carpetas predeterminadas. Si <paramref name="forzarCompilación"/> es falso,
+            solo se compilará la información HTML
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SimpleOps.Modelo.Producto.ObtenerAtributosNoRepetidos(System.String)">
+            <summary>
+            Obtiene los atributos sin repetir. Si se puede asegurar que los atributos no están repetidos, su resultado es igual al valor de 
+            la propiedad Atributos.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SimpleOps.Modelo.Producto.AgregarAtributo(System.String,System.Nullable{System.Boolean})">
+            <summary>
+            Agrega un atributo a la lista de atributos, sin repetirlo y usando la capitalización correcta. Permite la no adición
+            del atributo si no está en la tabla AtributosProductos al pasar <paramref name="permitirAtributosLibres"/> en falso. Devuelve
+            verdadero si el atributo fue agregado y falso si no se agregó.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SimpleOps.Modelo.Producto.ClasificarAtributos(System.Boolean)">
+            <summary>
+            Devuelve un diccionario clasificando por su tipo los atributos asignados al producto.
+            Si se puede asegurar que los atributos no están repetidos, o si están repetidos y no importa para la necesidad actual, al establecer
+            permitirRepetidos en verdadero se obtiene un mejor rendimiento.
+            </summary>
+            <param name="permitirRepetidos"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SimpleOps.Modelo.ProductoBase">
+            <summary>
+            Varias entidades de tipo <see cref="T:SimpleOps.Modelo.Producto"/> pueden contener características en común cómo 
+            la marca, el material, especificaciones técnicas, etc. A estos productos se les asigna un <see cref="T:SimpleOps.Modelo.ProductoBase"/> común y 
+            estas características se manejan centralizadas en este producto base. Esto evita errores de escritura y la repetición de la información
+            en la tabla Productos. Los atributos en los que los productos que comparten el mismo producto base difieran
+            se manejan como una o varias columnas adicionales en la tabla producto (ver comentario en clase Producto).
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.ProductoBase.Referencia">
+            <MaxLength>30</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.ProductoBase.ProductosBaseAsociados">
+            <summary>
+            Referencias de otros productos base asociados, similares o recomendados alternativos. Permite varias funciones en implementaciones 
+            personalizadas. Es una propiedad equivalente a Producto.ProductosAsociados, pero a nivel de productos base.
+            </summary>
+            <MaxLength>500</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.ProductoBase.Descripción">
+            <MaxLength>200</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.ProductoBase.Unidad">
+            <summary>
+            La unidad de venta del producto. Se escribe en campo Unidad de la factura. Desconocida = 0, Unidad = 1, Par = 2, Trío = 3, Cuarteto = 4, Quinteto = 5, MediaDocena = 6, Decena = 10,
+            Docena = 12, DocenaLarga = 13, Quincena = 15, Veintena = 20, DobleDocena = 24, CuartoDeCentena = 25, Treintena = 30, Cuarentena = 40,
+            CuatroDocenas = 48, MediaCentena = 50, OchoDecenas = 80, OchoDocenas = 96, DiezDocenas = 120, Centena = 100, Gruesa = 144,
+            DobleCentena = 200, VeinteDocenas = 240, TripleCentena = 300, CuatroCentenas = 400, MedioMillar = 500, Millar = 1000, DobleMillar = 2000,
+            TripleMillar = 3000, CuatroMillares = 4000, Miríada = 10000, Millón = 1000000, Millardo = 1000000000.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.ProductoBase.UnidadEmpaque">
+            <summary>
+            Permite ajustar los pedidos a los proveedores para que se hagan en unidades de empaque. Desconocida = 0, Unidad = 1, Par = 2, Trío = 3, Cuarteto = 4, Quinteto = 5, MediaDocena = 6, Decena = 10,
+            Docena = 12, DocenaLarga = 13, Quincena = 15, Veintena = 20, DobleDocena = 24, CuartoDeCentena = 25, Treintena = 30, Cuarentena = 40,
+            CuatroDocenas = 48, MediaCentena = 50, OchoDecenas = 80, OchoDocenas = 96, DiezDocenas = 120, Centena = 100, Gruesa = 144,
+            DobleCentena = 200, VeinteDocenas = 240, TripleCentena = 300, CuatroCentenas = 400, MedioMillar = 500, Millar = 1000, DobleMillar = 2000,
+            TripleMillar = 3000, CuatroMillares = 4000, Miríada = 10000, Millón = 1000000, Millardo = 1000000000.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.ProductoBase.PesoUnidadEmpaque">
+            <summary>
+            En kg.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.ProductoBase.DimensiónUnidadEmpaque">
+            <summary>
+            En m x m x m.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.ProductoBase.Subcategoría">
+            <summary>
+            Un tipo personalizado para clasificarlo.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.ProductoBase.LíneaNegocio">
+            <summary>
+            La línea de negocio a la que pertenece.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.ProductoBase.Material">
+            <summary>
+            Material principal del que está hecho.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.ProductoBase.Aplicación">
+            <summary>
+            El uso principal que se le da.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.ProductoBase.Físico">
+            <summary>
+            Si es verdadero el producto existe en el mundo físico. Si es falso no maneja inventario como en el caso de de los servicios y 
+            productos virtuales.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.ProductoBase.PorcentajeIVAPropio">
+            <summary>
+            Si es nulo se usan las reglas en Global.ObtenerPorcentajeIVA(). Si es cero es exento de IVA.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.ProductoBase.ExcluídoIVA">
+            <summary>
+            Si es verdadero es excluído de IVA y tiene un tratamiento tributario diferente porque no suma a la base tributable. Si es falso y 
+            PorcentajeIVAPropio = 0 (exentos) o PorcentajeIVAPropio > 0 si suma a la base tributable. Si se establece este valor en verdadero se le dará 
+            prioridad sin importar el valor en PorcentajeIVAPropio y el porcentaje de IVA efectivo (PorcentajeIVA) será cero.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.ProductoBase.PorcentajeImpuestoConsumoPropio">
+            <summary>
+            Si es nulo se usa el porcentaje en opciones. Si es cero es exento de cualquier tipo de impuesto al consumo porcentual.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.ProductoBase.ImpuestoConsumoUnitarioPropio">
+            <summary>
+            Si es nulo se usa el el valor en opciones. Si es cero es exento de cualquier tipo de impuesto al consumo por unidad.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.ProductoBase.TipoImpuestoConsumoPropio">
+            <summary>
+            Si es desconocido se usa el tipo en opciones. Se usa para relacionarlo con TipoTributo que será enviado a la DIAN en la 
+            factura electrónica. También se usa para establecer el valor de ImpuestoConsumoUnitario y PorcentajeImpuestoConsumo si el tipo
+            se encuentra en los diccionarios en opciones <see cref="P:SimpleOps.Singleton.OpcionesGenerales.PorcentajesImpuestosConsumo"/> o 
+            <see cref="P:SimpleOps.Singleton.OpcionesGenerales.ValoresUnitariosImpuestosConsumo" />.
+            Posibles valores: Desconocido = 0, General = 1 (Valor general que no tiene asociado una tasa automáticamente, se debe especificar por producto), 
+            BolsasPlásticas = 2, Carbono = 3, Combustibles = 4, DepartamentalNominal = 5, 
+            DepartamentalPorcentual = 6, SobretasaCombustibles = 7, TelefoníaCelularYDatos = 8, Otro = 255.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.ProductoBase.ConceptoRetenciónPropio">
+            <summary>
+            <para>Si es nulo se usa el <see cref="P:SimpleOps.Singleton.OpcionesEmpresa.ConceptoRetenciónPredeterminado"/> de opciones. Es el concepto de retención aplicable 
+            a este producto según la tabla de retención en la fuente. Al establecer este concepto también se está estableciendo si el producto es un 
+            Producto o Servicio, información que se usa en otros lugares, como en el cálculo del mínimo para la retención del IVA.</para>
+            Desconocido = 0, Generales = 1, TarjetaDébitoOCrédito = 2, AgrícolasOPecuariosSinProcesamiento = 3, AgrícolasOPecuaríosConProcesamiento = 4, 
+            CaféPergaminoOCereza = 5, CombustiblesDerivadosPetróleo = 6, ActivosFijosPersonasNaturales = 7, Vehículos = 8, BienesRaícesVivienda = 9, 
+            BienesRaícesNoVivienda = 10, ServiciosGenerales = 11, EmolumentosEclesiásticos = 12, TransporteCarga = 13, 
+            TransporteNacionalTerrestrePasajeros = 14, TransporteNacionalAéreoOMarítimoPasajeros = 15, ServiciosPorEmpresasTemporales = 16, 
+            ServiciosPorEmpresasVigilanciaYAseo = 16, SaludPorIPS = 17, HotelesYRestaurantes = 18, ArrendamientoBienesMuebles = 19, 
+            ArrendamientoBienesInmuebles = 20, OtrosIngresosTributarios = 21, HonorariosYComisiones = 22, LicenciamientoSoftware = 23, Intereses = 24, 
+            RendimientosFinacierosRentaFija = 25, LoteríasRifasYApuestas = 26, ColocaciónIndependienteJuegosAzar = 27, ContratosConstruccionYUrbanización = 28.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.ProductoBase.PrioridadWebPropia">
+            <summary>
+            Desconocida = 0, Ninguna = 1, MuyBaja = 10, Baja = 20, Media = 30, Alta = 40, MuyAlta = 50. Si es desconocida se usan las reglas en opciones.
+            Para implementaciones personalizadas. Establece la prioridad de los productos que se sincronizan con el sitio web. 
+            Si la prioridad es Ninguna no se sincroniza con el sitio web.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.ProductoBase.ProveedorPreferido">
+            <summary>
+            El proveedor, que independiente de cualquier otra regla, será el que se use en la programación de sus pedidos.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.ProductoBase.PorcentajeAdicionalGananciaPropio">
+            <summary>
+            Si es nulo se usan las reglas en opciones. El porcentaje de ganancia que se le sumará al porcentaje de ganancia del cliente para obtener 
+            el porcentaje de ganancia total. El porcentaje de ganancia total se le aplica a los costos de los productos para obtener sus precios 
+            de venta. Es útil cuando no se quieren usar las listas de precios o cuando el producto no está en ellas.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.ProductoBase.Características">
+            <summary>
+            Lista con las características principales del producto que serán usadas en el catálogo autogenerado, en las fichas técnicas autogeneradas 
+            y en el sitio web. Estas características normalmente son especificaciones adicionales que no se encuentran en la descripción ni en los 
+            atributos, pero podrían mencionarlos para ampliarlos un poco. No deben ser textos muy largos, deben ser poder ser leídos en unos pocos 
+            segundos y obtener una idea más completa que la que provee la descripción sobre el producto. No confundir con los atributos,
+            las características pueden ser compartidas por todos los productos que compartan el mismo producto base, mientras los atributos son
+            los que los diferencian entre si.
+            </summary>
+            <MaxLength>2000</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.ProductoBase.ArchivoImagen">
+            <summary>
+            Nombre del archivo de la imagen del producto. Si no se especifica, el nombre del archivo será la referencia.
+            La extensión del nombre del archivo de imagen se puede usar u omitir en el valor de esta propiedad. 
+            </summary>
+            <MaxLength>50</MaxLength>
+        </member>
+        <member name="P:SimpleOps.Modelo.ProductoBase.ArchivoInformación">
+            <summary>
+            Nombre del archivo con la información completa del producto. Si no se especifica, el nombre del archivo será la referencia.
+            El contenido del archivo puede ser un texto plano o HTML y su extensión puede ser .txt, .html o .htm. 
+            La extensión se puede usar u omitir en el valor de esta propiedad, SimpleOps buscará el que coincida. 
+            </summary>
+            <MaxLength>50</MaxLength>
+        </member>
+        <member name="M:SimpleOps.Modelo.ProductoBase.CompilarAtributos(System.Collections.Generic.List{SimpleOps.Modelo.Producto},System.String,System.String)">
+            <summary>
+            Devuelve un texto que enumera todos los atributos del <paramref name="tipoAtributo"/> en la lista de <paramref name="productos"/>.
+            Si los atributos son de tipo secuencial, como las tallas, se devuelven textos con 'a' para denotar los rangos
+            incluídos, por ejemplo: Talla 8 a 11. Si no son secuenciales, se devuelven los atributos del mismo tipo separados por coma y por 'y'.
+            Si un producto tiene varios atributos del mismo tipo, estos se unen usando <paramref name="separadorAtributosIgualTipoEnProducto"/>, 
+            por ejemplo, si un producto 2 valores para el tipo de atributo color: Rojo y Verde, se devolverá Rojo+Verde.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SimpleOps.Modelo.ProductoBase.CompilarAtributos(System.Collections.Generic.List{SimpleOps.Modelo.Producto},System.Collections.Generic.List{System.String})">
+            <summary>
+            De cada tipo de atributo en <paramref name="tiposAtributos"/> obtiene los atributos compilados de todos los <paramref name="productos"/>
+            y devuelve un diccionario con una línea con los atributos compilados por cada tipo.
+            </summary>
+            <param name="productos"></param>
+            <param name="tiposAtributos"></param>
+            <returns></returns>
         </member>
         <member name="T:SimpleOps.Modelo.Proveedor">
             <summary>
@@ -2160,6 +2742,15 @@
             Categorización personalizada más amplia que la subcategoría. Cada producto tiene una subcategoría y varias subcategorías pueden pertenecer a la misma categoría. Puede ser nula si no se desea ampliar más esta categorización y basta con la subcategoría.
             </summary>
         </member>
+        <member name="T:SimpleOps.Modelo.TipoAtributoProducto">
+            <summary>
+            Cuando se usan <see cref="T:SimpleOps.Modelo.ProductoBase"/>, los <see cref="T:SimpleOps.Modelo.AtributoProducto"/> sirven para diferenciar productos que comparten el mismo producto 
+            base entre si. Estos pueden ser clasificados por <see cref="T:SimpleOps.Modelo.TipoAtributoProducto"/> para presentación al usuario.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.TipoAtributoProducto.Nombre">
+            <MaxLength>50</MaxLength>
+        </member>
         <member name="T:SimpleOps.Modelo.Usuario">
             <summary>
             Persona autorizada para usar SimpleOps.
@@ -2277,7 +2868,7 @@
         </member>
         <member name="M:Vixark.General.ObtenerRutaAgregandoTexto(System.String,System.String)">
             <summary>
-            Devuelve una ruta del archivo manteniendo la extensión pero agregando un  <paramref name="textoAdicional"/> al nombre del archivo.
+            Devuelve una ruta del archivo manteniendo la extensión pero agregando un <paramref name="textoAdicional"/> al nombre del archivo.
             </summary>
         </member>
         <member name="M:Vixark.General.AbrirArchivo(System.String)">
@@ -2291,6 +2882,24 @@
             Borra un archivo sin generar excepciones. Devuelve verdadero si fue borrado y falso si no se pudo borrar. Útil en los casos
             que se quiere borrar un archivo pero si por alguna razón este está bloqueado y no se puede borrar se puede dejar sin borrar.
             </summary>
+        </member>
+        <member name="M:Vixark.General.ObtenerÚltimaFechaModificaciónArchivos(System.String)">
+            <summary>
+            Obtiene la fecha de modificación más reciente entre las fechas de modificación  de los archivos dentro de la <paramref name="rutaCarpeta"/>.
+            Devuelve nulo si la carpeta no contiene archivos.
+            </summary>
+            <param name="rutaCarpeta"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Vixark.General.ObtenerFechaModificaciónUtc(System.String)">
+            <summary>
+            Encapsulación de GetLastWriteTimeUtc() que devuelve nulo si el archivo no existe y sirve para no olvidar usar siempre la versión UTC.
+            Se prefiere la versión UTC porque es útil en los usos más comunes, como la verificación de si un archivo es más reciente que otro.
+            Si no se usa la versión UTC, un usuario en otro lugar del mundo le podría enviar un archivo modificado a otro usuario y la funcion que 
+            use esta función podría considerar incorrectamente que el archivo no ha sido modificado.
+            </summary>
+            <param name="rutaArchivo"></param>
+            <returns></returns>
         </member>
         <member name="M:Vixark.General.AgregarSufijo(System.String,System.String)">
             <summary>
@@ -2308,18 +2917,19 @@
             <param name="rutaCarpetaDestino"></param>
             <returns></returns>
         </member>
-        <member name="M:Vixark.General.CopiarArchivos(System.String,System.String,System.Boolean)">
+        <member name="M:Vixark.General.CopiarArchivos(System.String,System.String,System.Boolean,System.String)">
             <summary>
             Copia todos los archivos que estén en <paramref name="rutaCarpetaOrigen"/> en <paramref name="rutaCarpetaDestino"/>. 
             Si <paramref name="sobreescribir"/> es falso no se reemplazan los existentes con el mismo nombre en <paramref name="rutaCarpetaDestino"/>. 
-            Este procedimiento es útil para instaladores.
+            Este procedimiento es útil para instaladores. Devuelve la cantidad de archivos copiados.
             </summary>
             <param name="rutaCarpetaOrigen"></param>
             <param name="rutaCarpetaDestino"></param>
             <param name="sobreescribir"></param>
+            <param name="extensión"></param>
             <returns></returns>
         </member>
-        <member name="M:Vixark.General.Existe(Vixark.General.TipoRuta,System.String,System.String,System.String@,System.String)">
+        <member name="M:Vixark.General.ExisteRuta(Vixark.General.TipoElementoRuta,System.String,System.String,System.String@,System.String)">
             <summary>
             Función que permite devolver un mensaje descriptivo sobre la no existencia o la falta de asignación del valor de la ruta de cierto archivo 
             o carpeta. Si no se va a usar el mensaje obtenido no es necesario usar esta función porque File.Exists() o Directory.Exists() funcionan
@@ -2332,6 +2942,28 @@
             establecido.</param>
             <param name="mensaje">Variable en la que se devuelve el mensaje.</param>
             <param name="textoAdicional">Texto adicional opcional al final del mensaje para ambos casos.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Vixark.General.ObtenerRutaArchivo(System.String,System.String,System.String[])">
+            <summary>
+            Devuelve la ruta del archivo existente en <paramref name="rutaCarpeta"/>. Si se proporciona la lista <paramref name="extensionesVálidas"/>, 
+            se busca y se devuelve el archivo con la extensión válida que exista. El <paramref name="nombreArchivo"/> puede contener o no la extensión. 
+            Si la contiene y es una extensión válida, no busca archivos con otras extensiones válidas. Si no se proporciona la lista 
+            <paramref name="extensionesVálidas"/>, se verifica la existencia de <paramref name="nombreArchivo"/> en <paramref name="rutaCarpeta"/> sin
+            verificar ni añadir ninguna extensión. Devuelve nulo si no existe ningún un archivo coincidente. 
+            </summary>
+            <param name="nombreArchivo"></param>
+            <param name="rutaCarpeta"></param>
+            <param name="extensionesVálidas"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Vixark.General.ObtenerRutaCarpetaConBarra(System.String,System.Boolean)">
+            <summary>
+            Toma una <paramref name="rutaCarpeta"/> de cualquier tipo, URL o Local, con o sin barra al final, y la devuelve
+            con la barra al final adecuada.
+            </summary>
+            <param name="rutaCarpeta"></param>
+            <param name="barraInversaPorDefecto">Si es verdadero cuando se pasa una rutaCarpeta sin barras se devuelve con una barra inversa: \ al final.</param>
             <returns></returns>
         </member>
         <member name="M:Vixark.General.ObtenerBytesZip(System.String)">
@@ -2348,7 +2980,25 @@
             <param name="ruta"></param>
             <param name="rutaZip"></param>
         </member>
-        <member name="M:Vixark.General.RedimensionarImagen(System.String,System.String,System.Int32,System.Int32,System.Double,System.Int32)">
+        <member name="M:Vixark.General.ObtenerRutaImagen(System.String,System.String)">
+            <summary>
+            Devuelve la ruta del archivo la imagen con la extensión que exista. El <paramref name="archivoImagen"/> puede traer o no la extensión. 
+            Si no la trae se verifican las extensiones válidas de imágenes. Devuelve nulo si no existe ninguna un archivo coincidente.
+            </summary>
+            <param name="archivoImagen"></param>
+            <param name="rutaCarpeta"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Vixark.General.ObtenerBase64(System.String,System.Boolean,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="rutaImagen"></param>
+            <param name="paraHtml"></param>
+            <param name="rutaImagenNoDisponible">Se codifica esta imagen si la imagen en <paramref name="rutaImagen"/> es nula o no existe.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Vixark.General.RedimensionarImagen(System.String,System.String,System.Int32,System.Int32,System.Boolean,System.Double,System.Int32)">
             <summary>
             Redimensiona una imagen al nuevo tamaño recortándola inteligentemente. El recorte inteligente detecta el color del fondo de la imagen
             y encuentra cual es el rectángulo mínimo al que se puede recortar sin perder ninguna parte de la imagen, recorta la imagen a este 
@@ -2361,19 +3011,244 @@
             <param name="archivoFinal"></param>
             <param name="anchoNuevo"></param>
             <param name="altoNuevo"></param>
+            <param name="forzarRedimensionamiento">Si es falso y ya existe el <paramref name="archivoFinal"/> y su fecha de modificación es más reciente
+            que la fecha de modificación del <paramref name="archivoInicial"/>, no se redimensiona. Si es verdadero, siempre se redimensiona
+            independiente de las fechas de modificación. En el comportamiento predeterminado (falso) ahorra tiempo de cálculo,
+            pero se permite forzar el redimensionamiento porque en algunos casos las fechas de modificación podrían no ser confiables.</param>
             <param name="toleranciaDiferenciaColor">La tolerancia que permite en la diferencia del color de las 4 esquinas y en la detección del contorno 
             del objeto sobre el fondo. Con las 4 esquinas se saca un promedio del color de fondo. 
             Con este valor en 5 se empieza a notar la diferencia pero sigue siendo sutil. 
-            Si las imagenes están quedando recortadas descentradas, es porque el fondo tiene suciedad, en estos casos se puede considerar aumentar 
-            el valor de la tolerancia pero esto puede producir recortes incorrectos de algunas imagenes que se mezclan con el fondo.
-            Otra solución sería preprocesar las imagenes con un editor de imagenes para reducir la suciedad.</param>
+            Si las imágenes están quedando recortadas descentradas, es porque el fondo tiene suciedad, en estos casos se puede considerar aumentar 
+            el valor de la tolerancia pero esto puede producir recortes incorrectos de algunas imágenes que se mezclan con el fondo.
+            Otra solución sería preprocesar las imágenes con un editor de imágenes para reducir la suciedad.</param>
             <param name="margenRecorteImagen">Los pixeles de respiración que se le dejan a la imagen recortada a todos los lados. 
-            Es necesario usar un valor mayor que 2 siempre porque con 0 es muy justo donde va el cambio de color.</param>
+            Se sugiere usar un valor mayor a 2 porque con menos queda el recorte muy justo donde va el cambio de color.</param>
+        </member>
+        <member name="M:Vixark.General.AEnumeración``1(System.String)">
+            <summary>
+            Encapsulación de acceso rápido para convertir un texto en una enumeración.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="texto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Vixark.General.ADecimal(System.String)">
+            <summary>
+            Usa Convert.ToDecimal que permite mantener las posiciones decimales del texto en el decimal, así estas sean 00. Por ejemplo, 
+            convierte "158.0100" en 158.0100.
+            </summary>
+            <param name="texto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Vixark.General.AEntero(System.Char)">
+            <summary>
+            Función muy rápida de conversión de texto a entero. No realiza verificaciones de errores.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ATexto(System.Int32)">
+            <summary>
+            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 
+            sin saturar el código.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ATexto(System.Nullable{System.Int32})">
+            <summary>
+            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 
+            sin saturar el código.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ATexto(System.Int32,System.String)">
+            <summary>
+            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 
+            sin saturar el código.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ATexto(System.Decimal)">
+            <summary>
+            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 
+            sin saturar el código.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ATexto(System.Decimal,System.String)">
+            <summary>
+            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 
+            sin saturar el código.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ATexto(System.Int64)">
+            <summary>
+            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 
+            sin saturar el código.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ATexto(System.Char)">
+            <summary>
+            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 
+            sin saturar el código.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ATexto(System.Double)">
+            <summary>
+            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 
+            sin saturar el código.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ATexto(System.Double,System.String)">
+            <summary>
+            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 
+            sin saturar el código.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ATexto(System.TimeSpan,System.String)">
+            <summary>
+            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 
+            sin saturar el código.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ATexto(System.DateTime,System.String)">
+            <summary>
+            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 
+            sin saturar el código.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ATexto(System.Nullable{System.DateTime},System.String)">
+            <summary>
+            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 
+            sin saturar el código.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.EmpiezaPor(System.String,System.String,System.Boolean)">
+            <summary>
+            Encapsulación de rápido acceso de StartsWith() usando StringComparison.Ordinal. Es útil para omitir la advertencia CA1307 sin saturar el código.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.FinalizaCon(System.String,System.String,System.Boolean)">
+            <summary>
+            Encapsulación de rápido acceso de EndsWith() usando StringComparison.Ordinal. Es útil para omitir la advertencia CA1307 sin saturar el código.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.Contiene(System.String,System.String,System.Boolean)">
+            <summary>
+            Encapsulación de rápido acceso de Contains() usando StringComparison.Ordinal. Es útil para omitir la advertencia CA1307 sin saturar el código.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.IgualA(System.String,System.String,System.Boolean)">
+            <summary>
+            Encapsulación de rápido acceso de Equals() usando StringComparison.Ordinal. Es útil para omitir la advertencia CA1307 sin saturar el código.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.NoContiene(System.String,System.String,System.Boolean)">
+            <summary>
+            Encapsulación de rápido acceso de la negación de Contains() usando StringComparison.Ordinal. Es útil para omitir la advertencia CA1307 
+            sin saturar el código y para facilitar la lectura.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.Reemplazar(System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            Encapsulación de rápido de Replace() usando StringComparison.Ordinal. Es útil para omitir la advertencia CA1307 sin saturar el código.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.AFecha(System.String,System.String)">
+            <summary>
+            Encapsulación de acceso rápido para convertir un <paramref name="texto"/> en una fecha dado un <paramref name="formato"/>.
+            </summary>
+            <param name="texto"></param>
+            <param name="formato"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Vixark.General.ÍndiceDe(System.String,System.String,System.Int32)">
+            <summary>
+            Encapsulación de rápido acceso de IndexOf() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 
+            sin saturar el código.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.AMinúscula(System.String)">
+            <summary>
+            Encapsulación de rápido acceso de ToLowerInvariant(). Es útil para omitir la advertencia CA1308 sin saturar el código.
+            No se puede crear un método con el mismo nombre para string (sin ?) porque el compilador no lo permite. Si se necesitara 
+            se podría hacer otro método con otro nombre. Una solución fácil es usar este método con un string y poner ! después de () 
+            para informarle al compilador que se asegura que el resultado no será nulo.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.LimpiarEspacios(System.String)">
+            <summary>
+            Ejecuta Trim() y reemplaza todos los espacios dobles, triples etc, por espacios simples.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.SonIgualesTextosIgnorandoCapitalización(System.String,System.String)">
+            <summary>
+            Encapsulación de rápido acceso de Equals() usando StringComparison.Ordinal. Es útil usar en el delegado FSonIgualesTextosIgnorandoCapitalización.
+            </summary>
         </member>
         <member name="M:Vixark.General.ObtenerPalabraNúmeroYGénero(System.String,System.String)">
             <summary>
             Obtiene la palabra correcta según el género y número del sustantivo. Se provee la palabra masculina en singular.
             </summary>
+        </member>
+        <member name="M:Vixark.General.EmpiezaPor(System.String,System.String[],System.Boolean)">
+            <summary>
+            Determina si un <paramref name="texto"/> inicia por alguno de los <paramref name="textosInicio"/>.
+            </summary>
+            <param name="texto"></param>
+            <param name="textosInicio"></param>
+            <param name="ignorarCapitalización"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Vixark.General.Falso(System.String@,System.String)">
+            <summary>
+            Una función auxiliar útil para los métodos que requieren devolver un valor booleano que representa si fueron exitosos o no y 
+            además establecer un <paramref name="texto"/> de respuesta en la variable <paramref name="mensaje"/>.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.Coincide(System.String,System.String)">
+            <summary>
+            Es una función redundante con IsMatch, pero permite predeterminadamente ignorar la capitalización.
+            </summary>
+            <param name="texto"></param>
+            <param name="patrón"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Vixark.General.Extraer(System.String,System.String,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Busca en un <paramref name="texto"/> la coincidencia <paramref name="númeroCoincidencia"/> del <paramref name="patrón"/> y devuelve 
+            el texto coincidido del grupo <paramref name="númeroGrupo"/>. 
+            Si el <paramref name="númeroGrupo"/> es 0 se devuelve el texto completo coincidido.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.Extraer(System.String,System.String,System.Int32@,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Busca en un <paramref name="texto"/> la coincidencia <paramref name="númeroCoincidencia"/> del <paramref name="patrón"/> y devuelve 
+            el texto coincidido del grupo <paramref name="númeroGrupo"/>. 
+            Si el <paramref name="númeroGrupo"/> es 0 se devuelve el texto completo coincidido.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.Extraer(System.String,System.String,System.Int32@,System.Int32@,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Busca en un <paramref name="texto"/> la coincidencia <paramref name="númeroCoincidencia"/> del <paramref name="patrón"/> y devuelve 
+            el texto coincidido del grupo <paramref name="númeroGrupo"/>. 
+            Si el <paramref name="númeroGrupo"/> es 0 se devuelve el texto completo coincidido.
+            </summary>
+            <param name="texto"></param>
+            <param name="patrón"></param>
+            <param name="númeroGrupo"></param>
+            <param name="cantidadGrupos"></param>
+            <param name="cantidadCoincidencias"></param>
+            <param name="númeroCoincidencia"></param>
+            <param name="excepciónSiNoCoincidencias"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Vixark.General.ExtraerConPatrónObsoleta(System.String,System.String,System.Int32,System.Int32@,System.Boolean,System.Boolean)">
+            <summary>
+            Busca la primera coincidencia del <paramref name="patrón"/> dentro del <paramref name="texto"/> y devuelve el valor del grupo 
+            <paramref name="númeroGrupo"/>.
+            </summary>
+            <param name="texto"></param>
+            <param name="patrón"></param>
+            <param name="númeroGrupo"></param>
+            <param name="cantidadGrupos"></param>
+            <param name="errorEnNoCoincidenciaDePatrón"></param>
+            <param name="devolverValorSiNoHayCoincidencia"></param>
+            <returns></returns>
         </member>
         <member name="M:Vixark.General.AFechaYYMMDD(System.String)">
             <summary>
@@ -2409,20 +3284,103 @@
             Función igual a ATextoYYMMDD pero para fechasHoras que pueden ser nulas. Es 10% más lenta.
             </summary>
         </member>
+        <member name="M:Vixark.General.ATextoDinero(System.Object)">
+            <summary>
+            Si el objeto es decimal usa ATextoDinero. Si no lo es usa el ToString propio del objeto.
+            </summary>
+        </member>
         <member name="M:Vixark.General.AEntero(System.String)">
             <summary>
             Función muy rápida de conversión de texto a entero. No realiza verificaciones de errores, ni control de nulidad para máximizar la velocidad.
             </summary>
         </member>
-        <member name="M:Vixark.General.AEntero(System.Char)">
+        <member name="M:Vixark.General.ALíneas(System.String,System.Boolean)">
             <summary>
-            Función muy rápida de conversión de texto a entero. No realiza verificaciones de errores.
+            Función equivalente a System.IO.File.ReadAllLines() que toma como argumento un texto en vez de una ruta de archivo.
             </summary>
+            <param name="texto"></param>
+            <param name="eliminarLíneasVacías"></param>
+            <returns></returns>
         </member>
-        <member name="M:Vixark.General.ATexto``1(System.Collections.Generic.List{``0},Vixark.General.ConectorCoordinante)">
+        <member name="M:Vixark.General.ConvertirAHtml(System.String,System.String,System.String,System.Boolean,System.Int32)">
             <summary>
-            Devuelve la representación de una lista en un texto separado por comas y un <paramref name="conector"/> entre el penúltimo y último elemento.
+            <para>Abre un archivo de texto plano (.txt) o HTML y devuelve su representación en HTML.</para>
+            
+            <para>Adiciona elementos &lt;h2&gt; para líneas cortas de menos de <paramref name="máximoLargoTítulos"/> de carácteres (considerados títulos),
+            &lt;br&gt; para saltos de línea individuales, &lt;img&gt; para líneas con una imagen si terminan en una extensión válida de imagen, 
+            &lt;p&gt; para párrafos y &lt;ol&gt;+&lt;li&gt; o &lt;ul&gt;+&lt;li&gt; para listas que se pueden construir con *, -, · y 1., 2., etc. 
+            Dentro del texto plano permite la inclusión de algunos elementos HTML como &lt;i&gt; para cursivas y &lt;b&gt; para negritas que no serán 
+            alterados mientras se añadan en una sola línea.</para> 
+            
+            <para>Si el archivo tiene extensión .html o .htm, devuelve el contenido del archivo sin 
+            modificación, pero permite la compilación de diferentes archivos en un solo HTML mediante el uso de la etiqueta 
+            &lt;object data="Fragmento.html" /&gt;. De esta manera se permite reusar fragmentos de texto y HTML en múltiples archivos.
+            Si el archivo es de texto plano, permite realizar la compilación de varios agregando en una línea independiente el nombre o ruta del archivo 
+            con el fragmento a insertar, así: Fragmento.txt. Tanto en archivos HTML como en archivos de texto plano se pueden insertar archivos con 
+            fragmentos HTML o planos, es decir se pueden combinar archivos de texto plano con archivos HTML y viceversa.</para> 
+            
+            <para>En los fragmentos (tanto en texto plano como HTML) se pueden definir variables para ser reemplazadas 
+            por valores personalizados así: La {TipoProducto} marca {Marca}. En el archivo HTML donde se insertará el fragmento se puede establecer 
+            su valor usando &lt;object data="Fragmento.html" data-tipoproducto="camiseta" data-marca="Gato" /&gt;. En archivos de texto plano se
+            pueden establecer los valores de las variables así: {TipoProducto=camiseta}{Marca=Gato}Fragmento.html.</para>
+            
+            <para>Las imágenes y los fragmentos pueden ser escritos con la ruta completa (con o sin / o \ al final) o solo con el nombre de 
+            la imagen o fragmento y proporcionar una ruta común a todos con el parámetro <paramref name="rutaCarpetaImágenes"/> o 
+            <paramref name="rutaCarpetaFragmentos"/>. Si no se establece la ruta completa y tampoco se pasa un valor para 
+            las <paramref name="rutaCarpetaFragmentos"/> o <paramref name="rutaCarpetaImágenes"/>, se tomará cómo base la ruta de la 
+            carpeta de <paramref name="rutaArchivo"/>. Se pueden insertar fragmentos o imágenes usando rutas locales relativas, así:
+            fragmentos/fragmento.txt o fragmentos\fragmento.txt y se buscará dentro de la carpeta base la carpeta fragmentos y en ella 
+            el archivo fragmento.txt. El nombre del archivo fragmento.txt no puede contener el carácter { ni }.
+            </para>
+            
+            <para>Al establecer <paramref name="codificarImágenes"/> en verdadero, las imágenes locales se 
+            codifican en Base64 directamente en el código HTML sin ninguna referencia a fuentes externas. Esta función solo está disponible
+            para imagenes locales.</para> 
             </summary>
+            <param name="rutaArchivo"></param>
+            <param name="máximoLargoTítulos"></param>
+            <param name="rutaCarpetaImágenes"></param>
+            <param name="codificarImágenes"></param>
+            <param name="rutaCarpetaFragmentos"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Vixark.General.ConvertirALíneasHtml(System.String,System.String,System.String,System.Boolean,System.Int32)">
+            <summary>
+            Función similar a <see cref="M:Vixark.General.ConvertirAHtml(System.String,System.String,System.String,System.Boolean,System.Int32)"/> que devuelve líneas de HTML en vez del HTML completo.
+            </summary>
+            <param name="rutaArchivo"></param>
+            <param name="máximoLargoTítulos"></param>
+            <param name="rutaCarpetaImágenes"></param>
+            <param name="codificarImágenes"></param>
+            <param name="rutaCarpetaFragmentos"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Vixark.General.ConvertirALíneasHtml(System.String,Vixark.General.TipoArchivoInformación,System.String,System.String,System.Boolean,System.Int32)">
+            <summary>
+            Función similar a <see cref="M:Vixark.General.ConvertirAHtml(System.String,System.String,System.String,System.Boolean,System.Int32)"/> que toma un texto y su tipo en vez de la ruta del archivo.
+            Además, devuelve líneas de HTML en vez del HTML completo.
+            </summary>
+            <param name="texto"></param>
+            <param name="tipo"></param>
+            <param name="rutaCarpetaImágenes"></param>
+            <param name="codificarImágenes"></param>
+            <param name="rutaCarpetaFragmentos"></param>
+            <param name="máximoLargoTítulos"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Vixark.General.ConvertirALíneasHtml(System.Collections.Generic.List{System.String},Vixark.General.TipoArchivoInformación,System.String,System.String,System.Boolean,System.Int32)">
+            <summary>
+            Función similar a <see cref="M:Vixark.General.ConvertirAHtml(System.String,System.String,System.String,System.Boolean,System.Int32)"/> que toma una lísta de líneas de texto y su tipo en vez 
+            de la ruta del archivo o el texto.
+            Además, devuelve líneas de HTML en vez del HTML completo.
+            </summary>
+            <param name="líneas"></param>
+            <param name="tipo"></param>
+            <param name="rutaCarpetaImágenes"></param>
+            <param name="codificarImágenes"></param>
+            <param name="rutaCarpetaFragmentos"></param>
+            <param name="máximoLargoTítulos"></param>
+            <returns></returns>
         </member>
         <member name="M:Vixark.General.Serializar``1(``0)">
             <summary>
@@ -2465,137 +3423,111 @@
             realizados en la base de datos.
             </summary>
         </member>
-        <member name="M:Vixark.General.EmpiezaPor(System.String,System.String,System.Boolean)">
+        <member name="M:Vixark.General.Agregar``1(System.Collections.Generic.List{``0},``0,System.Boolean,System.Func{``0,``0,System.Boolean})">
             <summary>
-            Encapsulación de rápido acceso de StartsWith() usando StringComparison.Ordinal. Es útil para omitir la advertencia CA1307 sin saturar el código.
+            Agrega a una lista de manera limpia. Se crea la lista si es nula y se agrega el valor.
+            Para que funcione correctamente la creación si es nula, se debe llamar asignándolo a si mismo, así: lista = lista.Agregar(valor).
+            </summary>
+            <param name="lista">Lista a la que se agregará el valor.</param>
+            <param name="permitirRepetidos">Si es falso y el valor ya está en la lista, no se agregará.</param>
+            <param name="valor">Valor a agregar a la lista.</param>
+            <param name="sonIguales">Función que determina la igualdad entre el valor a agregar y los existentes. 
+            Si no se proporciona, se usa la igualdad predeterminada.</param>
+        </member>
+        <member name="M:Vixark.General.Agregar``2(System.Collections.Generic.Dictionary{``0,``1},``0,``1,System.Boolean)">
+            <summary>
+            Agrega a un diccionario de manera limpia. Se crea el diccionario si es nulo y se actualiza el valor si ya existe en la clave. 
+            Para que funcione correctamente la creación si es nulo, se debe llamar asignándolo a si mismo así diccionario = diccionario.Agregar(clave, valor).
             </summary>
         </member>
-        <member name="M:Vixark.General.FinalizaCon(System.String,System.String,System.Boolean)">
+        <member name="M:Vixark.General.Agregar``2(System.Collections.Generic.Dictionary{``0,System.Collections.Generic.List{``1}},``0,``1,System.Boolean,System.Func{``1,``1,System.Boolean})">
             <summary>
-            Encapsulación de rápido acceso de EndsWith() usando StringComparison.Ordinal. Es útil para omitir la advertencia CA1307 sin saturar el código.
+            Agrega a un diccionario con valor tipo lista una clave y un nuevo valor para la lista asociada a esta clave.
+            Se crea el diccionario si es nulo y se agrega el valor a la lista de valores. 
+            Para que funcione correctamente la creación si es nulo, se debe llamar asignándolo a si mismo, así:
+            diccionario = diccionario.Agregar(clave, valor).
+            </summary>
+            <param name="clave">La clave del elemento que se agregará.</param>
+            <param name="valor">El valor que se agregará a la lista.</param>
+            <param name="diccionario">El diccionario de claves y listas.</param>
+            <param name="permitirRepetidos">Si es verdadadero, no se verifican si los elementos ya existen en la lista, siempre se agregan.</param>
+            <param name="sonIguales">Función que determina la igualdad entre el valor a agregar y los existentes. 
+            Si no se proporciona, se usa la igualdad predeterminada.</param>
+        </member>
+        <member name="M:Vixark.General.AgregarSumando``1(System.Collections.Generic.Dictionary{``0,System.Decimal},``0,System.Decimal)">
+            <summary>
+            Agrega a un diccionario de manera limpia, se crea el diccionario si es nulo y se suma el valor si ya existe en la clave. Para poder que 
+            funcione correctamente la creación si está nulo se debe llamar asignándolo a si mismo así dicc = dicc.AgregarSumando(clave, valor).
             </summary>
         </member>
-        <member name="M:Vixark.General.Contiene(System.String,System.String,System.Boolean)">
+        <member name="M:Vixark.General.ObtenerValorObjeto``2(System.Collections.Generic.Dictionary{``0,``1},``0,System.Boolean)">
             <summary>
-            Encapsulación de rápido acceso de Contains() usando StringComparison.Ordinal. Es útil para omitir la advertencia CA1307 sin saturar el código.
+            Obtiene el valor asociado a la clave o devuelve nulo si no lo encuentra. Aplicable cuando <typeparamref name="V"/> es un 
+            objeto/clase. Si se necesita la misma función para valores/estructuras se debe usar 
+            <see cref="M:Vixark.General.ObtenerValor``2(System.Collections.Generic.Dictionary{``0,``1},``0,System.Boolean)"/>.
+            <paramref name="ignorarCapitalización"/> solo aplica para diccionarios con clave (<typeparamref name="K"/>) de tipo texto.
             </summary>
         </member>
-        <member name="M:Vixark.General.NoContiene(System.String,System.String,System.Boolean)">
+        <member name="M:Vixark.General.ObtenerValorObjeto``1(System.Collections.Generic.Dictionary{System.String,``0},System.String,System.Boolean)">
             <summary>
-            Encapsulación de rápido acceso de la negación de Contains() usando StringComparison.Ordinal. Es útil para omitir la advertencia CA1307 sin saturar el código y para facilitar la lectura.
+            Obtiene el valor en un diccionario con clave en texto permitiendo ignorar la capitalización. Aunque se podría permitir su uso por fuera 
+            de esta clase, se prefiere no confundir al usuario del código y se le proporciona una función 
+            <see cref="M:Vixark.General.ObtenerValorObjeto``2(System.Collections.Generic.Dictionary{``0,``1},``0,System.Boolean)"/> que llama a esta función cuando se ignora la capitalización y
+            cuando la clave es texto.
             </summary>
-        </member>
-        <member name="M:Vixark.General.Reemplazar(System.String,System.String,System.String,System.Boolean)">
-            <summary>
-            Encapsulación de rápido de Replace() usando StringComparison.Ordinal. Es útil para omitir la advertencia CA1307 sin saturar el código.
-            </summary>
-        </member>
-        <member name="M:Vixark.General.ATexto(System.DateTime,System.String)">
-            <summary>
-            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 sin saturar el código.
-            </summary>
-        </member>
-        <member name="M:Vixark.General.ATexto(System.Nullable{System.DateTime},System.String)">
-            <summary>
-            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 sin saturar el código.
-            </summary>
-        </member>
-        <member name="M:Vixark.General.AFecha(System.String,System.String)">
-            <summary>
-            Encapsulación de acceso rápido para convertir un <paramref name="texto"/> en una fecha dado un <paramref name="formato"/>.
-            </summary>
-            <param name="texto"></param>
-            <param name="formato"></param>
             <returns></returns>
         </member>
-        <member name="M:Vixark.General.ÍndiceDe(System.String,System.String,System.Int32)">
+        <member name="M:Vixark.General.ObtenerValor``2(System.Collections.Generic.Dictionary{``0,``1},``0,System.Boolean)">
             <summary>
-            Encapsulación de rápido acceso de IndexOf() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 sin saturar el código.
+            Obtiene el valor asociado a la clave o devuelve nulo si no lo encuentra. Aplicable cuando <typeparamref name="V"/> es un 
+            valor/estructura. Si se necesita la misma función para objetos/clases se debe usar 
+            <see cref="M:Vixark.General.ObtenerValorObjeto``2(System.Collections.Generic.Dictionary{``0,``1},``0,System.Boolean)"/>.
+            <paramref name="ignorarCapitalización"/> solo aplica para diccionarios con clave (<typeparamref name="K"/>) de tipo texto.
             </summary>
         </member>
-        <member name="M:Vixark.General.AEnumeración``1(System.String)">
+        <member name="M:Vixark.General.ObtenerValor``1(System.Collections.Generic.Dictionary{System.String,``0},System.String,System.Boolean)">
             <summary>
-            Encapsulación de acceso rápido para convertir un texto en una enumeración.
+            Obtiene el valor en un diccionario con clave en texto permitiendo ignorar la capitalización.
             </summary>
-            <typeparam name="T"></typeparam>
-            <param name="texto"></param>
             <returns></returns>
         </member>
-        <member name="M:Vixark.General.ATexto(System.Int32)">
+        <member name="M:Vixark.General.ObtenerClaveCapitalizaciónCorrecta``1(System.Collections.Generic.Dictionary{System.String,``0},System.String)">
             <summary>
-            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 sin saturar el código.
+            Al pasar la clave con cualquier capitalización, obtiene la clave en un diccionario con la capitalización que está en él.
             </summary>
         </member>
-        <member name="M:Vixark.General.ATexto(System.Nullable{System.Int32})">
+        <member name="M:Vixark.General.ObtenerValorCapitalizaciónCorrecta(System.Collections.Generic.List{System.String},System.String)">
             <summary>
-            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 sin saturar el código.
+            Al pasar el valor con cualquier capitalización, obtiene el valor en una lista con la capitalización que está en él.
             </summary>
         </member>
-        <member name="M:Vixark.General.ATexto(System.Int32,System.String)">
+        <member name="M:Vixark.General.ObtenerÍndice(System.Collections.Generic.List{System.String},System.String,System.Boolean)">
             <summary>
-            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 sin saturar el código.
+            Devuelve el índice de un texto en una lista. Permite hacer coincidencia sin tener en cuenta la capitalización.
+            Devuelve  -1 si no se encuentra el texto.
             </summary>
-        </member>
-        <member name="M:Vixark.General.ATexto(System.Decimal)">
-            <summary>
-            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 sin saturar el código.
-            </summary>
-        </member>
-        <member name="M:Vixark.General.ATexto(System.Decimal,System.String)">
-            <summary>
-            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 sin saturar el código.
-            </summary>
-        </member>
-        <member name="M:Vixark.General.ATexto(System.Int64)">
-            <summary>
-            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 sin saturar el código.
-            </summary>
-        </member>
-        <member name="M:Vixark.General.ATexto(System.Char)">
-            <summary>
-            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 sin saturar el código.
-            </summary>
-        </member>
-        <member name="M:Vixark.General.ATexto(System.Double)">
-            <summary>
-            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 sin saturar el código.
-            </summary>
-        </member>
-        <member name="M:Vixark.General.ATexto(System.Double,System.String)">
-            <summary>
-            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 sin saturar el código.
-            </summary>
-        </member>
-        <member name="M:Vixark.General.ATexto(System.TimeSpan,System.String)">
-            <summary>
-            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 sin saturar el código.
-            </summary>
-        </member>
-        <member name="M:Vixark.General.AMinúscula(System.String)">
-            <summary>
-            Encapsulación de rápido acceso de ToLowerInvariant(). Es útil para omitir la advertencia CA1308 sin saturar el código.
-            No se puede crear un método con el mismo nombre para string (sin ?) porque el compilador no lo permite. Si se necesitara 
-            se podría hacer otro método con otro nombre. Una solución fácil es usar este método con un string y poner ! después de () 
-            para informarle al compilador que se asegura que el resultado no será nulo.
-            </summary>
-        </member>
-        <member name="M:Vixark.General.ADecimal(System.String)">
-            <summary>
-            Usa Convert.ToDecimal que permite mantener las posiciones decimales del texto en el decimal, así estas sean 00. Por ejemplo, convierte "158.0100" en 158.0100.
-            </summary>
-            <param name="texto"></param>
             <returns></returns>
         </member>
-        <member name="M:Vixark.General.ATextoDinero(System.Object)">
+        <member name="M:Vixark.General.Existe(System.Collections.Generic.List{System.String},System.String,System.Boolean)">
             <summary>
-            Si el objeto es decimal usa ATextoDinero. Si no lo es usa el ToString propio del objeto.
+            Devuelve verdadero si un texto está en una lista. Permite hacer coincidencia sin tener en cuenta la capitalización.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Vixark.General.ATexto``1(System.Collections.Generic.List{``0},System.Boolean,Vixark.General.ConectorCoordinante,System.String)">
+            <summary>
+            Devuelve la representación de una lista como un texto separado por <paramref name="separador"/> o ninguno con si se establece 
+            <paramref name="separador"/> vacío. Permite establecer un <paramref name="conector"/> entre el penúltimo y último elemento y
+            también permite devolver el texto por líneas de cada elemento si se establece <paramref name="multilínea"/> en verdadero.
             </summary>
         </member>
-        <member name="M:Vixark.General.Falso(System.String@,System.String)">
+        <member name="M:Vixark.General.ResumirLíneasTexto``1(System.Collections.Generic.List{``0},System.Boolean)">
             <summary>
-            Una función auxiliar útil para los métodos que requieren devolver un valor booleano que representa si fueron exitosos o no y además establecer 
-            un <paramref name="texto"/> de respuesta en la variable <paramref name="mensaje"/>.
+            Analiza las representaciones de texto de los elementos de la lista, busca las palabras comunes por las que inician todos los elementos y
+            devuelve una tupla que tiene las palabras comunes y una lista con los elementos sin las palabras comunes. 
+            Es una función pricipalmente auxiliar para ser usada en <see cref="M:Vixark.General.ATextoConComas``1(System.Collections.Generic.List{``0},Vixark.General.ConectorCoordinante,System.Boolean)"/>.
             </summary>
+            <returns></returns>
         </member>
         <member name="M:Vixark.General.AValor``1(``0,System.Nullable{System.Int32})">
             <summary>
@@ -2607,13 +3539,15 @@
             Obtiene el valor del atributo Display del valor de la enumeración. Es útil para usar un texto personalizado para cada elemento en una enumeración.
             </summary>
         </member>
-        <member name="M:Vixark.General.ObtenerEnumeraciónDeTexto``1(System.String)">
+        <member name="M:Vixark.General.ObtenerEnumeraciónDeTexto``1(System.String,System.Boolean)">
             <summary>
             Obtiene la enumeración desde un texto que se encuentra en el atributo Display.
             </summary>
-            <typeparam name="T"></typeparam>
-            <param name="texto"></param>
-            <returns></returns>
+        </member>
+        <member name="M:Vixark.General.ObtenerEnumeraciónDeTexto``1(System.String,``0,System.Boolean)">
+            <summary>
+            Obtiene la enumeración desde un texto que se encuentra en el atributo Display.
+            </summary>
         </member>
         <member name="M:Vixark.General.EstáEn``1(``0,``0[])">
             <summary>
@@ -2669,16 +3603,16 @@
             <summary>
             <para>Método de fácil uso para cargar los datos de una propiedad de navegación de una <paramref name="entidad"/>.</para> 
             <para>Esta función es útil cuando, dependiendo del flujo de la ejecución, en algunas ocasiones se necesitará la propiedad
-            y en otras no. O cuando ya se dispone de la entidad de una consulta anterior. Aunque si se necesita para solo lectura
-            el beneficio puede ser más en facilidad de uso y mantenimiento que de rendimiento porque la duración de CargarPropiedad 
-            puede llegar a ser 30% mayor que la de una consulta de la entidad con AsNoTracking + Include. En caso que ya se disponga 
-            de la entidad y se necesite la propiedad para modificar si mejora considerablemente el rendimiento usar CargarPropiedad 
-            porque se puede tardar 60% del tiempo de la consulta de entidad usando Include.</para>
-            <para>Cuando se necesita obtener la entidad y su propiedad para solo lectura la mejor opción en rendimiento es usar AsNoTracking 
-            + Include (39% del tiempo de consulta de entidad + CargarPropiedad). Si se necesitan hacer cambios sobre las entidades aún sigue siendo mejor 
-            opción usar Include (90% del tiempo de consulta de entidad + CargarPropiedad).</para>
-            <para>Nota: Los rendimientos son aproximados. Para consultas donde se requiere mucho rendimiento se recomienda hacer las pruebas para
-            elegir la mejor opción.</para>
+            y en otras no. O cuando ya se dispone de la entidad de una consulta anterior. No funciona para entidades de solo lectura. 
+            En caso que ya se disponga de la entidad y se necesite la propiedad para modificar, si mejora considerablemente el rendimiento 
+            usar CargarPropiedad porque se puede tardar 60% del tiempo de la consulta completa de la entidad usando Include.</para>
+            <para>Cuando se necesita obtener la entidad y su propiedad para solo lectura la mejor opción en rendimiento suele ser AsNoTracking 
+            + Include. Si se necesitan hacer cambios sobre las entidades y siempre se debe cargar la propiedad normalmente es mejor 
+            opción usar Include.</para>
+            <para>Nota: Las recomendaciones son generales, no aplicables a todos los casos. Para consultas donde se requiere mucho rendimiento 
+            se recomienda hacer las pruebas para elegir la mejor opción. En particular se debe tener cuidado de realizar las pruebas con
+            Include tanto con entidades que tengan esta propiedad como con entidades que tengan esta propiedad en nulo. 
+            Ver github.com/vixark/SimpleOps.Contexto.ObtenerProducto().</para>
             </summary>
             <typeparam name="E">Tipo de la entidad.</typeparam>
             <typeparam name="F">Tipo de la propiedad.</typeparam>
@@ -2754,30 +3688,6 @@
             <param name="nombreTabla"></param>
             <param name="columnasAOmitir"></param>
             <returns></returns>
-        </member>
-        <member name="M:Vixark.General.Agregar``2(System.Collections.Generic.Dictionary{``0,``1},``0,``1,System.Boolean)">
-            <summary>
-            Agrega a un diccionario de manera limpia, se crea el diccionario si es nulo y se actualiza el valor si ya existe en la clave. 
-            Para que funcione correctamente la creación si es nulo se debe llamar asignándolo a si mismo así diccionario = diccionario.Agregar(clave, valor).
-            </summary>
-        </member>
-        <member name="M:Vixark.General.AgregarSumando``1(System.Collections.Generic.Dictionary{``0,System.Decimal},``0,System.Decimal)">
-            <summary>
-            Agrega a un diccionario de manera limpia, se crea el diccionario si es nulo y se suma el valor si ya existe en la clave. Para poder que 
-            funcione correctamente la creación si está nulo se debe llamar asignándolo a si mismo así dicc = dicc.AgregarSumando(clave, valor).
-            </summary>
-        </member>
-        <member name="M:Vixark.General.ObtenerValorObjeto``2(System.Collections.Generic.Dictionary{``0,``1},``0)">
-            <summary>
-            Obtiene el valor asociado a la clave o devuelve nulo si no lo encuentra. Aplicable cuando <typeparamref name="V"/> es un 
-            objeto/clase. Si se necesita la misma función para valores/estructuras se debe usar <see cref="M:Vixark.General.ObtenerValor``2(System.Collections.Generic.Dictionary{``0,``1},``0)"/>.
-            </summary>
-        </member>
-        <member name="M:Vixark.General.ObtenerValor``2(System.Collections.Generic.Dictionary{``0,``1},``0)">
-            <summary>
-            Obtiene el valor asociado a la clave o devuelve nulo si no lo encuentra. Aplicable cuando <typeparamref name="V"/> es un 
-            valor/estructura. Si se necesita la misma función para objetos/clases se debe usar <see cref="M:Vixark.General.ObtenerValorObjeto``2(System.Collections.Generic.Dictionary{``0,``1},``0)"/>.
-            </summary>
         </member>
         <member name="M:Vixark.General.SiNulo``1(System.Nullable{``0}@,System.Func{System.Boolean})">
             <summary>

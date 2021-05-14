@@ -11,7 +11,9 @@ namespace SimpleOps.Modelo {
 
 
     /// <summary>
-    /// Entidad que admite cambios después de creada. Se rastrea la fecha de actualización, el actualizador y el creador, pero no deja un rastro independiente de fecha de creación. Es útil para entidades que ya disponen de propiedades asociadas a su creación (como Factura) o entidades donde no es tan necesario disponer de esta información porque basta con el rastro de actualización (que se también se escribe en la creación).
+    /// Entidad que admite cambios después de creada. Se rastrea la fecha de actualización, el actualizador y el creador, pero no deja un rastro 
+    /// independiente de fecha de creación. Es útil para entidades que ya disponen de propiedades asociadas a su creación (como Factura) o entidades 
+    /// donde no es tan necesario disponer de esta información porque basta con el rastro de actualización (que se también se escribe en la creación).
     /// </summary>
     abstract class Actualizable : IActualizable {
 

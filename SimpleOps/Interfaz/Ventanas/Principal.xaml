@@ -21,16 +21,16 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <DockPanel Grid.Column="0" Width="220" >
+            <DockPanel Grid.Column="0" Width="220">
 
-                <StackPanel DockPanel.Dock="Top" Interfaz:EstablecedorMargen.Margen="10, 10, 10, 10" >
+                <StackPanel DockPanel.Dock="Top" Interfaz:EstablecedorMargen.Margen="10, 10, 10, 10">
                     <Button Content="Cotización" />
                     <Button Content="Orden de Compra" />
                     <Button Content="Venta" />
                 </StackPanel>
 
                 <StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom" >
-
+                    
                     <Separator />
                     <StackPanel Width="220" Orientation="Vertical" HorizontalAlignment="Center" Interfaz:EstablecedorMargen.Margen="10, 10, 10, 10" >
                         <StackPanel.Resources>
@@ -41,8 +41,10 @@
                             </Style>
                         </StackPanel.Resources>
                         <Button Click="GenerarCatálogo_Clic" Content="Generar Catálogo" />
+                        <Button Click="GenerarFichasInformativas_Clic" Content="Generar Fichas Informativas" />
                         <Button Click="CargarDatosIniciales_Clic" Content="Cargar Datos Iniciales" />
                         <Button Click="ReiniciarBaseDatosSQLite_Clic" Content="Reiniciar Base de Datos" />
+                        <Button Click="HacerPruebasUnitarias_Clic" Content="Hacer Pruebas Unitarias" />
                         <Label Foreground="{StaticResource BrochaFrente200}">Facturación Electrónica</Label>
                         <Button Click="HacerPruebasInternasFacturación_Clic" Content="Hacer Pruebas Internas" />
                         <Button Click="PruebasHabilitaciónFacturación_Clic" Content="Hacer Pruebas Habilitación" />
@@ -54,7 +56,7 @@
 
             </DockPanel>
 
-            <Grid x:Name="GrdLista" Width="300" Grid.Column="1" >
+            <Grid x:Name="GrdLista" Width="300" Grid.Column="1">
                 <ListBox Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Hidden" ItemsSource="{Binding}" />
             </Grid>
 

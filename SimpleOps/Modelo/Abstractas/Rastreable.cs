@@ -11,7 +11,8 @@ namespace SimpleOps.Modelo {
 
 
     /// <summary>
-    /// Entidad que admite cambios después de creada. Se hace rastreo completo del creador, actualizador, fecha de creación y fecha de actualización. Es útil para entidades que sus datos cambian frecuentemente y que se necesita disponer de la información del creador y la fecha de creación.
+    /// Entidad que admite cambios después de creada. Se hace rastreo completo del creador, actualizador, fecha de creación y fecha de actualización. 
+    /// Es útil para entidades que sus datos cambian frecuentemente y que se necesita disponer de la información del creador y la fecha de creación.
     /// </summary>
     abstract class Rastreable : IRegistro, IActualizable {
 

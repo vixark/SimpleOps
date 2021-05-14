@@ -27,7 +27,7 @@ namespace SimpleOps.Singleton {
 
 
         #region Patrón Singleton
-        // Tomado de https://csharpindepth.com/Articles/Singleton.
+        // Ver https://csharpindepth.com/Articles/Singleton.
 
         private static readonly Lazy<OpcionesEquipo> DatosLazy = new Lazy<OpcionesEquipo>(() => new OpcionesEquipo());
 
@@ -66,6 +66,12 @@ namespace SimpleOps.Singleton {
         #region Rutas
 
         public string RutaAplicación { get; set; } = Configuración.RutaAplicación; // Se actualiza en Rutas para permitir que los usuarios del código cambien este valor sin que sus cambios sean reemplazados con una nueva versión del código de OpcionesEquipo.cs.
+        
+        public string? RutaIntegración { get; set; } // Ruta de la carpeta dentro de un programa tercero usada para almacenar archivos de comunicación entre SimpleOps y este programa tercero.
+
+        public string? RutaProductos { get; set; } // Ruta de la carpeta donde se almacenarán las imágenes y los archivos de información de los productos. Si se deja en nulo, se almacenan en [RutaAplicación]/[CarpetaProductos]. Se permite personalizar la ruta para permitir establecer esta ruta en una carpeta compartida a la que puedan acceder todos los equipos de la empresa. Esta carpeta compartida puede habilitarse con OneDrive, Dropbox y servicios simlares o cómo una carpeta compartida de red.
+
+        public string? RutaPlantillasDocumentos { get; set; } // Ruta de la carpeta donde se almacenarán las plantillas de los documentos. Si se deja en nulo, se almacenan en [RutaAplicación]/[PlantillasDocumentos]. Se permite personalizar la ruta para permitir establecer esta ruta en una carpeta compartida a la que puedan acceder todos los equipos de la empresa. Esta carpeta compartida puede habilitarse con OneDrive, Dropbox y servicios simlares o cómo una carpeta compartida de red.
 
         #endregion Rutas>
 
@@ -76,8 +82,6 @@ namespace SimpleOps.Singleton {
         public string? RutaCertificado { get; set; } // Ruta del archivo PFX con el certificado de firma digital. No se autocalcula con RutaAplicación porque es posible que este archivo que es delicado se necesite guardar en otra ubicación. 
 
         public string? RutaClaveCertificado { get; set; } // Ruta del archivo TXT con una sola línea sin ningún espacio al frente ni atrás que contiene la clave del certificado de firma digital. No se autocalcula con RutaAplicación porque es posible que este archivo que es delicado se necesite guardar en otra ubicación.
-
-        public string? RutaIntegración { get; set; } // Carpeta dentro de un programa tercero usada para almacenar archivos de comunicación entre SimpleOps y este programa tercero.
 
         public float RelaciónFuentesPdfPantalla { get; set; } = 0.7422F; // 0.5938 = 9.5 / 16 para pantallas grandes con 125% de escala en Windows. 0.7422 para pantallas medianas con escala 100% en Windows. Es un factor de conversión aproximado entre el tamaño de la fuente en puntos de HTML y el tamaño de la letra usando medidas la librería System.Drawing. Es necesario para poder calcular el alto de la lista de productos y la cantidad de páginas de los documentos gráficos.
 
@@ -97,7 +101,7 @@ namespace SimpleOps.Singleton {
 
                     } else {
 
-                        if (!Existe(TipoRuta.Archivo, RutaCertificado, "certificado de firma digital", out string? mensaje, "No se podrá facturar electrónicamente")) {
+                        if (!ExisteRuta(TipoElementoRuta.Archivo, RutaCertificado, "certificado de firma digital", out string? mensaje, "No se podrá facturar electrónicamente")) {
 
                             MostrarError(mensaje);
                             return false; // No hay certificado entonces tampoco pide la clave.  

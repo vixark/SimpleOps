@@ -13,7 +13,7 @@ namespace SimpleOps.Legal {
     /// <summary>
     /// Clase auxiliar específica para el espacio de nombres wsu del estándar Oasis que permite la obtención de un elemento de un xml firmado usando el wsu:id.
     /// </summary>
-    public class XmlFirmadoConWsuID : SignedXml { // Tomado de https://stackoverflow.com/questions/5099156/malformed-reference-element-when-adding-a-reference-based-on-an-id-attribute-w.
+    public class XmlFirmadoConWsuID : SignedXml { // Ver https://stackoverflow.com/questions/5099156/malformed-reference-element-when-adding-a-reference-based-on-an-id-attribute-w.
 
 
         #region Constructores

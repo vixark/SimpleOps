@@ -1,0 +1,363 @@
+﻿@inherits SimpleOps.DocumentosGráficos.PlantillaBase<SimpleOps.DocumentosGráficos.DatosCotización>
+@using System.Collections.Generic
+
+
+@functions {
+
+
+    #region Generales
+    // Copiar y pegar en todas las páginas.
+
+    static string APuntos(double número) => $"{número.ToString().Replace(",", ".")}px";
+
+    string ATexto(decimal? precio) => precio == null ? "?" : ((decimal)precio).ToString("### ### ### ##0") + " $"; // Los espacios son espacios delgados tomados de https://www.compart.com/en/unicode/U+2009.
+
+
+    void Encabezado(string? título, string? imagenBase64, int espaciadoInferior = 28, bool alinearTextoAIzquierda = true) {
+
+        var alto = 92;
+        var usarImagen = !string.IsNullOrEmpty(imagenBase64);
+        if (!usarImagen) alto = 57;
+
+        <tr>
+
+            <td height="@(alto)px" class="fc">
+
+                <table width="100%">
+                    <tr>
+
+                        <td width="100%">
+                            @if (alinearTextoAIzquierda) {
+                                <div class="t32n fc-l255" style="white-space: nowrap; margin-left: 45px;">@título</div>
+                            } else {
+                                @if (usarImagen) { <img style="height: 61px; margin-left: 23px;" src="@imagenBase64" /> }                       
+                            }
+                        </td>
+
+                        <td>
+                            @if (alinearTextoAIzquierda) {
+                                @if (usarImagen) { <img style="height: 61px; margin-right: 45px;" src="@imagenBase64" /> }
+                            } else { 
+                                <div class="t32n fc-l255" style="white-space: nowrap; margin-right: 45px;">@título</div>
+                            }
+                        </td>
+
+                    </tr>
+                </table>
+
+            </td>
+
+        </tr>
+
+        FilaEnBlanco(espaciadoInferior);
+
+    } // Encabezado>
+
+
+    void LogoMarca(string? imagenBase64, int espaciadoInferior = 10, int ancho = 184) {
+
+        <tr>
+            <td>
+                <img style="width: @APuntos(ancho); margin-left: 22px;" src="@imagenBase64" />
+            </td>
+        </tr>
+
+        FilaEnBlanco(espaciadoInferior);
+
+    } // LogoMarca>
+
+
+    void LogoNorma(string? imagenBase64, int desfaceHorizontal = 0, int desfaceVertical = 0) {
+
+        <div style="position: relative">
+            <img style="width: 19px; position: absolute; top: @APuntos(-62 + desfaceVertical); left: @APuntos(191 + desfaceHorizontal);"
+                 src="@imagenBase64" />
+        </div>
+
+    } // LogoNorma>
+
+
+    void FilaEnBlanco(int alto) {
+
+        <tr>
+            <td height="@(alto)px">
+                @if (alto > 100) { <span style="font-size: 1px; color: white;">@Model.TextoPruebaColor</span> }
+            </td>
+        </tr>
+
+    } //FilaEnBlanco>
+
+
+    void ColumnaEnBlanco(int ancho) {
+
+        <td width="@(ancho)px">
+        </td>
+
+    } //FilaEnBlanco>
+
+
+    void TablaPrecios(Dictionary<string, decimal?> precios, string? claseAdicionalTabla = null, string? claseAdicionalContenedorPrecios = null,
+        int? ancho = null) {
+
+        <div class="cnprecios @claseAdicionalContenedorPrecios">
+            <table class="tprecios @claseAdicionalTabla" @(ancho != null ? @$"style='width:{ancho}px'" : "")>
+                @foreach (var kv in precios) {
+
+                    var precio = kv.Value;
+                    var infoPrecio = kv.Key;
+                    <tr class="fprecio">
+                        <td class="iprecio" style="display: inline-block">@(infoPrecio + (string.IsNullOrEmpty(infoPrecio) ? "" : ":"))</td>
+                        <td class="precio" style="display: inline-block">@ATexto(precio)</td>
+                    </tr>
+
+                }
+            </table>
+        </div>
+
+    } // TablaPrecios>
+
+
+    void BotónVideo(string enlace, string? claseAdicional = null, string texto = "Ver Ensamble", bool centrar = false) {
+
+        <a class="a-bi-blc" href="@enlace"><div class="bi-blc @claseAdicional @(centrar ? "dctr" : "")">▶ @texto</div></a>
+
+    } // BotónVideo>
+
+
+    void BotónDescargaXlsx(string? enlace, string? claseAdicional = null, string texto = "Abrir en Excel", bool centrar = false) {
+
+        if (string.IsNullOrEmpty(enlace)) {
+
+            <span class="t-alerta">Enlace vacío.</span>
+
+        } else {
+
+            <a class="a-bi-blc" href="@enlace">
+                <div class="bi-blc @claseAdicional @(centrar ? "dctr" : "")" style="height: 35px;">
+                    <table style="width: 103px; text-align: left;">
+                        <tr>
+
+                            <td>
+                                <img style="width: 33px; margin-left: 10px; margin-right: 10px; margin-top: -1px;" src="@Model.LogoExcelBase64" />
+                            </td>
+
+                            <td>
+                                <div style="margin-top: -2px;">@texto</div>
+                            </td>
+
+                        </tr>
+                    </table>
+                </div>
+            </a>
+
+        }
+
+    } // BotónDescargaXlsx>
+
+
+    void ReferenciaYDescripción(string? referencia, string? título, string? descripción, string? claseReferencia = null, bool centrarReferencia = false) {
+
+        if (!string.IsNullOrEmpty(referencia)) { <div class="bi-c @claseReferencia @(centrarReferencia ? "dctr" : "")">@referencia</div> }
+        if (!string.IsNullOrEmpty(título)) { <div class="tít tít-bref">@título</div> }
+        if (!string.IsNullOrEmpty(descripción)) { <div class="desc">@descripción</div> }
+
+    } // ReferenciaYDescripción>
+
+
+    void Imagen(string? referencia, string claseImagen, bool agregarContenedor = false, string? claseContenedor = null, int? ancho = null,
+        int margenDer = 0, int margenSup = 0) {
+
+        var imagenBase64 = referencia != null && Model.ImágenesProductosBase64.ContainsKey(referencia) ?
+            Model.ImágenesProductosBase64[referencia] : "data:null";
+
+        var estilo = ancho != null || margenDer != 0 || margenSup != 0 ?
+            @$"style='width:{ancho}px; margin-right:{margenDer}px; margin-top:{margenSup}px;'" : "";
+        if (agregarContenedor) {
+            <div class="@claseContenedor">
+                <img class="@claseImagen" @estilo src="@imagenBase64" />
+            </div>
+        } else {
+            <img class="@claseImagen" @estilo src="@imagenBase64" />
+        }
+
+    } // Imagen>
+
+
+    void ProductoGeneral(string? referenciaImagen, string? referenciaTítulo, string? título, string? descripción, Dictionary<string, decimal?> precios,
+        double ancho, double alto, double margenIzq, double margenSup, int anchoImagen, int margenDerImagen, int? anchoInfoPrecio = null,
+        int margenSupImagen = 0, bool agotado = false, bool ocultarPrecio = false, string? claseAdicionalTablaPrecios = null, 
+        string? claseReferencia = null) {
+
+        var largoInfoYPrecio 
+            = precios.Count == 0 ? 7 : precios.Max(kv => kv.Key.Length + (kv.Value == null ? 0 : (decimal)kv.Value!).ToString().Length + 7);
+        if (anchoInfoPrecio == null) anchoInfoPrecio = (int)(6.4286 * largoInfoYPrecio);
+
+        <div style="width: @APuntos(ancho); height: @APuntos(alto); margin-left: @APuntos(margenIzq); margin-top: @APuntos(margenSup);">
+            <table>
+                <tr>
+
+                    <td class="vtop">
+                        @{ Imagen(referenciaImagen, "", ancho: anchoImagen, margenDer: margenDerImagen, margenSup: margenSupImagen); }
+                    </td>
+
+                    <td class="vtop">
+
+                        <div style="position: relative; height: @APuntos(alto); width: @APuntos(ancho - anchoImagen - margenDerImagen);">
+
+                            <div>
+                                @{ ReferenciaYDescripción(referenciaTítulo, título, descripción, claseReferencia); }
+                                @if (agotado) {
+                                    <span class="t-alerta">Agotado</span>
+                                }
+                            </div>
+
+                            <div style="position: absolute; left: 0px; bottom: 0px;">
+                                <div style="float:right">
+                                    @if (!ocultarPrecio && !agotado) {
+                                        TablaPrecios(precios, ancho: anchoInfoPrecio, claseAdicionalTabla: claseAdicionalTablaPrecios);
+                                    }
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+            </table>
+        </div>
+
+    } // ProductoGeneral>
+
+
+    public string ObtenerTipoCelda(bool primeraFila, bool últimaFila, bool primeraColumna, bool últimaColumna) { // Las celdas tienen este orden: a1-b1-c1/a2-b2-c2/a3-b3-c3. Los bordes de a4-b4-c4 son bordes para cuadriculas de 1 fila x 2 columnas en adelante.
+
+        var filaÚnica = primeraFila && últimaFila;
+        var columnaÚnica = primeraColumna && últimaColumna;
+        var letra = columnaÚnica ? "d" : (primeraColumna ? "a" : (últimaColumna ? "c" : "b"));
+        var número = filaÚnica ? "4" : (primeraFila ? "1" : (últimaFila ? "3" : "2"));
+        return letra + número;
+
+    } // ObtenerTipoCelda>
+
+
+    public int ObtenerFilasCompletas(int totalElementos, int cantidadColumnas)
+        => (totalElementos / cantidadColumnas) + (totalElementos % cantidadColumnas == 0 ? 0 : 1);
+
+
+    #endregion Generales>
+
+
+}
+
+
+@{ // Todas las variables tienen E (de Extra) al final para diferenciarlas de las variables de las páginas con número.
+    var númeroPáginaE = 36923463; // No cambiar este número, se reemplaza por el correcto al leer el archivo CatálogoPdfExtra.cshtml. Inicia en 1.
+    var margenE = 15; // Margen izquierda, derecha, superior e inferior desde el contenido (foto y texto) a los bordes de la celda.
+    var cantidadTotalProductosE = Model.ReferenciasProductosPáginasExtra.Count;
+    var máximoLargoReferencia = cantidadTotalProductosE == 0 ? 1 : Model.ReferenciasProductosPáginasExtra.Max(r => r.Length);
+    var cantidadColumnasE = Model.CantidadColumnasProductos ?? 1; // No debería pasar que este valor sea nulo, pero si lo es se usará 1 para que claro que faltó especificarlo. 1 es un valor por defecto esperable, aunque no usual.
+    var cantidadFilasE = Model.CantidadFilasProductos ?? 1; // No debería pasar que este valor sea nulo, pero si lo es se usará 1 para que claro que faltó especificarlo. 1 es un valor por defecto esperable, aunque no usual.
+    var espacioInferiorTablaE = 30; // Espacio sobrante al final de la tabla.
+    var margenDerechoImagenE = 30;
+    var productosPorPáginaE = cantidadColumnasE * cantidadFilasE;
+    var índiceInicialProductoE = (númeroPáginaE - 1) * productosPorPáginaE;
+    var productosRestantesE = cantidadTotalProductosE - (númeroPáginaE - 1) * productosPorPáginaE;
+    var esPáginaParcialmenteLlena = productosRestantesE < productosPorPáginaE;
+    var altoCeldaE = (935 - espacioInferiorTablaE) / cantidadFilasE;
+    var anchoCeldaE = 768 / cantidadColumnasE;
+    var anchoImagenE = altoCeldaE - 2 * margenE;
+    var anchoE = 768 / cantidadColumnasE - 2 * margenE;
+    var altoE = altoCeldaE - margenE * 2;
+    var margenIzquierdoE = margenE;
+    var margenSuperiorE = margenE;
+    var anchoUsableE = anchoE - margenDerechoImagenE; // El ancho disponible para el contenido en la celda, incluye el ancho de la imagen y de la información.
+    if (anchoImagenE > anchoUsableE / 2) anchoImagenE = anchoUsableE / 2; // Para evitar que la imagen ocupe más de la mitad del ancho usable.
+    var cantidadFilasRealesE = !esPáginaParcialmenteLlena ? cantidadFilasE : ObtenerFilasCompletas(productosRestantesE, cantidadColumnasE); // Las filas reales después de acomodar todos los productos. Siempre es menor o igual a cantidadFilasE.
+    var índiceÚltimaColumnaÚltimaFila
+        = !esPáginaParcialmenteLlena ? cantidadColumnasE : productosRestantesE - (cantidadFilasRealesE - 1) * cantidadColumnasE;
+}
+
+
+<table width="100%">
+
+    @{ Encabezado(Model.TítuloPáginasExtra, null); }
+
+    <tr>
+        <td>
+
+            <span style="font-size: 1px; color: white;">@Model.TextoPruebaColor</span>
+
+            <table class="celdas">
+
+                @for (int f = 0; f < cantidadFilasE; f++) {
+
+                    var últimaFila = f == cantidadFilasRealesE - 1;
+
+                    <tr>
+
+                        @for (int c = 0; c < cantidadColumnasE; c++) {
+
+                            var índiceCelda = f * cantidadColumnasE + c;
+                            var índiceProducto = índiceInicialProductoE + índiceCelda;
+                            var esÚltimaColumna = c == cantidadColumnasE - 1;
+
+                            if (cantidadTotalProductosE - 1 >= índiceProducto) {
+
+                                var referencia = Model.ReferenciasProductosPáginasExtra[índiceProducto];
+                                if (Model.DatosProductos.ContainsKey(referencia)) {
+
+                                    var datosProducto = Model.DatosProductos[referencia];
+                                    var ajusteBordeÚltimoElemento = esÚltimaColumna ? 0 : (productosRestantesE == índiceCelda + 1 ? 1 : 0); // Se usa el + 1 porque se quiere considerar que el último elemento en realidad es el penúltimo cuando no está en la última columna para efectos de pintado de bordes. Con esto se asegura que el último elemento siempre tenga borde a su derecha, excepto si está en la última columna, porque si no lo tiene no se vería bien, se vería desconectado.
+
+                                    var últimaColumna =
+                                        c == (últimaFila ? índiceÚltimaColumnaÚltimaFila - 1 + ajusteBordeÚltimoElemento : cantidadColumnasE - 1);
+                                    var tipoCelda = ObtenerTipoCelda(primeraFila: f == 0, últimaFila: últimaFila, primeraColumna: c == 0,
+                                        últimaColumna: últimaColumna);
+
+                                    <td class="celda celda-extra @tipoCelda">
+
+                                        @if (datosProducto.EsProductoBase) {
+                                            ProductoGeneral(datosProducto.ReferenciaImagenBase64, datosProducto.Referencia, datosProducto.DescripciónBase,
+                                                datosProducto.CaracterísticasYAtributosLíneasHtml, datosProducto.ObtenerPreciosLíneasHtml, anchoE, altoE,
+                                                margenIzquierdoE, margenSuperiorE, anchoImagenE, margenDerechoImagenE, claseReferencia: "bi-c-ref-extra");
+                                        } else {
+                                            ProductoGeneral(datosProducto.ReferenciaImagenBase64, datosProducto.Referencia, datosProducto.Descripción,
+                                                 datosProducto.CaracterísticasLíneasHtml, datosProducto.ObtenerPreciosLíneasHtml, anchoE, altoE,
+                                                 margenIzquierdoE, margenSuperiorE, anchoImagenE, margenDerechoImagenE, claseReferencia: "bi-c-ref-extra");
+                                        }
+
+                                    </td>
+
+                                } else {
+                                    <td>
+                                        <span class="t-alerta">No se encontró @referencia en la lista de cotización.</span>
+                                    </td>
+                                }
+
+                            }
+
+                        }
+
+                    </tr>
+                }
+
+            </table>
+        </td>
+    </tr>
+
+</table>
+
+
+<style>
+
+    .celda-extra {
+        height: @APuntos(altoCeldaE);
+        width: @APuntos(anchoCeldaE);
+    }
+
+    .bi-c-ref-extra {
+        width: @APuntos(máximoLargoReferencia * 10.5);
+    }
+
+</style>

@@ -1,4 +1,5 @@
 ﻿@inherits SimpleOps.DocumentosGráficos.PlantillaBase<SimpleOps.DocumentosGráficos.DatosDocumento>
+@using SimpleOps.DocumentosGráficos
 
 
 @{ 
@@ -6,13 +7,13 @@
     double altoPáginas;
     int totalPáginasConCabezaYPie;
     switch (Model.ModoDocumento) {
-        case SimpleOps.DocumentosGráficos.DatosDocumento.Modo.CuerpoContinuo:
+        case DatosDocumento.Modo.CuerpoContinuo:
 
             altoPáginas = Model.TotalPáginas * Model.AltoHoja - Model.AltoPie - Model.AltoCabeza; // El altoPáginas podría causar que se genere una página adicional a las esperadas si existe un quiebre de página que genera un espacio adicional considerablemente grande, por ejemplo, si una descripción es muy larga y esto causa que esta termine en la segunda página se genera un espacio en la primera página que causa que esta fórmula no funcione y genere una página adicional. Esto en términos generales no representa mayor problema.
             totalPáginasConCabezaYPie = 1;
             break;
 
-        case SimpleOps.DocumentosGráficos.DatosDocumento.Modo.PáginasIndependientes:
+        case DatosDocumento.Modo.PáginasIndependientes:
 
             altoPáginas = Model.AltoHoja;
             totalPáginasConCabezaYPie = Model.TotalPáginas;
@@ -27,7 +28,7 @@
     }
 
     var selectorCssPáginas = "";
-    var empresa = Model.Empresa ?? new SimpleOps.DocumentosGráficos.DatosEmpresa();
+    var empresa = Model.Empresa ?? new DatosEmpresa();
 
     static string APuntos(double número) => $"{número.ToString().Replace(",", ".")}px";
 
@@ -151,54 +152,124 @@
 
     /* <Colores - Este código puede ser copiado y reemplazado por un bloque con los colores personalizados. */
 
-    a { color: @(Model.ModoImpresión ? "#191919" : "#891220"); } /* Usualmente es el mismo fc-s50, pero podría ser cambiado por otro si se desea. */
+    a { color: @(Model.ModoImpresión ? "#191919" : "#1355A5"); } /* Usualmente es el mismo fc-s50, pero podría ser cambiado por otro si se desea. */
 
-    .fc { background-color: @(Model.ModoImpresión ? "#FFFFFF" : "#AB1728"); } /* fc: Fondo de color. */
+    .fc { background-color: @(Model.ModoImpresión ? "#FFFFFF" : "#186ACE"); } /* fc: Fondo de color. */
 
     .fgtl { background-color: #9B9B9B; color: #FFFFFF; } /* Un estilo de fondo plano gris y color de letra blanco o casi blanco adecuado para la impresión. Es equivalente al fondo color + alguna clase fc-l###, pero solo debe ser usado en ciertos elementos de poca área como el encabezado de las columnas. Se debe establecer con un condicional en cada elemento cuando sea modo impresión y establecer las clases fc y fc-l### cuando no lo sea. */
 
     .fc-l255 { color: @(Model.ModoImpresión ? "#000000" : "white"); } /* Color luz sobre el fondo de color usado principalmente para los textos. Usualmente es blanco 255-255-255. */
 
-    .fc-l230 { color: @(Model.ModoImpresión ? "#191919" : "#F6E8E9"); } /* Se obtiene con Paint.Net el fc-l255 sobre el fc con una transparencia de 230. */
+    .fc-l230 { color: @(Model.ModoImpresión ? "#191919" : "#E8F0FA"); } /* Se obtiene con Paint.Net el fc-l255 sobre el fc con una transparencia de 230. */
 
-    .fc-l200 { color: @(Model.ModoImpresión ? "#373737" : "#ECCCD0"); } /* Se obtiene con Paint.Net el fc-l255 sobre el fc con una transparencia de 200. */
+    .fc-l200 { color: @(Model.ModoImpresión ? "#373737" : "#CDDEF4"); } /* Se obtiene con Paint.Net el fc-l255 sobre el fc con una transparencia de 200. */
 
-    .fc-l150 { color: @(Model.ModoImpresión ? "#696969" : "#DC9FA6"); } /* Se obtiene con Paint.Net el fc-l255 sobre el fc con una transparencia de 150. */
+    .fc-l180 { color: @(Model.ModoImpresión ? "#4B4B4B" : "#BBD3F0"); } /* Se obtiene con Paint.Net el fc-l255 sobre el fc con una transparencia de 180. */
 
-    .fc-l100 { color: @(Model.ModoImpresión ? "#9B9B9B" : "#CB717C"); } /* Se obtiene con Paint.Net el fc-l255 sobre el fc con una transparencia de 100. */
+    .fc-l150 { color: @(Model.ModoImpresión ? "#696969" : "#9FC1EA"); } /* Se obtiene con Paint.Net el fc-l255 sobre el fc con una transparencia de 150. */
 
-    .fc-l50 { color: @(Model.ModoImpresión ? "#CDCDCD" : "#BB4452"); } /* Se obtiene con Paint.Net el fc-l255 sobre el fc con una transparencia de 50. */
+    .fc-l130 { color: @(Model.ModoImpresión ? "#7D7D7D" : "#8DB5E6"); } /* Se obtiene con Paint.Net el fc-l130 sobre el fc con una transparencia de 130. */
+
+    .fc-l110 { color: @(Model.ModoImpresión ? "#919191" : "#7BAAE3"); } /* Se obtiene con Paint.Net el fc-l255 sobre el fc con una transparencia de 110. */
+
+    .fc-l100 { color: @(Model.ModoImpresión ? "#9B9B9B" : "#72A4E1"); } /* Se obtiene con Paint.Net el fc-l255 sobre el fc con una transparencia de 100. */
+
+    .fc-l50 { color: @(Model.ModoImpresión ? "#CDCDCD" : "#4587D7"); } /* Se obtiene con Paint.Net el fc-l255 sobre el fc con una transparencia de 50. */
 
     .fc-s255 { color: black; } /* Color sombra sobre el fondo de color. Usualmente es negro 0-0-0. */
 
-    .fc-s200 { color: @(Model.ModoImpresión ? "#373737" : "#240408"); } /* Se obtiene con Paint.Net el fc-s255 sobre el fc con una transparencia de 200. */
+    .fc-s200 { color: @(Model.ModoImpresión ? "#373737" : "#05162C"); } /* Se obtiene con Paint.Net el fc-s255 sobre el fc con una transparencia de 200. */
 
-    .fc-s150 { color: @(Model.ModoImpresión ? "#696969" : "#460910"); } /* Se obtiene con Paint.Net el fc-s255 sobre el fc con una transparencia de 150. */
+    .fc-s150 { color: @(Model.ModoImpresión ? "#696969" : "#092B54"); } /* Se obtiene con Paint.Net el fc-s255 sobre el fc con una transparencia de 150. */
 
-    .fc-s100 { color: @(Model.ModoImpresión ? "#9B9B9B" : "#670D18"); } /* Se obtiene con Paint.Net el fc-s255 sobre el fc con una transparencia de 100. */
+    .fc-s100 { color: @(Model.ModoImpresión ? "#9B9B9B" : "#0E407D"); } /* Se obtiene con Paint.Net el fc-s255 sobre el fc con una transparencia de 100. */
 
-    .fc-s70 { color: @(Model.ModoImpresión ? "#CDCDCD" : "#7C101D"); } /* Se obtiene con Paint.Net el fc-s255 sobre el fc con una transparencia de 70. */
+    .fc-s70 { color: @(Model.ModoImpresión ? "#CDCDCD" : "#114C95"); } /* Se obtiene con Paint.Net el fc-s255 sobre el fc con una transparencia de 70. */
 
-    .fc-s50 { color: @(Model.ModoImpresión ? "#CDCDCD" : "#891220"); } /* Se obtiene con Paint.Net el fc-s255 sobre el fc con una transparencia de 50. */
+    .fc-s50 { color: @(Model.ModoImpresión ? "#CDCDCD" : "#1355A5"); } /* Se obtiene con Paint.Net el fc-s255 sobre el fc con una transparencia de 50. */
 
-    .fc-s0, fc-l0 { color: @(Model.ModoImpresión ? "#FFFFFF" : "#AB1728"); } /* Es el mismo color fc pero para aplicarlo a fuentes. Se sigue la misma convención fc-s# para facilitar su recordación. */
+    .fc-s0, fc-l0 { color: @(Model.ModoImpresión ? "#FFFFFF" : "#186ACE"); } /* Es el mismo color fc pero para aplicarlo a fuentes. Se sigue la misma convención fc-s# para facilitar su recordación. */
 
-    .fc2 { background-color: @(Model.ModoImpresión ? Model.ColorBordes : "#5E0000"); } /* Fondo de color secundario. Normalmente es el mismo que se usa en l-cabeza. */
+    .fc2 { background-color: @(Model.ModoImpresión ? Model.ColorBordes : "#4C8C06"); } /* Fondo de color secundario. */
 
-    .l-cabeza { border-bottom-color: @(Model.ModoImpresión ? Model.ColorBordes : "#5E0000"); }
+    .l-cabeza { border-bottom-color: @(Model.ModoImpresión ? "white" : "white"); }
+
+    .gris-240 { color: #F0F0F0; }
+
+    .gris-230 { color: #E6E6E6; }
+
+    .gris-220 { color: #DCDCDC; }
+
+    .gris-210 { color: #D2D2D2; }
+
+    .gris-200 { color: #C8C8C8; }
+
+    .gris-190 { color: #BEBEBE; }
+
+    .gris-180 { color: #B4B4B4; }
+
+    .gris-170 { color: #AAAAAA; }
+
+    .gris-160 { color: #A0A0A0; }
+
+    .gris-150 { color: #969696; }
+
+    .gris-140 { color: #8C8C8C; }
+
+    .gris-130 { color: #828282; }
+
+    .gris-120 { color: #787878; }
+
+    .gris-110 { color: #6E6E6E; }
+
+    .gris-100 { color: #646464; }
+
+    .gris-90 { color: #5A5A5A; }
+
+    .gris-80 { color: #505050; }
+
+    .gris-70 { color: #464646; }
+
+    .gris-60 { color: #3C3C3C; }
+
+    .gris-50 { color: #323232; }
+
+    .gris-40 { color: #282828; }
+
+    .gris-30 { color: #1E1E1E; }
+
+    .gris-20 { color: #141414; }
+
+    .gris-10 { color: #0A0A0A; }
 
     /* Colores> */
 
 
-    /* <Tamaño Fuentes */
+    /* <Tamaño Fuentes y Negrita */
+
+    .t53n { font-size: 53px; font-weight: normal; }
+
+    .t40n { font-size: 40px; font-weight: normal; }
+
+    .t32n { font-size: 32px; font-weight: normal; }
 
     .t30b { font-size: 30px; font-weight: bold; }
 
+    .t30n { font-size: 30px; font-weight: normal; }
+
+    .t26b { font-size: 26px; font-weight: bold; }
+
     .t24b { font-size: 24px; font-weight: bold; }
+
+    .t23b { font-size: 23px; font-weight: bold; }
+
+    .t23n { font-size: 23px; font-weight: normal; }
 
     .t22b { font-size: 22px; font-weight: bold; }
 
     .t20b { font-size: 20px; font-weight: bold; }
+
+    .t20n { font-size: 20px; font-weight: normal; }
 
     .t18b { font-size: 18px; font-weight: bold; }
 
@@ -212,9 +283,11 @@
 
     .t12b { font-size: 12px; font-weight: bold; }
 
-    .t9-5n { font-size: 9.5px; }
+    .t9-5n { font-size: 9.5px; font-weight: normal; }
 
-    /* Tamaño Fuentes> */
+    .tn { font-weight: bold; }
+
+    /* Tamaño Fuentes y Negrita> */
 
 
     /* <Alineaciones */
@@ -224,6 +297,10 @@
     .tizq { text-align: left; }
 
     .tctr { text-align: center; }
+
+    .dctr { margin-right: auto; margin-left: auto; }
+
+    .vtop { vertical-align: top; } /* Principalmente para td. */
 
     /* Alineaciones> */
 

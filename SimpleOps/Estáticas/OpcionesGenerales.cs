@@ -11,19 +11,20 @@ namespace SimpleOps.Singleton {
 
 
     /// <summary>
-    /// Opciones, datos y configuraciones generales modificables por la empresa usuaria de SimpleOps. Inician en valores predeterminados que no se tendrían 
-    /// que modificar para los escenarios más comunes. Suelen ser valores válidos para todas las empresas en Colombia. Son comunes a todos los usuarios de 
-    /// SimpleOps de la misma empresa. Si la empresa no modifica el valor de alguna propiedad (las modificadas se escriben en GeneralesPropias.json) se usará
-    /// el valor en Generales.json. Las Generales.json tienen la ventaja de ser actualizadas automáticamente cada año o cada que hay un cambio externo, por 
-    /// ejemplo en la legislación. Sus valores siempre se cargan al iniciar desde Generales.json. Los valores iniciales en código solo sirven para autogenerar 
-    /// el archivo Generales.json cuando no exista y para evitar tener que declarar las propiedades permitiendo valores nulos. Su modificación está 
-    /// restringida por roles.
+    /// Configuraciones generales modificables por la empresa usuaria de SimpleOps. Inician en valores predeterminados que ninguna empresa tendría que 
+    /// modificar para los escenarios más comunes y/o que sus valores pueden cambiar de manera global para todas las empresas de Colombia. Suelen ser 
+    /// valores válidos para todas las empresas en Colombia. Si la empresa no modifica el valor de alguna propiedad (las modificadas se escriben en 
+    /// GeneralesPropias.json), se usará el valor en Generales.json. Las Generales.json tienen la ventaja de ser actualizadas automáticamente cada año 
+    /// o cada que hay un cambio externo, por ejemplo en la legislación. Sus valores siempre se cargan al iniciar desde Generales.json. Los valores 
+    /// iniciales en código solo sirven para autogenerar el archivo Generales.json cuando no exista y para evitar tener que declarar las propiedades 
+    /// permitiendo valores nulos. Su modificación está restringida por roles. En términos generales pocas configuraciones van aquí, ante de agregar 
+    /// una configuración asegurarse de que se cumplen las condiciones, de lo contrario lo más normal es que vaya en OpcionesEmpresa.cs.
     /// </summary>
     sealed class OpcionesGenerales { // No cambiar los nombres de las propiedades porque estos se usan en los archivos de opciones JSON. Si alguna propiedad pudiera tener valores diferentes para diferentes usuarios/equipos de la empresa se debe usar OpcionesEquipo. No debe tener métodos ni propiedades autocalculadas (estos van en Global). Se usa el término Opciones y no Configuración u otros porque es el término usado por Visual Studio y Excel. 
 
 
         #region Patrón Singleton
-        // Tomado de https://csharpindepth.com/Articles/Singleton.
+        // Ver https://csharpindepth.com/Articles/Singleton.
 
         private static readonly Lazy<OpcionesGenerales> DatosLazy = new Lazy<OpcionesGenerales>(() => new OpcionesGenerales());
 
@@ -36,7 +37,6 @@ namespace SimpleOps.Singleton {
 
         #region Variables Comportamiento
 
-
         public Dictionary<TipoImpuestoConsumo, double> PorcentajesImpuestosConsumo { get; set; } = new Dictionary<TipoImpuestoConsumo, double> { // Tomados de https://www.gerencie.com/que-es-el-impuesto-al-consumo.html.
             { TipoImpuestoConsumo.VehículosLujo, 0.16 },
             { TipoImpuestoConsumo.Aeronaves, 0.16 },
@@ -47,11 +47,9 @@ namespace SimpleOps.Singleton {
             { TipoImpuestoConsumo.TelefoníaCelularYDatos, 0.04 },
         };
 
-
         public Dictionary<TipoImpuestoConsumo, decimal> ValoresUnitariosImpuestosConsumo { get; set; } = new Dictionary<TipoImpuestoConsumo, decimal> { // Tomados de https://www.gerencie.com/que-es-el-impuesto-al-consumo.html.
-            { TipoImpuestoConsumo.BolsasPlásticas, 50 }, // Tomado de https://www.gerencie.com/impuesto-al-consumo-de-bolsas-plasticas.html.
+            { TipoImpuestoConsumo.BolsasPlásticas, 50 }, // Ver https://www.gerencie.com/impuesto-al-consumo-de-bolsas-plasticas.html.
         };
-
 
         #endregion Variables Comportamiento>
 
@@ -61,13 +59,13 @@ namespace SimpleOps.Singleton {
 
         public string Moneda { get; set; } = "COP"; // COP para Peso Colombiano. Divisa aplicable a todas las facturas. Ver lista de valores posibles en el numeral 13.3.3 en la documentación de la facturación electrónica de la DIAN. Algunos valores: COP, USD, EUR, CNY, MXN, BRL, XAU, XAG, etc. Como no se implementa el elemento PaymentExchangeRate en la facturación electrónica este valor solo puede ser COP.
 
-        public decimal MínimoUVTRetenciónIVAProductosLegal { get; set; } = 27; // Tomado de https://www.gerencie.com/retencion-en-la-fuente-por-iva-reteiva.html.
+        public decimal MínimoUVTRetenciónIVAProductosLegal { get; set; } = 27; // Ver https://www.gerencie.com/retencion-en-la-fuente-por-iva-reteiva.html.
 
-        public decimal MínimoUVTRetenciónIVAServiciosLegal { get; set; } = 4; // Tomado de https://www.gerencie.com/retencion-en-la-fuente-por-iva-reteiva.html.
+        public decimal MínimoUVTRetenciónIVAServiciosLegal { get; set; } = 4; // Ver https://www.gerencie.com/retencion-en-la-fuente-por-iva-reteiva.html.
 
-        public double PorcentajeRetenciónIVALegal { get; set; } = 0.15; // Porcentaje legal de retención del IVA. Tomado de https://www.gerencie.com/retencion-en-la-fuente-por-iva-reteiva.html.
+        public double PorcentajeRetenciónIVALegal { get; set; } = 0.15; // Porcentaje legal de retención del IVA. Ver https://www.gerencie.com/retencion-en-la-fuente-por-iva-reteiva.html.
 
-        public decimal UVT { get; set; } = 36308; // Tomado de https://www.gerencie.com/uvt-2021.html. 2020: 35607.
+        public decimal UVT { get; set; } = 36308; // Ver https://www.gerencie.com/uvt-2021.html. 2020: 35607.
 
         public int HorasAjusteUtc { get; set; } = -5; // -5 para Colombia. Cantidad de horas fijas que se le restarán a la hora UTC para obtener la hora semilocal que se usará para almacenar las fechas de las operaciones en la base de datos. Es semilocal porque coincide con la hora local del equipo en los paises en los que no hay horario de verano ni zonas horarias. Para evitar referenciar a SimpleOps.exe desde Dian.dll este valor es escrito manualmente en Dian.sln.
 
@@ -114,7 +112,7 @@ namespace SimpleOps.Singleton {
         };
 
 
-        public static Dictionary<Banco, string> CódigosBancosBancolombia { get; set; } = new Dictionary<Banco, string> { // Tomado de https://www.satbancolombia.com/conversores/#!/bancos.
+        public static Dictionary<Banco, string> CódigosBancosBancolombia { get; set; } = new Dictionary<Banco, string> { // Ver https://www.satbancolombia.com/conversores/#!/bancos.
             { Banco.Bancamía, "1059" }, { Banco.Agrario, "1040" }, { Banco.AVVillas, "6013677" }, { Banco.CajaSocial, "5600829" },
             { Banco.Bancompartir, "1067" }, { Banco.Coopcentral, "1066" }, { Banco.Davivienda, "5895142" }, { Banco.Bogotá, "5600010" },
             { Banco.Occidente, "5600230" }, { Banco.Falabella, "1062" }, { Banco.Finandina, "1063" }, { Banco.GNBSudameris, "5600120" },
@@ -125,7 +123,6 @@ namespace SimpleOps.Singleton {
             { Banco.Cotrafa, "1289" }, { Banco.Daviplata, "1551" }, { Banco.Juriscoop, "1121" }, { Banco.FinanciamientoItau, "1014" },
             { Banco.ItaúCorpbanca, "5600065" }, { Banco.Nequi, "1507" }, { Banco.ScotiabankColpatria, "5600191" }
         };
-
 
         #endregion Variables Legales>
 
@@ -141,7 +138,7 @@ namespace SimpleOps.Singleton {
 
         public decimal MínimoRetencionesExtraPredeterminado { get; set; } = 0; // Subtotal por encima del cual los clientes que tengan MínimoRetenciónExtraPropio nulo aplican retenciones extra. Cero implica que aplica para todas las facturas.
 
-        public string PaísPredeterminado { get; set; } = "Colombia"; // País predeterminado en la creación de los municipios.
+        public string PaísPredeterminado { get; set; } = "Colombia"; // País predeterminado en la creación de los municipios. Se agrega en generales porque en caso de adaptar a otro país, se podría usar otro archivo Generales.json.
 
         #endregion Datos Predeterminados>
 

@@ -35,6 +35,7 @@
     <div id="toc">
       <ul>
         <li class="table"><a href="#Aplicaciones">Aplicaciones</a></li>
+        <li class="table"><a href="#AtributosProductos">AtributosProductos</a></li>
         <li class="table"><a href="#Bloqueos">Bloqueos</a></li>
         <li class="table"><a href="#Campa%C3%B1as">Campañas</a></li>
         <li class="table"><a href="#Categor%C3%ADas">Categorías</a></li>
@@ -49,6 +50,7 @@
         <li class="table"><a href="#InformesPagos">InformesPagos</a></li>
         <li class="table"><a href="#InventariosConsignaci%C3%B3n">InventariosConsignación</a></li>
         <li class="table"><a href="#L%C3%ADneasCompras">LíneasCompras</a></li>
+        <li class="table"><a href="#L%C3%ADneasCotizaciones">LíneasCotizaciones</a></li>
         <li class="table"><a href="#L%C3%ADneasNegocio">LíneasNegocio</a></li>
         <li class="table"><a href="#L%C3%ADneasNotasCr%C3%A9ditoCompra">LíneasNotasCréditoCompra</a></li>
         <li class="table"><a href="#L%C3%ADneasNotasCr%C3%A9ditoVenta">LíneasNotasCréditoVenta</a></li>
@@ -73,6 +75,7 @@
         <li class="table"><a href="#PreciosClientes">PreciosClientes</a></li>
         <li class="table"><a href="#PreciosProveedores">PreciosProveedores</a></li>
         <li class="table"><a href="#Productos">Productos</a></li>
+        <li class="table"><a href="#ProductosBase">ProductosBase</a></li>
         <li class="table"><a href="#Proveedores">Proveedores</a></li>
         <li class="table"><a href="#RecibosCaja">RecibosCaja</a></li>
         <li class="table"><a href="#ReferenciasClientes">ReferenciasClientes</a></li>
@@ -82,6 +85,7 @@
         <li class="table"><a href="#RolesUsuarios">RolesUsuarios</a></li>
         <li class="table"><a href="#Sedes">Sedes</a></li>
         <li class="table"><a href="#Subcategor%C3%ADas">Subcategorías</a></li>
+        <li class="table"><a href="#TiposAtributosProductos">TiposAtributosProductos</a></li>
         <li class="table"><a href="#Usuarios">Usuarios</a></li>
         <li class="table"><a href="#Ventas">Ventas</a></li>
       </ul>
@@ -100,19 +104,19 @@
         <tbody>
           <tr>
             <td class="type">Database</td>
-            <td class="type">D:\Programas\SimpleOps\Datos.db</td>
+            <td class="type">D:\Programas\SimpleOps\Datos\Datos.db</td>
           </tr>
           <tr>
             <td class="type">ServerVersion</td>
-            <td class="type">3.30.1</td>
+            <td class="type">3.32.1</td>
           </tr>
           <tr>
             <td class="type">DatabaseSize</td>
-            <td class="type">18,527 MB</td>
+            <td class="type">772 KB</td>
           </tr>
           <tr>
             <td class="type">Created</td>
-            <td class="type">17/03/2020 3:34</td>
+            <td class="type">30/04/2021 2:19 AM</td>
           </tr>
         </tbody>
       </table>
@@ -169,6 +173,68 @@
             <td class="null">☐</td>
             <td>
             </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="AtributosProductos"><a href="#toc" class="tocref">⇧</a>Table AtributosProductos</h2>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name</th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_AtributosProductos">◆</span>ID</th>
+            <td class="type">bigint</td>
+            <td class="null">☐</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>CreadorID</th>
+            <td class="type">bigint</td>
+            <td class="null">☐</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ActualizadorID</th>
+            <td class="type">bigint</td>
+            <td class="null">☐</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraCreación</th>
+            <td class="type">text</td>
+            <td class="null">☐</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización</th>
+            <td class="type">text</td>
+            <td class="null">☐</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Nombre</th>
+            <td class="type">text</td>
+            <td class="null">☐</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>TipoID</th>
+            <td class="type">bigint</td>
+            <td class="null">☐</td>
+            <td><span class="flag" title="FK_AtributosProductos_0_0">⇨ <a href="#TiposAtributosProductos">TiposAtributosProductos</a>.ID</span></td>
           </tr>
         </tbody>
       </table>
@@ -850,6 +916,13 @@
             </td>
           </tr>
           <tr>
+            <th>Cude</th>
+            <td class="type">text</td>
+            <td class="null">☒</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
             <th>ProveedorID</th>
             <td class="type">bigint</td>
             <td class="null">☐</td>
@@ -1179,20 +1252,14 @@
             </td>
           </tr>
           <tr>
-            <th>ProductoID</th>
-            <td class="type">bigint</td>
-            <td class="null">☐</td>
-            <td><span class="flag" title="FK_Cotizaciones_0_0">⇨ <a href="#Productos">Productos</a>.ID</span></td>
-          </tr>
-          <tr>
             <th>ClienteID</th>
             <td class="type">bigint</td>
             <td class="null">☐</td>
-            <td><span class="flag" title="FK_Cotizaciones_1_0">⇨ <a href="#Clientes">Clientes</a>.ID</span></td>
+            <td><span class="flag" title="FK_Cotizaciones_0_0">⇨ <a href="#Clientes">Clientes</a>.ID</span></td>
           </tr>
           <tr>
-            <th>Precio</th>
-            <td class="type">real (53, 0)</td>
+            <th>Tipo</th>
+            <td class="type">bigint</td>
             <td class="null">☐</td>
             <td>
             </td>
@@ -1385,6 +1452,40 @@
           </tr>
           <tr>
             <th>CostoUnitario</th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">☐</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="LíneasCotizaciones"><a href="#toc" class="tocref">⇧</a>Table LíneasCotizaciones</h2>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name</th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_LíneasCotizaciones_1">◆</span>ProductoID</th>
+            <td class="type">bigint</td>
+            <td class="null">☐</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_LíneasCotizaciones_0_0">⇨ <a href="#Productos">Productos</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_LíneasCotizaciones_1">◆</span>CotizaciónID</th>
+            <td class="type">bigint</td>
+            <td class="null">☐</td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_LíneasCotizaciones_1_0">⇨ <a href="#Cotizaciones">Cotizaciones</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>Precio</th>
             <td class="type">real (53, 0)</td>
             <td class="null">☐</td>
             <td>
@@ -2567,6 +2668,13 @@
             </td>
           </tr>
           <tr>
+            <th>Cude</th>
+            <td class="type">text</td>
+            <td class="null">☒</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
             <th>ProveedorID</th>
             <td class="type">bigint</td>
             <td class="null">☐</td>
@@ -2582,7 +2690,8 @@
             <th>Razón</th>
             <td class="type">bigint</td>
             <td class="null">☐</td>
-            <td><span class="flag">DEFAULT 0</span></td>
+            <td>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -2725,6 +2834,13 @@
             </td>
           </tr>
           <tr>
+            <th>Cude</th>
+            <td class="type">text</td>
+            <td class="null">☒</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
             <th>ClienteID</th>
             <td class="type">bigint</td>
             <td class="null">☐</td>
@@ -2740,7 +2856,8 @@
             <th>Razón</th>
             <td class="type">bigint</td>
             <td class="null">☐</td>
-            <td><span class="flag">DEFAULT 0</span></td>
+            <td>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -2883,6 +3000,13 @@
             </td>
           </tr>
           <tr>
+            <th>Cude</th>
+            <td class="type">text</td>
+            <td class="null">☒</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
             <th>ProveedorID</th>
             <td class="type">bigint</td>
             <td class="null">☐</td>
@@ -2898,7 +3022,8 @@
             <th>Razón</th>
             <td class="type">bigint</td>
             <td class="null">☐</td>
-            <td><span class="flag">DEFAULT 0</span></td>
+            <td>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -3041,6 +3166,13 @@
             </td>
           </tr>
           <tr>
+            <th>Cude</th>
+            <td class="type">text</td>
+            <td class="null">☒</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
             <th>ClienteID</th>
             <td class="type">bigint</td>
             <td class="null">☐</td>
@@ -3056,7 +3188,8 @@
             <th>Razón</th>
             <td class="type">bigint</td>
             <td class="null">☐</td>
-            <td><span class="flag">DEFAULT 0</span></td>
+            <td>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -3422,6 +3555,314 @@
             </td>
           </tr>
           <tr>
+            <th>BaseID</th>
+            <td class="type">bigint</td>
+            <td class="null">☒</td>
+            <td><span class="flag" title="FK_Productos_5_0">⇨ <a href="#ProductosBase">ProductosBase</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>TieneBase</th>
+            <td class="type">bigint</td>
+            <td class="null">☐</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Atributos</th>
+            <td class="type">text</td>
+            <td class="null">☐</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Cantidad</th>
+            <td class="type">bigint</td>
+            <td class="null">☐</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CantidadMínima</th>
+            <td class="type">bigint</td>
+            <td class="null">☐</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CantidadMáxima</th>
+            <td class="type">bigint</td>
+            <td class="null">☐</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CantidadReservada</th>
+            <td class="type">bigint</td>
+            <td class="null">☐</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CostoUnitario</th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">☒</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>UbicaciónAlmacén</th>
+            <td class="type">text</td>
+            <td class="null">☒</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ProductosAsociados</th>
+            <td class="type">text</td>
+            <td class="null">☐</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>UnidadEspecífica</th>
+            <td class="type">bigint</td>
+            <td class="null">☐</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>UnidadEmpaqueEspecífica</th>
+            <td class="type">bigint</td>
+            <td class="null">☐</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>PesoUnidadEmpaqueEspecífica</th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">☒</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>DimensiónUnidadEmpaqueEspecífica_Alto</th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">☒</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>DimensiónUnidadEmpaqueEspecífica_Ancho</th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">☒</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>DimensiónUnidadEmpaqueEspecífica_Largo</th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">☒</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>SubcategoríaEspecíficaID</th>
+            <td class="type">bigint</td>
+            <td class="null">☒</td>
+            <td><span class="flag" title="FK_Productos_0_0">⇨ <a href="#Subcategor%C3%ADas">Subcategorías</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>LíneaNegocioEspecíficaID</th>
+            <td class="type">bigint</td>
+            <td class="null">☒</td>
+            <td><span class="flag" title="FK_Productos_4_0">⇨ <a href="#L%C3%ADneasNegocio">LíneasNegocio</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>MarcaEspecíficaID</th>
+            <td class="type">bigint</td>
+            <td class="null">☒</td>
+            <td><span class="flag" title="FK_Productos_3_0">⇨ <a href="#Marcas">Marcas</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>MaterialEspecíficoID</th>
+            <td class="type">bigint</td>
+            <td class="null">☒</td>
+            <td><span class="flag" title="FK_Productos_2_0">⇨ <a href="#Materiales">Materiales</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>AplicaciónEspecíficaID</th>
+            <td class="type">bigint</td>
+            <td class="null">☒</td>
+            <td><span class="flag" title="FK_Productos_6_0">⇨ <a href="#Aplicaciones">Aplicaciones</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>FísicoEspecífico</th>
+            <td class="type">bigint</td>
+            <td class="null">☒</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>PorcentajeIVAPropioEspecífico</th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">☒</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ExcluídoIVAEspecífico</th>
+            <td class="type">bigint</td>
+            <td class="null">☒</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>PorcentajeImpuestoConsumoPropioEspecífico</th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">☒</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ImpuestoConsumoUnitarioPropioEspecífico</th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">☒</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>TipoImpuestoConsumoPropioEspecífico</th>
+            <td class="type">bigint</td>
+            <td class="null">☐</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ConceptoRetenciónPropioEspecífico</th>
+            <td class="type">bigint</td>
+            <td class="null">☐</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>PrioridadWebPropiaEspecífica</th>
+            <td class="type">bigint</td>
+            <td class="null">☐</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ProveedorPreferidoEspecíficoID</th>
+            <td class="type">bigint</td>
+            <td class="null">☒</td>
+            <td><span class="flag" title="FK_Productos_1_0">⇨ <a href="#Proveedores">Proveedores</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>PorcentajeAdicionalGananciaPropioEspecífico</th>
+            <td class="type">real (53, 0)</td>
+            <td class="null">☒</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>DescripciónEspecífica</th>
+            <td class="type">text</td>
+            <td class="null">☒</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>CaracterísticasEspecíficas</th>
+            <td class="type">text</td>
+            <td class="null">☐</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ArchivoImagenEspecífica</th>
+            <td class="type">text</td>
+            <td class="null">☒</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ArchivoInformaciónEspecífica</th>
+            <td class="type">text</td>
+            <td class="null">☒</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
+      <h2 id="ProductosBase"><a href="#toc" class="tocref">⇧</a>Table ProductosBase</h2>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name</th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_ProductosBase">◆</span>ID</th>
+            <td class="type">bigint</td>
+            <td class="null">☐</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>CreadorID</th>
+            <td class="type">bigint</td>
+            <td class="null">☐</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ActualizadorID</th>
+            <td class="type">bigint</td>
+            <td class="null">☐</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraCreación</th>
+            <td class="type">text</td>
+            <td class="null">☐</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización</th>
+            <td class="type">text</td>
+            <td class="null">☐</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Referencia</th>
+            <td class="type">text</td>
+            <td class="null">☐</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ProductosBaseAsociados</th>
+            <td class="type">text</td>
+            <td class="null">☐</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Descripción</th>
+            <td class="type">text</td>
+            <td class="null">☒</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
             <th>Unidad</th>
             <td class="type">bigint</td>
             <td class="null">☐</td>
@@ -3464,101 +3905,39 @@
             </td>
           </tr>
           <tr>
-            <th>Descripción</th>
-            <td class="type">text</td>
-            <td class="null">☒</td>
-            <td>
-            </td>
-          </tr>
-          <tr>
-            <th>Cantidad</th>
-            <td class="type">bigint</td>
-            <td class="null">☐</td>
-            <td>
-            </td>
-          </tr>
-          <tr>
-            <th>CantidadMínima</th>
-            <td class="type">bigint</td>
-            <td class="null">☐</td>
-            <td>
-            </td>
-          </tr>
-          <tr>
-            <th>CantidadMáxima</th>
-            <td class="type">bigint</td>
-            <td class="null">☐</td>
-            <td>
-            </td>
-          </tr>
-          <tr>
-            <th>CantidadReservada</th>
-            <td class="type">bigint</td>
-            <td class="null">☐</td>
-            <td>
-            </td>
-          </tr>
-          <tr>
-            <th>Físico</th>
-            <td class="type">bigint</td>
-            <td class="null">☐</td>
-            <td>
-            </td>
-          </tr>
-          <tr>
-            <th>CostoUnitario</th>
-            <td class="type">real (53, 0)</td>
-            <td class="null">☒</td>
-            <td>
-            </td>
-          </tr>
-          <tr>
             <th>SubcategoríaID</th>
             <td class="type">bigint</td>
             <td class="null">☒</td>
-            <td><span class="flag" title="FK_Productos_0_0">⇨ <a href="#Subcategor%C3%ADas">Subcategorías</a>.ID</span></td>
+            <td><span class="flag" title="FK_ProductosBase_0_0">⇨ <a href="#Subcategor%C3%ADas">Subcategorías</a>.ID</span></td>
           </tr>
           <tr>
             <th>LíneaNegocioID</th>
             <td class="type">bigint</td>
             <td class="null">☒</td>
-            <td><span class="flag" title="FK_Productos_4_0">⇨ <a href="#L%C3%ADneasNegocio">LíneasNegocio</a>.ID</span></td>
+            <td><span class="flag" title="FK_ProductosBase_4_0">⇨ <a href="#L%C3%ADneasNegocio">LíneasNegocio</a>.ID</span></td>
           </tr>
           <tr>
             <th>MarcaID</th>
             <td class="type">bigint</td>
             <td class="null">☒</td>
-            <td><span class="flag" title="FK_Productos_3_0">⇨ <a href="#Marcas">Marcas</a>.ID</span></td>
+            <td><span class="flag" title="FK_ProductosBase_3_0">⇨ <a href="#Marcas">Marcas</a>.ID</span></td>
           </tr>
           <tr>
             <th>MaterialID</th>
             <td class="type">bigint</td>
             <td class="null">☒</td>
-            <td><span class="flag" title="FK_Productos_2_0">⇨ <a href="#Materiales">Materiales</a>.ID</span></td>
+            <td><span class="flag" title="FK_ProductosBase_2_0">⇨ <a href="#Materiales">Materiales</a>.ID</span></td>
           </tr>
           <tr>
             <th>AplicaciónID</th>
             <td class="type">bigint</td>
             <td class="null">☒</td>
-            <td><span class="flag" title="FK_Productos_5_0">⇨ <a href="#Aplicaciones">Aplicaciones</a>.ID</span></td>
+            <td><span class="flag" title="FK_ProductosBase_5_0">⇨ <a href="#Aplicaciones">Aplicaciones</a>.ID</span></td>
           </tr>
           <tr>
-            <th>PrioridadWebPropia</th>
+            <th>Físico</th>
             <td class="type">bigint</td>
             <td class="null">☐</td>
-            <td>
-            </td>
-          </tr>
-          <tr>
-            <th>ProveedorPreferidoID</th>
-            <td class="type">bigint</td>
-            <td class="null">☒</td>
-            <td><span class="flag" title="FK_Productos_1_0">⇨ <a href="#Proveedores">Proveedores</a>.ID</span></td>
-          </tr>
-          <tr>
-            <th>UbicaciónAlmacén</th>
-            <td class="type">text</td>
-            <td class="null">☒</td>
             <td>
             </td>
           </tr>
@@ -3598,11 +3977,24 @@
             </td>
           </tr>
           <tr>
-            <th>ProductosAsociados</th>
-            <td class="type">text</td>
+            <th>ConceptoRetenciónPropio</th>
+            <td class="type">bigint</td>
             <td class="null">☐</td>
             <td>
             </td>
+          </tr>
+          <tr>
+            <th>PrioridadWebPropia</th>
+            <td class="type">bigint</td>
+            <td class="null">☐</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ProveedorPreferidoID</th>
+            <td class="type">bigint</td>
+            <td class="null">☒</td>
+            <td><span class="flag" title="FK_ProductosBase_1_0">⇨ <a href="#Proveedores">Proveedores</a>.ID</span></td>
           </tr>
           <tr>
             <th>PorcentajeAdicionalGananciaPropio</th>
@@ -3612,9 +4004,23 @@
             </td>
           </tr>
           <tr>
-            <th>ConceptoRetenciónPropio</th>
-            <td class="type">bigint</td>
+            <th>Características</th>
+            <td class="type">text</td>
             <td class="null">☐</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ArchivoImagen</th>
+            <td class="type">text</td>
+            <td class="null">☒</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ArchivoInformación</th>
+            <td class="type">text</td>
+            <td class="null">☒</td>
             <td>
             </td>
           </tr>
@@ -4384,6 +4790,62 @@
       </table>
     </div>
     <div class="table">
+      <h2 id="TiposAtributosProductos"><a href="#toc" class="tocref">⇧</a>Table TiposAtributosProductos</h2>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:30ex">Name</th>
+            <th style="width:20ex">Type</th>
+            <th style="width:4ex">NULL</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_TiposAtributosProductos">◆</span>ID</th>
+            <td class="type">bigint</td>
+            <td class="null">☐</td>
+            <td><span class="flag">IDENTITY (1,1)</span></td>
+          </tr>
+          <tr>
+            <th>CreadorID</th>
+            <td class="type">bigint</td>
+            <td class="null">☐</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>ActualizadorID</th>
+            <td class="type">bigint</td>
+            <td class="null">☐</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraCreación</th>
+            <td class="type">text</td>
+            <td class="null">☐</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>FechaHoraActualización</th>
+            <td class="type">text</td>
+            <td class="null">☐</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Nombre</th>
+            <td class="type">text</td>
+            <td class="null">☐</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table">
       <h2 id="Usuarios"><a href="#toc" class="tocref">⇧</a>Table Usuarios</h2>
       <table>
         <thead>
@@ -4605,6 +5067,13 @@
             </td>
           </tr>
           <tr>
+            <th>Cude</th>
+            <td class="type">text</td>
+            <td class="null">☒</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
             <th>ClienteID</th>
             <td class="type">bigint</td>
             <td class="null">☐</td>
@@ -4661,6 +5130,6 @@
     </div>
     <div class="footer">
                     Generated by <a href="http://SqlDbDoc.codeplex.com/">DB&gt;doc</a> and <a href="https://github.com/ErikEJ/SqlCeToolbox">SQLite/SQL Server Compact Toolbox</a> on
-                    June 15, 2020, 23:03:27</div>
+                    April 30, 2021, 07:22:48</div>
   </body>
 </html>

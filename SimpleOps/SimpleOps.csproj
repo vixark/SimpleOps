@@ -20,13 +20,27 @@
     <Compile Remove="Migrations\20200615212437_[NombreMigración].Designer.cs" />
     <Compile Remove="Migrations\20201005082050_1.cs" />
     <Compile Remove="Migrations\20201005082050_1.Designer.cs" />
+    <Compile Remove="Migrations\20210225042539_Uno.cs" />
+    <Compile Remove="Migrations\20210225042539_Uno.Designer.cs" />
+    <Compile Remove="Migrations\20210225042939_Uno.cs" />
+    <Compile Remove="Migrations\20210225042939_Uno.Designer.cs" />
+    <Compile Remove="Migrations\20210225043323_Uno.cs" />
+    <Compile Remove="Migrations\20210225043323_Uno.Designer.cs" />
+    <Compile Remove="Migrations\20210225043931_Uno.cs" />
+    <Compile Remove="Migrations\20210225043931_Uno.Designer.cs" />
+    <Compile Remove="Migrations\20210225045812_Uno.cs" />
+    <Compile Remove="Migrations\20210225045812_Uno.Designer.cs" />
+    <Compile Remove="Migrations\20210427152118_Uno.cs" />
+    <Compile Remove="Migrations\20210427152118_Uno.Designer.cs" />
+    <Compile Remove="Migrations\20210430070919_dos.cs" />
+    <Compile Remove="Migrations\20210430070919_dos.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Interfaz\Imagenes\Acciones.png" />
-    <None Remove="Interfaz\Imagenes\Datos.png" />
-    <None Remove="Interfaz\Imagenes\Indicadores.png" />
-    <None Remove="Interfaz\Imagenes\Opciones.png" />
+    <None Remove="Interfaz\Imágenes\Acciones.png" />
+    <None Remove="Interfaz\Imágenes\Datos.png" />
+    <None Remove="Interfaz\Imágenes\Indicadores.png" />
+    <None Remove="Interfaz\Imágenes\Opciones.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -66,10 +80,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Interfaz\Imagenes\Acciones.png" />
-    <Resource Include="Interfaz\Imagenes\Datos.png" />
-    <Resource Include="Interfaz\Imagenes\Indicadores.png" />
-    <Resource Include="Interfaz\Imagenes\Opciones.png" />
+    <Resource Include="Interfaz\Imágenes\Acciones.png" />
+    <Resource Include="Interfaz\Imágenes\Datos.png" />
+    <Resource Include="Interfaz\Imágenes\Indicadores.png" />
+    <Resource Include="Interfaz\Imágenes\Opciones.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -94,7 +108,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Plantillas\Imagenes\" />
+    <Folder Include="Plantillas\Imágenes\" />
   </ItemGroup>
 
 </Project>

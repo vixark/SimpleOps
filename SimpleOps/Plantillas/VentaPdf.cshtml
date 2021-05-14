@@ -27,12 +27,14 @@
         <td class="cliente-td">
 
             <div class="cliente-cn">
-                <span class="t18b cliente-tít">Cliente</span>
-                <div class="cliente-nom">@Model.ClienteNombre</div>
-                <div>@Model.ClienteDirección @Model.ClienteMunicipioNombre</div>
-                <div>@Model.ClienteIdentificaciónCompleta</div>
-                <div>@Model.ClienteTeléfono</div>
-                <div>@Model.ClienteContactoFacturasEmail</div>
+                <div class="@(Model.ModoImpresión ? "fgtl" : "fc fc-l230") t18b cliente-tít">Cliente</div>
+                <div class="datos-cliente-cn">
+                    <div class="cliente-nom">@Model.ClienteNombre</div>
+                    <div>@Model.ClienteDirección @Model.ClienteMunicipioNombre</div>
+                    <div>@Model.ClienteIdentificaciónCompleta</div>
+                    <div>@Model.ClienteTeléfono</div>
+                    <div>@Model.ClienteContactoFacturasEmail</div>
+                </div>
             </div>
 
         </td>
@@ -48,7 +50,7 @@
 
                     <td class="fecha-td">
                         <div class="fecha-cn">
-                            <span class="t18b fecha-tít">Fecha</span>
+                            <div class="@(Model.ModoImpresión ? "fgtl" : "fc fc-l230") t18b fecha-tít">Fecha</div>
                             <div class="fecha-val">@Model.FechaHora?.ToShortDateString() @Model.FechaHora?.ToString("hh:mm tt", System.Globalization.CultureInfo.InvariantCulture)</div>
                         </div>
                     </td>
@@ -57,10 +59,10 @@
                         <div class="tctr venc-cn">
 
                             @if (Model.NombreDocumento == "Factura") {
-                                <span class="t18b venc-tít">Vencimiento</span>
+                                <div class="@(Model.ModoImpresión ? "fgtl" : "fc fc-l230") t18b venc-tít">Vencimiento</div>
                                 <div class="venc-val">@Model.FechaVencimiento?.ToShortDateString()</div>
                             } else if (Model.NombreDocumento == "Nota Crédito") {
-                                <span class="t18b venc-tít">Razón</span>
+                                <div class="@(Model.ModoImpresión ? "fgtl" : "fc fc-l230") t18b venc-tít">Razón</div>
                                 <div class="venc-val">@Model.RazónNotaCréditoTexto</div>
                             }
 
@@ -71,18 +73,16 @@
 
                 <tr>
                     <td class="oc-td" colspan="3">
-                        <div class="oc-cn-cn">
-                            <div class="oc-cn">
+                        <div class="oc-cn">
 
-                                @if (Model.NombreDocumento == "Factura") {
-                                    <span class="t18b oc-tít">Orden de Compra</span>
-                                    <div class="oc-val">@Model.OrdenCompraNúmero</div>
-                                } else if (Model.NombreDocumento == "Nota Crédito") {
-                                    <span class="t18b oc-tít">Número Factura</span>
-                                    <div class="oc-val">@Model.CódigoVenta</div>
-                                }
+                            @if (Model.NombreDocumento == "Factura") {
+                                <div class="@(Model.ModoImpresión ? "fgtl" : "fc fc-l230") t18b oc-tít">Orden de Compra</div>
+                                <div class="oc-val">@Model.OrdenCompraNúmero</div>
+                            } else if (Model.NombreDocumento == "Nota Crédito") {
+                                <div class="@(Model.ModoImpresión ? "fgtl" : "fc fc-l230") t18b oc-tít">Número Factura</div>
+                                <div class="oc-val">@Model.CódigoVenta</div>
+                            }
 
-                            </div>
                         </div>
                     </td>
                 </tr>
@@ -211,14 +211,17 @@
         </tr>
     </table>
    
-</div>
-
-@if (Model.MostrarInformaciónAdicional) {
-
-    <div class="infoextra t14n" style="height: 20px; margin-top: -20px;"> @* Información solo necesaria para clientes que son estrictos al pie de la letra con los requerimientos de la DIAN. Se establece un tamaño y margen manual para que la adición de este elemento no afecte el resto de los cálculos de tamaños del documento. *@
+    <div style="height: 5px; margin-top: -5px;"> @* Se establece un tamaño y margen manual para que la adición de este elemento no afecte el resto de los cálculos de tamaños del documento. *@
+        <span style="font-size: 1px; color: white;">@Model.TextoPruebaColor</span>
     </div>
 
-}
+    @if (Model.MostrarInformaciónAdicional) {
+        <div class="infoextra t14n" style="height: 20px; margin-top: -20px;"> @* Información solo necesaria para clientes que son estrictos al pie de la letra con los requerimientos de la DIAN. Se establece un tamaño y margen manual para que la adición de este elemento no afecte el resto de los cálculos de tamaños del documento. *@
+        </div>
+    }
+
+</div>
+
 
 <style>
 
@@ -227,31 +230,35 @@
 
     .cliente-cn,.oc-cn, .fecha-cn, .venc-cn { position: relative; bottom: 13px; }
 
-    .cliente-cn { left: 15px; } /* El título de cliente va alineado a la izquierda entonces se debe separar un poco de la curva. */
+    .cliente-cn { left: 0px; } 
 
-    .cliente-tít, .fecha-tít, .venc-tít, .oc-tít { background-color: white; padding-right: 10px; padding-left: 10px; }
+    .datos-cliente-cn { margin-left: 10px; }
+
+    .cliente-tít, .fecha-tít, .venc-tít, .oc-tít { border-radius: 5px; height: 26px; padding-top: 3px; }
+
+    .cliente-tít { text-align: left; padding-left: 10px;  }
+
+    .fecha-tít, .venc-tít, .oc-tít { text-align: center; }
+
+    .fecha-tít { margin-right: 10px; } /* Se genera un espacio a la derecha del título Fecha para separarlo del título Vencimiento. */
 
     .cliente-nom, .oc-val { margin-top: 7px; }
 
-    .fecha-val { margin-top: 8px; } /* Es ligeramente mayor que cliente-nom y oc-val porque al ser dos renglones necesita un poco más de espacio para verse bien. */
+    .fecha-val { margin-top: 3px; margin-left: -10px; } /* Es ligeramente mayor que cliente-nom y oc-val porque al ser dos renglones necesita un poco más de espacio para verse bien. Se ajustan los mismos 10px que se usan para separar el título Fecha del título Vencimiento para permitir que la fecha quede centrada sobre el título Fecha. */
 
     .venc-val { margin-top: 13px; } /* La fecha de vencimiento se deben separar más del título porque deben quedar centradas en la celda mientras que los datos del cliente deben quedar lo más cercano posible pues estos son los que determinan el alto de toda la sección de información superior. */
-
-    .fechas-td, .cliente-td { border: @APuntos(Model.GrosorBordes) solid @Model.ColorBordes; border-radius: 15px; }
 
     .cliente-td { width: @APuntos(anchoCliente); }
 
     .fechas-td { padding-right: 1px; padding-left: -1px;  vertical-align: top; width: @APuntos(anchoFechas); } /* 1px y -1px son un pequeño ajuste para que el borde de orden de compra se ajuste un poco por encima del borde del cuadro fechas. */
 
-    .fechas-relleno { width: 8px; } /* Se usa para evitar que la fecha quede muy a la izquierda. */
+    .fechas-relleno { width: 0px; } /* Se usa para evitar que la fecha quede muy a la izquierda. */
 
     .fechas-tb { width: @APuntos(anchoFechas); }
 
     .venc-td { width: @APuntos(anchoFechas / 2 + diferenciaAnchoFechaYVencimiento); vertical-align: top; }
 
     .fecha-td { width: @APuntos(anchoFechas / 2 - diferenciaAnchoFechaYVencimiento); vertical-align: top; height: 75px; } /* Los 75px son establecidos para permitir un margen de 8px arriba y abajo para la fecha y hora de emisión. */
-
-    .oc-cn-cn { border-top: @APuntos(Model.GrosorBordes) solid @Model.ColorBordes; } /* Elemento auxiliar necesario porque iText tiene un error que oculta el oc-tít detrás del borde de oc-td si se le pusiera a este. Se intentó con z-index y tampoco funciona. */
 
     .infosup-relleno { width: @APuntos(Model.MargenContenidos); }
 
@@ -270,7 +277,7 @@
 
     .infoinf-tb { margin-top: 20px; }
 
-    .obs-y-cufe { width: 440px; vertical-align: top; }
+    .obs-y-cufe { width: 460px; vertical-align: top; } /* El valor de 460px se obtiene del máximo ancho que se requiere para ubicar el CUDE, después de realizar múltiples ensayoscon decenas de CUDE. Este ancho permite que los números de los totales queden alineados a la derecha con los números de la última columna (solo cuando SimpleOps.DocumentosGráficos.OpcionesColumnas.AnchoTotalesFactura es 80). Si se cambia este valor, se debe cambiar el margen del certificado. */
 
     .observación-td { vertical-align: top; }
 
@@ -280,11 +287,11 @@
 
     .qr-img { width: 85px; height: 85px; } /* 85 garantiza un tamaño de 2cm x 2cm en la hoja impresa que es lo que obliga la DIAN. */
 
-    .certificado-img { margin-right: 15px; margin-left: 15px; margin-top: 7px; height: 130px; }
+    .certificado-img { margin-right: 7px; margin-left: 11px; margin-top: 7px; height: 130px; } /* Se usa menos a la derecha porque lo más usual es que el texto de los totales esté más lejos que el código QR. */
 
     .totales-td { vertical-align: top; }
 
-    .totales-tb { margin-right: 0px; width: 184px; }
+    .totales-tb { margin-right: 0px; width: @APuntos(184 + SimpleOps.DocumentosGráficos.OpcionesColumnas.AnchoTotalesFactura - 80); }
 
     .nombretotal-td { height: @(cantidadTotales switch { 2 => "34px", 3 => "34px", 4 => "34px", 5 => "26px", 6 => "22px", _ => "22px" } ); } /* Preferiblemente no se deberían usar 3 elementos en totales porque si se quisieran espaciar verticalmente se verían muy separados entre sí y si se quisieran usar con una separación normal quedarían con un espacio en blanco abajo. Se debe procurar mantener subtotal, algún impuesto (IVA o INC), descuento y total. */
 
