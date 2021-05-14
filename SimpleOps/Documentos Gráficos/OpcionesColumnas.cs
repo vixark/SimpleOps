@@ -14,7 +14,7 @@ namespace SimpleOps.DocumentosGráficos {
 
         #region Propiedades Estáticas
 
-        public static int AnchoTotalesFactura { get; set; } = 80; // 80 permite acomodar hasta 99 999 999. Afecta el ancho de las columnas con valores totales (Subtotal, IVA, Consumo y Total) y el ancho de la sección de totales de la factura. Se debe establecer al iniciar la aplicación. No se maneja cómo una propiedad del objeto porque no es usual que una empresa necesite cambiar este valor según la factura.
+        public static int AnchoTotalesFactura { get; set; } = 80; // 80 permite acomodar hasta 99 999 999. Afecta el ancho de las columnas con valores totales (Subtotal, IVA, Consumo y Total) y el ancho de la sección de totales de la factura. Se inicia con el valor predeterminado de 80 solo para mostrar el valor más típico porque su valor se establece al iniciar la aplicación desde Empresa.AnchoTotalesFactura. No se maneja cómo una propiedad del objeto porque no es usual que una empresa necesite cambiar este valor según la factura.
 
         #endregion Propiedades Estáticas>
 
