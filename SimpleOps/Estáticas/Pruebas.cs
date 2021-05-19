@@ -805,6 +805,7 @@ namespace SimpleOps {
                         if (l.Producto?.TieneBase == false) l.Producto.Base = null; // Necesario porque el Automaper siempre crea el objeto Base.
                     }
                     CrearPdfCatálogo(cotización, out string ruta);
+                    MostrarÉxito($"Catálogo creado: {ruta}.");
 
                 #pragma warning disable CA1031 // No capture tipos de excepción generales. Se acepta porque se el error se informa al usuario.
                 } catch (Exception ex) {

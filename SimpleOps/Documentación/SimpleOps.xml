@@ -139,7 +139,7 @@
         </member>
         <member name="T:SimpleOps.DocumentosGráficos.DatosLíneaProducto">
             <summary>
-            DTO de lectura. Adecuado solo para escribir desde Producto a DatosLíneaProducto. Si se requiere un DTO para escribir en ambas direcciones se 
+            DTO de lectura. Adecuado solo para escribir desde Producto a DatosLíneaProducto. Si se requiere un DTO para escribir en ambas direcciones, se 
             puede usar <see cref="T:SimpleOps.Integración.DatosLíneaProducto"/>.
             </summary>
         </member>
@@ -2885,7 +2885,7 @@
         </member>
         <member name="M:Vixark.General.ObtenerÚltimaFechaModificaciónArchivos(System.String)">
             <summary>
-            Obtiene la fecha de modificación más reciente entre las fechas de modificación  de los archivos dentro de la <paramref name="rutaCarpeta"/>.
+            Obtiene la fecha de modificación más reciente entre las fechas de modificación de los archivos dentro de la <paramref name="rutaCarpeta"/>.
             Devuelve nulo si la carpeta no contiene archivos.
             </summary>
             <param name="rutaCarpeta"></param>
@@ -2895,7 +2895,7 @@
             <summary>
             Encapsulación de GetLastWriteTimeUtc() que devuelve nulo si el archivo no existe y sirve para no olvidar usar siempre la versión UTC.
             Se prefiere la versión UTC porque es útil en los usos más comunes, como la verificación de si un archivo es más reciente que otro.
-            Si no se usa la versión UTC, un usuario en otro lugar del mundo le podría enviar un archivo modificado a otro usuario y la funcion que 
+            Si no se usa la versión UTC, un usuario en otro lugar del mundo le podría enviar un archivo modificado a otro usuario y la función que 
             use esta función podría considerar incorrectamente que el archivo no ha sido modificado.
             </summary>
             <param name="rutaArchivo"></param>

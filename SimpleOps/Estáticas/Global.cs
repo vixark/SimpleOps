@@ -119,7 +119,7 @@ namespace SimpleOps {
 
 
         private static bool _ModoDesarrolloPlantillas = false;
-        public static bool ModoDesarrolloPlantillas { // Se usa verdadero para permitir que los cambios que se hagan a los archivos CSHTML en la carpeta Plantillas sean copiados a la ruta de la aplicación y para habilitar algunas líneas de código que facilitan el desarrollo de estas plantillas. En producción se deben usar directamente los archivos en la ruta de la aplicación porque no se tienen los de desarrollo. Se usa cómo una variable de estado porque al ser algo más relacionado con el desarrollo y no la operación normal de parte de un usuario, no vale la pena generar cadenas de parámetros para llevar este valor de una manera más segura (sin problemas de estado) hasta las funciones que lo usan.
+        public static bool ModoDesarrolloPlantillas { // Se usa verdadero para permitir que los cambios que se hagan a los archivos CSHTML en la carpeta Plantillas sean copiados a la ruta de la aplicación y para habilitar algunas líneas de código que facilitan el desarrollo de estas plantillas. En producción se deben usar directamente los archivos en la ruta de la aplicación porque no se tienen los de desarrollo. Se usa cómo una variable de estado porque al ser algo más relacionado con el desarrollo y no la operación normal de parte de un usuario no vale la pena generar cadenas de parámetros para llevar este valor de una manera más segura (sin problemas de estado) hasta las funciones que lo usan.
             
             get => _ModoDesarrolloPlantillas;
 
@@ -576,7 +576,6 @@ namespace SimpleOps {
         /// </summary>
         public static void IniciarVariablesConfiguración() { } // IniciarVariablesConfiguración>
 
-
         /// <summary>
         /// Algunos objetos DTO, como los de DocumentosGráficos o Integración, tienen configuraciones globales que deben ser iniciadas desde otras variables,
         /// usualmente desde OpcionesEmpresa. Se inician de esta manera para no agregar referencias a espacios de nombres que puedan interferir
@@ -584,16 +583,15 @@ namespace SimpleOps {
         /// </summary>
         public static void IniciarVariablesDTO() => OpcionesColumnas.AnchoTotalesFactura = Empresa.AnchoTotalesFactura;
 
-
         /// <summary>
         /// Inicia algunas variables que no se pueden iniciar en el cuerpo de la clase Global porque requieren unos pasos adicionales para establecer su valor.
         /// </summary>
-        public static void IniciarVariablesGlobales() {
+        public static void IniciarVariablesGlobales() =>
             OpcionesConversiónPdf.SetFontProvider(new iText.Html2pdf.Resolver.Font.DefaultFontProvider(true, true, true)); // Necesario para poder usar la fuente Calibri, se podría tardar algunos segundos. Si llega a ser un problema de rendimiento revisar las opciones en SimpleOps.xlsx > Tareas > Rendimiento Generación de PDF.
-        } // IniciarVariablesGlobales>
 
         public static bool UsarRutaPlantillasDesarrollo(bool forzarRutaAplicación = false, bool forzarRutaDesarrollo = false) 
             => forzarRutaDesarrollo || (!forzarRutaAplicación && ModoDesarrolloPlantillas);
+
 
         public static string ObtenerRutaPlantillas(bool forzarRutaAplicación = false, bool forzarRutaDesarrollo = false) {
 
