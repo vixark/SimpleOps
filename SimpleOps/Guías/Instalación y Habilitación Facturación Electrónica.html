@@ -206,16 +206,15 @@
 
     <p>
         Crea una carpeta en tu computador con el nombre <i>SimpleOps</i> y crea dentro de ella la carpeta <i>Código</i>
-        y la carpeta <i>Firma Electrónica</i>. Para fines de esta guía la carpeta donde creaste la carpeta
-        <i>SimpleOps</i> se llamará <i>[CarpetaProgramas]</i>, por ejemplo si la creaste en <i>D:\Programas\SimpleOps</i>,
-        tu <i>[CarpetaProgramas]</i> será <i>D:\Programas</i>.
+        y la carpeta <i>Firma Electrónica</i>. Para fines de esta guía la ruta de la carpeta SimpleOps se llamará <i>[RutaSimpleOps]</i>,
+        por ejemplo <i>D:\Programas\SimpleOps</i>.
         Asegúrate de crear las carpetas exactamente cómo están escritas (incluyendo tildes) para que después no tengas
         contratiempos.
     </p>
 
     <p>
-        Copia y pega (no lo cortes) tu archivo PFX con tu certificado de firma digital en <i>[CarpetaProgramas]\SimpleOps\Firma Electrónica</i> y renómbralo a
-        <i>Certificado.pfx</i>. Crea un archivo de texto (extensión .txt) en <i>[CarpetaProgramas]\SimpleOps\Firma Electrónica</i>,
+        Copia y pega (no lo cortes) tu archivo PFX con tu certificado de firma digital en <i>[RutaSimpleOps]\Firma Electrónica</i> y renómbralo a
+        <i>Certificado.pfx</i>. Crea un archivo de texto (extensión .txt) en <i>[RutaSimpleOps]\Firma Electrónica</i>,
         nómbralo <i>Clave.txt</i>,
         ábrelo, escribe tu clave del certificado de firma digital sin agregar espacios ni nuevas líneas y guárdalo.
     </p>
@@ -223,7 +222,7 @@
 
     <p>
         Abre Visual Studio y haz clic en <i>Tareas Iniciales > Clonar un repositorio</i>. En <i>Ubicación del repositorio</i>
-        ingresa https://github.com/vixark/SimpleOps.git y en <i>Ruta de acceso</i> selecciona <i>[CarpetaProgramas]\SimpleOps\Código</i>
+        ingresa https://github.com/vixark/SimpleOps.git y en <i>Ruta de acceso</i> selecciona <i>[RutaSimpleOps]\Código</i>
         y haz clic en <i>Clonar</i>.
     </p>
     <img src="Imágenes/Instalación y Habilitación Facturación Electrónica/ClonarRepositorio.png" />
@@ -236,7 +235,7 @@
 
     <p>
         Con esto abrirás el código por primera vez. La próxima vez que vayas a abrir el código abre
-        el archivo <i>[CarpetaProgramas]\SimpleOps\Código\SimpleOps.sln</i> y actualiza el código a la última versión en GitHub haciendo clic
+        el archivo <i>[RutaSimpleOps]\Código\SimpleOps.sln</i> y actualiza el código a la última versión en GitHub haciendo clic
         en la esquina inferior derecha en <i>master > "Pull"</i>.
     </p>
     <img src="Imágenes/Instalación y Habilitación Facturación Electrónica/ActualizarCambiosSimpleOpsSln.png" />
@@ -253,10 +252,10 @@
 
         <ul>
             <li>
-                <b>RutaDesarrollo:</b> Cámbialo por <i>[CarpetaProgramas]\SimpleOps\Código\SimpleOps</i>
+                <b>RutaDesarrollo:</b> Cámbialo por <i>[RutaSimpleOps]\Código\SimpleOps</i>
             </li>
             <li>
-                <b>RutaAplicación:</b> Cámbialo por <i>[CarpetaProgramas]\SimpleOps</i>
+                <b>RutaAplicación:</b> Cámbialo por <i>[RutaSimpleOps]</i>
             </li>
             <li>
                 <b>ModoIntegraciónTerceros:</b> Si quieres habilitar la facturación electrónica en un programa tercero (otro ERP, Excel u otro) mediante
@@ -286,7 +285,7 @@
         relacionadas con tu computador.
     </p>
     <p>
-        Abre el archivo <i>[CarpetaProgramas]\SimpleOps\Opciones\Equipo.json</i> (<i>clic derecho > Abrir con.. > Microsoft Visual Studio</i>)
+        Abre el archivo <i>[RutaSimpleOps]\Opciones\Equipo.json</i> (<i>clic derecho > Abrir con.. > Microsoft Visual Studio</i>)
         y para editarlo más fácil haz <i>clic derecho en el texto > Desminimizar</i> e ingresa los siguientes valores.
     </p>
 
@@ -302,19 +301,19 @@
 
         <li>
             <b>RutaCertificado [Texto]:</b>
-            Ruta del archivo PFX con el certificado de firma digital. <i>[CarpetaProgramas]\SimpleOps\Firma Electrónica\Certificado.pfx</i>.
+            Ruta del archivo PFX con el certificado de firma digital. <i>[RutaSimpleOps]\Firma Electrónica\Certificado.pfx</i>.
         </li>
 
         <li>
             <b>RutaClaveCertificado [Texto]:</b>
             Ruta del archivo TXT con una sola línea que contiene la clave del certificado de firma digital.
-            <i>[CarpetaProgramas]\SimpleOps\Firma Electrónica\Clave.txt</i>.
+            <i>[RutaSimpleOps]\Firma Electrónica\Clave.txt</i>.
         </li>
 
         <li>
             <b>RutaIntegraci\u00F3n [Texto]:</b>
             Carpeta usada para almacenar los archivos de comunicación entre <b>SimpleOps</b> y un programa tercero.
-            <i>[CarpetaProgramas]\SimpleOps\Programa Tercero\Integración SimpleOps</i>.
+            <i>[RutaSimpleOps]\Programa Tercero\Integración SimpleOps</i>.
         </li>
 
         <li>
@@ -332,7 +331,7 @@
 
     <p>
         Para hacerlo necesitarás agregar varios datos de tu empresa al archivo <i>Empresa.json</i>.
-        Abre el archivo <i>[CarpetaProgramas]\SimpleOps\Opciones\Empresa.json</i> con Visual Studio
+        Abre el archivo <i>[RutaSimpleOps]\Opciones\Empresa.json</i> con Visual Studio
         (<i>clic derecho > Abrir con.. > Microsoft Visual Studio</i>).
         Para editarlo más fácil haz <i>clic derecho en el texto > Desminimizar</i>.
     </p>
@@ -513,14 +512,14 @@
     </p>
 
     <p>
-        Abre la carpeta <i>[CarpetaProgramas]\SimpleOps\Documentos Electrónicos\[Año]\[Mes]-[Día]</i> donde encontrarás las representaciones
+        Abre la carpeta <i>[RutaSimpleOps]\Documentos Electrónicos\[Año]\[Mes]-[Día]</i> donde encontrarás las representaciones
         gráficas (archivos PDF) de los documentos de prueba que acabas de enviar a la DIAN y las facturas electrónicas (archivos XML).
     </p>
 
     <p>
         Puedes personalizar la representación gráfica cambiando las imágenes y los colores: las imágenes las encuentras en
-        <i>[CarpetaProgramas]\SimpleOps\Plantillas Documentos\Imágenes</i> y los colores los puedes cambiar abriendo
-        <i>[CarpetaProgramas]\SimpleOps\Plantillas Documentos\MarcoPdf.cshtml</i> con Visual Studio y cambiando los
+        <i>[RutaSimpleOps]\Plantillas Documentos\Imágenes</i> y los colores los puedes cambiar abriendo
+        <i>[RutaSimpleOps]\Plantillas Documentos\MarcoPdf.cshtml</i> con Visual Studio y cambiando los
         <a href="https://www.colorcodehex.com/html-color-picker.html">colores HEX</a> en <i> &lt;style&gt; &gt; Colores</i>. El primer
         color después de <i>Model.ModoImpresión</i> es el color del modo blanco y negro para impresión (archivos terminados en <i>-I</i>),
         cambia el segundo color para personalizar el color de la representación gráfica a color.
@@ -528,9 +527,7 @@
     <img src="../Guías/Imágenes/Instalación y Habilitación Facturación Electrónica/CambioColores.png" />
 
     <p>
-        Guarda los cambios y ejecuta nuevamente <b>SimpleOps</b> para generar las nuevas representaciones gráficas. Alternativamente puedes
-        activar el modo <i>Desarrollo de Plantillas</i> que te facilitará el proceso de edición de archivos CSHTML y generación de archivos PDF
-        modificados.
+        Guarda los cambios y ejecuta nuevamente <b>SimpleOps</b> para generar las nuevas representaciones gráficas.
     </p>
 
     <p>
@@ -542,8 +539,36 @@
         Un error que te puede salir es <i>Rechazo 90: Documento con CUFE '...' procesado anteriormente</i>. Esto se puede deber a que estás
         intentando hacer una factura electrónica con un número que ya usaste antes. Para solucionarlo suspende la ejecución,
         ingresa al portal de habilitación de la DIAN, haz clic en <i>Documentos > Enviados</i>, toma nota del último de pruebas SETP990000###
-        (sin tener en cuenta el 99 inicial), súmale 1 a ese número, escríbe el valor resultante en <i>[CarpetaProgramas]\SimpleOps\Opciones\Empresa.json</i>
+        (sin tener en cuenta el 99 inicial), súmale 1 a ese número, escríbe el valor resultante en <i>[RutaSimpleOps]\Opciones\Empresa.json</i>
         > <i>Pr\u00F3ximoN\u00FAmeroDocumentoElectr\u00F3nicoPruebas</i>, guarda el archivo e intenta nuevamente.
+    </p>
+
+    <h2>Modo Desarrollo de Plantillas</h2>
+
+    <p>
+        En SimpleOps puedes activar el modo <i>Desarrollo de Plantillas</i> que te facilitará el proceso de edición de archivos CSHTML 
+        y generación de archivos PDF modificados.
+    </p>
+
+    <p>
+        Normalmente mantienen dos versiones de los archivos CSHTML; una en <i>[RutaSimpleOps]\Código\SimpleOps\Plantillas</i> y otra en
+        <i>[RutaSimpleOps]\Plantillas Documentos</i>. Cuando el modo Desarrollo de Plantillas está activado los archivos en
+        <i>[RutaSimpleOps]\Código\SimpleOps\Plantillas</i> se copian en <i>[RutaSimpleOps]\Plantillas Documentos</i> después de cada
+        documento realizado, esto permite que se mantengan sincronizados. Cuando no se tiene activado este modo solo se tienen en cuenta
+        los archivos en  <i>[RutaSimpleOps]\Plantillas Documentos</i>.
+    </p>
+
+    <p>
+        Los archivos en <i>[RutaSimpleOps]\Código\SimpleOps\Plantillas</i>
+        los puedes editar directamente abriéndolos desde el <i>Explorador de Soluciones</i> y tendrás todas las funcionalidades
+        y ayudas de Visual Studio para su edición. Sin embargo, debes tener cuidado porque estos archivos se reemplazan por la última versión del
+        repositorio cuando actualices el código, entonces podrías perder las personalizaciones realizadas. Para evitar esto tienes dos opciones;
+        una es editar directamente los archivos en <i>[RutaSimpleOps]\Plantillas Documentos</i> desde el bloc de notas de Windows y no activar
+        el Modo Desarrollo de Plantillas y otra es hacer copias de los archivos en <i>[RutaSimpleOps]\Código\SimpleOps\Plantillas</i>, 
+        agregarles al nombre la palabra Propia (por ejemplo <i>MarcoPdf.cshtml</i>
+        quedaría <i>MarcoPdfPropia.cshtml</i>), activar el modo Desarrollo de Plantillas y abrirlos desde el <i>Explorador de Soluciones</i>. 
+        Con esto podrás editar los archivos propios desde Visual Studio, estos no se reemplazarán cuando se actualice el código y 
+        no perderás las personalizaciones realizadas.
     </p>
 
     <h2 id="paso7">7. Pruebas de Habilitación en la DIAN</h2>
@@ -556,10 +581,10 @@
     <p>
         Ejecuta <b>SimpleOps</b> y presiona el botón <i>Hacer Pruebas Habilitación</i>. Se generarán
         las mismas facturas que en las pruebas internas, pero esta vez le informará a la DIAN que las sume a las requeridas para
-        habilitar a tu empresa como facturador electrónico. Al recibir los primeros mensajes de éxito (de la primera factura y de la primera nota 
-        crédito), no hagas clic inmediatamente en <i>Aceptar</i>, espera un par de minutos y después haz clic en <i>Aceptar</i>. 
+        habilitar a tu empresa como facturador electrónico. Al recibir los primeros mensajes de éxito (de la primera factura y de la primera nota
+        crédito), no hagas clic inmediatamente en <i>Aceptar</i>, espera un par de minutos y después haz clic en <i>Aceptar</i>.
         Esto es necesario porque en ocasiones el servidor de la DIAN no acepta las notas crédito y débito si se hacen muy seguidas de los
-        documentos anteriores. Haz clic en <i>Aceptar</i> en los siguientes mensajes de éxito (nota débito y siguientes facturas) hasta que termine 
+        documentos anteriores. Haz clic en <i>Aceptar</i> en los siguientes mensajes de éxito (nota débito y siguientes facturas) hasta que termine
         con todos.
     </p>
 
@@ -581,7 +606,7 @@
 
     <h2 id="paso9">9. Configuración de Modo Producción</h2>
     <p>
-        Haz dos copias del archivo <i>[CarpetaProgramas]\SimpleOps\Opciones\Empresa.json</i> y renómbralos a <i>Empresa - Producción.json</i> y
+        Haz dos copias del archivo <i>[RutaSimpleOps]\Opciones\Empresa.json</i> y renómbralos a <i>Empresa - Producción.json</i> y
         <i>Empresa - Pruebas.json</i> respectivamente. Abre el archivo de la resolución de autorización numeración de facturación y el archivo
         <i>Empresa - Producción.json</i> y copia los siguientes valores de la resolución al archivo JSON:
         <ul>
@@ -626,7 +651,7 @@
 
 
     <p>
-        Vuelve a la carpeta <i>[CarpetaProgramas]\SimpleOps\Opciones</i>, elimina
+        Vuelve a la carpeta <i>[RutaSimpleOps]\Opciones</i>, elimina
         el archivo <i>Empresa.json</i>, haz una copia de <i>Empresa - Producción.json</i> y renombra la copia a <i>Empresa.json</i>.
         <b>Advertencia:</b> Con este cambio, <b>SimpleOps</b> funcionará en modo de producción de facturación electrónica y las facturas que se generen
         serán legalmente válidas ante la DIAN.
@@ -750,7 +775,7 @@
 
     <p>
         Para probar el modo de integración con terceros cambia al modo de pruebas para evitar generar facturas legales:
-        en la carpeta <i>[CarpetaProgramas]\SimpleOps\Opciones</i> elimina el archivo <i>Empresa.json</i>, haz una copia de
+        en la carpeta <i>[RutaSimpleOps]\Opciones</i> elimina el archivo <i>Empresa.json</i>, haz una copia de
         <i>Empresa - Pruebas.json</i> y renombra la copia a <i>Empresa.json</i>.
     </p>
 
@@ -759,7 +784,7 @@
         <i>Empresa.json > Pr\u00F3ximoN\u00FAmeroDocumentoElectr\u00F3nicoPruebas</i> más el valor de <i>PrimerN\u00FAmeroFacturaAutorizada</i>,
         el <i>Prefijo</i> por <i>SETP</i> y guárdalo con el nombre <i>VT-yyyy-MM-dd HH-mm-ss.json</i>, por ejemplo <i>VT-2021-01-26 23-29-00.json</i>
         si la fecha y hora actual es 26 de enero de 2021 a las 11:29 pm.
-        Ejecuta <b>SimpleOps</b> y copia y pega (no lo cortes) el archivo JSON en <i>[CarpetaProgramas]\SimpleOps\Programa Tercero\Integración SimpleOps</i>.
+        Ejecuta <b>SimpleOps</b> y copia y pega (no lo cortes) el archivo JSON en <i>[RutaSimpleOps]\Programa Tercero\Integración SimpleOps</i>.
         Unos segundos después aparecerá en la misma carpeta un archivo <i>VT-yyyy-MM-dd HH-mm-ss.ok</i> que significa que la factura electrónica fue
         generada exitosamente y si lo abres con el bloc de notas encontrarás las rutas al PDF de la representación gráfica y al XML. Si aparece
         un archivo <i>VT-yyyy-MM-dd HH-mm-ss.error</i>, significa que hubo un error que podrás leer abriendo este archivo con el bloc
@@ -769,7 +794,7 @@
     <p>
         Una vez finalices tus ensayos, podrás generar tu primera factura electrónica legal con el modo de integración con terceros.
         Suspende la ejecución y cambia al modo de producción:
-        en la carpeta <i>[CarpetaProgramas]\SimpleOps\Opciones</i> elimina el archivo <i>Empresa.json</i>, haz una copia de
+        en la carpeta <i>[RutaSimpleOps]\Opciones</i> elimina el archivo <i>Empresa.json</i>, haz una copia de
         <i>Empresa - Producción.json</i> y renombra la copia a <i>Empresa.json</i>.
     </p>
 
@@ -778,13 +803,13 @@
         <i>Empresa.json > PrimerN\u00FAmeroFacturaAutorizada</i>,
         el <i>Prefijo</i> por <i>Empresa.json > PrefijoFacturas</i> y guárdalo con el nombre <i>VT-yyyy-MM-dd HH-mm-ss.json</i>.
         Cambia el resto de los datos a los valores reales de tu primera factura electrónica legal.
-        Ejecuta <b>SimpleOps</b> y copia y pega (no lo cortes) el archivo JSON en <i>[CarpetaProgramas]\SimpleOps\Programa Tercero\Integración SimpleOps</i>.
+        Ejecuta <b>SimpleOps</b> y copia y pega (no lo cortes) el archivo JSON en <i>[RutaSimpleOps]\Programa Tercero\Integración SimpleOps</i>.
         Unos segundos después aparecerá en la misma carpeta un archivo <i>VT-yyyy-MM-dd HH-mm-ss.ok</i> que significa que la factura electrónica fue
         generada exitosamente o <i>VT-yyyy-MM-dd HH-mm-ss.error</i> si hubo un error.
     </p>
 
     <p>
-        En la carpeta <i>[CarpetaProgramas]\SimpleOps\Documentos Electrónicos\[Año]\[Mes]-[Día]</i> puedes encontrar la representación gráfica (PDF) y
+        En la carpeta <i>[RutaSimpleOps]\Documentos Electrónicos\[Año]\[Mes]-[Día]</i> puedes encontrar la representación gráfica (PDF) y
         la factura electrónica (XLM) que acabas de generar. Si quieres verificar si la factura efectivamente fue aceptada por la DIAN, puedes
         entrar a su portal de facturador y hacer clic en <i>Documentos > Enviados</i>. Si la factura eléctrónica aparece allí, habrás configurado
         exitósamente <b>SimpleOps</b> para funcione como facturador electrónico de un programa tercero.
@@ -793,7 +818,7 @@
     <h2 id="paso11">11. Facturación Electrónica usando Excel (Opcional)</h2>
 
     <p>
-        Excel es un programa tercero que puedes usar en compañia de <b>SimpleOps</b> para facturar electrónicamente. 
+        Excel es un programa tercero que puedes usar en compañia de <b>SimpleOps</b> para facturar electrónicamente.
         Su ubicuidad y facilidad de uso lo hacen perfecto para pequeñas empresas con bajos niveles de facturación.
     </p>
 

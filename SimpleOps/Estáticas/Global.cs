@@ -136,7 +136,7 @@ namespace SimpleOps {
                     MostrarInformación($"Activado el modo de desarrollo de plantillas.{DobleLínea}Este modo suspende la ejecución del código después de " +
                         $"crear cada archivo PDF, permite la edición de los archivos CSHTML durante esta suspensión y al reanudar genera " +
                         $"nuevamente el mismo archivo PDF con los cambios realizados en el CSHTML. Esto facilita la edición y desarrollo de archivos " +
-                        $"CSHTML.{DobleLínea}Todos archivos de plantillas CSHTML serán copiados de '{rutaDesarrollo}' a '{rutaAplicación}' cada vez que " +
+                        $"CSHTML.{DobleLínea}Los archivos de plantillas CSHTML serán copiados de '{rutaDesarrollo}' a '{rutaAplicación}' cada vez que " +
                         $"se genere un documento." + (cantidadArchivosCopiados == 0 ? "" : $"{DobleLínea}Para evitar la pérdida de datos accidental, " +
                         $"se ha hecho una copia de seguridad de los archivos CSHTML en '{rutaAplicación}' en '{rutaCopiaSeguridadHoy}'."));
 
