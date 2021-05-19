@@ -731,7 +731,7 @@ namespace SimpleOps {
         } // DocumentosElectrónicos>
 
 
-        public static void GeneraciónCatálogo() {
+        public static void GeneraciónCatálogo(out string ruta) {
 
             var cliente = new Cliente("Distribuciones ABC", new Municipio("Bogotá", "Distrito Capital"), TipoCliente.Distribuidor) {
                 TipoEntidad = TipoEntidad.Empresa, Dirección = "Calle 80-100 68", Teléfono = "4589843", Identificación = "990986892" };
@@ -780,7 +780,7 @@ namespace SimpleOps {
 
             cotización.ÍndiceInversoInserciónPáginasExtra = 1; // Para que deje una página al final para la contraportada.
 
-            CrearPdfCatálogo(cotización, out string ruta);
+            CrearPdfCatálogo(cotización, out ruta);
 
         } // GeneraciónCatálogo>
 
@@ -821,7 +821,8 @@ namespace SimpleOps {
 
                 MostrarInformación(@$"Para crear un catálogo a partir de un archivo JSON de prueba, creálo en '{Equipo.RutaIntegración}\CT-Prueba.json'." +
                                    @$"{DobleLínea}Se creará un catálogo con datos de prueba.");
-                GeneraciónCatálogo();
+                GeneraciónCatálogo(out string ruta);
+                MostrarÉxito($"Catálogo creado: {ruta}.");
 
             }
 

@@ -624,7 +624,7 @@ namespace SimpleOps {
             bool forzarRutaAplicación = false, bool forzarRutaDesarrollo = false, int cantidadPáginasExtra = 0) {
 
             var númeroPágina = 0;
-            bool existe = false;
+            bool existe;
             var rutasPáginasPlantilla = new Dictionary<int, string>();
 
             do {
