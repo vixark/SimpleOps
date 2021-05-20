@@ -248,7 +248,7 @@
     </p>
 
     <p>
-        Abre <i>SimpleOps > Estáticas > Configuración.cs</i> en el Explorador de soluciones y cambia el valor los siguientes valores:
+        Abre en el Explorador de Soluciones <i>SimpleOps > Estáticas > Configuración.cs</i> y cambia el valor los siguientes valores:
 
         <ul>
             <li>
@@ -546,16 +546,16 @@
     <h3>Modo Desarrollo de Plantillas</h3>
 
     <p>
-        En SimpleOps puedes activar el modo <i>Desarrollo de Plantillas</i> que te facilitará el proceso de edición de archivos CSHTML 
-        y generación de archivos PDF modificados.
+        Puedes activar el modo <i>Desarrollo de Plantillas</i> desde la interfaz de <b>SimpleOps</b> que te facilitará el proceso de edición de 
+        archivos CSHTML y generación de archivos PDF modificados.
     </p>
 
     <p>
-        Normalmente mantienen dos versiones de los archivos CSHTML; una en <i>[RutaSimpleOps]\Código\SimpleOps\Plantillas</i> y otra en
-        <i>[RutaSimpleOps]\Plantillas Documentos</i>. Cuando el modo Desarrollo de Plantillas está activado los archivos en
-        <i>[RutaSimpleOps]\Código\SimpleOps\Plantillas</i> se copian en <i>[RutaSimpleOps]\Plantillas Documentos</i> después de cada
-        documento realizado, esto permite que se mantengan sincronizados. Cuando no se tiene activado este modo solo se tienen en cuenta
-        los archivos en  <i>[RutaSimpleOps]\Plantillas Documentos</i>.
+        Se mantienen dos versiones de los archivos CSHTML; una en <i>[RutaSimpleOps]\Código\SimpleOps\Plantillas</i> y otra en
+        <i>[RutaSimpleOps]\Plantillas Documentos</i>. Cuando el <b>Modo Desarrollo de Plantillas</b> está activado, los archivos en
+        <i>[RutaSimpleOps]\Código\SimpleOps\Plantillas</i> se copian a <i>[RutaSimpleOps]\Plantillas Documentos</i> después de cada
+        documento realizado, esto permite que se mantengan sincronizados. Cuando no se tiene activado este modo, solo se tienen en cuenta
+        los archivos en <i>[RutaSimpleOps]\Plantillas Documentos</i>.
     </p>
 
     <p>
@@ -564,9 +564,9 @@
         y ayudas de Visual Studio para su edición. Sin embargo, debes tener cuidado porque estos archivos se reemplazan por la última versión del
         repositorio cuando actualices el código, entonces podrías perder las personalizaciones realizadas. Para evitar esto tienes dos opciones;
         una es editar directamente los archivos en <i>[RutaSimpleOps]\Plantillas Documentos</i> desde el bloc de notas de Windows y no activar
-        el Modo Desarrollo de Plantillas y otra es hacer copias de los archivos en <i>[RutaSimpleOps]\Código\SimpleOps\Plantillas</i>, 
+        el <b>Modo Desarrollo de Plantillas</b> y la otra es hacer copias de los archivos en <i>[RutaSimpleOps]\Código\SimpleOps\Plantillas</i>, 
         agregarles al nombre la palabra Propia (por ejemplo <i>MarcoPdf.cshtml</i>
-        quedaría <i>MarcoPdfPropia.cshtml</i>), activar el modo Desarrollo de Plantillas y abrirlos desde el <i>Explorador de Soluciones</i>. 
+        quedaría <i>MarcoPdfPropia.cshtml</i>), activar el <b>Modo Desarrollo de Plantillas</b> y abrirlos desde el <i>Explorador de Soluciones</i>. 
         Con esto podrás editar los archivos propios desde Visual Studio, estos no se reemplazarán cuando se actualice el código y 
         no perderás las personalizaciones realizadas.
     </p>
@@ -703,21 +703,45 @@
         "L\u00EDneas": [<br />
         &nbsp;&nbsp;&nbsp;&nbsp;{<br />
         &nbsp;&nbsp;&nbsp;&nbsp;"Cantidad": 10,<br />
-        &nbsp;&nbsp;&nbsp;&nbsp;"Precio": 5500,<br />
-        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoReferencia": "R1",<br />
-        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoDescripci\u00F3n": "Producto 1",<br />
-        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoUnidad": "Unidad",<br />
-        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoPorcentajeIVAPropio": null,<br />
-        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoExclu\u00EDdoIVA": false<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"Precio": 70000,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoReferencia": "CMV",<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoAtributos": [],<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoTieneBase": false,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoDescripci\u00F3nEspec\u00EDfica": "Camiseta Verde",<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoUnidadEspec\u00EDfica": "Unidad",<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoPorcentajeIVAPropioEspec\u00EDfico": null,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoExclu\u00EDdoIVAEspec\u00EDfico": false,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoBaseDescripci\u00F3n": null,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoBaseUnidad": "Desconocida",<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoBasePorcentajeIVAPropio": null,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoBaseExclu\u00EDdoIVA": false,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoArchivoInformaci\u00F3nEspec\u00EDfica": null,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoArchivoImagenEspec\u00EDfica": null,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoCaracter\u00EDsticasEspec\u00EDficas": [],<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoBaseArchivoInformaci\u00F3n": null,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoBaseArchivoImagen": null,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoBaseCaracter\u00EDsticas": []<br />
         &nbsp;&nbsp;&nbsp;&nbsp;},<br />
         &nbsp;&nbsp;&nbsp;&nbsp;{<br />
-        &nbsp;&nbsp;&nbsp;&nbsp;"Cantidad": 15,<br />
-        &nbsp;&nbsp;&nbsp;&nbsp;"Precio": 7500,<br />
-        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoReferencia": "R2",<br />
-        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoDescripci\u00F3n": "Producto 2",<br />
-        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoUnidad": "Unidad",<br />
-        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoPorcentajeIVAPropio": null,<br />
-        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoExclu\u00EDdoIVA": false<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"Cantidad": 2,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"Precio": 55000,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoReferencia": "CMA",<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoAtributos": [],<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoTieneBase": false,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoDescripci\u00F3nEspec\u00EDfica": "Camiseta Azul",<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoUnidadEspec\u00EDfica": "Unidad",<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoPorcentajeIVAPropioEspec\u00EDfico": null,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoExclu\u00EDdoIVAEspec\u00EDfico": false,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoBaseDescripci\u00F3n": null,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoBaseUnidad": "Desconocida",<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoBasePorcentajeIVAPropio": null,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoBaseExclu\u00EDdoIVA": false,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoArchivoInformaci\u00F3nEspec\u00EDfica": null,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoArchivoImagenEspec\u00EDfica": null,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoCaracter\u00EDsticasEspec\u00EDficas": [],<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoBaseArchivoInformaci\u00F3n": null,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoBaseArchivoImagen": null,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoBaseCaracter\u00EDsticas": []<br />
         &nbsp;&nbsp;&nbsp;&nbsp;}<br />
         ],<br />
         "N\u00FAmero": 1,<br />
@@ -749,14 +773,14 @@
                 <b>VentaN\u00FAmero:</b> Número de la factura a la que se le aplicará la nota crédito.
             </li>
             <li>
-                <b>ProductoUnidad:</b> Principalmente puede ser Par o Unidad.
+                <b>ProductoUnidadEspec\u00EDfica:</b> Principalmente puede ser Par o Unidad.
             </li>
             <li>
-                <b>ProductoPorcentajeIVAPropio:</b> Si el producto le aplica un IVA diferente de la tarifa normal del 19%. Si le aplica, debes
+                <b>ProductoPorcentajeIVAPropioEspec\u00EDfico:</b> Si el producto le aplica un IVA diferente de la tarifa normal del 19%. Si le aplica, debes
                 ingresar el valor en decimal, por ejemplo 0.05 para 5%. Si se deja en null se aplicará la tarifa normal.
             </li>
             <li>
-                <b>ProductoExclu\u00EDdoIVA:</b> Si se establece en <i>true</i> es excluído de IVA y tiene un tratamiento tributario diferente porque no suma
+                <b>ProductoExclu\u00EDdoIVAEspec\u00EDfico:</b> Si se establece en <i>true</i> es excluído de IVA y tiene un tratamiento tributario diferente porque no suma
                 a la base tributable.
             </li>
             <li>

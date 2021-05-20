@@ -64,8 +64,8 @@ namespace SimpleOps.Interfaz {
                 Visibility = Visibility.Visible;
                 Integrador = new Integrador();
                 if (Integrador.Iniciado) {
-                    LblAlerta.Content += $"Habilitada la integración con terceros. Se puede facturar electrónicamente, generar catálogos, cotizaciones " +
-                        $"y fichas informativas desde otro programa o desde Excel.";
+                    LblAlerta.Content += $"Habilitada la integración con terceros para facturar electrónicamente, generar catálogos, cotizaciones " +
+                        $"y fichas desde otro programa o desde Excel."; // No incrementar mucho este texto para no generar barras de desplazamiento horizontales en pantallas de tamaño medio.
                 } else {
                     LblAlerta.Content += $"Sucedió un error habilitando el modo de integración con programas terceros.";
                 }
@@ -124,7 +124,7 @@ namespace SimpleOps.Interfaz {
                 var nuevaRuta = System.IO.Path.Combine(rutaCopiasSeguridad, ArchivoBaseDatosSQLite.Reemplazar(".db", " [" + AhoraNombresArchivos + "].db"));
                 File.Move(RutaBaseDatosSQLite, nuevaRuta);
                 File.Copy(RutaBaseDatosVacíaSQLite, RutaBaseDatosSQLite);
-                MostrarInformación("Se ha reiniciado la base de datos SQLite exitósamente.");
+                MostrarInformación("Se ha reiniciado la base de datos SQLite exitosamente.");
 
             }
 

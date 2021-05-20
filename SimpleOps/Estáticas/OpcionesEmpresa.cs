@@ -301,7 +301,7 @@ namespace SimpleOps.Singleton {
         /// <summary>
         /// Cantidad de columnas por página para las páginas de las cotizaciones.
         /// </summary>
-        public int CantidadColumnasProductosPorPáginaCotización { get; set; } = 2;
+        public int CantidadColumnasProductosPorPáginaCotización { get; set; } = 1;
 
         #endregion Variables de Apariencia y Comportamiento>
 

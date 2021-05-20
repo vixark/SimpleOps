@@ -450,7 +450,7 @@ namespace SimpleOps {
         public enum DocumentoIntegración {
             [Display(Name = "VT-")] Venta, [Display(Name = "NC-")] NotaCrédito, [Display(Name = "ND-")] NotaDébito, [Display(Name = "CZ-")] Cotización, 
             [Display(Name = "PD-")] Pedido, [Display(Name = "CE-")] ComprobanteEgreso, [Display(Name = "CB-")] Cobro, [Display(Name = "RS-")] Remisión,
-            [Display(Name = "CT-")] Catálogo, [Display(Name = "FI-")] FichasInformativas // El documento de integración de fichas informativas se escribe en plural porque por lo general trae información para realizar fichas de varios productos.
+            [Display(Name = "CT-")] Catálogo, [Display(Name = "FI-")] FichasInformativas, [Display(Name = "FP-")] FacturaProforma // El documento de integración de fichas informativas se escribe en plural porque por lo general trae información para realizar fichas de varios productos.
         }
 
 
