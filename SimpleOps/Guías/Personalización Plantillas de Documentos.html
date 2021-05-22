@@ -1,0 +1,189 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" href="CSS/Estilos.css">
+</head>
+
+<body>
+
+    <style>
+        /* Temporalmente se copia textual desde Estilos.css para poder que funcione con htmlpreview.github.io. */
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            width: 800px;
+            margin: auto;
+        }
+
+        img {
+            display: block;
+            margin: auto;
+            margin-top: 80px;
+            margin-bottom: 80px;
+            max-width: 800px;
+        }
+
+        h1, h2 {
+            margin-top: 80px;
+            margin-bottom: 30px;
+        }
+
+        .código {
+            font-family: Courier New, Courier, monospace;
+            margin-bottom: 50px;
+            margin-top: 50px;
+        }
+    </style>
+
+    <h1>Personalización de Plantillas de Documentos</h1>
+
+    <p>
+        Todos los documentos generados por <b>SimpleOps</b> pueden ser personalizados al editar los archivos de sus plantillas (archivos con extensión
+        .cshtml). Estas plantillas están escritas en lenguaje C# y HTML+CSS, que permiten el uso de variables, ciclos y demás funcionalidades de C#
+        y la flexibilidad del HTML+CSS para diseñar un documento. No es necesario tener grandes conocimientos de C# para editarlas, pero si recomendable
+        tener un conocimiento medio de HTML+CSS si se quieren hacer cambios o personalizaciones importantes. Para cambios pequeños como cambios de
+        colores, imágenes, tipo de letra, márgenes y tamaños de los elementos no se necesita conocimiento de C# y basta con tener conocimiento básico de HTML+CSS.
+    </p>
+
+    <p>
+        El código de <b>SimpleOps</b> contiene unas plantillas originales que pueden ser usadas sin modificaciones y
+        se encuentran en
+        <i>[RutaSimpleOps]/Código/Plantillas</i>, a esta ruta se le llamará <i>[RutaCódigo]</i>. Estas plantillas son reemplazadas por la última
+        versión cada vez que se actualice el código. La primera vez que se ejecuta <b>SimpleOps</b> estas plantillas
+        se copian a la carpeta <i>[RutaSimpleOps]/Plantillas Documentos</i> o a <i>Equipo.json > RutaPlantillasDocumentos</i> si se ha especificado 
+        allí una diferente, a esta ruta se le llamará <i>[RutaAplicación]</i>.
+    </p>
+
+    <p>
+        Por lo general la edición de una plantilla afecta el diseño del documento del mismo nombre. Aunque algunas plantillas son usadas por varios
+        documentos, como <i>MarcoPdf.cshtml</i> que es usada por todos los documentos y <i>ListaProductosPdf.cshtml</i> que es usada por los documentos
+        que tienen listas de productos. Y algunos documentos pueden usar varias plantillas, como el catálogo que usa
+        <i>CatálogoPdf.csthml</i>,  <i>CatálogoPdf2.cshtml</i>, <i>CatálogoPdfExtra.cshtml</i>, etc.
+    </p>
+
+
+    <h3>Ediciones Menores</h3>
+    <p>
+        La mayoría de usuarios necesitan solo cambiar las imágenes y los colores sin modificar en gran medida el diseño de los documentos, 
+        esto se puede hacer de manera sencilla sin ahondar en las opciones avanzadas y grandes flexibilidades que brinda <b>SimpleOps</b>.
+        Las plantillas en
+        <i>[RutaAplicación]</i> siempre se usarán de manera predeterminada y no
+        serán reemplazadas al actualizar el código. Esto permite que se puedan realizar cambios menores de colores e imágenes en ellas
+        desde un editor de texto plano, como el Bloc de Notas de Windows, teniendo cuidado de no activar el
+        <i>Modo Desarrollo de Plantillas</i>.
+    </p>
+
+    <p>
+        Puedes personalizar los colores abriendo cada plantilla y cambiando los colores hexadecimales, 
+        principalmente en la sección <i> &lt;style&gt; &gt; Colores</i>
+        de la plantilla <i>MarcoPdf.cshtml</i>. El primer color después de <span class="código">Model.ModoImpresión ?</span> es el color del modo blanco y negro 
+        adecuado para impresión (archivos PDF terminados en <i>-I</i>) y por lo general no necesitarás cambiarlo. Cambia el segundo color para personalizar 
+        los colores de los archivos PDF a color. Otros documentos podrían tener sus propios colores adicionales, como el catálogo en la 
+        plantilla <i>CatálogoPdf.cshtml</i>.
+    </p>
+
+    <p>
+        Para obtener los códigos hexadecimales de tus colores deseados puedes usar
+        <a href="https://www.colorcodehex.com/html-color-picker.html">esta herramienta</a> y copiar el valor al frente de HEX. Recuerda que al
+        escribirlo en la plantilla debes agregarle # al principio, así: #CA46DB.
+    </p>
+
+    <img src="../Guías/Imágenes/Instalación y Habilitación Facturación Electrónica/CambioColores.png" />
+
+    <p>
+        Para finalizar la edición, guarda los cambios en la plantilla, cierra y reinicia <b>SimpleOps</b> y genera nuevamente
+        el documento que estás editando para ver el nuevo archivo PDF con los cambios aplicados.
+    </p>
+
+    <p>
+        También puedes personalizar las imágenes de los documentos. Las imágenes las encuentras en
+        <i><i>[RutaAplicación]</i>\Imágenes</i> y las puedes editar con cualquier editor de imágenes, recomendamos
+        <a href="https://www.getpaint.net/">Paint.NET</a>. Algunos documentos usan varias imágenes y estas son referenciadas dentro de
+        las plantillas con <span class="código">@Model.Logo###Base64</span>, donde ### es un número del 1 al 7. Por ejemplo, puedes editar la imagen
+        <i><i>[RutaAplicación]</i>\Imágenes\LogoEmpresa3.png</i> y agregarla en la plantilla con:
+        <span class="código">&lt;img style="width: 400px;" src="@Model.Logo3Base64" /&gt;</span>
+    </p>
+
+    <h3>Modo Desarrollo de Plantillas</h3>
+
+    <p>
+        El <i>Modo Desarrollo de Plantillas</i> se activa desde la interfaz de <b>SimpleOps</b> durante la ejecución de la aplicación.
+        Este modo permite que al generar un documento PDF cualquiera todas las plantilas en <i>[RutaCódigo]</i>
+        se copien y reemplacen las plantillas en <i>[RutaAplicación]</i>. Además, suspende la ejecución del programa permitiendo editar
+        desde Visual Studio las plantillas en <i>[RutaCódigo]</i> y ver los cambios aplicados fácilmente. Para hacerlo debes esperar que la ejecución
+        llegue al punto <span class="código">Debugger.Break();</span>, hacer las modificaciones en la plantilla, grabar los cambios, 
+        cerrar el PDF generado anteriormente y reanudar la ejecución (F5), así obtendrás un nuevo PDF con los cambios aplicados sin necesidad de reiniciar 
+        <b>SimpleOps</b>. Este modo facilita y agiliza en gran medida el proceso de edición de las plantillas.
+    </p>
+
+
+    <p>
+        Se debe tener en cuenta que si nunca se usa el <i>Modo Desarrollo de Plantillas</i>, las plantillas en <i>[RutaAplicación]</i> quedarán
+        desincronizadas de las plantillas en <i>[RutaCódigo]</i>. Es decir, los cambios que se apliquen a las plantillas en <i>[RutaCódigo]</i>
+        al actualizar el código no serán aplicados en las plantillas en <i>[RutaAplicación]</i>. En términos generales esto no es problema
+        porque una vez que el usuario realiza personalizaciones a sus plantillas no es usual que quiera retomar las plantillas en
+        <i>[RutaCódigo]</i>.
+    </p>
+
+    <p>
+        Si por alguna razón deseas actualizar las plantillas en <i>[RutaAplicación]</i> con las últimas versiones del repositorio de código
+        (por ejemplo, si se añadió un nuevo elemento legal en la factura electrónica), debes actualizar el código (master > "Pull"),
+        ejecutar <b>SimpleOps</b>, activar el <i>Modo Desarrollo de Plantillas</i>, generar un documento cualquiera
+        para forzar el reemplazo de las plantillas en <i>[RutaAplicación]</i> con las nuevas versiones
+        y editar nuevamente todas las plantillas en <i>[RutaAplicación]</i> para aplicar las personalizaciones de colores e imágenes.
+    </p>
+
+    <p>
+        De manera preventiva <b>SimpleOps</b> hace copia de todas las plantillas en <i>[RutaAplicación]</i> en
+        <i><i>[RutaAplicación]</i>/Copias de Seguridad</i> para evitar que pierdas información si se activa por error el
+        <i>Modo Desarrollo de Plantillas</i> y estas son sobreescritas con las de <i>[RutaCódigo]</i>.
+    </p>
+
+    <h3>Edición Avanzada con Plantillas Propias</h3>
+    <p>
+        La edición básica de las plantillas en <i>[RutaAplicación]</i> usando el Bloc de Notas es suficiente para hacer cambios menores, 
+        pero no permite la escritura de código C# con el IntelliSense de Visual Studio ni usar el <i>Modo Desarrollo de Plantillas</i> 
+        ni usar otras funciones avanzadas, por esto se pierde gran flexibilidad y agilidad en la edición. Si se quieren 
+        hacer cambios importantes, cómo el diseño de múltiples páginas de un catálogo personalizado, se recomienda usar el siguiente método.
+    </p>
+
+    <p>
+        Aunque, como se menciona en la sección <i>Modo Desarrollo de Plantillas</i>, se pueden editar directamente las plantillas en <i>[RutaCódigo]</i>, 
+        en la práctica esto genera conflictos cuando se actualiza el código, entonces no se recomienda hacerlo, se recomienda usar las plantillas
+        propias.
+        Las plantillas propias se mantienen en <i>[RutaCódigo]</i>, son copias de las plantillas originales
+        y tienen <i>Propia</i> al final de su nombre. Por ejemplo, para <i>MarcoPdf.cshtml</i> la plantilla propia tendría el nombre
+        <i>MarcoPdfPropia.cshtml</i>. Estas nunca son actualizadas ni reemplazadas al actualizar el código,
+        pero a diferencia de las de <i>[RutaAplicación]</i> si pueden ser abiertas con Visual Studio y permiten su edición
+        avanzada.
+    </p>
+
+    <p>
+        Para activar el uso de las plantillas propias debes realizar una copia de todas las plantillas en  <i>[RutaCódigo]</i>, pegarlas en 
+        la misma carpeta y renombrarlas para reemplazar ' - copia' por 'Propia'. Además, debes verificar que la variable
+        <i>Estáticas > Configuración.cs > HabilitarPlantillasPropias</i> tenga valor <i>true</i>.
+    </p>
+
+    <p>
+        Puedes abrir las plantillas propias con el Explorador de Soluciones de Visual Studio en <i>SimpleOps/Plantillas</i>
+        y tendrás todas las funcionalidades de este para ayudarte en la edición. Las plantillas
+        propias se comportan igual que las plantillas originales en <i>[RutaCódigo]</i>. Si tienes activado el <i>Modo Desarrollo de Plantillas</i>,
+        estas plantillas reemplazarán las plantillas en <i>[RutaAplicación]</i> para mantenerlas sincronizadas. 
+        En este caso se mantendrán sincronizadas las plantillas propias y las de <i>[RutaAplicación]</i>, pero no las originales en <i>[RutaCódigo]</i>. 
+    </p>
+
+    <p>
+        Si has realizado personalizaciones a tus plantillas propias y si por alguna razón deseas incorporar un elemento nuevo agregado 
+        en las plantillas originales al actualizar el código (por ejemplo, si se agregó un nuevo elemento legal en la factura electrónica), 
+        a diferencia del caso de ediciones menores,
+        en este caso se recomienda que copies este nuevo elemento desde la plantilla original a tus plantillas propias, pues normalmente reescribir 
+        el código personalizado en las plantillas propias no es una opción viable.
+    </p>
+
+</body>
+
+</html>

@@ -526,7 +526,7 @@ namespace SimpleOps {
         public static string ObtenerRutaOpciones() => ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaOpciones, crearSiNoExiste: true);
 
         public static string ObtenerRutaImágenesPlantillas() => ObtenerRutaCarpeta(ObtenerRutaPlantillas(forzarRutaAplicación: true, 
-            forzarRutaDesarrollo: false), CarpetaImágenesPlantillas, crearSiNoExiste: true); // No es necesario modificarlas desde el Visual Studio. Las plantillas si se manejan en ambos lugares porque si se requiere trabajar en ellas y se deben agregar al repositorio y también se requieren tener las propias por fuera del repositorio en la ruta de la aplicación.
+            forzarRutaDesarrollo: false), CarpetaImágenesPlantillas, crearSiNoExiste: true); // No es necesario modificarlas desde el Visual Studio, entonces se manejan directamente en la ruta de la aplicación. Las plantillas si se manejan en ambos lugares porque si se requiere trabajar en ellas y se deben agregar al repositorio y también se requieren tener las propias por fuera del repositorio en la ruta de la aplicación.
 
         public static string ObtenerRutaProductos() 
             => Equipo.RutaProductos ?? ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaProductos, crearSiNoExiste: true);

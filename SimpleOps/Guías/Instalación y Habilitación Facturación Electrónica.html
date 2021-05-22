@@ -46,6 +46,7 @@
             margin-bottom: 50px;
             margin-top: 50px;
         }
+
     </style>
 
     <h1>Instalación de SimpleOps y Habilitación de la Facturación Electrónica</h1>
@@ -88,7 +89,7 @@
 
     <p>
         Selecciona <i>Empresa</i>.
-        Si el representante legal de tu empresa es una persona natural colombiana deja la opción <i>Cédula de ciudadanía</i> seleccionada.
+        Si el representante legal de tu empresa es una persona natural colombiana, deja la opción <i>Cédula de ciudadanía</i> seleccionada.
         Ingresa el número de la cédula del representante legal, el NIT de tu empresa sin número de verificación y has clic en <i>Entrar</i>.
         Si te aparece el error <i>Recaptcha inválido</i>, ingresa nuevamente desde <a href="https://www.dian.gov.co">www.dian.gov.co</a>
         y hazlo más rápidamente.
@@ -114,7 +115,7 @@
     <img src="Imágenes/Instalación y Habilitación Facturación Electrónica/RegistroFacturadorElectrónico.png" />
 
     <p>
-        Te preguntará que si estás seguro de proceder, dale clic en <i>Sí</i> e inicia otra vez sesión como se describió anteriormente.
+        Te preguntará si estás seguro de proceder, dale clic en <i>Sí</i> e inicia otra vez sesión como se describió anteriormente.
         Haz clic en <i>Participantes > Facturador</i> y haz clic en <i>Configurar modos de operación</i>.
     </p>
 
@@ -152,9 +153,9 @@
     <img src="Imágenes/Instalación y Habilitación Facturación Electrónica/ParametrosFacturaciónElectrónica.png" />
 
     <p>
-        Al copiar los valores asegúrate que los estas copiando completos, si la pantalla de tu computador es pequeña parte de algunos textos
+        Al copiar los valores asegúrate que los estas copiando completos, pues si la pantalla de tu computador es pequeña parte de algunos textos
         se pueden esconder. Si este es tu caso, selecciona con el mouse desde el inicio del texto, desplázalo hasta el
-        final del cuadro de texto hasta que no aparezcan más letras nuevas y presiona Ctrl + C para copiar.
+        final del cuadro de texto hasta que no aparezcan más letras nuevas y presiona <i>Ctrl + C</i> para copiar.
     </p>
 
     <p>
@@ -173,8 +174,8 @@
 
     <p>
         Si actualmente facturas electrónicamente con otra aplicación o con el portal de la DIAN, no necesitarás realizar este procedimiento
-        nuevamente para poder facturar con <b>SimpleOps</b>. El certificado de firma digital que ya tienes te servirá,
-        asegúrate de tener tu archivo PFX y tu clave y puedes pasar al procedimiento de pruebas.
+        nuevamente para poder facturar con <b>SimpleOps</b>. El certificado de firma digital que ya tienes te servirá.
+        Asegúrate de tener tu archivo PFX y tu clave y pasa al procedimiento de pruebas.
     </p>
 
 
@@ -199,16 +200,17 @@
         <b>SimpleOps</b> se encuentra en desarrollo, por lo tanto aún no cuenta con instalador y la mejor
         manera de ejecutarlo es directamente desde el código fuente. Para ejecutar el código necesitarás
         <a href="https://visualstudio.microsoft.com/es/vs/community/">Visual Studio</a>. Si ya tienes instalado Visual Studio, actualízalo
-        a la última versión (busca y abre Visual Studio Installer en Windows). Si quieres ejecutar <b>SimpleOps</b> sin necesidad
-        de instalar Visual Studio, me puedes escribir a vixark@outlook.com explicándome tu caso, pero antes asegúrate de leer
-        <a href="https://github.com/vixark/SimpleOps">la licencia</a>.
+        a la última versión (busca y abre Visual Studio Installer en Windows). Además, recuerda que la 
+        <a href="https://github.com/vixark/SimpleOps#licencia">licencia</a> de SimpleOps es 
+        <a href="https://es.wikipedia.org/wiki/GNU_Affero_General_Public_License">AGPL</a>, lo que implica que el usuario <b>siempre</b> debe 
+        recibir una copia del código. Instalarlo de esta manera automáticamente garantiza el cumplimiento de esta obligación.
     </p>
 
     <p>
         Crea una carpeta en tu computador con el nombre <i>SimpleOps</i> y crea dentro de ella la carpeta <i>Código</i>
         y la carpeta <i>Firma Electrónica</i>. Para fines de esta guía la ruta de la carpeta SimpleOps se llamará <i>[RutaSimpleOps]</i>,
-        por ejemplo <i>D:\Programas\SimpleOps</i>.
-        Asegúrate de crear las carpetas exactamente cómo están escritas (incluyendo tildes) para que después no tengas
+        esta puede ser, por ejemplo: <i>D:\Programas\SimpleOps</i>.
+        Asegúrate de crear las carpetas exactamente cómo están escritas (incluyendo tildes) para que no tengas
         contratiempos.
     </p>
 
@@ -235,7 +237,7 @@
 
     <p>
         Con esto abrirás el código por primera vez. La próxima vez que vayas a abrir el código abre
-        el archivo <i>[RutaSimpleOps]\Código\SimpleOps.sln</i> y actualiza el código a la última versión en GitHub haciendo clic
+        el archivo <i>[RutaSimpleOps]\Código\SimpleOps.sln</i> y actualiza el código a la última versión en el repositorio haciendo clic
         en la esquina inferior derecha en <i>master > "Pull"</i>.
     </p>
     <img src="Imágenes/Instalación y Habilitación Facturación Electrónica/ActualizarCambiosSimpleOpsSln.png" />
@@ -260,7 +262,7 @@
             <li>
                 <b>ModoIntegraciónTerceros:</b> Si quieres habilitar la facturación electrónica en un programa tercero (otro ERP, Excel u otro) mediante
                 <b>SimpleOps</b>, establécelo en <i>true</i>. Si quieres usar <b>SimpleOps</b>
-                como tu ERP y facturador electrónico establécelo en <i>false</i>. <b>Nota:</b> A junio de 2021, <b>SimpleOps</b> aún no tiene interfaz
+                como tu ERP y facturador electrónico establécelo en <i>false</i>. <b>Nota:</b> A diciembre de 2021, <b>SimpleOps</b> aún no tiene interfaz
                 gráfica y no puede ser usado como ERP, entonces la única opción para facturar electrónicamente es usando un programa tercero.
             </li>
         </ul>
@@ -274,8 +276,8 @@
     </p>
 
     <p>
-        Ejecuta <b>SimpleOps</b> (F5), espera unos segundos y te aparecerá un mensaje que dice <i>Base de Datos SQLite Creada</i>, esto significa
-        que realizaste correctamente los pasos anteriores y que se creo la base de datos y todos los archivos necesarios para ejecutar <b>SimpleOps</b>.
+        Ejecuta <b>SimpleOps</b> (F5), espera unos segundos y te aparecerá un mensaje que dice <i>Base de Datos SQLite Creada</i>. Este mensaje significa
+        que realizaste correctamente los pasos anteriores y que se creó la base de datos y todos los archivos necesarios para ejecutar <b>SimpleOps</b>.
         Vuelve al código y suspende la ejecución (Shift + F5).
     </p>
 
@@ -292,9 +294,10 @@
     <p>
         Para los valores <b>[Texto]</b> usa dobles comillas ("") y para los <b>[Número]</b> ninguna comilla y punto como separador de decimales.
         Los textos debes preprocesarlos con <a href="https://www.freeformatter.com/json-escape.html">esta utilidad</a>.
-        Ingresa el texto en el cuadro, haz clic en <i>ESCAPE</i>,
-        copia el texto del cuadro <i>Escaped string</i> y pégalo en el archivo. Por ejemplo, el texto <i>D:\Programas\SimpleOps\Firma Electrónica</i>
-        se convierte en <i>D:\\Programas\\SimpleOps\\Firma Electr\u00F3nica</i>, que es el texto que se debe usar.
+        En esa utilidad ingresa el texto en el cuadro, haz clic en <i>ESCAPE</i>,
+        copia el texto del cuadro <i>Escaped string</i> y pégalo en el archivo <i>Equipo.json</i>. 
+        Por ejemplo, el texto <i>D:\Programas\SimpleOps\Firma Electrónica</i> se convierte en <i>D:\\Programas\\SimpleOps\\Firma Electr\u00F3nica</i>, 
+        que es el texto que se debe usar.
     </p>
 
     <ul>
@@ -330,17 +333,12 @@
     <h2 id="paso5">5. Configuración de los Datos de tu Empresa en SimpleOps</h2>
 
     <p>
-        Para hacerlo necesitarás agregar varios datos de tu empresa al archivo <i>Empresa.json</i>.
-        Abre el archivo <i>[RutaSimpleOps]\Opciones\Empresa.json</i> con Visual Studio
-        (<i>clic derecho > Abrir con.. > Microsoft Visual Studio</i>).
-        Para editarlo más fácil haz <i>clic derecho en el texto > Desminimizar</i>.
-    </p>
-
-    <p>
-        Para los valores <b>[Fecha]</b> usa el formato "YYYY-MM-DDT00:00:00Z" (con dobles comillas) y para los <b>[Booleano]</b>
-        usa true o false (sin comillas).
-        Si un texto tiene tildes o eñes debes preprocesarlo con <a href="https://www.freeformatter.com/json-escape.html">esta utilidad</a>,
-        si no las tiene lo puedes ingresar sin preprocesarlo.
+        <b>SimpleOps</b> necesitará toda la información de tu empresa para poder generar facturas válidas ante la DIAN. Para hacerlo necesitarás agregar
+        varios datos de tu empresa al archivo <i>Empresa.json</i>. Abre el archivo <i>[RutaSimpleOps]\Opciones\Empresa.json</i> y edítalo
+        siguiendo las mismas recomendaciones de la edición de <i>Equipo.json</i>. Para los valores <b>[Fecha]</b> usa el 
+        formato "YYYY-MM-DDT00:00:00Z" (con dobles comillas) y para los <b>[Booleano]</b> usa true para verdadero o false para falso (sin comillas). 
+        Si un texto tiene tildes o eñes, debes preprocesarlo con <a href="https://www.freeformatter.com/json-escape.html">esta utilidad</a>, si no las 
+        tiene, lo puedes ingresar sin preprocesarlo.
     </p>
 
     <ul>
@@ -496,7 +494,7 @@
     <p>Presiona <i>Ctrl + S</i> para guardar los cambios realizados.</p>
 
 
-    <h2 id="paso6">6. Pruebas Internas de Facturación y Personalización de Factura</h2>
+    <h2 id="paso6">6. Pruebas Internas de Facturación</h2>
     <p>
         <b>SimpleOps</b> ya está listo para iniciar las pruebas de facturación electrónica. Primero se realizarán unas pruebas internas
         y después se realizarán las pruebas oficiales ante la DIAN, que una vez cumplidas activan el estatus de tu empresa como facturador electrónico
@@ -505,77 +503,36 @@
 
     <p>
         Ejecuta <b>SimpleOps</b>, haz clic en el botón <i>Hacer Pruebas Internas</i>, espera unos segundos y te aparecerá un mensaje sobre
-        el envío de documentos electrónicos a la DIAN, léelo y haz clic en <i>Aceptar</i>. Si realizaste correctamente todos los pasos anteriores
-        te aparecerá un mensaje de Éxito que significa que <b>SimpleOps</b> se comunicó con el servidor de la DIAN en nombre de tu empresa y pudo
+        el envío de documentos electrónicos a la DIAN, léelo y haz clic en <i>Aceptar</i>. Si realizaste correctamente todos los pasos anteriores,
+        te aparecerá un mensaje de éxito que significa que <b>SimpleOps</b> se comunicó con el servidor de la DIAN en nombre de tu empresa y pudo
         enviar exitósamente la primera factura electrónica de prueba interna. Haz clic en <i>Aceptar</i> y se ejecutarán varias pruebas de otras
-        facturas, notas débito y notas crédito, puedes volver al código y suspender la ejecución cuando desees.
+        facturas, notas débito y notas crédito. Puedes volver al código y suspender la ejecución cuando desees.
     </p>
 
     <p>
         Abre la carpeta <i>[RutaSimpleOps]\Documentos Electrónicos\[Año]\[Mes]-[Día]</i> donde encontrarás las representaciones
         gráficas (archivos PDF) de los documentos de prueba que acabas de enviar a la DIAN y las facturas electrónicas (archivos XML).
+        Puedes personalizar los colores y las imagenes en la factura usando <a href="Personalización Plantillas de Documentos.html">esta guía</a> .
     </p>
 
     <p>
-        Puedes personalizar la representación gráfica cambiando las imágenes y los colores: las imágenes las encuentras en
-        <i>[RutaSimpleOps]\Plantillas Documentos\Imágenes</i> y los colores los puedes cambiar abriendo
-        <i>[RutaSimpleOps]\Plantillas Documentos\MarcoPdf.cshtml</i> con Visual Studio y cambiando los
-        <a href="https://www.colorcodehex.com/html-color-picker.html">colores HEX</a> en <i> &lt;style&gt; &gt; Colores</i>. El primer
-        color después de <i>Model.ModoImpresión</i> es el color del modo blanco y negro para impresión (archivos terminados en <i>-I</i>),
-        cambia el segundo color para personalizar el color de la representación gráfica a color.
-    </p>
-    <img src="../Guías/Imágenes/Instalación y Habilitación Facturación Electrónica/CambioColores.png" />
-
-    <p>
-        Guarda los cambios y ejecuta nuevamente <b>SimpleOps</b> para generar las nuevas representaciones gráficas.
-    </p>
-
-    <p>
-        Puedes abrir el portal de habilitación de la DIAN y hacer clic en <i>Documentos > Enviados</i> para verificar los documentos electrónicos
+        Si abres el portal de habilitación de la DIAN y haces clic en <i>Documentos > Enviados</i>, podrás verificar los documentos electrónicos
         de prueba que has generado con <b>SimpleOps</b>.
     </p>
 
     <p>
-        Un error que te puede salir es <i>Rechazo 90: Documento con CUFE '...' procesado anteriormente</i>. Esto se puede deber a que estás
+        Un error común que te puede salir es <i>Rechazo 90: Documento con CUFE '...' procesado anteriormente</i>. Esto se puede deber a que estás
         intentando hacer una factura electrónica con un número que ya usaste antes. Para solucionarlo suspende la ejecución,
         ingresa al portal de habilitación de la DIAN, haz clic en <i>Documentos > Enviados</i>, toma nota del último de pruebas SETP990000###
         (sin tener en cuenta el 99 inicial), súmale 1 a ese número, escríbe el valor resultante en <i>[RutaSimpleOps]\Opciones\Empresa.json</i>
         > <i>Pr\u00F3ximoN\u00FAmeroDocumentoElectr\u00F3nicoPruebas</i>, guarda el archivo e intenta nuevamente.
     </p>
 
-    <h3>Modo Desarrollo de Plantillas</h3>
-
-    <p>
-        Puedes activar el modo <i>Desarrollo de Plantillas</i> desde la interfaz de <b>SimpleOps</b> que te facilitará el proceso de edición de 
-        archivos CSHTML y generación de archivos PDF modificados.
-    </p>
-
-    <p>
-        Se mantienen dos versiones de los archivos CSHTML; una en <i>[RutaSimpleOps]\Código\SimpleOps\Plantillas</i> y otra en
-        <i>[RutaSimpleOps]\Plantillas Documentos</i>. Cuando el <b>Modo Desarrollo de Plantillas</b> está activado, los archivos en
-        <i>[RutaSimpleOps]\Código\SimpleOps\Plantillas</i> se copian a <i>[RutaSimpleOps]\Plantillas Documentos</i> después de cada
-        documento realizado, esto permite que se mantengan sincronizados. Cuando no se tiene activado este modo, solo se tienen en cuenta
-        los archivos en <i>[RutaSimpleOps]\Plantillas Documentos</i>.
-    </p>
-
-    <p>
-        Los archivos en <i>[RutaSimpleOps]\Código\SimpleOps\Plantillas</i>
-        los puedes editar directamente abriéndolos desde el <i>Explorador de Soluciones</i> y tendrás todas las funcionalidades
-        y ayudas de Visual Studio para su edición. Sin embargo, debes tener cuidado porque estos archivos se reemplazan por la última versión del
-        repositorio cuando actualices el código, entonces podrías perder las personalizaciones realizadas. Para evitar esto tienes dos opciones;
-        una es editar directamente los archivos en <i>[RutaSimpleOps]\Plantillas Documentos</i> desde el bloc de notas de Windows y no activar
-        el <b>Modo Desarrollo de Plantillas</b> y la otra es hacer copias de los archivos en <i>[RutaSimpleOps]\Código\SimpleOps\Plantillas</i>, 
-        agregarles al nombre la palabra Propia (por ejemplo <i>MarcoPdf.cshtml</i>
-        quedaría <i>MarcoPdfPropia.cshtml</i>), activar el <b>Modo Desarrollo de Plantillas</b> y abrirlos desde el <i>Explorador de Soluciones</i>. 
-        Con esto podrás editar los archivos propios desde Visual Studio, estos no se reemplazarán cuando se actualice el código y 
-        no perderás las personalizaciones realizadas.
-    </p>
-
     <h2 id="paso7">7. Pruebas de Habilitación en la DIAN</h2>
     <p>
-        Este procedimiento habilitará tu empresa cómo facturador electrónico usando <b>SimpleOps</b> en la DIAN y no podrás seguir facturando de la forma
-        tradicional física. Si actualmente facturas con la solución gratuita de la DIAN o con un operador tecnológico, aún podrás seguir facturando
-        de esa forma.
+        Este procedimiento habilitará a tu empresa cómo facturador electrónico usando <b>SimpleOps</b> en la DIAN y no podrás seguir facturando 
+        de la forma tradicional física. Si actualmente facturas con la solución gratuita de la DIAN o con un operador tecnológico, aún podrás seguir 
+        facturando de esa forma.
     </p>
 
     <p>
@@ -670,15 +627,15 @@
     </p>
 
     <p>
-        ¡Con esto has finalizado con la DIAN y
-        <b>SimpleOps</b> está listo para facturar electrónicamente!
+        ¡Con esto has finalizado los procedimientos con la DIAN y <b>SimpleOps</b> está listo para facturar electrónicamente!
     </p>
 
     <h2 id="paso10">10. Facturación Electrónica</h2>
     <p>
         La facturación electrónica se puede hacer directamente con <b>SimpleOps</b>
-        funcionando como tu aplicación ERP o mediante el uso de un programa tercero (otro ERP, Excel u otro). <b>Nota:</b> A junio de 2021, <b>SimpleOps</b> aún no tiene interfaz
-        gráfica y no puede ser usado como ERP, entonces la única opción para facturar electrónicamente es usando un programa tercero.
+        funcionando como tu aplicación ERP o mediante el uso de un programa tercero (otro ERP, Excel u otro). <b>Nota:</b> A diciembre de 2021, 
+        <b>SimpleOps</b> aún no tiene interfaz gráfica y no puede ser usado como ERP, entonces la única opción para facturar electrónicamente 
+        es usando un programa tercero.
     </p>
 
     <p>
@@ -764,20 +721,21 @@
     </p>
 
     <p>
-        La mayoría de los elementos son autoexplicativos. Algunos requieren explicación adicional o aplican solo para notas crédito:
+        La mayoría de los elementos son autoexplicativos, pero algunos requieren explicación adicional:
         <ul>
             <li>
-                <b>VentaPrefijo:</b> Prefijo de la factura a la que se le aplicará la nota crédito.
+                <b>VentaPrefijo:</b> Prefijo de la factura a la que se le aplicará la nota crédito. Para facturas se deja en null.
             </li>
             <li>
-                <b>VentaN\u00FAmero:</b> Número de la factura a la que se le aplicará la nota crédito.
+                <b>VentaN\u00FAmero:</b> Número de la factura a la que se le aplicará la nota crédito. Para facturas se deja en null.
             </li>
             <li>
                 <b>ProductoUnidadEspec\u00EDfica:</b> Principalmente puede ser Par o Unidad.
             </li>
             <li>
-                <b>ProductoPorcentajeIVAPropioEspec\u00EDfico:</b> Si el producto le aplica un IVA diferente de la tarifa normal del 19%. Si le aplica, debes
-                ingresar el valor en decimal, por ejemplo 0.05 para 5%. Si se deja en null se aplicará la tarifa normal.
+                <b>ProductoPorcentajeIVAPropioEspec\u00EDfico:</b> Se usa si al producto le aplica un IVA diferente de la tarifa predeterminada
+                (19% para mayo de 2021). Debes ingresar el valor en decimal, por ejemplo 0.05 para 5%.
+                Si lo dejas en null, se aplicará la tarifa predeterminada.
             </li>
             <li>
                 <b>ProductoExclu\u00EDdoIVAEspec\u00EDfico:</b> Si se establece en <i>true</i> es excluído de IVA y tiene un tratamiento tributario diferente porque no suma
@@ -804,7 +762,7 @@
     </p>
 
     <p>
-        Copia el texto JSON de ejemplo, pégalo en el bloc de notas, cambia el valor de <i>N\u00FAmero</i> por el valor en
+        Copia el texto JSON de ejemplo, pégalo en el Bloc de Notas, cambia el valor de <i>N\u00FAmero</i> por el valor en
         <i>Empresa.json > Pr\u00F3ximoN\u00FAmeroDocumentoElectr\u00F3nicoPruebas</i> más el valor de <i>PrimerN\u00FAmeroFacturaAutorizada</i>,
         el <i>Prefijo</i> por <i>SETP</i> y guárdalo con el nombre <i>VT-yyyy-MM-dd HH-mm-ss.json</i>, por ejemplo <i>VT-2021-01-26 23-29-00.json</i>
         si la fecha y hora actual es 26 de enero de 2021 a las 11:29 pm.
@@ -842,12 +800,12 @@
     <h2 id="paso11">11. Facturación Electrónica usando Excel (Opcional)</h2>
 
     <p>
-        Excel es un programa tercero que puedes usar en compañia de <b>SimpleOps</b> para facturar electrónicamente.
-        Su ubicuidad y facilidad de uso lo hacen perfecto para pequeñas empresas con bajos niveles de facturación.
+        Excel es un programa tercero que puedes usar en compañía de <b>SimpleOps</b> para facturar electrónicamente.
+        Su ubicuidad y facilidad de uso lo hacen perfecto para independientes y pequeñas empresas con bajos niveles de facturación.
     </p>
 
     <p>
-        <b>[Pendiente]</b> Si quieres saber cómo se podría facturar electrónicamente usando Excel escríbeme a vixark@outlook.com y procuraré
+        <b>[Pendiente]</b> Si quieres saber cómo se podría facturar electrónicamente usando Excel, escríbeme a vixark@outlook.com y procuraré
         completar esta guía.
     </p>
 
