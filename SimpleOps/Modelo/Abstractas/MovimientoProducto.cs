@@ -167,13 +167,11 @@ namespace SimpleOps.Modelo {
             get {
 
                 if (Producto == null) return null;
-                #pragma warning disable CS8524 // Se omite para que no obligue a usar el patrón de descarte _ => porque este oculta la advertencia CS8509 que es muy útil para detectar valores de la enumeración faltantes. No se omite a nivel global porque la desactivaría para los switchs que no tienen enumeraciones, ver https://github.com/dotnet/roslyn/issues/47066.
                 return Producto.ModoImpuestoConsumo switch {
                     ModoImpuesto.Exento => 0,
                     ModoImpuesto.Porcentaje => (decimal?)Producto.PorcentajeImpuestoConsumo * SubtotalBase,
                     ModoImpuesto.Unitario => Cantidad * Producto.ImpuestoConsumoUnitario,
                 };
-                #pragma warning restore CS8524
 
             }
 
@@ -231,13 +229,11 @@ namespace SimpleOps.Modelo {
 
             var valorImpuesto = ObtenerValorImpuesto(tipoTributo);
             var modoImpuesto = ObtenerModoImpuesto(tipoTributo);
-            #pragma warning disable CS8524 // Se omite para que no obligue a usar el patrón de descarte _ => porque este oculta la advertencia CS8509 que es muy útil para detectar valores de la enumeración faltantes. No se omite a nivel global porque la desactivaría para los switchs que no tienen enumeraciones, ver https://github.com/dotnet/roslyn/issues/47066.
             return modoImpuesto switch {
                 ModoImpuesto.Exento => 0,
                 ModoImpuesto.Porcentaje => ObtenerTarifaImpuestoPorcentual(valorImpuesto, SubtotalBaseReal), // Para efectos de obtener la tarifa del impuesto
                 ModoImpuesto.Unitario => valorImpuesto / Cantidad,
             };
-            #pragma warning restore CS8524
 
         } // ObtenerTarifaImpuesto>
 

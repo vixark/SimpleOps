@@ -66,14 +66,12 @@ namespace SimpleOps.Legal {
             (Documento, CódigoFacturaContingencia, FechaFacturaContingencia) = (documento, códigoFacturaContingencia, fechaFacturaContingencia);
             Tipo = documento switch {
                 Venta _ =>
-                    #pragma warning disable CS8524 // Se omite para que no obligue a usar el patrón de descarte _ => porque este oculta la advertencia CS8509 que es muy útil para detectar valores de la enumeración faltantes. No se omite a nivel global porque la desactivaría para los switchs que no tienen enumeraciones, ver https://github.com/dotnet/roslyn/issues/47066.
                     tipoFactura switch {
                         TipoFacturaVenta.Venta => TipoDocumentoElectrónico.FacturaVenta,
                         TipoFacturaVenta.ContingenciaDian => TipoDocumentoElectrónico.FacturaContingenciaDian,
                         TipoFacturaVenta.ContingenciaFacturador => TipoDocumentoElectrónico.FacturaContingenciaFacturador,
                         TipoFacturaVenta.Exportación => TipoDocumentoElectrónico.FacturaExportación,
                     },
-                    #pragma warning restore CS8524
                 NotaCréditoVenta _ => TipoDocumentoElectrónico.NotaCrédito,
                 NotaDébitoVenta _ => TipoDocumentoElectrónico.NotaDébito,
                 _ => throw new Exception(CasoNoConsiderado(documento.GetType().ToString()))
@@ -83,7 +81,6 @@ namespace SimpleOps.Legal {
             Cude = documento.Cude!; // Se asegura que no es nulo porque si se ejecutó CalcularTodo() antes de iniciar el envío del documento electrónico.
             RutaDocumentosElectrónicosHoy = ObtenerRutaDocumentosElectrónicosDeHoy();
 
-            #pragma warning disable CS8524 // Se omite para que no obligue a usar el patrón de descarte _ => porque este oculta la advertencia CS8509 que es muy útil para detectar valores de la enumeración faltantes. No se omite a nivel global porque la desactivaría para los switchs que no tienen enumeraciones, ver https://github.com/dotnet/roslyn/issues/47066.
             TipoFirma = Tipo switch {
                 TipoDocumentoElectrónico.FacturaVenta => TipoFirma.Factura,
                 TipoDocumentoElectrónico.FacturaExportación => TipoFirma.Factura,
@@ -92,7 +89,6 @@ namespace SimpleOps.Legal {
                 TipoDocumentoElectrónico.NotaCrédito => TipoFirma.NotaCrédito,
                 TipoDocumentoElectrónico.NotaDébito => TipoFirma.NotaDébito,
             };
-            #pragma warning restore CS8524
 
         } // DocumentoElectrónico>
 

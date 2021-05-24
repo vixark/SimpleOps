@@ -512,7 +512,6 @@ namespace SimpleOps.Modelo {
         public double PorcentajeAdicionalGanancia => PorcentajeAdicionalGananciaPropio ?? ObtenerPorcentajeGananciaAdicionalProducto();
 
 
-        #pragma warning disable CS8524 // Se omite para que no obligue a usar el patrón de descarte _ => porque este oculta la advertencia CS8509 que es muy útil para detectar valores de la enumeración faltantes. No se omite a nivel global porque la desactivaría para los switchs que no tienen enumeraciones, ver https://github.com/dotnet/roslyn/issues/47066.
         public TipoProducto TipoProducto
             => ConceptoRetención switch {
                 ConceptoRetención.Desconocido => throw new Exception("No se esperaba ConceptoRetención = Desconocido."),
@@ -546,7 +545,6 @@ namespace SimpleOps.Modelo {
                 ConceptoRetención.ColocaciónIndependienteJuegosAzar => TipoProducto.Servicio,
                 ConceptoRetención.ContratosConstruccionYUrbanización => TipoProducto.Servicio,
             };
-        #pragma warning restore CS8524
 
 
         /// <summary>

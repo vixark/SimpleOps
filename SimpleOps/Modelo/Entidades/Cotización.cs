@@ -168,12 +168,10 @@ namespace SimpleOps.Modelo {
             datos.LogoExcelBase64 = ObtenerBase64(Path.Combine(ObtenerRutaImágenesPlantillas(), opcionesDocumento.ModoImpresión ? 
                 ArchivoLogoExcelImpresión : ArchivoLogoExcel), paraHtml: true);
 
-            #pragma warning disable CS8524 // Se omite para que no obligue a usar el patrón de descarte _ => porque este oculta la advertencia CS8509 que es muy útil para detectar valores de la enumeración faltantes. No se omite a nivel global porque la desactivaría para los switchs que no tienen enumeraciones, ver https://github.com/dotnet/roslyn/issues/47066.
             (datos.ModoDocumento, datos.TotalPáginas) = Tipo switch {
                 TipoCotización.Cotización => (DatosDocumento.Modo.CuerpoContinuo, 1),
                 TipoCotización.Catálogo => (DatosDocumento.Modo.PáginasIndependientes, totalPáginasCatálogo),
             };
-            #pragma warning restore CS8524
 
             foreach (var línea in Líneas) {
                 if (línea.Producto == null) continue;

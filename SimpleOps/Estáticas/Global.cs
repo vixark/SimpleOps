@@ -690,17 +690,14 @@ namespace SimpleOps {
             };
 
 
-        #pragma warning disable CS8524 // Se omite para que no obligue a usar el patrón de descarte _ => porque este oculta la advertencia CS8509 que es muy útil para detectar valores de la enumeración faltantes. No se omite a nivel global porque la desactivaría para los switchs que no tienen enumeraciones, ver https://github.com/dotnet/roslyn/issues/47066.
         public static DocumentoIdentificación ObtenerDocumentoIdentificación(TipoEntidad tipoEntidad)
             => tipoEntidad switch {
                 TipoEntidad.Desconocido => DocumentoIdentificación.CédulaCiudadanía,
                 TipoEntidad.Empresa => DocumentoIdentificación.Nit,
                 TipoEntidad.Persona => DocumentoIdentificación.CédulaCiudadanía,
             };
-        #pragma warning restore CS8524
 
 
-        #pragma warning disable CS8524 // Se omite para que no obligue a usar el patrón de descarte _ => porque este oculta la advertencia CS8509 que es muy útil para detectar valores de la enumeración faltantes. No se omite a nivel global porque la desactivaría para los switchs que no tienen enumeraciones, ver https://github.com/dotnet/roslyn/issues/47066.
         public static TipoTributo ObtenerTipoTributo(TipoImpuestoConsumo tipoImpuestoConsumo)
             => tipoImpuestoConsumo switch {
                 TipoImpuestoConsumo.Desconocido => throw new Exception("No se esperaba TipoImpuestoConsumo desconocido."),
@@ -720,13 +717,11 @@ namespace SimpleOps {
                 TipoImpuestoConsumo.SobretasaCombustibles => TipoTributo.SobretasaCombustibles,
                 TipoImpuestoConsumo.Otro => TipoTributo.Otro,
             };
-        #pragma warning restore CS8524
 
 
         public static decimal ObtenerMínimoTransporteGratis(TipoCliente tipoCliente, Municipio? municipio) {
 
             var formaEntrega = ObtenerFormaEntrega(municipio);
-            #pragma warning disable CS8524 // Se omite para que no obligue a usar el patrón de descarte _ => porque este oculta la advertencia CS8509 que es muy útil para detectar valores de la enumeración faltantes. No se omite a nivel global porque la desactivaría para los switchs que no tienen enumeraciones, ver https://github.com/dotnet/roslyn/issues/47066.
             var tipoClienteFormaEntrega = formaEntrega switch {
                 FormaEntrega.Desconocida => tipoCliente switch {
                     TipoCliente.Desconocido => TipoClienteFormaEntrega.Desconocido_Desconocida,
@@ -778,7 +773,6 @@ namespace SimpleOps {
                     TipoCliente.Otro => TipoClienteFormaEntrega.Otro_Otra,
                 },
             };
-            #pragma warning restore CS8524
 
             return Empresa.MínimosTransporteGratis[tipoClienteFormaEntrega];
 

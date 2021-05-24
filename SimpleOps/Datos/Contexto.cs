@@ -138,13 +138,11 @@ namespace SimpleOps.Datos {
         /// <param name="tipoContexto"></param>
         public Contexto(TipoContexto tipoContexto) {
 
-            #pragma warning disable CS8524 // Se omite para que no obligue a usar el patrón de descarte _ => porque este oculta la advertencia CS8509 que es muy útil para detectar valores de la enumeración faltantes. No se omite a nivel global porque la desactivaría para los switchs que no tienen enumeraciones, ver https://github.com/dotnet/roslyn/issues/47066.
             ChangeTracker.QueryTrackingBehavior = tipoContexto switch {
                 TipoContexto.Lectura => QueryTrackingBehavior.NoTracking,
                 TipoContexto.Escritura => QueryTrackingBehavior.TrackAll,
                 TipoContexto.LecturaConRastreo => QueryTrackingBehavior.TrackAll,
             }; // Si saca excepción en este punto, se puede deber a que se actualizó el paquete Microsoft.Extensions.Configuration.Abstractions a una versión no soportada. Se debe reversar el paquete a la versión anterior y se corrige el problema. Ver https://stackoverflow.com/questions/64809716/could-not-load-file-or-assembly-microsoft-extensions-configuration-abstractions y https://github.com/dotnet/aspnetcore/issues/21033.
-            #pragma warning restore CS8524
             TipoContexto = tipoContexto;
 
         } // Contexto>

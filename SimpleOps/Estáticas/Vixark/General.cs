@@ -1970,7 +1970,6 @@ namespace Vixark {
                     var tipoRutaFragmento = ObtenerTipoRuta(archivoFragmento);
                     corregirBarraIncorrectaEnRutaRelativa(ref archivoFragmento, ref tipoRutaFragmento, tipoRutaCarpetaFragmentos);
 
-                    #pragma warning disable CS8524 // Se omite para que no obligue a usar el patrón de descarte _ => porque este oculta la advertencia CS8509 que es muy útil para detectar valores de la enumeración faltantes. No se omite a nivel global porque la desactivaría para los switchs que no tienen enumeraciones, ver https://github.com/dotnet/roslyn/issues/47066.
                     string? rutaFragmento = tipoRutaFragmento switch {
                         TipoRuta.Vacío => throw new Exception("No se esperaba que tipoRutaArchivo fuera vacío."),
                         TipoRuta.Local => archivoFragmento,
@@ -1979,7 +1978,6 @@ namespace Vixark {
                         TipoRuta.RelativoLocal => tipoRutaCarpetaFragmentos == TipoRuta.Local ? $"{rutaCarpetaFragmentosConBarra}{archivoFragmento}" : null,
                         TipoRuta.Elemento => tipoRutaCarpetaFragmentos == TipoRuta.Local ? $"{rutaCarpetaFragmentosConBarra}{archivoFragmento}" : null,
                     };
-                    #pragma warning restore CS8524
 
                     if (rutaFragmento != null) {
 
@@ -2169,7 +2167,6 @@ namespace Vixark {
                             if (idsLíneasImágenes.Contains(i)) {
 
                                 var rutaImagen = $"{rutaCarpetaImágenesConBarra}{línea}";
-                                #pragma warning disable CS8524 // Se omite para que no obligue a usar el patrón de descarte _ => porque este oculta la advertencia CS8509 que es muy útil para detectar valores de la enumeración faltantes. No se omite a nivel global porque la desactivaría para los switchs que no tienen enumeraciones, ver https://github.com/dotnet/roslyn/issues/47066.
                                 contenidoSrc = tipoRutaCarpetaImágenes switch {
                                     TipoRuta.Vacío => rutaImagen,
                                     TipoRuta.Url => rutaImagen,
@@ -2178,7 +2175,6 @@ namespace Vixark {
                                     TipoRuta.RelativoLocal => rutaImagen,
                                     TipoRuta.Elemento => rutaImagen,
                                 };
-                                #pragma warning restore CS8524
 
                             } else if (idsLíneasImágenesRutaCompletaUrl.Contains(i)) { // Se agrega completa la ruta de la imagen como está escrita sin ninguna modificación.
                                 contenidoSrc = línea; // No se soporta la codificación base 64 para imágenes en URLs.
@@ -2609,14 +2605,12 @@ namespace Vixark {
             }
 
             string? últimoElemento = lista[^1]?.ToString().AMinúscula(); // lista[^1] = lista[lista.Count - 1].
-            #pragma warning disable CS8524 // Se omite para que no obligue a usar el patrón de descarte _ => porque este oculta la advertencia CS8509 que es muy útil para detectar valores de la enumeración faltantes. No se omite a nivel global porque la desactivaría para los switchs que no tienen enumeraciones, ver https://github.com/dotnet/roslyn/issues/47066.
             var textoConector = conector switch {
                 ConectorCoordinante.Y => últimoElemento.EmpiezaPor("i") ? "e" : "y",
                 ConectorCoordinante.O => últimoElemento.EmpiezaPor("o") ? "u" : "o",
                 ConectorCoordinante.Ni => "ni",
                 ConectorCoordinante.Ninguno => "",
             };
-            #pragma warning restore CS8524
 
             if (string.IsNullOrEmpty(textoConector)) {
                 _ = multilínea ? texto.AppendLine(separador) : texto.Append(separador);
@@ -2983,9 +2977,7 @@ namespace Vixark {
                 if (cuerpo2 == null) throw new ArgumentException("Los argumentos no pueden ser nulos.");
                 var expresión2 = modificador.Modificar((cuerpo2 as BinaryExpression)!);
 
-                #pragma warning disable CS8524 // Se omite para que no obligue a usar el patrón de descarte _ => porque este oculta la advertencia CS8509 que es muy útil para detectar valores de la enumeración faltantes. No se omite a nivel global porque la desactivaría para los switchs que no tienen enumeraciones, ver https://github.com/dotnet/roslyn/issues/47066.
                 return conector switch {
-                #pragma warning restore CS8524
                     ConectorLógico.Y => System.Linq.Expressions.Expression.AndAlso(expresión1, expresión2),
                     ConectorLógico.O => System.Linq.Expressions.Expression.OrElse(expresión1, expresión2),
                 };

@@ -537,13 +537,11 @@ namespace SimpleOps.Modelo {
         private static ReglasImpuesto ObtenerReglasRetenciónIVA(double? porcentajeForzado, decimal? mínimoForzado, 
             TipoContribuyente tipoContribuyenteComprador, TipoContribuyente tipoContribuyenteVendedor, TipoProducto tipoProducto) { // Ver https://dianhoy.com/reteiva-retencion-en-la-fuente-por-iva/ y https://www.gerencie.com/retencion-en-la-fuente-por-iva-reteiva.html. No tiene en cuenta el caso 'No residente o no domiciliado en el país'.
 
-            #pragma warning disable CS8524 // Se omite para que no obligue a usar el patrón de descarte _ => porque este oculta la advertencia CS8509 que es muy útil para detectar valores de la enumeración faltantes. No se omite a nivel global porque la desactivaría para los switchs que no tienen enumeraciones, ver https://github.com/dotnet/roslyn/issues/47066.
             var mínimo = tipoProducto switch {
                 TipoProducto.Desconocido => throw new Exception("No se esperaba tipoProducto = Desconocido."),
                 TipoProducto.Producto => Generales.MínimoUVTRetenciónIVAProductosLegal * Generales.UVT,
                 TipoProducto.Servicio => Generales.MínimoUVTRetenciónIVAServiciosLegal * Generales.UVT,
             };
-            #pragma warning restore CS8524
 
             double porcentaje;
             if (tipoContribuyenteVendedor.HasFlag(TipoContribuyente.ResponsableIVA)) {
@@ -577,13 +575,11 @@ namespace SimpleOps.Modelo {
 
             if (tipoContribuyenteVendedor.HasFlag(TipoContribuyente.Autorretenedor)) return new ReglasImpuesto((decimal)(porcentajeForzado ?? 0), mínimoForzado ?? 0);
 
-            #pragma warning disable CS8524 // Se omite para que no obligue a usar el patrón de descarte _ => porque este oculta la advertencia CS8509 que es muy útil para detectar valores de la enumeración faltantes. No se omite a nivel global porque la desactivaría para los switchs que no tienen enumeraciones, ver https://github.com/dotnet/roslyn/issues/47066.
             var tipoDeclarante = tipoEntidadVendedor switch { // Se usará la clasificación entre Empresa y Persona para diferenciar entre Declarante y No Declarante. No hay claridad completa sobre si esto es o no correcto, sobretodo en el caso de personas, pero es una aceptable aproximación. Esto es necesario porque la información más fácilmente disponible de las entidades económicas es el tipo de entidad.
                 TipoEntidad.Desconocido => TipoDeclarante.Desconocido,
                 TipoEntidad.Empresa => TipoDeclarante.Declarante,
                 TipoEntidad.Persona => TipoDeclarante.NoDeclarante,
             };
-            #pragma warning restore CS8524
 
             var mínimo = 0M;
             var porcentaje = 0D;

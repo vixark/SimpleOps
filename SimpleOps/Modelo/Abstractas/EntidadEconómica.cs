@@ -151,7 +151,6 @@ namespace SimpleOps.Modelo {
         public FormaPago FormaPago => TieneCrédito ? FormaPago.Crédito : FormaPago.Contado; // Útil para la factura electrónica de la DIAN.
 
 
-        #pragma warning disable CS8524 // Se omite para que no obligue a usar el patrón de descarte _ => porque este oculta la advertencia CS8509 que es muy útil para detectar valores de la enumeración faltantes. No se omite a nivel global porque la desactivaría para los switchs que no tienen enumeraciones, ver https://github.com/dotnet/roslyn/issues/47066.
         /// <summary>
         /// Si es persona natural o si no tiene identificación devuelve nulo.
         /// </summary>
@@ -162,10 +161,8 @@ namespace SimpleOps.Modelo {
                 TipoEntidad.Empresa => ObtenerDígitoVerificación(Identificación),
                 TipoEntidad.Persona => null,
             };
-        #pragma warning restore CS8524
 
 
-        #pragma warning disable CS8524 // Se omite para que no obligue a usar el patrón de descarte _ => porque este oculta la advertencia CS8509 que es muy útil para detectar valores de la enumeración faltantes. No se omite a nivel global porque la desactivaría para los switchs que no tienen enumeraciones, ver https://github.com/dotnet/roslyn/issues/47066.
         /// <summary>
         /// Si es empresa se incluye el número de verificación del NIT. Si es otro tipo de entidad no se agrega.
         /// </summary>
@@ -175,27 +172,22 @@ namespace SimpleOps.Modelo {
                 TipoEntidad.Empresa => $"{Identificación}-{ObtenerDígitoVerificación(Identificación)}",
                 TipoEntidad.Persona => Identificación,
             };
-        #pragma warning restore CS8524
 
 
-        #pragma warning disable CS8524 // Se omite para que no obligue a usar el patrón de descarte _ => porque este oculta la advertencia CS8509 que es muy útil para detectar valores de la enumeración faltantes. No se omite a nivel global porque la desactivaría para los switchs que no tienen enumeraciones, ver https://github.com/dotnet/roslyn/issues/47066.
         public string? NitLegalEfectivo
             => TipoEntidad switch {
                 TipoEntidad.Desconocido => "2222222222", // Para efectos de la Dian se asumirá que un desconocido es una persona natural.
                 TipoEntidad.Empresa => Identificación, 
                 TipoEntidad.Persona => "2222222222", // Según el elemento FAK03-2 de la tabla Invoice del archivo de documentación de facturación electrónica de la DIAN cuando es pesona natural se usa un pseudo NIT con 10 números dos.
             };
-        #pragma warning restore CS8524
 
 
-        #pragma warning disable CS8524 // Se omite para que no obligue a usar el patrón de descarte _ => porque este oculta la advertencia CS8509 que es muy útil para detectar valores de la enumeración faltantes. No se omite a nivel global porque la desactivaría para los switchs que no tienen enumeraciones, ver https://github.com/dotnet/roslyn/issues/47066.
         public string? NombreLegalEfectivo
             => TipoEntidad switch {
                 TipoEntidad.Desconocido => "adquiriente final", // Para efectos de la Dian se asumirá que un desconocido es una persona natural.
                 TipoEntidad.Empresa => Identificación, 
                 TipoEntidad.Persona => "adquiriente final", // Según el elemento FAK20 de la tabla Invoice del archivo de documentación de facturación electrónica de la DIAN cuando es pesona natural se reporta "adquiriente final".
             };
-        #pragma warning restore CS8524
 
 
         public string CódigoDocumentoIdentificación => ObtenerDocumentoIdentificación(TipoEntidad).AValor();

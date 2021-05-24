@@ -311,7 +311,6 @@ namespace SimpleOps.DocumentosGráficos {
         } // ObtenerTotalPáginas>
 
 
-        #pragma warning disable CS8524 // Se omite para que no obligue a usar el patrón de descarte _ => porque este oculta la advertencia CS8509 que es muy útil para detectar valores de la enumeración faltantes. No se omite a nivel global porque la desactivaría para los switchs que no tienen enumeraciones, ver https://github.com/dotnet/roslyn/issues/47066.
         public static int ObtenerTamañoPredeterminadoImágenesProductos(PlantillaDocumento plantillaDocumento) =>
             plantillaDocumento switch {
                 PlantillaDocumento.VentaPdf => throw new Exception($"No se ha especificado un tamaño de imagen para {plantillaDocumento.ATexto()}"),
@@ -354,7 +353,6 @@ namespace SimpleOps.DocumentosGráficos {
                 PlantillaDocumento.ListaProductosWeb => throw new Exception($"No se ha especificado un tamaño de imagen para {plantillaDocumento.ATexto()}"),
                 PlantillaDocumento.ListaProductosEmail => throw new Exception($"No se ha especificado un tamaño de imagen para {plantillaDocumento.ATexto()}"),
             };
-        #pragma warning restore CS8524
 
 
         #endregion Métodos y Funciones>
