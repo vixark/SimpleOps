@@ -469,8 +469,6 @@ namespace Vixark {
             } catch {
                 throw;
             }
-            var fecha = AhoraUtc(0);
-            var textoMes = $"Mes: {fecha.Month:00}";
 
             return xmlRespuesta;
 
