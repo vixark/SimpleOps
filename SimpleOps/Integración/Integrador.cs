@@ -135,7 +135,7 @@ namespace SimpleOps.Integración {
                         if (l.Producto?.TieneBase == false) l.Producto.Base = null; // Necesario porque el Automaper siempre crea el objeto Base.
                     }
                     venta.ConsecutivoDianAnual = venta.Número - Empresa.PrimerNúmeroFacturaAutorizada + 1;
-                    ValidarCliente(venta.Cliente);
+                    ValidarCliente(venta.Cliente, validarDepartamento: true);
                     ProcesarDocumentoCliente(venta, ruta, "factura");
 
                 } else if (documentoIntegración == DocumentoIntegración.NotaCrédito) {
@@ -148,7 +148,7 @@ namespace SimpleOps.Integración {
                         if (l.Producto?.TieneBase == false) l.Producto.Base = null; // Necesario porque el Automaper siempre crea el objeto Base.
                     }
                     notaCréditoVenta.ConsecutivoDianAnual = notaCréditoVenta.Número;          
-                    ValidarCliente(notaCréditoVenta.Cliente);
+                    ValidarCliente(notaCréditoVenta.Cliente, validarDepartamento: true);
                     ProcesarDocumentoCliente(notaCréditoVenta, ruta, "nota crédito");
 
                 } else if (documentoIntegración == DocumentoIntegración.Catálogo) {
@@ -162,7 +162,7 @@ namespace SimpleOps.Integración {
                         l.Cotización = cotización; // Necesario porque después de ser leídas por el Automapper no quedan automáticamente enlazadas.
                         if (l.Producto?.TieneBase == false) l.Producto.Base = null; // Necesario porque el Automaper siempre crea el objeto Base.
                     }
-                    ValidarCliente(cotización.Cliente);
+                    ValidarCliente(cotización.Cliente, validarDepartamento: false);
                     if (CrearPdfCatálogo(cotización, out string rutaPdf)) {
                         File.WriteAllText(ObtenerRutaCambiandoExtensión(ruta, "ok"), $"{rutaPdf}");
                     } else {
@@ -218,8 +218,14 @@ namespace SimpleOps.Integración {
         } // ProcesarDocumentoCliente>
 
 
-        public static void ValidarCliente(Cliente? cliente) {
-            if (cliente?.Municipio?.CódigoDepartamento == CódigoDepartamentoNulo) throw new Exception("El departamento es incorrecto.");
+        /// <summary>
+        /// Valida los datos del cliente según lo requiera cada tipo de documento.
+        /// </summary>
+        /// <param name="cliente"></param>
+        /// <param name="validarDepartamento"></param>
+        public static void ValidarCliente(Cliente? cliente, bool validarDepartamento) {
+            if (validarDepartamento && cliente?.Municipio?.CódigoDepartamento == CódigoDepartamentoNulo)
+                throw new Exception("El departamento es incorrecto.");
         } // ValidarCliente>
 
 
