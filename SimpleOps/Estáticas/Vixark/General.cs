@@ -2343,8 +2343,8 @@ namespace Vixark {
         /// <summary>
         /// Convierte un objeto a su representación serializada en JSON y viceversa. Es útil para pasarlo al método HasConversion de una propiedad de tipo especial (como List) en OnModelCreating de un contexto y poder almacenar el objeto en la base de datos.
         /// </summary>
-        public static ValueConverter<T, string> ConvertidorJSON<T>() where T : class // La restricción de clase es para poder usar el método Deserializar que exige esta restricción. En términos generales no debe ser problema porque el caso más común de serialización es de clases. Si fuera necesario implementarlo para estructuras habría que duplicar el código. No se declara con tipo T? porque no es el tipo que espera EF Core.
-            => new ValueConverter<T, string>(o => Serializar(o), s => Deserializar<T>(s)!); // Se permitirá que los objetos tipo T sean nulos así esto impida la verificación de nulidad. Esto no es problema porque esta función solo es usada internamente por EF Core.
+        public static ValueConverter<T, string> ConvertidorJSON<T>() where T : class // La restricción de clase es para poder usar el método Deserializar que exige esta restricción. En términos generales no debe ser problema porque el caso más común de serialización es de clases. Si fuera necesario implementarlo para estructuras habría que duplicar el código. No se declara con tipo T? porque no es el tipo que espera Entity Framework.
+            => new ValueConverter<T, string>(o => Serializar(o), s => Deserializar<T>(s)!); // Se permitirá que los objetos tipo T sean nulos así esto impida la verificación de nulidad. Esto no es problema porque esta función solo es usada internamente por Entity Framework.
 
 
         /// <summary>
@@ -2352,9 +2352,9 @@ namespace Vixark {
         /// propiedad de tipo especial (como List) en OnModelCreating de un contexto. Si no se establece el comparador no se guardaran los cambios 
         /// realizados en la base de datos.
         /// </summary>
-        public static ValueComparer ComparadorJSON<T>() where T : class => new ValueComparer<T>( // La restricción de clase es para poder usar el método Deserializar que exige esta restricción. En términos generales no debe ser problema porque el caso más común de serializaciónes de clases. Si fuera necesario implementarlo para estructuras habría que duplicar el código. No se declara con tipo T? porque no es el tipo que espera EF Core.
+        public static ValueComparer ComparadorJSON<T>() where T : class => new ValueComparer<T>( // La restricción de clase es para poder usar el método Deserializar que exige esta restricción. En términos generales no debe ser problema porque el caso más común de serializaciónes de clases. Si fuera necesario implementarlo para estructuras habría que duplicar el código. No se declara con tipo T? porque no es el tipo que espera Entity Framework.
                 (o1, o2) => Serializar(o1) == Serializar(o2), o => o == null ? 0 : Serializar(o).GetHashCode(StringComparison.InvariantCulture),
-                o => Deserializar<T>(Serializar(o))!); // // Se permitirá que los objetos tipo T sean nulos así esto impida la verificación de nulidad. Esto no es problema porque esta función solo es usada internamente por EF Core. Es suficiente para las necesidades actuales aunque es desaconsejado crear comparadores genéricos usando JSON: https://stackoverflow.com/questions/38411221/compare-two-objects-using-serialization-c-sharp. Ver https://stackoverflow.com/questions/44829824/how-to-store-json-in-an-entity-field-with-ef-core/59185869#59185869 y https://stackoverflow.com/questions/53050419/json-serialization-value-conversion-not-tracking-changes-with-ef-core/53051419#53051419.
+                o => Deserializar<T>(Serializar(o))!); // // Se permitirá que los objetos tipo T sean nulos así esto impida la verificación de nulidad. Esto no es problema porque esta función solo es usada internamente por Entity Framework. Es suficiente para las necesidades actuales aunque es desaconsejado crear comparadores genéricos usando JSON: https://stackoverflow.com/questions/38411221/compare-two-objects-using-serialization-c-sharp. Ver https://stackoverflow.com/questions/44829824/how-to-store-json-in-an-entity-field-with-ef-core/59185869#59185869 y https://stackoverflow.com/questions/53050419/json-serialization-value-conversion-not-tracking-changes-with-ef-core/53051419#53051419.
 
 
         #endregion Serialización JSON>
@@ -3264,7 +3264,7 @@ namespace Vixark {
                 if (tipoOrigen.IsSubclassOf(tipoDestino)) {
                     origenEsHijoDeDestino = true;
                 } else {
-                    throw new ArgumentException($"{tipoDestino} y {tipoOrigen} no son de tipos heredados entre si."); // Si se da esta excepción puede ser porque alguna propiedad de una entidad se ha declarado virtual lo que causa que EF Core cree una entidad auxiliar. Para obtener la clase de la entidad real de la entidad auxiliar leer: https://stackoverflow.com/questions/25770369/get-underlying-entity-object-from-entity-framework-proxy. La solución es, una vez identificado que se trata de este caso, manejarlo como tipoOrigen.IsSubclassOf(tipoDestino).
+                    throw new ArgumentException($"{tipoDestino} y {tipoOrigen} no son de tipos heredados entre si."); // Si se da esta excepción puede ser porque alguna propiedad de una entidad se ha declarado virtual lo que causa que Entity Framework cree una entidad auxiliar. Para obtener la clase de la entidad real de la entidad auxiliar leer: https://stackoverflow.com/questions/25770369/get-underlying-entity-object-from-entity-framework-proxy. La solución es, una vez identificado que se trata de este caso, manejarlo como tipoOrigen.IsSubclassOf(tipoDestino).
                 }
 
             }

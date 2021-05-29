@@ -433,7 +433,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private Producto() { } // Solo para que EF Core no saque error.
+        private Producto() { } // Solo para que Entity Framework no saque error.
 
         public Producto(string referencia) => (Referencia, TieneBase) = (referencia, false);
 

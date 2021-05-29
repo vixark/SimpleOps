@@ -66,7 +66,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private MovimientoBancario() : base(AhoraUtcAjustado, 0) { } // Solo para que EF Core no saque error.
+        private MovimientoBancario() : base(AhoraUtcAjustado, 0) { } // Solo para que Entity Framework no saque error.
 
         public MovimientoBancario(DateTime fechaHora, decimal valor) : base(fechaHora, valor) => (Banco) = (Empresa.BancoPreferido);
 
@@ -77,7 +77,7 @@ namespace SimpleOps.Modelo {
 
         #region Métodos y Funciones
 
-        public override string ToString() => $"en {Banco.ToString()} el {FechaHora.ToShortDateString()} por {Valor.ATextoDinero()}";
+        public override string ToString() => $"en {Banco} el {FechaHora.ToShortDateString()} por {Valor.ATextoDinero()}";
 
         public string? CuentaBancaria => ObtenerNúmeroCuentaBancaria(Banco, OtroNúmeroCuenta);
 

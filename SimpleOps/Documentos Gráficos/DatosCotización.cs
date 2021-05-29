@@ -35,7 +35,13 @@ namespace SimpleOps.DocumentosGráficos {
 
         public int? CantidadColumnasProductos { get; set; }  
 
-        public string? TítuloPáginasExtra { get; set; } 
+        public string? TítuloPáginasExtra { get; set; }
+
+        public string? ContactoNombre { get; set; }
+
+        public string? ContactoTeléfono { get; set; }
+
+        public string? ContactoEmail { get; set; } // Puede ser nulo porque el contacto puede ser nulo.
 
         #endregion Propiedades>
 

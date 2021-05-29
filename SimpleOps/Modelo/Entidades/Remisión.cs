@@ -57,7 +57,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private Remisión() { } // Solo para que EF Core no saque error.
+        private Remisión() { } // Solo para que Entity Framework no saque error.
 
         public Remisión(decimal subtotal, Cliente cliente) => (Subtotal, ClienteID, Cliente) = (subtotal, cliente.ID, cliente);
 

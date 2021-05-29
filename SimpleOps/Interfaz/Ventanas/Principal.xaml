@@ -42,6 +42,7 @@
                         </StackPanel.Resources>
                         <Button Click="GenerarCatálogo_Clic" Content="Generar Catálogo" />
                         <Button Click="GenerarFichasInformativas_Clic" Content="Generar Fichas Informativas" />
+                        <Button Click="GenerarCotización_Clic" Content="Generar Cotización" />
                         <Button Click="CargarDatosIniciales_Clic" Content="Cargar Datos Iniciales" />
                         <Button Click="ReiniciarBaseDatosSQLite_Clic" Content="Reiniciar Base de Datos" />
                         <Button Click="HacerPruebasUnitarias_Clic" Content="Hacer Pruebas Unitarias" />

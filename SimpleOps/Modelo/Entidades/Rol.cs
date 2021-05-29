@@ -38,7 +38,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private Rol() { } // Solo para que EF Core no saque error.
+        private Rol() { } // Solo para que Entity Framework no saque error.
 
         public Rol(string nombre) => (Nombre) = (nombre);
 

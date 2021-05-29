@@ -148,7 +148,7 @@ namespace SimpleOps.Datos {
         } // Contexto>
 
 
-        private Contexto() { } // Necesario para la migración de EF Core. No debería ser usado en ninguna parte del código. Poner public solo para la migración y después volver a poner private.
+        private Contexto() { } // Necesario para la migración de Entity Framework. No debería ser usado en ninguna parte del código. Poner public solo para la migración y después volver a poner private.
 
         #endregion Constructores>
 
@@ -499,7 +499,7 @@ namespace SimpleOps.Datos {
 
             } // controlarDbUpdateConcurrencyException>
 
-            var enConflictoInserción = false; // Si es verdadero las inserciones se realizan una a una para capturar y controlar la o las inserciones que están produciendo las excepciones. Este código para identificar las entidades con conflicto es necesario porque EF Core aún no las devuelve en ex.Entries como si sucede en DbUpdateConcurrencyException. Ver https://github.com/dotnet/efcore/issues/7829.
+            var enConflictoInserción = false; // Si es verdadero las inserciones se realizan una a una para capturar y controlar la o las inserciones que están produciendo las excepciones. Este código para identificar las entidades con conflicto es necesario porque Entity Framework aún no las devuelve en ex.Entries como si sucede en DbUpdateConcurrencyException. Ver https://github.com/dotnet/efcore/issues/7829.
             List<EntityEntry>? ePendientesInsertar = null; // Lista de entradas pendientes. Se llena cuando se da un conflicto de inserción.      
             EntityEntry? eInsertar = null; // Entrada que se insertará individualmente.
             bool? hayInserciones = null; 
@@ -558,7 +558,7 @@ namespace SimpleOps.Datos {
                             }
 
                         } else {
-                            enConflictoInserción = hayInserciones == null ? true : throw ex; // Se activa enConflictoInserción si se verifica que se trata de una excepción de fallo de restricción de claves únicas y aún no se ha verificado si hay inserciones por realizar. El relanzamiento de la excepción se produce posiblemente en un caso especial en el se entra en conflicto por la modificación de las claves de una entidad a las mismas claves que otro usuario hace poco insertó, aunque a la versión actual EF core impide estas operaciones se deja el lanzamiento de la excepción por si se filtra algún caso que lo genere.  
+                            enConflictoInserción = hayInserciones == null ? true : throw ex; // Se activa enConflictoInserción si se verifica que se trata de una excepción de fallo de restricción de claves únicas y aún no se ha verificado si hay inserciones por realizar. El relanzamiento de la excepción se produce posiblemente en un caso especial en el se entra en conflicto por la modificación de las claves de una entidad a las mismas claves que otro usuario hace poco insertó, aunque a la versión actual Entity Framework impide estas operaciones se deja el lanzamiento de la excepción por si se filtra algún caso que lo genere.  
                         }
                                 
                     } else {

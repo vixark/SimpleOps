@@ -41,7 +41,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private Marca() { } // Solo para que EF Core no saque error.
+        private Marca() { } // Solo para que Entity Framework no saque error.
 
         public Marca(string nombre) => (Nombre) = (nombre);
 

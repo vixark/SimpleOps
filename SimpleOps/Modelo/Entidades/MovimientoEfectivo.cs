@@ -24,7 +24,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private MovimientoEfectivo() : base(AhoraUtcAjustado, 0) { } // Solo para que EF Core no saque error.
+        private MovimientoEfectivo() : base(AhoraUtcAjustado, 0) { } // Solo para que Entity Framework no saque error.
 
         public MovimientoEfectivo(DateTime fechaHora, decimal valor, ReciboCaja reciboCaja) : base(fechaHora, valor) 
             => (ReciboCajaID, ReciboCaja) = (reciboCaja.ID, reciboCaja);

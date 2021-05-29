@@ -31,7 +31,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private LíneaNegocio() { } // Solo para que EF Core no saque error.
+        private LíneaNegocio() { } // Solo para que Entity Framework no saque error.
 
         public LíneaNegocio(string nombre) => (Nombre) = (nombre);
 

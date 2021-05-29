@@ -41,7 +41,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private NotaDébitoCompra() { } // Solo para que EF Core no saque error.
+        private NotaDébitoCompra() { } // Solo para que Entity Framework no saque error.
 
         public NotaDébitoCompra(Proveedor proveedor, Compra compra) {
             (ProveedorID, CompraID, Proveedor, Compra) = (proveedor.ID, compra.ID, proveedor, compra);

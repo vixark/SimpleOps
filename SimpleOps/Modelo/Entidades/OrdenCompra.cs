@@ -64,7 +64,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private OrdenCompra() { } // Solo para que EF Core no saque error.
+        private OrdenCompra() { } // Solo para que Entity Framework no saque error.
 
         public OrdenCompra(Cliente cliente, string número) 
             => (ClienteID, Número, Prioridad, Cliente) = (cliente.ID, número, cliente.Prioridad, cliente);

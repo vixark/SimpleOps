@@ -13,11 +13,13 @@ namespace SimpleOps.DocumentosGráficos {
     public class DatosDocumento {
 
 
+
         #region Enumeraciones
 
         public enum Modo { CuerpoContinuo, PáginasIndependientes } // Se debe agregar aquí en vez de en DocumentosGráficos porque requiere el modificador public y no se debe hacer la clase estática DocumentosGráficos pública porque contiene referencias a otras clases no públicas.
 
         #endregion Enumeraciones>
+
 
 
         #region Propiedades Documento
@@ -52,8 +54,6 @@ namespace SimpleOps.DocumentosGráficos {
 
         public string? Observación { get; set; }
 
-        public DatosEmpresa? Empresa { get; set; } // Los datos de la empresa usuaria de SimpleOps.
-
         /// <summary>
         /// En el <see cref="Modo.CuerpoContinuo"/> se debe pasar a 
         /// <see cref="CompilarPlantilla{T}(RazorEngineCore.RazorEngine, string, IDictionary{string, string})"/> 
@@ -69,26 +69,14 @@ namespace SimpleOps.DocumentosGráficos {
 
         public DateTime? FechaHora { get; set; }
 
+        public DatosEmpresa? Empresa { get; set; } // Los datos de la empresa usuaria de SimpleOps. Estos datos normalmente se leen del de opciones Empresa.json.
+
+        public DatosUsuario? Usuario { get; set; } // Los datos del usuario de SimpleOps que está realizando el documento. Este usuario se puede obtener del objeto Global.UsuarioActual o se puede construir desde datos pasados por un archivo de integración.
+
+        public DatosCliente? Cliente { get; set; } // Puede ser nulo para documentos que no son de clientes.
+
         #endregion Propiedades Documento>
 
-
-        #region Propiedades Cliente
-
-        public string? ClienteNombre { get; set; } // Puede ser nulo para documentos que no son de clientes.
-
-        public string? ClienteTeléfono { get; set; }
-
-        public string? ClienteMunicipioNombre { get; set; }
-
-        public string? ClienteDirección { get; set; }
-
-        public string? ClienteIdentificaciónCompleta { get; set; }
-
-        public string? ClienteContactoFacturasEmail { get; set; }
-
-        public string? ClienteTipoClienteTexto { get; set; }
-
-        #endregion Propiedades Cliente>
 
 
         #region Propiedades Diseño
@@ -140,6 +128,7 @@ namespace SimpleOps.DocumentosGráficos {
         #endregion Propiedades Diseño>
 
 
+
         #region Propiedades Autocalculadas
 
         public int AnchoContenido => AnchoHoja - 2 * MargenHorizontal;
@@ -149,6 +138,7 @@ namespace SimpleOps.DocumentosGráficos {
         public string NombreArchivo => NombreArchivoPropio ?? $"{PrefijoNombreArchivo}{CódigoDocumento}";
 
         #endregion Propiedades Autocalculadas>
+
 
 
     } // DatosDocumento>

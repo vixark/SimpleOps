@@ -31,7 +31,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private RolUsuario() { } // Solo para que EF Core no saque error.
+        private RolUsuario() { } // Solo para que Entity Framework no saque error.
 
         public RolUsuario(Usuario usuario, Rol rol) => (UsuarioID, RolID, Usuario, Rol) = (usuario.ID, rol.ID, usuario, rol);
 

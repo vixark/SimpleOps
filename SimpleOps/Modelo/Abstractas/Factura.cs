@@ -128,6 +128,13 @@ namespace SimpleOps.Modelo {
         [NotMapped]
         public bool MostrarInformaciónAdicional { get; set; } = false;
 
+        /// <summary>
+        /// Usuario que creó la factura. Se usa principalmente como almacenamiento intermedio entre los archivos de integración o el usuario actual
+        /// de SimpleOps y las representaciones gráficas. Al crear un nuevo objeto Factura, se inicia esta variable con Global.UsuarioActual.
+        /// </summary>
+        [NotMapped]
+        public Usuario? Usuario { get; set; }
+
         #endregion Propiedades>
 
 
@@ -200,7 +207,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        public Factura() => (FechaHora) = (AhoraUtcAjustado);
+        public Factura() => (FechaHora, Usuario) = (AhoraUtcAjustado, UsuarioActual);
 
         #endregion Constructores>
 

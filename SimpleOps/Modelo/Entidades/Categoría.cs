@@ -31,7 +31,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private Categoría() { } // Solo para que EF Core no saque error.
+        private Categoría() { } // Solo para que Entity Framework no saque error.
 
         public Categoría(string nombre) => (Nombre) = (nombre);
 

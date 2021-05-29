@@ -35,7 +35,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private ContactoProveedor() { } // Solo para que EF Core no saque error.
+        private ContactoProveedor() { } // Solo para que Entity Framework no saque error.
 
         public ContactoProveedor(Proveedor proveedor, Contacto contacto) 
             => (ProveedorID, ContactoID, Proveedor, Contacto) = (proveedor.ID, contacto.ID, proveedor, contacto);

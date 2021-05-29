@@ -11,6 +11,7 @@ namespace SimpleOps.DocumentosGráficos {
     public class DatosEmpresa {
 
 
+
         #region Propiedades
 
         public string? Nombre { get; set; } 
@@ -29,7 +30,7 @@ namespace SimpleOps.DocumentosGráficos {
 
         public string? NitCompleto { get; set; }
 
-        public string? TipoContribuyenteTexto { get; set; }
+        public string TipoContribuyenteTexto { get; set; } = null!; // Se asegura que no es nulo.
 
         public bool DetallarImpuestoSiPorcentajesDiferentes { get; set; }
 
@@ -46,6 +47,7 @@ namespace SimpleOps.DocumentosGráficos {
         public DateTime? FinAutorizaciónFacturación { get; set; }
 
         #endregion Propiedades>
+
 
 
     } // DatosEmpresa>

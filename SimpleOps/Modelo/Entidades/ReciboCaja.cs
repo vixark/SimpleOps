@@ -27,7 +27,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private ReciboCaja() : base(LugarMovimientoDinero.Desconocido) { } // Solo para que EF Core no saque error.
+        private ReciboCaja() : base(LugarMovimientoDinero.Desconocido) { } // Solo para que Entity Framework no saque error.
 
         public ReciboCaja(Proveedor proveedor, LugarMovimientoDinero lugar) : base(proveedor, lugar) { }
 

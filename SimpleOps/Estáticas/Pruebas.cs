@@ -731,35 +731,37 @@ namespace SimpleOps {
         } // DocumentosElectrónicos>
 
 
-        public static void GeneraciónCatálogo(out string ruta) {
+        public static Cotización ObtenerCotización(TipoCotización tipo) {
 
-            var cliente = new Cliente("Distribuciones ABC", new Municipio("Bogotá", "Distrito Capital"), TipoCliente.Distribuidor) {
-                TipoEntidad = TipoEntidad.Empresa, Dirección = "Calle 80-100 68", Teléfono = "4589843", Identificación = "990986892" };
+            var contacto = new Contacto("pedro@distribucionesabc123.com") { Nombre = "Pedro Martínez", Teléfono = "313 330 33 33" };
+
+            var cliente = new Cliente("Distribuciones ABC 123", new Municipio("Bogotá", "Distrito Capital"), TipoCliente.Distribuidor) {
+                TipoEntidad = TipoEntidad.Empresa, Dirección = "Calle 80-100 68", Teléfono = "4589843", Identificación = "990986892"
+            };
 
             var CM = new ProductoBase("ZZCM") { Descripción = "Camiseta de Algodón Suave" };
-
-            var cotización = new Cotización(cliente, TipoCotización.Catálogo);
-            cotización.Líneas = new List<LíneaCotización> { 
+            var cotización = new Cotización(cliente, contacto, tipo);
+            cotización.Líneas = new List<LíneaCotización> {
                 new LíneaCotización(cotización, new Producto("ZZTV30EJSO") { DescripciónBase = "Televisor Pantalla Plana 30 pulgadas" }, 1200000),
                 new LíneaCotización(cotización, new Producto("ZZVP50EJSO") { DescripciónBase = "Videoproyector Alto Brillo 50 pulgadas" }, 1400000),
                 new LíneaCotización(cotización, new Producto("ZZMP3EJSO") { DescripciónBase = "Mueble para 3 Personas" }, 2000000),
                 new LíneaCotización(cotización, new Producto("ZZM14CEJSO") { DescripciónBase = "Monitor de 14 pulgadas" }, 600000),
                 new LíneaCotización(cotización, new Producto("ZZEM2EJSO") { DescripciónBase = "Escritorio de Madera de 2 m" }, 500000),
-                new LíneaCotización(cotización, new Producto("ZZCMAM", CM, new List<string> { "Azul", "Talla M" }) 
+                new LíneaCotización(cotización, new Producto("ZZCMAM", CM, new List<string> { "Azul", "Talla M" })
                     { ArchivoImagenEspecífica = "ZZCMA" }, 54000),
-                new LíneaCotización(cotización, new Producto("ZZCMAL", CM, new List<string> { "Azul", "Talla L" }) 
+                new LíneaCotización(cotización, new Producto("ZZCMAL", CM, new List<string> { "Azul", "Talla L" })
                     { ArchivoImagenEspecífica = "ZZCMA" }, 54000),
-                new LíneaCotización(cotización, new Producto("ZZCMAXL", CM, new List<string> { "Azul", "Talla XL" }) 
+                new LíneaCotización(cotización, new Producto("ZZCMAXL", CM, new List<string> { "Azul", "Talla XL" })
                     { ArchivoImagenEspecífica = "ZZCMA" }, 54000),
                 new LíneaCotización(cotización, new Producto("ZZCMAXXL", CM, new List<string> { "Azul", "Talla XXL" })
                     { ArchivoImagenEspecífica = "ZZCMA" }, 64000),
                 new LíneaCotización(cotización, new Producto("ZZCMVS", CM, new List<string> { "Verde", "Talla S" })
                     { ArchivoImagenEspecífica = "ZZCMV" }, 54000),
-                new LíneaCotización(cotización, new Producto("ZZCMVM", CM, new List<string> { "Verde", "Talla M" }) 
+                new LíneaCotización(cotización, new Producto("ZZCMVM", CM, new List<string> { "Verde", "Talla M" })
                     { ArchivoImagenEspecífica = "ZZCMV" }, 54000),
-                new LíneaCotización(cotización, new Producto("ZZCMVXL", CM, new List<string> { "Verde", "Talla XL" }) 
+                new LíneaCotización(cotización, new Producto("ZZCMVXL", CM, new List<string> { "Verde", "Talla XL" })
                     { ArchivoImagenEspecífica = "ZZCMV" }, 54000),
-                new LíneaCotización(cotización, new Producto("ZZCMRL", CM, new List<string> { "Roja", "Talla L" }) 
+                new LíneaCotización(cotización, new Producto("ZZCMRL", CM, new List<string> { "Roja", "Talla L" })
                     { ArchivoImagenEspecífica = "ZZCMR" }, 54000),
                 new LíneaCotización(cotización, new Producto("ZZCMRXL", CM, new List<string> { "Roja", "Talla XL" })
                     { ArchivoImagenEspecífica = "ZZCMR" }, 54000),
@@ -767,6 +769,49 @@ namespace SimpleOps {
                     { ArchivoImagenEspecífica = "ZZCMR" }, 64000),
             };
 
+            return cotización;
+
+        } // ObtenerCotización>
+
+
+        public static Cotización ObtenerCotización(string rutaJson, TipoCotización tipo) {
+
+            OperacionesEspecialesDatos = true; // Necesario para evitar el mensaje de error al escribir Cliente.ContactoFacturas.Email en el mapeo inverso hacia el objeto venta.
+            try {
+
+                var datosCotización = Deserializar<Integración.DatosCotización>(File.ReadAllText(rutaJson), Serialización.EnumeraciónEnTexto);
+                if (datosCotización == null) throw new Exception("El objeto datosCotización está vacío.");
+                var mapeador = new Mapper(ConfiguraciónMapeadorCotizaciónIntegraciónInverso);
+                var cotización = mapeador.Map<Cotización>(datosCotización);
+                cotización.EstablecerTipo(tipo); // Siempre se debe establecer el tipo después del mapeo para agregue los valores predeterminados de algunas propiedades si no fueron mapeadas y quedaron nulas.
+                foreach (var l in cotización.Líneas) {
+                    l.Cotización = cotización; // Necesario porque después de ser leídas por el Automapper no quedan automáticamente enlazadas.
+                    if (l.Producto?.TieneBase == false) l.Producto.Base = null; // Necesario porque el Automaper siempre crea el objeto Base.
+                }
+                return cotización;
+
+            } catch (Exception) {
+                throw;
+            } finally {
+                OperacionesEspecialesDatos = false;
+            }
+
+        } // ObtenerCotización>
+
+
+        public static bool ExisteArchivoPruebaIntegración(string nombreArchivo, out string rutaArchivoPrueba) {
+
+            var rutaIntegración = "";
+            if (!string.IsNullOrEmpty(Equipo.RutaIntegración)) rutaIntegración = ObtenerRutaCarpeta(Equipo.RutaIntegración, "", crearSiNoExiste: true);
+            rutaArchivoPrueba = Path.Combine(rutaIntegración, nombreArchivo);
+            return File.Exists(rutaArchivoPrueba);
+
+        } // ExisteArchivoPruebaIntegración>
+
+
+        public static void GeneraciónCatálogo(out string ruta) {
+
+            var cotización = ObtenerCotización(TipoCotización.Catálogo);
             foreach (var línea in cotización.Líneas) {
 
                 var producto = línea.Producto;
@@ -785,48 +830,64 @@ namespace SimpleOps {
         } // GeneraciónCatálogo>
 
 
+        public static void GeneraciónCotización(out string ruta) {
+
+            var cotización = ObtenerCotización(TipoCotización.Cotización);
+            CrearPdfCotización(cotización, out ruta);
+
+        } // GeneraciónCotización>
+
+
         public static void GeneraciónCatálogoIntegración() {
 
-            var rutaIntegración = "";
-            if (!string.IsNullOrEmpty(Equipo.RutaIntegración)) rutaIntegración = ObtenerRutaCarpeta(Equipo.RutaIntegración, "", crearSiNoExiste: true);
-            var rutaArchivoPrueba = Path.Combine(rutaIntegración, "CT-Prueba.json");
-            if (File.Exists(rutaArchivoPrueba)) {
+            if (ExisteArchivoPruebaIntegración("CT-Prueba.json", out string rutaJsonCatálogoPrueba)) {
 
-                OperacionesEspecialesDatos = true; // Necesario para evitar el mensaje de error al escribir Cliente.ContactoFacturas.Email en el mapeo inverso hacia el objeto venta.
                 try {
-
-                    var datosCotización = Deserializar<Integración.DatosCotización>(File.ReadAllText(rutaArchivoPrueba), Serialización.EnumeraciónEnTexto);
-                    if (datosCotización == null) throw new Exception("El objeto datosCotización está vacío.");
-                    var mapeador = new Mapper(ConfiguraciónMapeadorCotizaciónIntegraciónInverso);
-                    var cotización = mapeador.Map<Cotización>(datosCotización);
-                    cotización.EstablecerTipo(TipoCotización.Catálogo); // Siempre se debe establecer el tipo después del mapeo para agregue los valores predeterminados de algunas propiedades si no fueron mapeadas y quedaron nulas.
-                    foreach (var l in cotización.Líneas) {
-                        l.Cotización = cotización; // Necesario porque después de ser leídas por el Automapper no quedan automáticamente enlazadas.
-                        if (l.Producto?.TieneBase == false) l.Producto.Base = null; // Necesario porque el Automaper siempre crea el objeto Base.
-                    }
-                    CrearPdfCatálogo(cotización, out string ruta);
+                    CrearPdfCatálogo(ObtenerCotización(rutaJsonCatálogoPrueba, TipoCotización.Catálogo), out string ruta);
                     MostrarÉxito($"Catálogo creado: {ruta}.");
-
-                #pragma warning disable CA1031 // No capture tipos de excepción generales. Se acepta porque se el error se informa al usuario.
+                #pragma warning disable CA1031 // No capture tipos de excepción generales. Se acepta porque el error se informa al usuario.
                 } catch (Exception ex) {
                 #pragma warning restore CA1031
-
                     MostrarError(@$"Ocurrió un error creando el catálogo desde el archivo de prueba '{Equipo.RutaIntegración}\CT-Prueba.json'." +
                                  @$"{DobleLínea}{ex.Message}");
-                } finally {
-                    OperacionesEspecialesDatos = false;
                 }
   
             } else { // Si no existe el archivo de prueba, se generará un catálogo con una prueba genérica.
 
-                MostrarInformación(@$"Para crear un catálogo a partir de un archivo JSON de prueba, creálo en '{Equipo.RutaIntegración}\CT-Prueba.json'." +
-                                   @$"{DobleLínea}Se creará un catálogo con datos de prueba.");
+                MostrarInformación(@$"Para crear un catálogo a partir de un archivo JSON de prueba, créalo en '{Equipo.RutaIntegración}\CT-Prueba.json'." +
+                                   @$"{DobleLínea}Se generará un catálogo con datos de prueba.");
                 GeneraciónCatálogo(out string ruta);
                 MostrarÉxito($"Catálogo creado: {ruta}.");
 
             }
 
         } // GeneraciónCatálogoIntegración>
+
+
+        public static void GenerarCotizaciónIntegración() {
+
+            if (ExisteArchivoPruebaIntegración("CZ-Prueba.json", out string rutaJsonCotizaciónPrueba)) {
+ 
+                try {
+                    CrearPdfCotización(ObtenerCotización(rutaJsonCotizaciónPrueba, TipoCotización.Cotización), out string ruta);
+                    MostrarÉxito($"Cotización creada: {ruta}.");
+                #pragma warning disable CA1031 // No capture tipos de excepción generales. Se acepta porque el error se informa al usuario.
+                } catch (Exception ex) {
+                #pragma warning restore CA1031
+                    MostrarError(@$"Ocurrió un error creando la cotización desde el archivo de prueba '{Equipo.RutaIntegración}\CZ-Prueba.json'." +
+                                 @$"{DobleLínea}{ex.Message}");
+                }
+
+            } else { // Si no existe el archivo de prueba, se generará una cotización con una prueba genérica.
+
+                MostrarInformación(@$"Para crear una cotización a partir de un archivo JSON de prueba, créalo en '{Equipo.RutaIntegración}\CZ-Prueba.json'." +
+                                   @$"{DobleLínea}Se generará una cotización con datos de prueba.");
+                GeneraciónCotización(out string ruta);
+                MostrarÉxito($"Cotización creada: {ruta}.");
+
+            }
+
+        } // GenerarCotizaciónIntegración>
 
 
         public static void GeneraciónFichasInformativasIntegración() {
@@ -848,7 +909,7 @@ namespace SimpleOps {
                 {"Firma", @"<F Atentamente, Vixark F>"},
             };
             var plantillaCompilada = CompilarPlantilla<DatosVenta>(motorRazor, cuerpo, partes);
-            var html = plantillaCompilada.ObtenerHtml(new DatosVenta { Cude = "AFJ451MN", CódigoDocumento = "123", ClienteNombre = "Ópticas", 
+            var html = plantillaCompilada.ObtenerHtml(new DatosVenta { Cude = "AFJ451MN", CódigoDocumento = "123", Cliente = new DatosCliente() { Nombre = "Ópticas" }, 
                 Observación = "" });
             if (html != "<M Encab.  <C <h1>123</h1> <ML Cliente: <h2>Ópticas</h2>  <L  1. 2. 3. 4 L> ML> C> CUFE: AFJ451MN PieP. <F Atentamente, Vixark F> M>") 
                 MostrarError("Falló la generación del HTML para la generación del PDF.");

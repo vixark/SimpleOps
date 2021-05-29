@@ -15,7 +15,7 @@ namespace SimpleOps.Modelo {
     /// Datos de contacto asociados a una dirección de email. No está restringido a una entidad económica porque un contacto puede ser válido para varias.
     /// </summary>
     [ControlInserción(ControlConcurrencia.Optimista)]
-    class Contacto : Actualizable { // Es Actualizable porque todos sus datos excepto el email pueden actualizarse, pero no se hace Rastreable porque no es de mucho interés conocer la fecha de creación y es una tabla que puede crecer mucho.
+    class Contacto : Actualizable { // Es Actualizable porque todos sus datos, excepto el email, pueden actualizarse, pero no se hace Rastreable porque no es de mucho interés conocer la fecha de creación y es una tabla que puede crecer mucho.
 
 
         #region Propiedades
@@ -55,7 +55,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private Contacto() { } // Solo para que EF Core no saque error.
+        private Contacto() { } // Solo para que Entity Framework no saque error.
 
         public Contacto(string email) => (_Email) = (email); // Para evitar la excepción ExcepciónNoPermitidoCambiarEmailContacto.
 

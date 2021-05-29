@@ -61,14 +61,10 @@ namespace SimpleOps.DocumentosGráficos {
             PlantillaCompilada<T>? plantillaCompilada = null;
 
             try {
-
                 plantillaCompilada = crearPlantillaCompilada(motorRazor);
-
             } catch (RazorEngineCompilationException ex) {
-
                 MostrarError($"No se pudo cargar la plantilla HTML necesaria para construir el PDF del documento gráfico.{DobleLínea}{ex.Message}");
                 creado = false;
-
             }
 
             if (plantillaCompilada != null) (creado, rutaPdf) = crearPdf(plantillaCompilada);
@@ -96,16 +92,16 @@ namespace SimpleOps.DocumentosGráficos {
         public static bool CrearPdfCatálogo(Cotización cotización, out string rutaPdf) {
 
             if (cotización.Tipo != TipoCotización.Catálogo) 
-                throw new Exception("No se esperaba que la cotización no fuera de tipo Catálogo en CrearPdfCatálogo()");
+                throw new Exception("No se esperaba que la cotización no fuera de tipo Catálogo en CrearPdfCatálogo().");
 
             var cantidadPáginasExtra = (int)Math.Ceiling((double)cotización.ReferenciasProductosPáginasExtra.Count / 
                 ((cotización.CantidadFilasProductos ?? 1) * (cotización.CantidadColumnasProductos ?? 1))); 
             var rutasPáginasPlantilla = ObtenerRutasPáginasPlantilla(PlantillaDocumento.CatálogoPdf, omitirPrimera: true, 
                 cantidadPáginasExtra: cantidadPáginasExtra);
-            var cantidadPáginasConPlantillaPropia = rutasPáginasPlantilla.Count - cantidadPáginasExtra;
+            var cantidadPáginasPersonalizadas = rutasPáginasPlantilla.Count - cantidadPáginasExtra; // Cantidad de páginas de catálogo con diseño personalizado: CatálogoPdf2.cshtml, CatálogoPdf3.cshtml, CatálogoPdf4.cshtml, etc.
             var índiceInversoInserciónPáginasExtra = cotización.ÍndiceInversoInserciónPáginasExtra ?? 0;
-            var númeroInserciónPáginasExtra = cantidadPáginasConPlantillaPropia - índiceInversoInserciónPáginasExtra + 1;
-            var desfaceNúmeroPáginaExtra = cantidadPáginasConPlantillaPropia == 0 ? 1 : 0; // Las páginas del catálogo inician en la página 2, la 1 siempre es omitida porque se considera que es el marco. Por esto, cuando no hay páginas con plantilla propia se debe establecer un desface a las páginas extra de 1 para que inicien en 2.
+            var númeroInserciónPáginasExtra = cantidadPáginasPersonalizadas - índiceInversoInserciónPáginasExtra + 1;
+            var desfaceNúmeroPáginaExtra = cantidadPáginasPersonalizadas == 0 ? 1 : 0; // Las páginas del catálogo inician en la página 2, la 1 siempre es omitida porque se considera que es el marco. Por esto, cuando no hay páginas personalizadas se debe establecer un desface a las páginas extra de 1 para que inicien en 2.
 
             return CrearPdf(out rutaPdf, motorRazor => {
 
@@ -116,7 +112,7 @@ namespace SimpleOps.DocumentosGráficos {
 
                     if (EsPáginaExtra(kv.Value)) {
                         partes.Add($"Página{kv.Key - índiceInversoInserciónPáginasExtra + desfaceNúmeroPáginaExtra}", // El número de la página extra insertada se reduce por el índice inverso de inserción porque entre más alto este número más hacia el inicio del documento quedarán las páginas extra.
-                            File.ReadAllText(kv.Value).Reemplazar("36923463", $"{kv.Key - cantidadPáginasConPlantillaPropia - 1}")); // Reemplazar directamente en el texto leído el número de la página en la plantilla CatálogoPdfExtra.cshtml (36923463) por el número correcto, no es la solución más elegante, pero funciona razonablemente bien para poder lograr diferenciar en que número de página de CatálogoPdfExtra se encuentra y poder mostrar los productos extra apropiados.
+                            File.ReadAllText(kv.Value).Reemplazar("36923463", $"{kv.Key - cantidadPáginasPersonalizadas - 1}")); // Reemplazar directamente en el texto leído el número de la página en la plantilla CatálogoPdfExtra.cshtml (36923463) por el número correcto, no es la solución más elegante, pero funciona razonablemente bien para poder lograr diferenciar en que número de página de CatálogoPdfExtra se encuentra y poder mostrar los productos extra apropiados.
                     } else {
                         if (kv.Key <= númeroInserciónPáginasExtra) partes.Add($"Página{kv.Key}", File.ReadAllText(kv.Value));
                     } 
@@ -133,13 +129,35 @@ namespace SimpleOps.DocumentosGráficos {
             }, plantillaCompilada => {
 
                 var datos = cotización.ObtenerDatos(new OpcionesDocumento(), PlantillaDocumento.CatálogoPdf, rutasPáginasPlantilla.Count + 1); // Se suma uno para obtener las páginas porque en el diccionario rutasPáginasPlantilla se está omitiendo la primera página.
-                datos.TítuloPáginasExtra = cantidadPáginasConPlantillaPropia == 0 ? "Productos" : "Otros Productos";
+                datos.TítuloPáginasExtra = cantidadPáginasPersonalizadas == 0 ? "Productos" : "Otros Productos";
                 var creado = CrearPdf(datos, plantillaCompilada, ObtenerRutaCotizacionesDeHoy(), out string rutaPdfAux); 
                 return (creado, rutaPdfAux);
 
             });
 
         } // CrearPdfCatálogo>
+
+
+        public static bool CrearPdfCotización(Cotización cotización, out string rutaPdf) {
+
+            if (cotización.Tipo != TipoCotización.Cotización)
+                throw new Exception("No se esperaba que la cotización no fuera de tipo Cotización en CrearPdfCotización().");
+
+            return CrearPdf(out rutaPdf, motorRazor => {
+
+                var cuerpo = File.ReadAllText(ObtenerRutaPlantilla(PlantillaDocumento.CotizaciónPdf));
+                var partes = new Dictionary<string, string> { {"Marco", File.ReadAllText(ObtenerRutaPlantilla(PlantillaDocumento.MarcoPdf))} };
+                return CompilarPlantilla<DatosCotización>(motorRazor, cuerpo, partes);
+
+            }, plantillaCompilada => {
+
+                var datos = cotización.ObtenerDatos(new OpcionesDocumento(), PlantillaDocumento.CotizaciónPdf);
+                var creado = CrearPdf(datos, plantillaCompilada, ObtenerRutaCotizacionesDeHoy(), out string rutaPdfAux);
+                return (creado, rutaPdfAux);
+
+            });
+
+        } // CrearPdfCotización>
 
 
         public static bool CrearPdfVenta<D, M>(D documento, DocumentoElectrónico<Factura<Cliente, M>, M>? documentoElectrónico, out string rutaPdf)
@@ -229,6 +247,7 @@ namespace SimpleOps.DocumentosGráficos {
             datosVenta.TotalPáginas = ObtenerTotalPáginas(datosVenta, líneas);
             datosVenta.ModoImpresión = opcionesDocumento.ModoImpresión;
             datosVenta.MostrarInformaciónAdicional = opcionesDocumento.MostrarInformaciónAdicional;
+            datosVenta.LíneasTextoPie = 4;
 
         } // CompletarDatosVenta>
 

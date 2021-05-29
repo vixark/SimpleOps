@@ -28,6 +28,9 @@ namespace SimpleOps.Modelo {
         public Cliente? Cliente { get; set; } // Obligatorio.
         public int ClienteID { get; set; }
 
+        public Contacto? Contacto { get; set; } // Se asocia la cotización con Contacto y no con ContactoCliente, porque Contacto es la entidad que contiene la información de la persona. ContactoCliente es solo una entidad de enlace para crear la tabla ContactosClientes que contiene los contactos activos de determinada empresa. Además, es posible que un contacto deje de pertenecer a una empresa y pase a pertenecer a otra, entonces es conveniente tener un registro de a qué persona se le cotizó independiente de la empresa a la que perteneciera en ese momento.
+        public int? ContactoID { get; set; } 
+
         public List<LíneaCotización> Líneas { get; set; } = new List<LíneaCotización>();
 
         /// <summary>
@@ -66,6 +69,38 @@ namespace SimpleOps.Modelo {
         [NotMapped]
         public int? CantidadColumnasProductos { get; set; }
 
+        /// <summary>
+        /// Código de la cotización para imprimir en la representación gráfica que puede ser personalizable, especialmente por programas terceros 
+        /// en la integración, para permitir usar un código libre en el encabezado de la cotización que no esté restringido a ser númerico, como lo 
+        /// exige el código predeterminado que toma su valor de Cotización.ID. Si se establece en cadena de texto vacía (""), la representación
+        /// gráfica se adaptará a no tener este código y dará más importancia en el encabezado al nombre del documento: Cotización.
+        /// </summary>
+        [NotMapped]
+        public string? CódigoPropio { get; set; }
+
+        /// <summary>
+        /// Código de la cotización aplicable para escribir en la representación gráfica. Si <see cref="CódigoPropio"/> es nulo, 
+        /// se devuelve el <see cref="Registro.ID"/>. Al establecer su valor, debido a que <see cref="Registro.ID"/> no es modificable por ser
+        /// un concecutivo de la base de datos, se establece el valor de <see cref="CódigoPropio"/>. No se escribe en la base de datos porque
+        /// se usa principalmente para integración con programas terceros y para la generación de represenaciones gráficas.
+        /// </summary>
+        [NotMapped]
+        public string Código { get => CódigoPropio ?? ID.ATexto(); set => CódigoPropio = value; }
+
+        /// <summary>
+        /// Una observación libre sobre la cotización que no se almacena en la base de datos para evitar crezca de tamaño innecesariamente. 
+        /// Se usa como almacenamiento intermedio y queda escrita en la representación gráfica.
+        /// </summary>
+        [NotMapped]
+        public string? Observación { get; set; }
+
+        /// <summary>
+        /// Usuario que creó la cotización. Se usa principalmente como almacenamiento intermedio entre los archivos de integración o el usuario actual
+        /// de SimpleOps y las representaciones gráficas. Al crear un nuevo objeto Cotización, se inicia esta variable con Global.UsuarioActual.
+        /// </summary>
+        [NotMapped]
+        public Usuario? Usuario { get; set; }
+
         #endregion Propiedades>
 
 
@@ -93,16 +128,23 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private Cotización() { } // Solo para que EF Core no saque error.
+        private Cotización() { } // Solo para que Entity Framework no saque error.
+
+        public Cotización(Cliente cliente, Contacto contacto) : this(cliente) => (ContactoID, Contacto) = (contacto.ID, contacto);
 
         public Cotización(Cliente cliente) { 
             (ClienteID, Cliente) = (cliente.ID, cliente);
             EstablecerTipo(TipoCotización.Cotización);
+            Usuario = UsuarioActual;
         } // Cotización>
+
+        public Cotización(Cliente cliente, Contacto contacto, TipoCotización tipo) : this(cliente, tipo) 
+            => (ContactoID, Contacto) = (contacto.ID, contacto);
 
         public Cotización(Cliente cliente, TipoCotización tipo) {
             (ClienteID, Cliente) = (cliente.ID, cliente);
             EstablecerTipo(tipo);
+            Usuario = UsuarioActual;
         } // Cotización>
 
         #endregion Constructores>
@@ -181,6 +223,7 @@ namespace SimpleOps.Modelo {
             datos.ModoImpresión = opcionesDocumento.ModoImpresión;
             datos.MostrarInformaciónAdicional = opcionesDocumento.MostrarInformaciónAdicional;
             datos.NombreArchivoPropio = $"{datos.NombreDocumento} - {Cliente?.Nombre}";
+            datos.LíneasTextoPie = 3; // Aplicable para la cotización.
 
             var productosProductosBase = new Dictionary<string, List<(Producto, decimal)>>();
             var productosBase = new Dictionary<string, ProductoBase>(); // Es necesario hacerlo en un diccionario independiente porque los productos base podrían venir de una fuente de integración entonces podrían ser diferentes objetos así sean el mismo producto base. Al ser diferentes objetos no podrían funcionar como una clave del diccionario.

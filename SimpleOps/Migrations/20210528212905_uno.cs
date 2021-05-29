@@ -684,6 +684,7 @@ namespace SimpleOps.Migrations
                     CreadorID = table.Column<int>(nullable: false),
                     FechaHoraCreación = table.Column<string>(nullable: false),
                     ClienteID = table.Column<int>(nullable: false),
+                    ContactoID = table.Column<int>(nullable: true),
                     Tipo = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -693,6 +694,12 @@ namespace SimpleOps.Migrations
                         name: "FK_Cotizaciones_Clientes_ClienteID",
                         column: x => x.ClienteID,
                         principalTable: "Clientes",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Cotizaciones_Contactos_ContactoID",
+                        column: x => x.ContactoID,
+                        principalTable: "Contactos",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -1920,6 +1927,11 @@ namespace SimpleOps.Migrations
                 name: "IX_Cotizaciones_ClienteID",
                 table: "Cotizaciones",
                 column: "ClienteID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cotizaciones_ContactoID",
+                table: "Cotizaciones",
+                column: "ContactoID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_InformesPagos_ClienteID",

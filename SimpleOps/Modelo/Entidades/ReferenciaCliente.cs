@@ -28,7 +28,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private ReferenciaCliente() : base(null, null!) { } // Solo para que EF Core no saque error.
+        private ReferenciaCliente() : base(null, null!) { } // Solo para que Entity Framework no saque error.
 
         public ReferenciaCliente(Producto producto, Cliente cliente, string referencia) : base(producto, referencia) 
             => (ClienteID, Cliente) = (cliente.ID, cliente);

@@ -28,7 +28,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private PrecioCliente() : base(null, 0) { } // Solo para que EF Core no saque error.
+        private PrecioCliente() : base(null, 0) { } // Solo para que Entity Framework no saque error.
 
         public PrecioCliente(Producto producto, Cliente cliente, decimal valor) : base(producto, valor) 
             => (ClienteID, Cliente) = (cliente.ID, cliente);

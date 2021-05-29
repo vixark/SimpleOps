@@ -22,7 +22,7 @@ namespace SimpleOps.Modelo {
     /// las tablas y sus filas.
     /// </summary>
     [ControlInserción(ControlConcurrencia.Ninguno)]
-    class Bloqueo { // No se necesita información de su creación ni de su actualización porque es una entidad auxiliar. Se hace de esta manera personalizada porque no se encontró algo propio del EF Core que permitiera implementar este control ni se encontró artículos completos que dieran lineamientos de la forma de implementarlo. En parte se inspiró de estas dos respuestas https://forums.asp.net/t/2127954.aspx?implementing+pessimistic+concurrency+using+entity+framework+ y https://stackoverflow.com/questions/32335266/pessimistic-concurrency-for-entity-framework.
+    class Bloqueo { // No se necesita información de su creación ni de su actualización porque es una entidad auxiliar. Se hace de esta manera personalizada porque no se encontró algo propio del Entity Framework que permitiera implementar este control ni se encontró artículos completos que dieran lineamientos de la forma de implementarlo. En parte se inspiró de estas dos respuestas https://forums.asp.net/t/2127954.aspx?implementing+pessimistic+concurrency+using+entity+framework+ y https://stackoverflow.com/questions/32335266/pessimistic-concurrency-for-entity-framework.
 
 
         #region Propiedades
@@ -65,7 +65,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private Bloqueo() { } // Solo para que EF Core no saque error.
+        private Bloqueo() { } // Solo para que Entity Framework no saque error.
 
         public Bloqueo(string nombreEntidad, int usuarioBloqueadorID)
             => (NombreEntidad, UsuarioID, FechaHoraInicio) = (nombreEntidad, usuarioBloqueadorID, AhoraUtcAjustado);

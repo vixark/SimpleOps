@@ -28,7 +28,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private Pedido() { } // Solo para que EF Core no saque error.
+        private Pedido() { } // Solo para que Entity Framework no saque error.
 
         public Pedido(Proveedor proveedor) => (ProveedorID, Proveedor) = (proveedor.ID, proveedor);
 

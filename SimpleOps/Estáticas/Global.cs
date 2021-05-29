@@ -113,7 +113,7 @@ namespace SimpleOps {
         #region Estados
         // Variables que pueden cambiar durante la ejecución.
 
-        public static bool OperacionesEspecialesDatos = true; // Se establece en falso al iniciar el SimpleOps y habilita la generación de excepciones al asignar datos inválidos al modelo. Es verdadero durante migraciones de EF Core y durante la carga inicial de datos para evitar hacer algunas verificaciones y lanzar errores.
+        public static bool OperacionesEspecialesDatos = true; // Se establece en falso al iniciar el SimpleOps y habilita la generación de excepciones al asignar datos inválidos al modelo. Es verdadero durante migraciones de Entity Framework y durante la carga inicial de datos para evitar hacer algunas verificaciones y lanzar errores.
 
         public static Usuario UsuarioActual = new Usuario("David", "david@simpleops.net") { ID = 1 }; // Temporalmente mientras se implementa se usará usuario 1. Al implementar usuarios lo debería obtener de la base de datos.
 
@@ -173,6 +173,8 @@ namespace SimpleOps {
             = new MapperConfiguration(c => {
                 c.CreateMap<LíneaVenta, DatosLíneaProducto>();
                 c.CreateMap<Venta, DatosVenta>().ForMember(vg => vg.CódigoDocumento, mce => mce.MapFrom(v => v.Código));
+                c.CreateMap<Cliente, DatosCliente>();
+                c.CreateMap<Usuario, DatosUsuario>();
             });
 
 
@@ -194,6 +196,8 @@ namespace SimpleOps {
             = new MapperConfiguration(c => {
                 c.CreateMap<LíneaNotaCréditoVenta, DatosLíneaProducto>();
                 c.CreateMap<NotaCréditoVenta, DatosVenta>().ForMember(vg => vg.CódigoDocumento, mce => mce.MapFrom(v => v.Código));
+                c.CreateMap<Cliente, DatosCliente>();
+                c.CreateMap<Usuario, DatosUsuario>();
             });
 
 
@@ -214,22 +218,26 @@ namespace SimpleOps {
         public static MapperConfiguration ConfiguraciónMapeadorCotizaciónIntegración
             = new MapperConfiguration(c => {
                 c.CreateMap<LíneaCotización, Integración.DatosLíneaProducto>();
-                c.CreateMap<Cotización, Integración.DatosCotización>();
+                c.CreateMap<Cotización, Integración.DatosCotización>().ForMember(dcz => dcz.FechaHora, m => m.MapFrom(cz => cz.FechaHoraCreación));
             });
 
 
         public static MapperConfiguration ConfiguraciónMapeadorCotizaciónIntegraciónInverso
             = new MapperConfiguration(c => {
                 c.CreateMap<LíneaCotización, Integración.DatosLíneaProducto>().ReverseMap();
-                c.CreateMap<Cotización, Integración.DatosCotización>().ReverseMap();
+                c.CreateMap<Cotización, Integración.DatosCotización>().ReverseMap()
+                    .ForMember(cz => cz.FechaHoraCreación, m => m.MapFrom(dcz => dcz.FechaHora));
             });
 
 
         public static MapperConfiguration ConfiguraciónMapeadorCotización
             = new MapperConfiguration(c => {
-                c.CreateMap<LíneaCotización, DatosLíneaProducto>().ForMember(dlc => dlc.PrecioBaseTexto, m => m.MapFrom(lc => lc.PrecioTexto));
-                c.CreateMap<LíneaCotización, DatosLíneaProducto>().ForMember(dlc => dlc.PrecioBase, m => m.MapFrom(lc => lc.Precio));
-                c.CreateMap<Cotización, DatosCotización>().ForMember(dc => dc.CódigoDocumento, m => m.MapFrom(v => v.ID));
+                c.CreateMap<LíneaCotización, DatosLíneaProducto>().ForMember(dlp => dlp.PrecioBaseTexto, m => m.MapFrom(lc => lc.PrecioTexto));
+                c.CreateMap<LíneaCotización, DatosLíneaProducto>().ForMember(dlp => dlp.PrecioBase, m => m.MapFrom(lc => lc.Precio));
+                c.CreateMap<Cotización, DatosCotización>().ForMember(dcz => dcz.CódigoDocumento, m => m.MapFrom(cz => cz.Código))
+                    .ForMember(dc => dc.FechaHora, m => m.MapFrom(cz => cz.FechaHoraCreación));
+                c.CreateMap<Cliente, DatosCliente>();
+                c.CreateMap<Usuario, DatosUsuario>();
             });
 
 
@@ -329,7 +337,7 @@ namespace SimpleOps {
         }
 
 
-        public enum TipoContactoCliente : byte {  // Nuevos elementos podrían ser agregados entre los actuales, conservando los valores.
+        public enum TipoContactoCliente : byte { // Nuevos elementos podrían ser agregados entre los actuales, conservando los valores.
             Desconocido = 0, Comprador = 1, Almacenista = 2, Tesorería = 5, JefeCompras = 10, AltoDirectivo = 15, Gerente = 20, Propietario = 25, Otro = 255
         }
 
@@ -631,7 +639,7 @@ namespace SimpleOps {
 
                 númeroPágina++;
                 var rutaPlantilla = ObtenerRutaPlantilla(plantilla, forzarRutaAplicación, forzarRutaDesarrollo, númeroPágina);
-                existe = File.Exists(rutaPlantilla); // No importa que se repita File.Exists de ObtenerRutaPlantilla() si se está usando plantilla propia, no afecta en gran medida el rendimiento. Es necesario siempre calcular si existe o no la plantilla para poder salir del ciclo. Si llegar a afectar el rendimiento, habría que usar una variable de salida en el procedimiento reemplazarPorPlantillaPropia para indicar cuando se ha encontrado una plantilla propia y no se debe volver a verificar su existencia.
+                existe = File.Exists(rutaPlantilla); // No importa que se repita File.Exists de ObtenerRutaPlantilla() si se está usando plantilla personalizada (CatálogoPdf2.cshtml, CatálogoPdf3.cshtml, etc). No afecta en gran medida el rendimiento. Es necesario siempre calcular si existe o no la plantilla para poder salir del ciclo. Si llega a afectar el rendimiento, habría que usar una variable de salida en el procedimiento para indicar cuando se ha encontrado una plantilla personalizada y no se debe volver a verificar su existencia.
                 if (existe && (númeroPágina != 1 || !omitirPrimera)) rutasPáginasPlantilla.Add(númeroPágina, rutaPlantilla);
 
             } while (existe);

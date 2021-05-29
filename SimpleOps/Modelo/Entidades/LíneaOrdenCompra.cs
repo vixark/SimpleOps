@@ -28,7 +28,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private LíneaOrdenCompra() : base(null, 0, 0) { } // Solo para que EF Core no saque error.
+        private LíneaOrdenCompra() : base(null, 0, 0) { } // Solo para que Entity Framework no saque error.
 
         public LíneaOrdenCompra(OrdenCompra ordenCompra, Producto producto, int cantidad, decimal precio) : base(producto, cantidad, precio) 
             => (OrdenCompraID, OrdenCompra) = (ordenCompra.ID, ordenCompra);

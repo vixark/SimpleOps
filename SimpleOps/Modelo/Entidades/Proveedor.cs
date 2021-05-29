@@ -78,7 +78,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private Proveedor() : base(null!) { } // Solo para que EF Core no saque error.
+        private Proveedor() : base(null!) { } // Solo para que Entity Framework no saque error.
 
         public Proveedor(string nombre) : base(nombre) { }
 

@@ -48,7 +48,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private Usuario() { } // Solo para que EF Core no saque error.
+        private Usuario() { } // Solo para que Entity Framework no saque error.
 
         public Usuario(string nombre, string email) => (Nombre, Email) = (nombre, email);
 

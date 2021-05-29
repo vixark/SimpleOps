@@ -31,7 +31,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private Material() { } // Solo para que EF Core no saque error.
+        private Material() { } // Solo para que Entity Framework no saque error.
 
         public Material(string nombre) => (Nombre) = (nombre);
 

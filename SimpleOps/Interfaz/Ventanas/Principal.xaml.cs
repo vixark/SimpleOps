@@ -142,6 +142,8 @@ namespace SimpleOps.Interfaz {
 
         private void GenerarFichasInformativas_Clic(object sender, RoutedEventArgs e) => Pruebas.GeneraciónFichasInformativasIntegración();
 
+        private void GenerarCotización_Clic(object sender, RoutedEventArgs e) => Pruebas.GenerarCotizaciónIntegración();
+
         private void HacerPruebasUnitarias_Clic(object sender, RoutedEventArgs e) => Pruebas.Ejecutar();
 
         #endregion Eventos>

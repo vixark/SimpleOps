@@ -553,6 +553,13 @@
             Debido a que en el evento Created sale error en el método ReadAllText porque es posible que aún no se ha cerrado.
             </summary>
         </member>
+        <member name="M:SimpleOps.Integración.Integrador.ValidarCliente(SimpleOps.Modelo.Cliente,System.Boolean)">
+            <summary>
+            Valida los datos del cliente según lo requiera cada tipo de documento.
+            </summary>
+            <param name="cliente"></param>
+            <param name="validarDepartamento"></param>
+        </member>
         <member name="T:SimpleOps.Interfaz.BarraDesplazamiento">
             <summary>
             Barra de desplazamiento personalizada que permite el desplazamiento horizontal con la rueda del mouse y personalizar
@@ -988,6 +995,12 @@
             <summary>
             No se almacena en la base de datos para evitar que crezca de tamaño innecesariamente. Se usa para mostrar información adicional legal que no 
             se muestra siempre (para evitar saturar el diseño) para algunos algunos clientes que requieren que la tenga.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Factura`2.Usuario">
+            <summary>
+            Usuario que creó la factura. Se usa principalmente como almacenamiento intermedio entre los archivos de integración o el usuario actual
+            de SimpleOps y las representaciones gráficas. Al crear un nuevo objeto Factura, se inicia esta variable con Global.UsuarioActual.
             </summary>
         </member>
         <member name="P:SimpleOps.Modelo.Factura`2.SubtotalBase">
@@ -1751,6 +1764,34 @@
             las imágenes ayuda a que el tamaño final del PDF sea más pequeño y además las imágenes son recortadas inteligentemente (ajustadas a su
             contenido) antes de ser redimensionadas, esto permite que todas las imágenes de los productos tengan un tamaño homogéneo independiente
             de como estén recortadas las imágenes originales.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Cotización.CódigoPropio">
+            <summary>
+            Código de la cotización para imprimir en la representación gráfica que puede ser personalizable, especialmente por programas terceros 
+            en la integración, para permitir usar un código libre en el encabezado de la cotización que no esté restringido a ser númerico, como lo 
+            exige el código predeterminado que toma su valor de Cotización.ID. Si se establece en cadena de texto vacía (""), la representación
+            gráfica se adaptará a no tener este código y dará más importancia en el encabezado al nombre del documento: Cotización.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Cotización.Código">
+            <summary>
+            Código de la cotización aplicable para escribir en la representación gráfica. Si <see cref="P:SimpleOps.Modelo.Cotización.CódigoPropio"/> es nulo, 
+            se devuelve el <see cref="P:SimpleOps.Modelo.Registro.ID"/>. Al establecer su valor, debido a que <see cref="P:SimpleOps.Modelo.Registro.ID"/> no es modificable por ser
+            un concecutivo de la base de datos, se establece el valor de <see cref="P:SimpleOps.Modelo.Cotización.CódigoPropio"/>. No se escribe en la base de datos porque
+            se usa principalmente para integración con programas terceros y para la generación de represenaciones gráficas.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Cotización.Observación">
+            <summary>
+            Una observación libre sobre la cotización que no se almacena en la base de datos para evitar crezca de tamaño innecesariamente. 
+            Se usa como almacenamiento intermedio y queda escrita en la representación gráfica.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Cotización.Usuario">
+            <summary>
+            Usuario que creó la cotización. Se usa principalmente como almacenamiento intermedio entre los archivos de integración o el usuario actual
+            de SimpleOps y las representaciones gráficas. Al crear un nuevo objeto Cotización, se inicia esta variable con Global.UsuarioActual.
             </summary>
         </member>
         <member name="P:SimpleOps.Modelo.Cotización.ReferenciasProductosPáginasExtra">

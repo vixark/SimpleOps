@@ -216,7 +216,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private ProductoBase() { } // Solo para que EF Core no saque error.
+        private ProductoBase() { } // Solo para que Entity Framework no saque error.
 
         public ProductoBase(string referencia) => (Referencia) = (referencia);
 

@@ -143,7 +143,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private Cliente() : base(null!) { } // Solo para que EF Core no saque error.
+        private Cliente() : base(null!) { } // Solo para que Entity Framework no saque error.
 
         public Cliente(string nombre) : this(nombre, TipoCliente.Desconocido) { }
 

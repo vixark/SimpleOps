@@ -31,7 +31,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private Campaña() { } // Solo para que EF Core no saque error.
+        private Campaña() { } // Solo para que Entity Framework no saque error.
 
         public Campaña(string nombre) => (Nombre) = (nombre);
 

@@ -53,7 +53,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private InformePago() { } // Solo para que EF Core no saque error.
+        private InformePago() { } // Solo para que Entity Framework no saque error.
 
         public InformePago(decimal valor, DateTime fechaHoraPago, Cliente cliente, Banco banco) 
             => (ClienteID, Valor, FechaHoraPago, Cliente, Banco) = (cliente.ID, valor, fechaHoraPago, cliente, banco);
@@ -70,7 +70,7 @@ namespace SimpleOps.Modelo {
 
         public string? CuentaBancaria => ObtenerNúmeroCuentaBancaria(Banco, OtroNúmeroCuenta);
 
-        public string? Lugar => $"Recibido en {Banco.ToString()} {CuentaBancaria}"; // Usada en el ID del elemento PrePaidPayment de la factura electrónica. Este es un uso personalizado de SimpleOps solo para completar la información del pago realizado por el cliente en la factura electrónica.
+        public string? Lugar => $"Recibido en {Banco} {CuentaBancaria}"; // Usada en el ID del elemento PrePaidPayment de la factura electrónica. Este es un uso personalizado de SimpleOps solo para completar la información del pago realizado por el cliente en la factura electrónica.
 
         #endregion Métodos y Funciones>
 

@@ -28,7 +28,13 @@ namespace SimpleOps.Integración {
 
         public int? CantidadColumnasProductos { get; set; } 
 
-        public int? ÍndiceInversoInserciónPáginasExtra { get; set; } 
+        public int? ÍndiceInversoInserciónPáginasExtra { get; set; }
+
+        public string? ContactoNombre { get; set; }
+
+        public string? ContactoTeléfono { get; set; }
+
+        public string? ContactoEmail { get; set; } // Puede ser nulo porque el contacto puede ser nulo.
 
         #endregion Propiedades>
 

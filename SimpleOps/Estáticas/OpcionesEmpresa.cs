@@ -23,6 +23,7 @@ namespace SimpleOps.Singleton {
     sealed class OpcionesEmpresa { // No cambiar los nombres de las propiedades porque estos se usan en los archivos de opciones JSON. Si alguna propiedad pudiera tener valores diferentes para diferentes usuarios/equipos de la empresa se debe usar OpcionesEquipo. No debe tener métodos (estos van en Global), pero si se permiten propiedades autocalculadas para algunas propiedades que tiene sentido que le pertenezcan al objeto Empresa.
 
 
+
         #region Patrón Singleton
         // Ver https://csharpindepth.com/Articles/Singleton.
 
@@ -35,9 +36,10 @@ namespace SimpleOps.Singleton {
         #endregion Patrón Singleton>
 
 
+
         #region Propiedades y Variables
 
-        public Municipio MunicipioFacturación = null!; // Es un clon de solo lectura. Se garantiza no será nulo porque siempre se carga al iniciar. Datos del municipio de la dirección de facturación de la empresa. Se actualiza al iniciar SimpleOps, al cambiar Empresa.Datos.MunicipioFacturaciónID y al realizar cambios en la tabla municipios. Para que funcione la factura electrónica debe tener un departamento de Colombia y este corresponder a uno de los valores de la columna Nombre en el numeral 13.4.2 de la documentación de factura electrónica. Aunque si no corresponde no genera Rechazo si no Notificación. El código del municipio debe corresponder a un valor válido de lista de municipios en el numeral 13.4.3 de la documentación de factura electrónica de la DIAN. Para que funcione la factura electrónica con la DIAN debe ser un municipio de Colombia y su nombre corresponder a uno de los valores del la columna Nombre Municipio en el numeral 13.4.3 de la documentación de factura electrónica. Aunque si no corresponde no genera Rechazo si no Notificación.
+        public Municipio MunicipioFacturación = null!; // Es un clon de solo lectura. Se garantiza no será nulo porque siempre se carga al iniciar. Datos del municipio de la dirección de facturación de la empresa. Se actualiza al iniciar SimpleOps, al cambiar Empresa.Datos.MunicipioFacturaciónID y al realizar cambios en la tabla municipios. Para que funcione la factura electrónica debe tener un departamento de Colombia y este corresponder a uno de los valores de la columna Nombre en el numeral 13.4.2 de la documentación de factura electrónica. Aunque si no corresponde, no genera Rechazo, si no Notificación. El código del municipio debe corresponder a un valor válido de lista de municipios en el numeral 13.4.3 de la documentación de factura electrónica de la DIAN. Para que funcione la factura electrónica con la DIAN debe ser un municipio de Colombia y su nombre corresponder a uno de los valores del la columna Nombre Municipio en el numeral 13.4.3 de la documentación de factura electrónica. Aunque si no corresponde, no genera Rechazo, si no Notificación.
 
         private int municipioFacturaciónID = 1; // ID del municipio de la dirección de facturación. 1: Bogotá, 2: Medellín, 3: Cali, 4: Barranquilla, etc. Ver tabla municipios en Guías/IDs Municipios.html. Siempre será establecido. Si no se establece inicia por defecto en Bogotá.
         public int MunicipioFacturaciónID { 
@@ -116,6 +118,7 @@ namespace SimpleOps.Singleton {
         #endregion Propiedades y Variables>
 
 
+
         #region Variables Facturación Electrónica
 
         public AmbienteFacturaciónElectrónica AmbienteFacturaciónElectrónica { get; set; } = AmbienteFacturaciónElectrónica.Pruebas; // Código que describe el ambiente de destino donde será procesada la validación previa de los documentos electrónicos. Siempre inicia en Pruebas porque parte del proceso de habilitación de la facturación electrónica implica iniciar en modo Pruebas y después cambiarlo a Producción.
@@ -159,6 +162,7 @@ namespace SimpleOps.Singleton {
         public int AnchoTotalesFactura { get; set; } = 80; // Con 80 permite acomodar hasta 99 999 999 en los valores de las columnas Subtotal, Total, Consumo, IVA y en los valores de los totales de la factura: Subtotal, IVA, Impuesto Consumo, Descuento y Total. Con 90 permite hasta 999 999 999 sin que el valor quede muy cerca al de las otras columnas, pero se pierde un poco la alineación a la derecha entre los totales de la factura y los números de la última columna. 
 
         #endregion Variables Facturación Electrónica>
+
 
 
         #region Variables Comerciales
@@ -226,6 +230,7 @@ namespace SimpleOps.Singleton {
 
 
         #endregion Variables Comerciales>
+
 
 
         #region Variables de Apariencia y Comportamiento
@@ -304,6 +309,7 @@ namespace SimpleOps.Singleton {
         public int CantidadColumnasProductosPorPáginaCotización { get; set; } = 1;
 
         #endregion Variables de Apariencia y Comportamiento>
+
 
 
         #region Valores Predeterminados
@@ -385,6 +391,7 @@ namespace SimpleOps.Singleton {
         #endregion Valores Predeterminados>
 
 
+
         #region Propiedades Autocalculadas
 
         [JsonIgnore]
@@ -415,6 +422,7 @@ namespace SimpleOps.Singleton {
         public string TipoContribuyenteTexto => TipoContribuyente.ATexto().Reemplazar("Ordinario, ", ""); // Se omite el Ordinario si va acompañado de otro tipo como responsable IVA porque el ordinario es el más común y para las personas puede ser redundante y confuso. Es más usual especificar si una empresa es Régimen Simple o Gran Contribuyente y no especificar nada cuando no sea ninguno de los dos.
 
         #endregion Propiedades Autocalculadas>
+
 
 
     } // OpcionesEmpresa>

@@ -57,7 +57,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        public Municipio() { } // Solo para que EF Core no saque error. Se permite público para poderlo pasar nulo al método genérico Vixark.General.CopiarA() y que dentro de este se cree la nueva instancia de Municipio.
+        public Municipio() { } // Solo para que Entity Framework no saque error. Se permite público para poderlo pasar nulo al método genérico Vixark.General.CopiarA() y que dentro de este se cree la nueva instancia de Municipio.
 
         public Municipio(string nombre, string departamento) => (Nombre, Departamento) = (nombre, departamento);
 

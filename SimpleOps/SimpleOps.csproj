@@ -34,6 +34,8 @@
     <Compile Remove="Migrations\20210427152118_Uno.Designer.cs" />
     <Compile Remove="Migrations\20210430070919_dos.cs" />
     <Compile Remove="Migrations\20210430070919_dos.Designer.cs" />
+    <Compile Remove="Migrations\20210528212604_dos.cs" />
+    <Compile Remove="Migrations\20210528212604_dos.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -9,7 +9,7 @@ using SimpleOps.Datos;
 namespace SimpleOps.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20210430071155_uno")]
+    [Migration("20210528212905_uno")]
     partial class uno
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -634,6 +634,9 @@ namespace SimpleOps.Migrations
                     b.Property<int>("ClienteID")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("ContactoID")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("CreadorID")
                         .HasColumnType("INTEGER");
 
@@ -647,6 +650,8 @@ namespace SimpleOps.Migrations
                     b.HasKey("ID");
 
                     b.HasIndex("ClienteID");
+
+                    b.HasIndex("ContactoID");
 
                     b.ToTable("Cotizaciones");
                 });
@@ -2838,6 +2843,10 @@ namespace SimpleOps.Migrations
                         .HasForeignKey("ClienteID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("SimpleOps.Modelo.Contacto", "Contacto")
+                        .WithMany()
+                        .HasForeignKey("ContactoID");
                 });
 
             modelBuilder.Entity("SimpleOps.Modelo.InformePago", b =>

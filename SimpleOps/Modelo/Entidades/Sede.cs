@@ -79,7 +79,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private Sede() { } // Solo para que EF Core no saque error.
+        private Sede() { } // Solo para que Entity Framework no saque error.
 
         public Sede(string nombre, Cliente cliente, string dirección, Municipio municipio)
             => (Nombre, ClienteID, MunicipioID, Dirección, Cliente, Municipio) = (nombre, cliente.ID, municipio.ID, dirección, cliente, municipio);

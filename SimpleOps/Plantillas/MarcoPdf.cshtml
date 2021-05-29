@@ -32,6 +32,7 @@
 
     var selectorCssPáginas = "";
     var empresa = Model.Empresa ?? new DatosEmpresa();
+    var esFacturaONotaCrédito = Model.NombreDocumento == "Factura" || Model.NombreDocumento == "Nota Crédito";
 
     static string APuntos(double número) => $"{número.ToString().Replace(",", ".")}px";
 
@@ -59,13 +60,33 @@
 
                         <td class="tder">
 
-                            <div>
-                                <span class="t18b fc-l100">@Model.NombreDocumento Electrónica de Venta</span>
-                            </div>
+                            @if (string.IsNullOrEmpty(Model.CódigoDocumento)) {
 
-                            <div>
-                                <span class="t30b fc-l230">@Model.CódigoDocumento</span>
-                            </div>
+                                <div>
+                                    <span class="t30b fc-l230">@Model.NombreDocumento</span>
+                                </div>
+
+                            } else {
+
+                                <div>
+                                    @switch (Model.NombreDocumento) {
+                                        case "Factura":
+                                            <span class="t18b fc-l100">Factura Electrónica de Venta</span>
+                                            break;
+                                        case "Nota Crédito":
+                                            <span class="t18b fc-l100">Nota Crédito Electrónica</span>
+                                            break;
+                                        default:
+                                            <span class="t18b fc-l100">@Model.NombreDocumento</span>
+                                            break;
+                                    }
+                                </div>
+
+                                <div>
+                                    <span class="t30b fc-l230">@Model.CódigoDocumento</span>
+                                </div>
+
+                            }
 
                         </td>
 
@@ -100,15 +121,17 @@
                 <div>
                     <span>@empresa.RazónSocial&nbsp;&nbsp;</span>
                     <span>@empresa.NitCompleto&nbsp;&nbsp;</span>
-                    <span>@empresa.TipoContribuyenteTexto</span>
+                    @if (esFacturaONotaCrédito) { <span>@empresa.TipoContribuyenteTexto</span> }         
                 </div>
 
-                <div>
-                    <span>Autorización de Facturación</span>
-                    <span>@empresa.NúmeroAutorizaciónFacturación</span>
-                    <span>del @empresa.PrimerNúmeroFacturaAutorizada al @empresa.ÚltimoNúmeroFacturaAutorizada</span>
-                    <span>hasta @empresa.FinAutorizaciónFacturación?.ToShortDateString()</span>
-                </div>
+                @if (esFacturaONotaCrédito) {
+                    <div>
+                        <span>Autorización de Facturación</span>
+                        <span>@empresa.NúmeroAutorizaciónFacturación</span>
+                        <span>del @empresa.PrimerNúmeroFacturaAutorizada al @empresa.ÚltimoNúmeroFacturaAutorizada</span>
+                        <span>hasta @empresa.FinAutorizaciónFacturación?.ToShortDateString()</span>
+                    </div>
+                }
 
                 <div>
                     <span>@empresa.TeléfonoPrincipal&nbsp;&nbsp;</span>

@@ -31,7 +31,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private Aplicación() { } // Solo para que EF Core no saque error.
+        private Aplicación() { } // Solo para que Entity Framework no saque error.
 
         public Aplicación(string nombre) => (Nombre) = (nombre);
 

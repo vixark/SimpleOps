@@ -60,7 +60,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private NotaCréditoVenta() { } // Solo para que EF Core no saque error.
+        private NotaCréditoVenta() { } // Solo para que Entity Framework no saque error.
 
         public NotaCréditoVenta(Cliente cliente, Venta venta) {
             (ClienteID, VentaID, Cliente, Venta) = (cliente.ID, venta.ID, cliente, venta);

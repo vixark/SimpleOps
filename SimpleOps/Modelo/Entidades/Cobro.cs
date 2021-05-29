@@ -58,7 +58,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private Cobro() { } // Solo para que EF Core no saque error.
+        private Cobro() { } // Solo para que Entity Framework no saque error.
 
         public Cobro(Cliente cliente) {
             (ClienteID, Cliente) = (cliente.ID, cliente);

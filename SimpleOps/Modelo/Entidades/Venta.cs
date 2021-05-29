@@ -77,7 +77,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private Venta() { } // Solo para que EF Core no saque error.
+        private Venta() { } // Solo para que Entity Framework no saque error.
 
         public Venta(Cliente cliente, OrdenCompra ordenCompra) : this(cliente) => (OrdenCompraID, OrdenCompra) = (ordenCompra.ID, ordenCompra);
 

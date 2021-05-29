@@ -38,7 +38,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private AtributoProducto() { } // Solo para que EF Core no saque error.
+        private AtributoProducto() { } // Solo para que Entity Framework no saque error.
 
         public AtributoProducto(string nombre, TipoAtributoProducto tipo) => (Nombre, Tipo, TipoID) = (nombre, tipo, tipo.ID);
 

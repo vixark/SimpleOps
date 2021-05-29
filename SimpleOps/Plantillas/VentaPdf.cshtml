@@ -17,6 +17,7 @@
     var mostrarImpuestoConsumo = tieneImpuestoConsumo;
     var mostrarDescuento = !(!tieneDescuento && mostrarIVA && mostrarImpuestoConsumo); // Se muestra siempre el descuento excepto cuando no tiene descuento y además se está mostrando el IVA y el impuesto de consumo. Esto asegura que casi siempre se muestra el descuento = 0. Es una decisión por simple estética del diseño de la sección de totales, no se ve bien cuando solo hay 3 elementos en esta sección.  
     var cantidadTotales = 2 + (mostrarIVA ? 1 : 0) + (mostrarDescuento ? 1 : 0) + (mostrarImpuestoConsumo ? 1 : 0);
+    var cliente = Model.Cliente;
 
 }
 
@@ -29,11 +30,11 @@
             <div class="cliente-cn">
                 <div class="@(Model.ModoImpresión ? "fgtl" : "fc fc-l230") t18b cliente-tít">Cliente</div>
                 <div class="datos-cliente-cn">
-                    <div class="cliente-nom">@Model.ClienteNombre</div>
-                    <div>@Model.ClienteDirección @Model.ClienteMunicipioNombre</div>
-                    <div>@Model.ClienteIdentificaciónCompleta</div>
-                    <div>@Model.ClienteTeléfono</div>
-                    <div>@Model.ClienteContactoFacturasEmail</div>
+                    <div class="cliente-nom">@cliente?.Nombre</div>
+                    <div>@cliente?.Dirección @cliente?.MunicipioNombre</div>
+                    <div>@cliente?.IdentificaciónCompleta</div>
+                    <div>@cliente?.Teléfono</div>
+                    <div>@cliente?.ContactoFacturasEmail</div>
                 </div>
             </div>
 
@@ -246,7 +247,7 @@
 
     .fecha-val { margin-top: 3px; margin-left: -10px; } /* Es ligeramente mayor que cliente-nom y oc-val porque al ser dos renglones necesita un poco más de espacio para verse bien. Se ajustan los mismos 10px que se usan para separar el título Fecha del título Vencimiento para permitir que la fecha quede centrada sobre el título Fecha. */
 
-    .venc-val { margin-top: 13px; } /* La fecha de vencimiento se deben separar más del título porque deben quedar centradas en la celda mientras que los datos del cliente deben quedar lo más cercano posible pues estos son los que determinan el alto de toda la sección de información superior. */
+    .venc-val { margin-top: 13px; } /* La fecha de vencimiento se debe separar más del título porque debe quedar centrada en la celda mientras que los datos del cliente deben quedar lo más cercano posible pues estos son los que determinan el alto de toda la sección de información superior. */
 
     .cliente-td { width: @APuntos(anchoCliente); }
 
@@ -277,7 +278,7 @@
 
     .infoinf-tb { margin-top: 20px; }
 
-    .obs-y-cufe { width: 460px; vertical-align: top; } /* El valor de 460px se obtiene del máximo ancho que se requiere para ubicar el CUDE, después de realizar múltiples ensayoscon decenas de CUDE. Este ancho permite que los números de los totales queden alineados a la derecha con los números de la última columna (solo cuando SimpleOps.DocumentosGráficos.OpcionesColumnas.AnchoTotalesFactura es 80). Si se cambia este valor, se debe cambiar el margen del certificado. */
+    .obs-y-cufe { width: 460px; vertical-align: top; } /* El valor de 460px se obtiene del máximo ancho que se requiere para ubicar el CUDE, después de realizar múltiples ensayos con decenas de CUDE. Este ancho permite que los números de los totales queden alineados a la derecha con los números de la última columna (solo cuando SimpleOps.DocumentosGráficos.OpcionesColumnas.AnchoTotalesFactura es 80). Si se cambia este valor, se debe cambiar el margen del certificado. */
 
     .observación-td { vertical-align: top; }
 

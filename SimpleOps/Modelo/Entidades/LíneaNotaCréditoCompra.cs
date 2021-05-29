@@ -28,7 +28,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private LíneaNotaCréditoCompra() : base(null, 0, 0, 0) { } // Solo para que EF Core no saque error.
+        private LíneaNotaCréditoCompra() : base(null, 0, 0, 0) { } // Solo para que Entity Framework no saque error.
 
         public LíneaNotaCréditoCompra(Producto producto, NotaCréditoCompra notaCréditoCompra, int cantidad, decimal precio, decimal costo)
             : base(producto, cantidad, precio, costo) 

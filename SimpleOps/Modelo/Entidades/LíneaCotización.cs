@@ -44,7 +44,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private LíneaCotización() { } // Solo para que EF Core no saque error.
+        private LíneaCotización() { } // Solo para que Entity Framework no saque error.
 
         public LíneaCotización(Cotización cotización, Producto producto, decimal precio) 
             => (Cotización, CotizaciónID, ProductoID, Producto, Precio) = (cotización, cotización.ID, producto.ID, producto, precio);

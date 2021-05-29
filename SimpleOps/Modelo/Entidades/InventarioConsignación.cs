@@ -40,7 +40,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private InventarioConsignación() { } // Solo para que EF Core no saque error.
+        private InventarioConsignación() { } // Solo para que Entity Framework no saque error.
 
         public InventarioConsignación(Producto producto, Cliente cliente, int cantidad, decimal precio) 
             => (ClienteID, ProductoID, Cantidad, Precio, Producto, Cliente) = (cliente.ID, producto.ID, cantidad, precio, producto, cliente);

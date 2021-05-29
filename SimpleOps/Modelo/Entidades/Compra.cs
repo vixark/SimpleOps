@@ -39,7 +39,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private Compra() { } // Solo para que EF Core no saque error.
+        private Compra() { } // Solo para que Entity Framework no saque error.
 
         public Compra(Proveedor proveedor, Pedido pedido) : this(proveedor) => (PedidoID, Pedido) = (pedido.ID, pedido);
 

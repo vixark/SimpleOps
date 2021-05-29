@@ -27,7 +27,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private ComprobanteEgreso() : base(LugarMovimientoDinero.Desconocido) { } // Solo para que EF Core no saque error.
+        private ComprobanteEgreso() : base(LugarMovimientoDinero.Desconocido) { } // Solo para que Entity Framework no saque error.
 
         public ComprobanteEgreso(Cliente cliente, LugarMovimientoDinero lugar) : base(cliente, lugar) { }
 

@@ -28,7 +28,7 @@ namespace SimpleOps.Modelo {
 
         #region Constructores
 
-        private ReferenciaProveedor() : base(null, null!) { } // Solo para que EF Core no saque error.
+        private ReferenciaProveedor() : base(null, null!) { } // Solo para que Entity Framework no saque error.
 
         public ReferenciaProveedor(Producto producto, Proveedor proveedor, string referencia) : base(producto, referencia)
             => (ProveedorID, Proveedor) = (proveedor.ID, proveedor);
