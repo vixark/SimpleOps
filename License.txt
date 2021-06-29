@@ -1,3 +1,15 @@
+This file contains the license for SimpleOps®.
+
+For more information about SimpleOps®, see https://www.simpleops.net.
+
+Removing the above two lines is not allowed. 
+
+
+
+===============================================================================
+
+
+
                     GNU AFFERO GENERAL PUBLIC LICENSE
                        Version 3, 19 November 2007
 
