@@ -789,7 +789,7 @@ namespace SimpleOps {
                     if (l.Producto?.TieneBase == false) l.Producto.Base = null; // Necesario porque el Automaper siempre crea el objeto Base.
                 }
                 return cotización;
-
+                
             } catch (Exception) {
                 throw;
             } finally {
