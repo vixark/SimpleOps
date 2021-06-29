@@ -1,6 +1,6 @@
 This file contains the license for SimpleOps®.
 
-For more information about SimpleOps®, see https://www.simpleops.net.
+For more information about SimpleOps®, see https://simpleops.net.
 
 Removing the above two lines is not allowed. 
 
