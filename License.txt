@@ -2,7 +2,9 @@ This file contains the license for SimpleOps®.
 
 For more information about SimpleOps®, see https://simpleops.net.
 
-Removing the above two lines is not allowed. 
+This License does not grant permission to use the trade names, trademarks, service marks, or product names of the Licensor, except as required for reasonable and customary use in describing the origin of the Work and reproducing the content of the NOTICE file.
+
+Removing the above lines is not allowed. 
 
 
 
