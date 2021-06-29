@@ -1,4 +1,6 @@
-This file contains the license for SimpleOps®.
+This file contains the license for SimpleOps®. A free ERP software for small businesses and independents.
+
+Copyright© 2021 Vixark (vixark@outlook.com)
 
 For more information about SimpleOps®, see https://simpleops.net.
 
