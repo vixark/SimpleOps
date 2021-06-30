@@ -1,25 +1,25 @@
 ﻿@* Copyright Notice:
 
-SimpleOps® is a free ERP software for small businesses and independents.
-Copyright© 2021 Vixark (vixark@outlook.com).
-For more information about SimpleOps®, see https://simpleops.net.
+    SimpleOps® is a free ERP software for small businesses and independents.
+    Copyright© 2021 Vixark (vixark@outlook.com).
+    For more information about SimpleOps®, see https://simpleops.net.
 
-This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero
-General Public License as published by the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+    This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero
+    General Public License as published by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY, without even the
-implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public
-License for more details.
+    This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY, without even the
+    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public
+    License for more details.
 
-You should have received a copy of the GNU Affero General Public License along with this program. If not,
-see https://www.gnu.org/licenses.
+    You should have received a copy of the GNU Affero General Public License along with this program. If not,
+    see https://www.gnu.org/licenses.
 
-This License does not grant permission to use the trade names, trademarks, service marks, or product names
-of the Licensor, except as required for reasonable and customary use in describing the origin of the Work
-and reproducing the content of the NOTICE file.
+    This License does not grant permission to use the trade names, trademarks, service marks, or product names
+    of the Licensor, except as required for reasonable and customary use in describing the origin of the Work
+    and reproducing the content of the NOTICE file.
 
-Removing or changing the above text is not allowed. *@
+    Removing or changing the above text is not allowed. *@
 
 
 @* Plantilla usada por todos los documentos, incluye los colores y las clases CSS generales usadas por en las otras plantillas. *@
@@ -29,7 +29,7 @@ Removing or changing the above text is not allowed. *@
 @using SimpleOps.DocumentosGráficos
 
 
-@{ 
+@{
 
     double altoPáginas;
     int totalPáginasConCabezaYPie;
@@ -59,6 +59,15 @@ Removing or changing the above text is not allowed. *@
     var esFacturaONotaCrédito = Model.NombreDocumento == "Factura" || Model.NombreDocumento == "Nota Crédito";
 
     static string APuntos(double número) => $"{número.ToString().Replace(",", ".")}px";
+
+    void AnuncioAplicación(string claseColorLetra) {
+
+        @* Si deseas, puedes eliminar el siguiente div, pero si disfrutas de SimpleOps y quieres apoyarnos, nos ayudarías mucho a su difusión si no lo eliminaras. Si no te gusta la palabra "gratis", elimínala y deja el resto, así también nos sirve para la difusión de la aplicación. *@
+        <div style="font-size: 7px; text-align: right; margin-right: 25px;" class="@claseColorLetra">
+            Generado gratis con SimpleOps®, visita <a href="https://simpleops.net" class="@claseColorLetra">SimpleOps.net</a>.
+        </div>
+
+    } // AnuncioAplicación>
 
 }
 
@@ -136,8 +145,9 @@ Removing or changing the above text is not allowed. *@
 
         </div>
 
-        @if (Model.NombreDocumento != "Catálogo") { 
-        
+
+        @if (Model.NombreDocumento != "Catálogo") {
+
             <div class="pie fc tctr fc-l150 t@(Model.TamañoLetraPie)b">
 
                 @(Model.ModoImpresión ? "<hr />" : "")
@@ -145,7 +155,7 @@ Removing or changing the above text is not allowed. *@
                 <div>
                     <span>@empresa.RazónSocial&nbsp;&nbsp;</span>
                     <span>@empresa.NitCompleto&nbsp;&nbsp;</span>
-                    @if (esFacturaONotaCrédito) { <span>@empresa.TipoContribuyenteTexto</span> }         
+                    @if (esFacturaONotaCrédito) { <span>@empresa.TipoContribuyenteTexto</span> }
                 </div>
 
                 @if (esFacturaONotaCrédito) {
@@ -168,8 +178,16 @@ Removing or changing the above text is not allowed. *@
                     <span>@empresa.MunicipioUbicaciónNombre - Colombia</span>
                 </div>
 
+                @{ AnuncioAplicación("fc-l150"); } 
+
             </div>
 
+        } else {
+
+            if (i == 2) { // Para el catálogo solo se agrega el anuncio de la aplicación en la primera página con productos (la segunda después de la portada) para no saturar el diseño del documento en todas las páginas.
+                AnuncioAplicación("gris-150");
+            }
+    
         }
 
     </div>

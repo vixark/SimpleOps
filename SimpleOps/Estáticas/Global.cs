@@ -56,7 +56,11 @@ namespace SimpleOps {
 
         public const string NombreAplicación = "SimpleOps";
 
-        public const string WebAplicación = "SimpleOps.net";
+        public const string NombreAplicaciónRegistrada = "SimpleOps®"; // Al cambiarlo aquí también se debe cambiar en MarcoPdf.cshtml > AnuncioAplicación().
+
+        public const string WebAplicación = "SimpleOps.net"; // Al cambiarlo aquí también se debe cambiar en MarcoPdf.cshtml > AnuncioAplicación().
+
+        public const string DirecciónWebAplicación = "https://simpleops.net"; // Al cambiarlo aquí también se debe cambiar en MarcoPdf.cshtml > AnuncioAplicación().
 
         public const string CarpetaDatosJson = "Datos JSON";
 
