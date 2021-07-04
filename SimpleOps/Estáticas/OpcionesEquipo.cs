@@ -72,7 +72,7 @@ namespace SimpleOps.Singleton {
         #region Apariencia
 
 
-        public Dictionary<EstadoOrdenCompra, BrochaInformativa> BrochasEstadosOrdenesCompra { get; set; }
+        public Dictionary<EstadoOrdenCompra, BrochaInformativa> BrochasEstadosÓrdenesCompra { get; set; }
             = new Dictionary<EstadoOrdenCompra, BrochaInformativa> {
                 { EstadoOrdenCompra.Lista, BrochaInformativa.Éxito },
                 { EstadoOrdenCompra.EsperandoProducto, BrochaInformativa.Indiferente },

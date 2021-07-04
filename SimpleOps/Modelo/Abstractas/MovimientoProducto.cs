@@ -29,6 +29,7 @@ using System.Text;
 using static SimpleOps.Global;
 using static Vixark.General;
 using SimpleOps.Datos;
+using System.ComponentModel.DataAnnotations;
 
 
 
@@ -79,6 +80,10 @@ namespace SimpleOps.Modelo {
         /// No se almacena en la base de datos, se ignora en <see cref="Contexto.OnModelCreating"/>.
         /// </summary>
         public bool MuestraGratis { get; set; } = false; // Se prefiere el término muestra gratis en vez de regalo u obsequio porque describe más claramente el uso más común que se le da a esta propiedad.
+
+        /// <MaxLength>200</MaxLength>
+        [MaxLength(200)]
+        public Dictionary<string, string> Personalizaciones { get; set; } = new Dictionary<string, string>();
 
         #endregion Propiedades>
 

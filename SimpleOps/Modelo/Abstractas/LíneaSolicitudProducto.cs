@@ -36,7 +36,7 @@ namespace SimpleOps.Modelo {
 
 
     /// <summary>
-    /// Línea de Ordenes de Compra (Clientes) o Pedidos (Proveedores).
+    /// Línea de Órdenes de Compra (Clientes) o Pedidos (Proveedores).
     /// </summary>
     abstract class LíneaSolicitudProducto : Rastreable { // Es Rastreable porque es una entidad modificable y además es necesario disponer de la fecha de creación para calcular los días de cumplimiento.
 
@@ -58,6 +58,10 @@ namespace SimpleOps.Modelo {
         /// Pendiente = 0, Cumplida = 1, Anulada = 2. Puede ser anulado o cumplido individualmente sin anular o cumplir la solicitud completa. No se hace autocalculada para poder mantener los datos de la solucitud al momento de la anulación.
         /// </summary>
         public EstadoSolicitudProducto Estado { get; set; } = EstadoSolicitudProducto.Pendiente;
+
+        /// <MaxLength>200</MaxLength>
+        [MaxLength(200)]
+        public Dictionary<string, string> Personalizaciones { get; set; } = new Dictionary<string, string>();
 
         #endregion Propiedades>
 

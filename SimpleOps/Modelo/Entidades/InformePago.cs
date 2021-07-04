@@ -70,7 +70,7 @@ namespace SimpleOps.Modelo {
 
         public List<Venta> Ventas { get; set; } = new List<Venta>();
 
-        public List<OrdenCompra> OrdenesCompra { get; set; } = new List<OrdenCompra>();
+        public List<OrdenCompra> ÓrdenesCompra { get; set; } = new List<OrdenCompra>();
 
         #endregion Propiedades>
 

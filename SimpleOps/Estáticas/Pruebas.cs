@@ -39,6 +39,7 @@ using RazorEngineCore;
 using SimpleOps.DocumentosGráficos;
 using static SimpleOps.DocumentosGráficos.DocumentosGráficos;
 using AutoMapper;
+using Vixark;
 
 
 
@@ -63,9 +64,10 @@ namespace SimpleOps {
             // GeneraciónCatálogo();
             // IntegraciónAplicacionesTerceros();
             // ImágenesEInformaciónProductos();
+            // LeerYGuardarPersonalizacionesProductos();
             ProductosYProductosBase();
             AtributosProductos();
-            ConsolidaciónAtributosProductoBase();
+            ConsolidaciónAtributosProductoBase();        
 
         } // Ejecutar>
 
@@ -89,7 +91,7 @@ namespace SimpleOps {
             var líneasNotasCréditoVenta = ctx.LíneasNotasCréditoVenta.ToList();
             var líneasNotasDébitoCompra = ctx.LíneasNotasDébitoCompra.ToList();
             var líneasNotasDébitoVenta = ctx.LíneasNotasDébitoVenta.ToList();
-            var líneasOrdenesCompra = ctx.LíneasOrdenesCompra.ToList();
+            var líneasÓrdenesCompra = ctx.LíneasÓrdenesCompra.ToList();
             var líneasPedidos = ctx.LíneasPedidos.ToList();
             var líneasRemisiones = ctx.LíneasRemisiones.ToList();
             var líneasVentas = ctx.LíneasVentas.ToList();
@@ -107,7 +109,7 @@ namespace SimpleOps {
             var notasDébitoCompra = ctx.NotasDébitoCompra.ToList();
             var cotizaciones = ctx.Cotizaciones.ToList();
             var notasDébitoVenta = ctx.NotasDébitoVenta.ToList();
-            var ordenesCompra = ctx.OrdenesCompra.ToList();
+            var órdenesCompra = ctx.ÓrdenesCompra.ToList();
             var pedidos = ctx.Pedidos.ToList();
             var preciosClientes = ctx.PreciosClientes.ToList();
             var preciosProveedores = ctx.PreciosProveedores.ToList();
@@ -886,6 +888,29 @@ namespace SimpleOps {
             }
 
         } // GeneraciónCatálogoIntegración>
+
+
+        public static void LeerYGuardarPersonalizacionesProductos() {
+
+            using var ctx = new Contexto(TipoContexto.Escritura);
+            var productoMás = ctx.ObtenerProducto("+");
+            if (productoMás != null && productoMás.Personalizaciones.Count == 0) {
+                productoMás.Personalizaciones.Add(new TuplaSerializable<string, List<string>>("", new List<string> { "Amarillo", "Rojo", "Verde" }));
+                productoMás.Personalizaciones.Add(new TuplaSerializable<string, List<string>>("", new List<string> { "Marco Dorado", "Marco Plateado"}));
+                productoMás.Personalizaciones.Add(new TuplaSerializable<string, List<string>>("Nombre", new List<string> { "Pedro", "José" }));
+                productoMás.Personalizaciones.Add(new TuplaSerializable<string, List<string>>("Lema", new List<string>()));
+            }
+                       
+            var primeraLíneaOC = ctx.LíneasÓrdenesCompra.FirstOrDefault();
+            if (primeraLíneaOC != null && primeraLíneaOC.Personalizaciones.Count == 0) {
+                primeraLíneaOC.Personalizaciones.Add("Nombre", "David");
+                primeraLíneaOC.Personalizaciones.Add("Color", "Amarillo");
+                primeraLíneaOC.Personalizaciones.Add("Color Marco", "Marco Dorado");
+            }
+
+            ctx.GuardarCambios();
+
+        } // GuardarPersonalizacionesProductos>
 
 
         public static void GenerarCotizaciónIntegración() {

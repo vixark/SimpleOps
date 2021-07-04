@@ -82,7 +82,12 @@ namespace SimpleOps.Modelo {
         /// </summary>
         /// <MaxLength>500</MaxLength>
         [MaxLength(500)]
-        public List<string> Atributos { get; set; } = new List<string>(); // Se consideró la opción de hacer esta lista de tipo AtributoProducto, pero esto implicaría dos escenarios: uno, se perdería la posibilidad de agregar atributos libres o dos, se tendría que agregar una nueva propiedad de lista tipo texto de atributos libres. Para evitar agregar más columnas y complejizar (tal vez inneceseariamente) la tabla producto no se implementó la segunda opción y cómo se quiere permitir los atributos libres, la primera tampoco se consideró. Además, almacenar los atributos con el ID de su valor en la enumeración es peligroso porque un usuario del código poco cuidadoso podría añadir un nuevo elemento a la enumeración AtributosProductos y haría que los valores almacenados en la base de datos apunten a valores de atributos diferentes. También, al tener los atributos almacenados como texto se permite buscar más fácil directamente en la base de datos, por ejemplo se puede buscar Amarillo y se devolverían todos los productos que tengan algún amarillo en sus atributos. Si se usara una lista con enumeraciones esto solo se podría hacer después de cargar todos los productos usando la propiedad Descripción o buscando coincidencias de un ID de enumeración particular (el ID del amarillo), con lo que se perdería la posibilidad de obtener resultados de productos que contengan otros amarillos. Se decidió entonces escribirlos como texto e implementar métodos y funciones auxiliares para mantenerlos estandarizados y no repetidos, ver la región Métodos y Funciones de Atributos. Si es muy importante tener un atributo tipado directamente en la base de datos, se puede considerar crear una propiedad con tipo enumeración para la propiedad requerida y tenerla en cuenta en el cálculo de la descripción, por ejemplo se podría crear la propiedad Talla con valor de una enumeración TallasProductos o se podría crear una columna Colores con valor una lista de enumeración de tipo ColoresProductos y usar estos valores de estos "atributos especiales tipados" para construir la descripción del producto. Aunque como los atributos no solo afectan la descripción si no que son usados en multitud de lugares como la generación de catálogos, fichas, etc, la mejor manera de implementar columnas nuevas con atributos tipados como Talla sería crear una nueva propiedad AtributosEfectivos() que agrupe los atributos de esta propiedad y los otros atributos tipados con su columna propia. Por el momento esto no se considera necesario para el desarrollo general del código. 
+        public List<string> Atributos { get; set; } = new List<string>(); // Se consideró la opción de hacer esta lista de tipo AtributoProducto, pero esto implicaría dos escenarios: uno, se perdería la posibilidad de agregar atributos libres o dos, se tendría que agregar una nueva propiedad de lista tipo texto de atributos libres. Para evitar agregar más columnas y complejizar (tal vez inneceseariamente) la tabla producto no se implementó la segunda opción y cómo se quiere permitir los atributos libres, la primera tampoco se consideró. Además, almacenar los atributos con el ID de su valor en la enumeración es peligroso porque un usuario del código poco cuidadoso podría añadir un nuevo elemento a la enumeración AtributosProductos y haría que los valores almacenados en la base de datos apunten a valores de atributos diferentes. También, al tener los atributos almacenados como texto se permite buscar más fácil directamente en la base de datos, por ejemplo se puede buscar Amarillo y se devolverían todos los productos que tengan algún amarillo en sus atributos. Si se usara una lista con enumeraciones esto solo se podría hacer después de cargar todos los productos usando la propiedad Descripción o buscando coincidencias de un ID de enumeración particular (el ID del amarillo), con lo que se perdería la posibilidad de obtener resultados de productos que contengan otros amarillos. Se decidió entonces escribirlos como texto e implementar métodos y funciones auxiliares para mantenerlos estandarizados y no repetidos, ver la región "Métodos y Funciones de Atributos". Si es muy importante tener un atributo tipado directamente en la base de datos, se puede considerar crear una propiedad con tipo enumeración para la propiedad requerida y tenerla en cuenta en el cálculo de la descripción, por ejemplo se podría crear la propiedad Talla con valor de una enumeración TallasProductos o se podría crear una columna Colores con valor una lista de enumeración de tipo ColoresProductos y usar estos valores de estos "atributos especiales tipados" para construir la descripción del producto. Aunque como los atributos no solo afectan la descripción si no que son usados en multitud de lugares como la generación de catálogos, fichas, etc, la mejor manera de implementar columnas nuevas con atributos tipados como Talla sería crear una nueva propiedad AtributosEfectivos() que agrupe los atributos de esta propiedad y los otros atributos tipados con su columna propia. Por el momento esto no se considera necesario para el desarrollo general del código. 
+
+        /// <MaxLength>2000</MaxLength>
+        [MaxLength(2000)]
+        public List<TuplaSerializable<string, List<string>>> Personalizaciones { get; set; } = new List<TuplaSerializable<string, List<string>>>();
+
 
         /// <summary>
         /// Cantidad en inventario.
@@ -100,7 +105,7 @@ namespace SimpleOps.Modelo {
         public int CantidadMáxima { get; set; }
 
         /// <summary>
-        /// Cantidad reservada por ordenes de compra activas.
+        /// Cantidad reservada por órdenes de compra activas.
         /// </summary>
         public int CantidadReservada { get; set; }
 
@@ -492,7 +497,7 @@ namespace SimpleOps.Modelo {
             : (string.IsNullOrEmpty(DescripciónBase) ? Atributos.ATextoConEspacios() : $"{DescripciónBase} {Atributos.ATextoConEspacios()}"));
 
         /// <summary>
-        /// Cantidad disponible en inventario para ordenes de compra nuevas.
+        /// Cantidad disponible en inventario para órdenes de compra nuevas.
         /// </summary>
         public int CantidadDisponible => Cantidad - CantidadReservada;
 

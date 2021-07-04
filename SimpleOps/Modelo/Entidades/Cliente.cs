@@ -112,7 +112,7 @@ namespace SimpleOps.Modelo {
         public decimal? MínimoRetencionesExtraPropio { get; set; }
 
         /// <summary>
-        /// Desconocida = 0, Ninguna = 1, MuyBaja = 10, Baja = 20, Media = 30, Alta = 40, MuyAlta = 50. Si es desconocida se usan las reglas en opciones. Al programar la asignación de los productos en inventario a las ordenes de compra pendientes se prefieren los clientes de mayor prioridad.
+        /// Desconocida = 0, Ninguna = 1, MuyBaja = 10, Baja = 20, Media = 30, Alta = 40, MuyAlta = 50. Si es desconocida se usan las reglas en opciones. Al programar la asignación de los productos en inventario a las órdenes de compra pendientes se prefieren los clientes de mayor prioridad.
         /// </summary>
         public Prioridad PrioridadPropia { get; set; } = Prioridad.Desconocida;
 

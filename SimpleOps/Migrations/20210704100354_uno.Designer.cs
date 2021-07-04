@@ -9,7 +9,7 @@ using SimpleOps.Datos;
 namespace SimpleOps.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20210528212905_uno")]
+    [Migration("20210704100354_uno")]
     partial class uno
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -745,6 +745,11 @@ namespace SimpleOps.Migrations
                     b.Property<double>("CostoUnitario")
                         .HasColumnType("REAL");
 
+                    b.Property<string>("Personalizaciones")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(200);
+
                     b.Property<double>("Precio")
                         .HasColumnType("REAL");
 
@@ -821,6 +826,11 @@ namespace SimpleOps.Migrations
                     b.Property<double>("CostoUnitario")
                         .HasColumnType("REAL");
 
+                    b.Property<string>("Personalizaciones")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(200);
+
                     b.Property<double>("Precio")
                         .HasColumnType("REAL");
 
@@ -844,6 +854,11 @@ namespace SimpleOps.Migrations
 
                     b.Property<double>("CostoUnitario")
                         .HasColumnType("REAL");
+
+                    b.Property<string>("Personalizaciones")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(200);
 
                     b.Property<double>("Precio")
                         .HasColumnType("REAL");
@@ -869,6 +884,11 @@ namespace SimpleOps.Migrations
                     b.Property<double>("CostoUnitario")
                         .HasColumnType("REAL");
 
+                    b.Property<string>("Personalizaciones")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(200);
+
                     b.Property<double>("Precio")
                         .HasColumnType("REAL");
 
@@ -892,6 +912,11 @@ namespace SimpleOps.Migrations
 
                     b.Property<double>("CostoUnitario")
                         .HasColumnType("REAL");
+
+                    b.Property<string>("Personalizaciones")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(200);
 
                     b.Property<double>("Precio")
                         .HasColumnType("REAL");
@@ -938,6 +963,11 @@ namespace SimpleOps.Migrations
                     b.Property<string>("FechaHoraCumplimiento")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Personalizaciones")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(200);
+
                     b.Property<double>("Precio")
                         .HasColumnType("REAL");
 
@@ -945,7 +975,7 @@ namespace SimpleOps.Migrations
 
                     b.HasIndex("ProductoID");
 
-                    b.ToTable("LíneasOrdenesCompra");
+                    b.ToTable("LíneasÓrdenesCompra");
                 });
 
             modelBuilder.Entity("SimpleOps.Modelo.LíneaPedido", b =>
@@ -983,6 +1013,11 @@ namespace SimpleOps.Migrations
                     b.Property<string>("FechaHoraCumplimiento")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Personalizaciones")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(200);
+
                     b.Property<double>("Precio")
                         .HasColumnType("REAL");
 
@@ -1007,6 +1042,11 @@ namespace SimpleOps.Migrations
                     b.Property<double>("CostoUnitario")
                         .HasColumnType("REAL");
 
+                    b.Property<string>("Personalizaciones")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(200);
+
                     b.Property<double>("Precio")
                         .HasColumnType("REAL");
 
@@ -1030,6 +1070,11 @@ namespace SimpleOps.Migrations
 
                     b.Property<double>("CostoUnitario")
                         .HasColumnType("REAL");
+
+                    b.Property<string>("Personalizaciones")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(200);
 
                     b.Property<double>("Precio")
                         .HasColumnType("REAL");
@@ -1675,7 +1720,7 @@ namespace SimpleOps.Migrations
 
                     b.HasIndex("SedeID");
 
-                    b.ToTable("OrdenesCompra");
+                    b.ToTable("ÓrdenesCompra");
                 });
 
             modelBuilder.Entity("SimpleOps.Modelo.Pedido", b =>
@@ -1911,6 +1956,11 @@ namespace SimpleOps.Migrations
 
                     b.Property<int?>("MaterialEspecíficoID")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Personalizaciones")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(2000);
 
                     b.Property<double?>("PesoUnidadEmpaqueEspecífica")
                         .HasColumnType("REAL");
@@ -3122,7 +3172,7 @@ namespace SimpleOps.Migrations
                         .HasForeignKey("ContactoID");
 
                     b.HasOne("SimpleOps.Modelo.InformePago", "InformePago")
-                        .WithMany("OrdenesCompra")
+                        .WithMany("ÓrdenesCompra")
                         .HasForeignKey("InformePagoID");
 
                     b.HasOne("SimpleOps.Modelo.Sede", "Sede")

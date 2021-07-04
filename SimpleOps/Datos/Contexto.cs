@@ -39,6 +39,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Windows;
 using static SimpleOps.Configuración;
+using Vixark;
 
 
 
@@ -90,7 +91,7 @@ namespace SimpleOps.Datos {
         public DbSet<ReciboCaja> RecibosCaja { get; set; } = null!;
         public DbSet<ComprobanteEgreso> ComprobantesEgresos { get; set; } = null!;
         public DbSet<Pedido> Pedidos { get; set; } = null!;
-        public DbSet<OrdenCompra> OrdenesCompra { get; set; } = null!;
+        public DbSet<OrdenCompra> ÓrdenesCompra { get; set; } = null!;
         public DbSet<Venta> Ventas { get; set; } = null!;
         public DbSet<Compra> Compras { get; set; } = null!;
         public DbSet<Remisión> Remisiones { get; set; } = null!;
@@ -110,7 +111,7 @@ namespace SimpleOps.Datos {
         public DbSet<LíneaNotaDébitoVenta> LíneasNotasDébitoVenta { get; set; } = null!;
         public DbSet<LíneaNotaDébitoCompra> LíneasNotasDébitoCompra { get; set; } = null!;
         public DbSet<LíneaPedido> LíneasPedidos { get; set; } = null!;
-        public DbSet<LíneaOrdenCompra> LíneasOrdenesCompra { get; set; } = null!;
+        public DbSet<LíneaOrdenCompra> LíneasÓrdenesCompra { get; set; } = null!;
         public DbSet<LíneaCotización> LíneasCotizaciones { get; set; } = null!;
         // Líneas de Documentos>
 
@@ -212,6 +213,26 @@ namespace SimpleOps.Datos {
                 .Metadata.SetValueComparer(ComparadorJSON<List<string>>());
             constructor.Entity<Cobro>().Property(c => c.NúmerosFacturas).HasConversion(ConvertidorJSON<List<string>>())
                 .Metadata.SetValueComparer(ComparadorJSON<List<string>>());
+            constructor.Entity<LíneaVenta>().Property(c => c.Personalizaciones).HasConversion(ConvertidorJSON<Dictionary<string, string>>())
+                .Metadata.SetValueComparer(ComparadorJSON<Dictionary<string, string>>());
+            constructor.Entity<LíneaCompra>().Property(c => c.Personalizaciones).HasConversion(ConvertidorJSON<Dictionary<string, string>>())
+                .Metadata.SetValueComparer(ComparadorJSON<Dictionary<string, string>>());
+            constructor.Entity<LíneaNotaCréditoCompra>().Property(c => c.Personalizaciones).HasConversion(ConvertidorJSON<Dictionary<string, string>>())
+                .Metadata.SetValueComparer(ComparadorJSON<Dictionary<string, string>>());
+            constructor.Entity<LíneaNotaCréditoVenta>().Property(c => c.Personalizaciones).HasConversion(ConvertidorJSON<Dictionary<string, string>>())
+                .Metadata.SetValueComparer(ComparadorJSON<Dictionary<string, string>>());
+            constructor.Entity<LíneaNotaDébitoVenta>().Property(c => c.Personalizaciones).HasConversion(ConvertidorJSON<Dictionary<string, string>>())
+                .Metadata.SetValueComparer(ComparadorJSON<Dictionary<string, string>>());
+            constructor.Entity<LíneaNotaDébitoCompra>().Property(c => c.Personalizaciones).HasConversion(ConvertidorJSON<Dictionary<string, string>>())
+                .Metadata.SetValueComparer(ComparadorJSON<Dictionary<string, string>>());
+            constructor.Entity<LíneaOrdenCompra>().Property(c => c.Personalizaciones).HasConversion(ConvertidorJSON<Dictionary<string, string>>())
+                .Metadata.SetValueComparer(ComparadorJSON<Dictionary<string, string>>());
+            constructor.Entity<LíneaPedido>().Property(c => c.Personalizaciones).HasConversion(ConvertidorJSON<Dictionary<string, string>>())
+                .Metadata.SetValueComparer(ComparadorJSON<Dictionary<string, string>>());
+            constructor.Entity<LíneaRemisión>().Property(c => c.Personalizaciones).HasConversion(ConvertidorJSON<Dictionary<string, string>>())
+                .Metadata.SetValueComparer(ComparadorJSON<Dictionary<string, string>>());
+            constructor.Entity<Producto>().Property(c=> c.Personalizaciones).HasConversion(ConvertidorJSON<List<TuplaSerializable<string, List<string>>>>())
+                .Metadata.SetValueComparer(ComparadorJSON<List<TuplaSerializable<string, List<string>>>>());
 
             if (UsarSQLite && GuardarFechaReducidaSQLite) {
 
@@ -244,7 +265,7 @@ namespace SimpleOps.Datos {
 
             // Conversión de Datos>
 
-            // Propiedades Ignoradas -  Todas se pueden establecer con el atributo [NotMapped] excepto las que son creadas en las clases abstractas que se deben configurar manualmente en cada entidad.
+            // Propiedades Ignoradas - Todas se pueden establecer con el atributo [NotMapped] excepto las que son creadas en las clases abstractas que se deben configurar manualmente en cada entidad.
 
             constructor.Entity<Cliente>().Ignore(c => c.DirecciónCompleta);
             constructor.Entity<Proveedor>().Ignore(p => p.DirecciónCompleta);
@@ -327,7 +348,7 @@ namespace SimpleOps.Datos {
             constructor.Entity<InventarioConsignación>().HasKey(ic => new { ic.ProductoID, ic.ClienteID });
             // Clave Doble Principal>
 
-            // Unicidad de Pareja No Clave Principal -  No se usan como dobles claves principales porque no es conveniente una clave doble relacionada en otras tablas (LíneasOrdenesCompra, OrdenCompra, etc). 
+            // Unicidad de Pareja No Clave Principal -  No se usan como dobles claves principales porque no es conveniente una clave doble relacionada en otras tablas (LíneasÓrdenesCompra, OrdenCompra, etc). 
             constructor.Entity<OrdenCompra>().HasAlternateKey(oc => new { oc.Número, oc.ClienteID });
             constructor.Entity<Sede>().HasAlternateKey(s => new { s.Nombre, s.ClienteID });
             constructor.Entity<Municipio>().HasAlternateKey(s => new { s.Nombre, s.Departamento });
@@ -346,7 +367,8 @@ namespace SimpleOps.Datos {
                 var tipoClr = tipoEntidad.ClrType;
                 var atributo = tipoClr.GetCustomAttribute<ControlInserciónAttribute>();
                 if (atributo == null) {
-                    throw new Exception($"No se ha establecido el atributo obligatorio ControlInserción para la entidad {tipoClr.Name}");
+                    if (tipoClr.Name != "TuplaSerializable`2") // Se omite este tipo porque es un tipo de una propiedad (Producto.Personalizaciones) que se serializa a texto y no es una entidad que tenga su propia tabla en la base de datos.
+                        throw new Exception($"No se ha establecido el atributo obligatorio ControlInserción para la entidad {tipoClr.Name}");
                 } else {
                     if (atributo.Tipo == ControlConcurrencia.Optimista && !typeof(IActualizable).IsAssignableFrom(tipoClr.BaseType))
                         throw new Exception($"La entidad {tipoClr.Name} no implementa IActualizable y tiene atributo de control de inserción optimista. " +
@@ -807,7 +829,7 @@ namespace SimpleOps.Datos {
                         "LíneasNotasCréditoVenta" => ctx.LíneasNotasCréditoVenta.Any(),
                         "LíneasNotasDébitoCompra" => ctx.LíneasNotasDébitoCompra.Any(),
                         "LíneasNotasDébitoVenta" => ctx.LíneasNotasDébitoVenta.Any(),
-                        "LíneasOrdenesCompra" => ctx.LíneasOrdenesCompra.Any(),
+                        "LíneasÓrdenesCompra" => ctx.LíneasÓrdenesCompra.Any(),
                         "LíneasPedidos" => ctx.LíneasPedidos.Any(),
                         "LíneasRemisiones" => ctx.LíneasRemisiones.Any(),
                         "LíneasVentas" => ctx.LíneasVentas.Any(),
@@ -825,7 +847,7 @@ namespace SimpleOps.Datos {
                         "NotasDébitoCompra" => ctx.NotasDébitoCompra.Any(),
                         "Cotizaciones" =>  ctx.Cotizaciones.Any(),
                         "NotasDébitoVenta" => ctx.NotasDébitoVenta.Any(),
-                        "OrdenesCompra" => ctx.OrdenesCompra.Any(),
+                        "ÓrdenesCompra" => ctx.ÓrdenesCompra.Any(),
                         "Pedidos" => ctx.Pedidos.Any(),
                         "PreciosClientes" => ctx.PreciosClientes.Any(),
                         "PreciosProveedores" => ctx.PreciosProveedores.Any(),
@@ -872,7 +894,7 @@ namespace SimpleOps.Datos {
                         "LíneasNotasCréditoVenta" => cargarJson<LíneaNotaCréditoVenta>(nombreTabla),
                         "LíneasNotasDébitoCompra" => cargarJson<LíneaNotaDébitoCompra>(nombreTabla),
                         "LíneasNotasDébitoVenta" => cargarJson<LíneaNotaDébitoVenta>(nombreTabla),
-                        "LíneasOrdenesCompra" => cargarJson<LíneaOrdenCompra>(nombreTabla),
+                        "LíneasÓrdenesCompra" => cargarJson<LíneaOrdenCompra>(nombreTabla),
                         "LíneasPedidos" => cargarJson<LíneaPedido>(nombreTabla),
                         "LíneasRemisiones" => cargarJson<LíneaRemisión>(nombreTabla),
                         "LíneasVentas" => cargarJson<LíneaVenta>(nombreTabla),
@@ -890,7 +912,7 @@ namespace SimpleOps.Datos {
                         "NotasDébitoCompra" => cargarJson<NotaDébitoCompra>(nombreTabla),
                         "NotasDébitoVenta" => cargarJson<NotaDébitoVenta>(nombreTabla),
                         "Cotizaciones" => cargarJson<Cotización>(nombreTabla),
-                        "OrdenesCompra" => cargarJson<OrdenCompra>(nombreTabla),
+                        "ÓrdenesCompra" => cargarJson<OrdenCompra>(nombreTabla),
                         "Pedidos" => cargarJson<Pedido>(nombreTabla),
                         "PreciosClientes" => cargarJson<PrecioCliente>(nombreTabla),
                         "PreciosProveedores" => cargarJson<PrecioProveedor>(nombreTabla),
@@ -1086,19 +1108,19 @@ namespace SimpleOps.Datos {
 
 
         /// <summary>
-        /// Consulta las ordenes de compra pendientes y actualiza la FechaHoraCreación usando las líneas.
+        /// Consulta las órdenes de compra pendientes y actualiza la FechaHoraCreación usando las líneas.
         /// </summary>
-        public List<OrdenCompra> ObtenerOrdenesCompraPendientes() {
+        public List<OrdenCompra> ObtenerÓrdenesCompraPendientes() {
 
-            var ordenesCompra
-                = OrdenesCompra.Where(oc => oc.Estado == EstadoSolicitudProducto.Pendiente).Include(oc => oc.Cliente).Include(oc => oc.Líneas).ToList();
-            foreach (var ordenCompra in ordenesCompra) {
+            var órdenesCompra
+                = ÓrdenesCompra.Where(oc => oc.Estado == EstadoSolicitudProducto.Pendiente).Include(oc => oc.Cliente).Include(oc => oc.Líneas).ToList();
+            foreach (var ordenCompra in órdenesCompra) {
                 if (ordenCompra.Líneas != null && ordenCompra.Líneas.Count > 0)
                     ordenCompra.FechaHoraCreación = ordenCompra.Líneas.Min(ocd => ocd.FechaHoraCreación);
             }
-            return ordenesCompra;
+            return órdenesCompra;
 
-        } // ObtenerOrdenesCompraPendientes>
+        } // ObtenerÓrdenesCompraPendientes>
 
 
         /// <summary>

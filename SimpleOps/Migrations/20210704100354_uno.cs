@@ -1,28 +1,4 @@
-﻿// Copyright Notice:
-//
-// SimpleOps® is a free ERP software for small businesses and independents.
-// Copyright© 2021 Vixark (vixark@outlook.com).
-// For more information about SimpleOps®, see https://simpleops.net.
-//
-// This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero
-// General Public License as published by the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY, without even the
-// implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public
-// License for more details.
-//
-// You should have received a copy of the GNU Affero General Public License along with this program. If not,
-// see https://www.gnu.org/licenses.
-//
-// This License does not grant permission to use the trade names, trademarks, service marks, or product names
-// of the Licensor, except as required for reasonable and customary use in describing the origin of the Work
-// and reproducing the content of the NOTICE file.
-//
-// Removing or changing the above text is not allowed.
-//
-
-using System;
+﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SimpleOps.Migrations
@@ -842,6 +818,7 @@ namespace SimpleOps.Migrations
                     BaseID = table.Column<int>(nullable: true),
                     TieneBase = table.Column<bool>(nullable: false),
                     Atributos = table.Column<string>(maxLength: 500, nullable: false),
+                    Personalizaciones = table.Column<string>(maxLength: 2000, nullable: false),
                     Cantidad = table.Column<int>(nullable: false),
                     CantidadMínima = table.Column<int>(nullable: false),
                     CantidadMáxima = table.Column<int>(nullable: false),
@@ -1052,7 +1029,7 @@ namespace SimpleOps.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "OrdenesCompra",
+                name: "ÓrdenesCompra",
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
@@ -1074,28 +1051,28 @@ namespace SimpleOps.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrdenesCompra", x => x.ID);
-                    table.UniqueConstraint("AK_OrdenesCompra_Número_ClienteID", x => new { x.Número, x.ClienteID });
+                    table.PrimaryKey("PK_ÓrdenesCompra", x => x.ID);
+                    table.UniqueConstraint("AK_ÓrdenesCompra_Número_ClienteID", x => new { x.Número, x.ClienteID });
                     table.ForeignKey(
-                        name: "FK_OrdenesCompra_Clientes_ClienteID",
+                        name: "FK_ÓrdenesCompra_Clientes_ClienteID",
                         column: x => x.ClienteID,
                         principalTable: "Clientes",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_OrdenesCompra_Contactos_ContactoID",
+                        name: "FK_ÓrdenesCompra_Contactos_ContactoID",
                         column: x => x.ContactoID,
                         principalTable: "Contactos",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_OrdenesCompra_InformesPagos_InformePagoID",
+                        name: "FK_ÓrdenesCompra_InformesPagos_InformePagoID",
                         column: x => x.InformePagoID,
                         principalTable: "InformesPagos",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_OrdenesCompra_Sedes_SedeID",
+                        name: "FK_ÓrdenesCompra_Sedes_SedeID",
                         column: x => x.SedeID,
                         principalTable: "Sedes",
                         principalColumn: "ID",
@@ -1171,7 +1148,8 @@ namespace SimpleOps.Migrations
                     Cantidad = table.Column<int>(nullable: false),
                     CantidadEntregada = table.Column<int>(nullable: false),
                     FechaHoraCumplimiento = table.Column<string>(nullable: true),
-                    Estado = table.Column<byte>(nullable: false)
+                    Estado = table.Column<byte>(nullable: false),
+                    Personalizaciones = table.Column<string>(maxLength: 200, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1340,7 +1318,8 @@ namespace SimpleOps.Migrations
                     CompraID = table.Column<int>(nullable: false),
                     Cantidad = table.Column<int>(nullable: false),
                     Precio = table.Column<double>(nullable: false),
-                    CostoUnitario = table.Column<double>(nullable: false)
+                    CostoUnitario = table.Column<double>(nullable: false),
+                    Personalizaciones = table.Column<string>(maxLength: 200, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1450,7 +1429,7 @@ namespace SimpleOps.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "LíneasOrdenesCompra",
+                name: "LíneasÓrdenesCompra",
                 columns: table => new
                 {
                     ProductoID = table.Column<int>(nullable: false),
@@ -1463,19 +1442,20 @@ namespace SimpleOps.Migrations
                     Cantidad = table.Column<int>(nullable: false),
                     CantidadEntregada = table.Column<int>(nullable: false),
                     FechaHoraCumplimiento = table.Column<string>(nullable: true),
-                    Estado = table.Column<byte>(nullable: false)
+                    Estado = table.Column<byte>(nullable: false),
+                    Personalizaciones = table.Column<string>(maxLength: 200, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_LíneasOrdenesCompra", x => new { x.OrdenCompraID, x.ProductoID });
+                    table.PrimaryKey("PK_LíneasÓrdenesCompra", x => new { x.OrdenCompraID, x.ProductoID });
                     table.ForeignKey(
-                        name: "FK_LíneasOrdenesCompra_OrdenesCompra_OrdenCompraID",
+                        name: "FK_LíneasÓrdenesCompra_ÓrdenesCompra_OrdenCompraID",
                         column: x => x.OrdenCompraID,
-                        principalTable: "OrdenesCompra",
+                        principalTable: "ÓrdenesCompra",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_LíneasOrdenesCompra_Productos_ProductoID",
+                        name: "FK_LíneasÓrdenesCompra_Productos_ProductoID",
                         column: x => x.ProductoID,
                         principalTable: "Productos",
                         principalColumn: "ID",
@@ -1531,9 +1511,9 @@ namespace SimpleOps.Migrations
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Ventas_OrdenesCompra_OrdenCompraID",
+                        name: "FK_Ventas_ÓrdenesCompra_OrdenCompraID",
                         column: x => x.OrdenCompraID,
-                        principalTable: "OrdenesCompra",
+                        principalTable: "ÓrdenesCompra",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -1552,7 +1532,8 @@ namespace SimpleOps.Migrations
                     NotaCréditoCompraID = table.Column<int>(nullable: false),
                     Cantidad = table.Column<int>(nullable: false),
                     Precio = table.Column<double>(nullable: false),
-                    CostoUnitario = table.Column<double>(nullable: false)
+                    CostoUnitario = table.Column<double>(nullable: false),
+                    Personalizaciones = table.Column<string>(maxLength: 200, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1579,7 +1560,8 @@ namespace SimpleOps.Migrations
                     NotaDébitoCompraID = table.Column<int>(nullable: false),
                     Cantidad = table.Column<int>(nullable: false),
                     Precio = table.Column<double>(nullable: false),
-                    CostoUnitario = table.Column<double>(nullable: false)
+                    CostoUnitario = table.Column<double>(nullable: false),
+                    Personalizaciones = table.Column<string>(maxLength: 200, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1606,7 +1588,8 @@ namespace SimpleOps.Migrations
                     VentaID = table.Column<int>(nullable: false),
                     Cantidad = table.Column<int>(nullable: false),
                     Precio = table.Column<double>(nullable: false),
-                    CostoUnitario = table.Column<double>(nullable: false)
+                    CostoUnitario = table.Column<double>(nullable: false),
+                    Personalizaciones = table.Column<string>(maxLength: 200, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1742,9 +1725,9 @@ namespace SimpleOps.Migrations
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Remisiones_OrdenesCompra_OrdenCompraID",
+                        name: "FK_Remisiones_ÓrdenesCompra_OrdenCompraID",
                         column: x => x.OrdenCompraID,
-                        principalTable: "OrdenesCompra",
+                        principalTable: "ÓrdenesCompra",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -1763,7 +1746,8 @@ namespace SimpleOps.Migrations
                     NotaCréditoVentaID = table.Column<int>(nullable: false),
                     Cantidad = table.Column<int>(nullable: false),
                     Precio = table.Column<double>(nullable: false),
-                    CostoUnitario = table.Column<double>(nullable: false)
+                    CostoUnitario = table.Column<double>(nullable: false),
+                    Personalizaciones = table.Column<string>(maxLength: 200, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1790,7 +1774,8 @@ namespace SimpleOps.Migrations
                     NotaDébitoVentaID = table.Column<int>(nullable: false),
                     Cantidad = table.Column<int>(nullable: false),
                     Precio = table.Column<double>(nullable: false),
-                    CostoUnitario = table.Column<double>(nullable: false)
+                    CostoUnitario = table.Column<double>(nullable: false),
+                    Personalizaciones = table.Column<string>(maxLength: 200, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1817,7 +1802,8 @@ namespace SimpleOps.Migrations
                     RemisiónID = table.Column<int>(nullable: false),
                     Cantidad = table.Column<int>(nullable: false),
                     Precio = table.Column<double>(nullable: false),
-                    CostoUnitario = table.Column<double>(nullable: false)
+                    CostoUnitario = table.Column<double>(nullable: false),
+                    Personalizaciones = table.Column<string>(maxLength: 200, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -2004,8 +1990,8 @@ namespace SimpleOps.Migrations
                 column: "ProductoID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_LíneasOrdenesCompra_ProductoID",
-                table: "LíneasOrdenesCompra",
+                name: "IX_LíneasÓrdenesCompra_ProductoID",
+                table: "LíneasÓrdenesCompra",
                 column: "ProductoID");
 
             migrationBuilder.CreateIndex(
@@ -2106,23 +2092,23 @@ namespace SimpleOps.Migrations
                 column: "VentaID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrdenesCompra_ClienteID",
-                table: "OrdenesCompra",
+                name: "IX_ÓrdenesCompra_ClienteID",
+                table: "ÓrdenesCompra",
                 column: "ClienteID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrdenesCompra_ContactoID",
-                table: "OrdenesCompra",
+                name: "IX_ÓrdenesCompra_ContactoID",
+                table: "ÓrdenesCompra",
                 column: "ContactoID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrdenesCompra_InformePagoID",
-                table: "OrdenesCompra",
+                name: "IX_ÓrdenesCompra_InformePagoID",
+                table: "ÓrdenesCompra",
                 column: "InformePagoID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrdenesCompra_SedeID",
-                table: "OrdenesCompra",
+                name: "IX_ÓrdenesCompra_SedeID",
+                table: "ÓrdenesCompra",
                 column: "SedeID");
 
             migrationBuilder.CreateIndex(
@@ -2387,7 +2373,7 @@ namespace SimpleOps.Migrations
                 name: "LíneasNotasDébitoVenta");
 
             migrationBuilder.DropTable(
-                name: "LíneasOrdenesCompra");
+                name: "LíneasÓrdenesCompra");
 
             migrationBuilder.DropTable(
                 name: "LíneasPedidos");
@@ -2465,7 +2451,7 @@ namespace SimpleOps.Migrations
                 name: "Pedidos");
 
             migrationBuilder.DropTable(
-                name: "OrdenesCompra");
+                name: "ÓrdenesCompra");
 
             migrationBuilder.DropTable(
                 name: "RecibosCaja");

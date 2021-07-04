@@ -24,43 +24,50 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Text;
-using System.Windows;
-using System.Windows.Data;
-using static SimpleOps.Global;
-using static Vixark.General;
 
 
 
-namespace SimpleOps.Interfaz {
+namespace Vixark {
 
 
 
     /// <summary>
-    /// Convierte un estado de una orden de compra a una brocha
-    /// con un color que lo represente.
+    /// Clase auxiliar que reemplaza la <see cref="Tuple{T1, T2}"/> para propósitos de serialización. Es necesario usarla porque 
+    /// la serialización exige una clase con constructor sin parámetros. Ver https://stackoverflow.com/a/13739409/8330412.
     /// </summary>
-    class EstadoOrdenCompraABrocha : IValueConverter {
+    class TuplaSerializable<T1, T2> {
 
 
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
+        #region Propiedades
 
-            var sufijoNombreBrocha = parameter?.ToString();
-            return value switch {
-                null => Visibility.Collapsed,
-                EstadoOrdenCompra estado => ObtenerBrocha(Equipo.BrochasEstadosÓrdenesCompra[estado], sufijoNombreBrocha),
-                _ => throw new Exception(CasoNoConsiderado(value?.ToString())),
-            };
+        public T1 I1 { get; set; } = default!; // Se usa el nombre reducido I1 para reducir el tamaño del texto serializado.
 
-        } // Convert>
+        public T2 I2 { get; set; } = default!; // Se usa el nombre reducido I2 para reducir el tamaño del texto serializado.
+
+        #endregion Propiedades>
 
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
+        #region Constructores
+
+        public TuplaSerializable() { }
+
+        public TuplaSerializable(T1 i1, T2 i2) => (I1, I2) = (i1, i2);
+
+        #endregion Constructores.
 
 
-    } // EstadoOrdenCompraABrocha>
+        #region Operadores
+
+        public static implicit operator TuplaSerializable<T1, T2>(Tuple<T1, T2> t) => new TuplaSerializable<T1, T2>() { I1 = t.Item1, I2 = t.Item2 };
+
+        public static implicit operator Tuple<T1, T2>(TuplaSerializable<T1, T2> t) => Tuple.Create(t.I1, t.I2);
+
+        #endregion Operadores>
+
+
+    } // TuplaSerializable>
 
 
 
-} // SimpleOps.Interfaz>
+} // Vixark>

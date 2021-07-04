@@ -56,7 +56,7 @@
         <li class="table"><a href="#L%C3%ADneasNotasCr%C3%A9ditoVenta">LíneasNotasCréditoVenta</a></li>
         <li class="table"><a href="#L%C3%ADneasNotasD%C3%A9bitoCompra">LíneasNotasDébitoCompra</a></li>
         <li class="table"><a href="#L%C3%ADneasNotasD%C3%A9bitoVenta">LíneasNotasDébitoVenta</a></li>
-        <li class="table"><a href="#L%C3%ADneasOrdenesCompra">LíneasOrdenesCompra</a></li>
+        <li class="table"><a href="#L%C3%ADneas%C3%93rdenesCompra">LíneasÓrdenesCompra</a></li>
         <li class="table"><a href="#L%C3%ADneasPedidos">LíneasPedidos</a></li>
         <li class="table"><a href="#L%C3%ADneasRemisiones">LíneasRemisiones</a></li>
         <li class="table"><a href="#L%C3%ADneasVentas">LíneasVentas</a></li>
@@ -70,7 +70,7 @@
         <li class="table"><a href="#NotasCr%C3%A9ditoVenta">NotasCréditoVenta</a></li>
         <li class="table"><a href="#NotasD%C3%A9bitoCompra">NotasDébitoCompra</a></li>
         <li class="table"><a href="#NotasD%C3%A9bitoVenta">NotasDébitoVenta</a></li>
-        <li class="table"><a href="#OrdenesCompra">OrdenesCompra</a></li>
+        <li class="table"><a href="#%C3%93rdenesCompra">ÓrdenesCompra</a></li>
         <li class="table"><a href="#Pedidos">Pedidos</a></li>
         <li class="table"><a href="#PreciosClientes">PreciosClientes</a></li>
         <li class="table"><a href="#PreciosProveedores">PreciosProveedores</a></li>
@@ -112,11 +112,11 @@
           </tr>
           <tr>
             <td class="type">DatabaseSize</td>
-            <td class="type">772 KB</td>
+            <td class="type">22,566 MB</td>
           </tr>
           <tr>
             <td class="type">Created</td>
-            <td class="type">30/04/2021 2:19 AM</td>
+            <td class="type">04/07/2021 5:33 AM</td>
           </tr>
         </tbody>
       </table>
@@ -224,7 +224,7 @@
             </td>
           </tr>
           <tr>
-            <th>Nombre<td></td><td>50</td></th>
+            <th>Nombre<td>Como el nombre del atributo se usa para diferenciar productos específicos entre sí en los documentos gráficos, este debe ser descriptivo             por si mismo sin necesidad del tipo de atributo. Por ejemplo, un nombre de atributo correcto es "Talla 10", en vez de "10", otro             atributo correcto sería "Rayas Rojas", en vez de "Rojas".</td><td>50</td></th>
             <td class="type">text</td>
             <td class="null">No</td>
             <td>
@@ -639,7 +639,7 @@
             </td>
           </tr>
           <tr>
-            <th>PrioridadPropia<td>Desconocida = 0, Ninguna = 1, MuyBaja = 10, Baja = 20, Media = 30, Alta = 40, MuyAlta = 50. Si es desconocida se usan las reglas en opciones. Al programar la asignación de los productos en inventario a las ordenes de compra pendientes se prefieren los clientes de mayor prioridad.</td><td></td></th>
+            <th>PrioridadPropia<td>Desconocida = 0, Ninguna = 1, MuyBaja = 10, Baja = 20, Media = 30, Alta = 40, MuyAlta = 50. Si es desconocida se usan las reglas en opciones. Al programar la asignación de los productos en inventario a las órdenes de compra pendientes se prefieren los clientes de mayor prioridad.</td><td></td></th>
             <td class="type">bigint</td>
             <td class="null">No</td>
             <td>
@@ -1255,7 +1255,13 @@
             <th>ClienteID<td></td><td></td></th>
             <td class="type">bigint</td>
             <td class="null">No</td>
-            <td><span class="flag" title="FK_Cotizaciones_0_0">R:  <a href="#Clientes">Clientes</a>.ID</span></td>
+            <td><span class="flag" title="FK_Cotizaciones_1_0">R:  <a href="#Clientes">Clientes</a>.ID</span></td>
+          </tr>
+          <tr>
+            <th>ContactoID<td></td><td></td></th>
+            <td class="type">bigint</td>
+            <td class="null">Sí</td>
+            <td><span class="flag" title="FK_Cotizaciones_0_0">R:  <a href="#Contactos">Contactos</a>.ID</span></td>
           </tr>
           <tr>
             <th>Tipo<td>Cotización o Catálogo. Al usar Catálogo, permite registrar cuándo se le envió el catálogo a un cliente. En estos casos             puede ser vacío.</td><td></td></th>
@@ -1457,6 +1463,13 @@
             <td>
             </td>
           </tr>
+          <tr>
+            <th>Personalizaciones<td></td><td>200</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -1595,6 +1608,13 @@
             <td>
             </td>
           </tr>
+          <tr>
+            <th>Personalizaciones<td></td><td>200</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -1639,6 +1659,13 @@
           <tr>
             <th>CostoUnitario<td></td><td></td></th>
             <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Personalizaciones<td></td><td>200</td></th>
+            <td class="type">text</td>
             <td class="null">No</td>
             <td>
             </td>
@@ -1691,6 +1718,13 @@
             <td>
             </td>
           </tr>
+          <tr>
+            <th>Personalizaciones<td></td><td>200</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -1739,11 +1773,18 @@
             <td>
             </td>
           </tr>
+          <tr>
+            <th>Personalizaciones<td></td><td>200</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
     <div class="table">
-      <h2 id="LíneasOrdenesCompra"><a href="#toc" class="tocref">⇧</a>Table LíneasOrdenesCompra</h2><div style="margin-bottom:20px">Línea de una orden de compra.</div>
+      <h2 id="LíneasÓrdenesCompra"><a href="#toc" class="tocref">⇧</a>Table LíneasÓrdenesCompra</h2><div style="margin-bottom:20px">Línea de una orden de compra.</div>
       <table>
         <thead>
           <tr>
@@ -1755,16 +1796,16 @@
         </thead>
         <tbody>
           <tr>
-            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_LíneasOrdenesCompra_1"></span>ProductoID<td></td><td></td></th>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_LíneasÓrdenesCompra_1"></span>ProductoID<td></td><td></td></th>
             <td class="type">bigint</td>
             <td class="null">No</td>
-            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_LíneasOrdenesCompra_0_0">R:  <a href="#Productos">Productos</a>.ID</span></td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_LíneasÓrdenesCompra_0_0">R:  <a href="#Productos">Productos</a>.ID</span></td>
           </tr>
           <tr>
-            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_LíneasOrdenesCompra_1"></span>OrdenCompraID<td></td><td></td></th>
+            <th><span class="pk" title="PRIMARY KEY sqlite_autoindex_LíneasÓrdenesCompra_1"></span>OrdenCompraID<td></td><td></td></th>
             <td class="type">bigint</td>
             <td class="null">No</td>
-            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_LíneasOrdenesCompra_1_0">R:  <a href="#OrdenesCompra">OrdenesCompra</a>.ID</span></td>
+            <td><span class="flag">IDENTITY (1,1)</span><span class="flag" title="FK_LíneasÓrdenesCompra_1_0">R:  <a href="#%C3%93rdenesCompra">ÓrdenesCompra</a>.ID</span></td>
           </tr>
           <tr>
             <th>CreadorID<td></td><td></td></th>
@@ -1825,6 +1866,13 @@
           <tr>
             <th>Estado<td>Pendiente = 0, Cumplida = 1, Anulada = 2. Puede ser anulado o cumplido individualmente sin anular o cumplir la solicitud completa. No se hace autocalculada para poder mantener los datos de la solucitud al momento de la anulación.</td><td></td></th>
             <td class="type">bigint</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Personalizaciones<td></td><td>200</td></th>
+            <td class="type">text</td>
             <td class="null">No</td>
             <td>
             </td>
@@ -1919,6 +1967,13 @@
             <td>
             </td>
           </tr>
+          <tr>
+            <th>Personalizaciones<td></td><td>200</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -1967,6 +2022,13 @@
             <td>
             </td>
           </tr>
+          <tr>
+            <th>Personalizaciones<td></td><td>200</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -2011,6 +2073,13 @@
           <tr>
             <th>CostoUnitario<td></td><td></td></th>
             <td class="type">real (53, 0)</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Personalizaciones<td></td><td>200</td></th>
+            <td class="type">text</td>
             <td class="null">No</td>
             <td>
             </td>
@@ -3195,7 +3264,7 @@
       </table>
     </div>
     <div class="table">
-      <h2 id="OrdenesCompra"><a href="#toc" class="tocref">⇧</a>Table OrdenesCompra</h2><div style="margin-bottom:20px">Solicitud de producto de un cliente.</div>
+      <h2 id="ÓrdenesCompra"><a href="#toc" class="tocref">⇧</a>Table ÓrdenesCompra</h2><div style="margin-bottom:20px">Solicitud de producto de un cliente.</div>
       <table>
         <thead>
           <tr>
@@ -3207,7 +3276,7 @@
         </thead>
         <tbody>
           <tr>
-            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_OrdenesCompra"></span>ID<td></td><td></td></th>
+            <th><span class="pk" title="PRIMARY KEY sqlite_master_PK_ÓrdenesCompra"></span>ID<td></td><td></td></th>
             <td class="type">bigint</td>
             <td class="null">No</td>
             <td><span class="flag">IDENTITY (1,1)</span></td>
@@ -3237,7 +3306,7 @@
             <th>ContactoID<td></td><td></td></th>
             <td class="type">bigint</td>
             <td class="null">Sí</td>
-            <td><span class="flag" title="FK_OrdenesCompra_2_0">R:  <a href="#Contactos">Contactos</a>.ID</span></td>
+            <td><span class="flag" title="FK_ÓrdenesCompra_2_0">R:  <a href="#Contactos">Contactos</a>.ID</span></td>
           </tr>
           <tr>
             <th>Estado<td>Pendiente = 0, Cumplida = 1, Anulada = 2.</td><td></td></th>
@@ -3257,7 +3326,7 @@
             <th>ClienteID<td></td><td></td></th>
             <td class="type">bigint</td>
             <td class="null">No</td>
-            <td><span class="flag" title="FK_OrdenesCompra_3_0">R:  <a href="#Clientes">Clientes</a>.ID</span></td>
+            <td><span class="flag" title="FK_ÓrdenesCompra_3_0">R:  <a href="#Clientes">Clientes</a>.ID</span></td>
           </tr>
           <tr>
             <th>Número<td>Código alfanumérico identificador de la orden de compra. Único para cada cliente.</td><td>30</td></th>
@@ -3270,7 +3339,7 @@
             <th>SedeID<td></td><td></td></th>
             <td class="type">bigint</td>
             <td class="null">Sí</td>
-            <td><span class="flag" title="FK_OrdenesCompra_0_0">R:  <a href="#Sedes">Sedes</a>.ID</span></td>
+            <td><span class="flag" title="FK_ÓrdenesCompra_0_0">R:  <a href="#Sedes">Sedes</a>.ID</span></td>
           </tr>
           <tr>
             <th>EnviadaProforma<td></td><td></td></th>
@@ -3304,7 +3373,7 @@
             <th>InformePagoID<td></td><td></td></th>
             <td class="type">bigint</td>
             <td class="null">Sí</td>
-            <td><span class="flag" title="FK_OrdenesCompra_1_0">R:  <a href="#InformesPagos">InformesPagos</a>.ID</span></td>
+            <td><span class="flag" title="FK_ÓrdenesCompra_1_0">R:  <a href="#InformesPagos">InformesPagos</a>.ID</span></td>
           </tr>
         </tbody>
       </table>
@@ -3568,7 +3637,14 @@
             </td>
           </tr>
           <tr>
-            <th>Atributos<td>que diferencian productos que comparten el mismo producto base. Por ejemplo, puede tener atributos Talla XL             y Verde. Los atributos se agregan al final de la descripción del producto base para formar la descripción del producto. Preferiblemente            no se debe modificar este objeto directamente, si no hacerlo mediante  y             para evitar duplicados y mantener estandarizados los valores mediante el uso            de los valores en la tabla AtributosProductos. No confundir con , las características pueden ser compartidas            por los productos que tienen el mismo producto base.</td><td>500</td></th>
+            <th>Atributos<td>que diferencian productos que comparten el mismo producto base. Por ejemplo, puede tener atributos Talla XL             y Verde. Los atributos se agregan al final de la descripción del producto base para formar la descripción del producto. Preferiblemente            no se debe modificar este objeto directamente, si no hacerlo mediante  y             para evitar duplicados y mantenerlos con la capitalización correcta de la tabla AtributosProductos.             No se debe confundir con , las características normalmente se agregan al producto base y pueden ser compartidas            por los productos específicos que tienen el mismo producto base.</td><td>500</td></th>
+            <td class="type">text</td>
+            <td class="null">No</td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <th>Personalizaciones<td></td><td>2000</td></th>
             <td class="type">text</td>
             <td class="null">No</td>
             <td>
@@ -3596,7 +3672,7 @@
             </td>
           </tr>
           <tr>
-            <th>CantidadReservada<td>Cantidad reservada por ordenes de compra activas.</td><td></td></th>
+            <th>CantidadReservada<td>Cantidad reservada por órdenes de compra activas.</td><td></td></th>
             <td class="type">bigint</td>
             <td class="null">No</td>
             <td>
@@ -4523,7 +4599,7 @@
             <th>OrdenCompraID<td></td><td></td></th>
             <td class="type">bigint</td>
             <td class="null">Sí</td>
-            <td><span class="flag" title="FK_Remisiones_1_0">R:  <a href="#OrdenesCompra">OrdenesCompra</a>.ID</span></td>
+            <td><span class="flag" title="FK_Remisiones_1_0">R:  <a href="#%C3%93rdenesCompra">ÓrdenesCompra</a>.ID</span></td>
           </tr>
         </tbody>
       </table>
@@ -4790,7 +4866,7 @@
       </table>
     </div>
     <div class="table">
-      <h2 id="TiposAtributosProductos"><a href="#toc" class="tocref">⇧</a>Table TiposAtributosProductos</h2><div style="margin-bottom:20px">Cuando se usan , los  sirven para diferenciar productos que comparten el mismo producto             base entre si. Estos pueden ser clasificados por  para efectos de presentación al usuario.</div>
+      <h2 id="TiposAtributosProductos"><a href="#toc" class="tocref">⇧</a>Table TiposAtributosProductos</h2><div style="margin-bottom:20px">Cuando se usan , los  sirven para diferenciar productos que comparten el mismo producto             base entre si. Estos pueden ser clasificados por  para presentación al usuario.</div>
       <table>
         <thead>
           <tr>
@@ -5123,13 +5199,13 @@
             <th>OrdenCompraID<td></td><td></td></th>
             <td class="type">bigint</td>
             <td class="null">Sí</td>
-            <td><span class="flag" title="FK_Ventas_1_0">R:  <a href="#OrdenesCompra">OrdenesCompra</a>.ID</span></td>
+            <td><span class="flag" title="FK_Ventas_1_0">R:  <a href="#%C3%93rdenesCompra">ÓrdenesCompra</a>.ID</span></td>
           </tr>
         </tbody>
       </table>
     </div>
     <div class="footer">
                     Generated by <a href="http://SqlDbDoc.codeplex.com/">DB&gt;doc</a> and <a href="https://github.com/ErikEJ/SqlCeToolbox">SQLite/SQL Server Compact Toolbox</a> on
-                    April 30, 2021, 07:22:48</div>
+                    July 04, 2021, 10:42:38</div>
   </body>
 </html>

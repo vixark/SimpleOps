@@ -47,12 +47,13 @@ namespace SimpleOps.Modelo {
         public int ID { get; set; }
 
         /// <summary>
-        /// Cómo el nombre del atributo se usa para diferenciar productos específicos entre sí en los documentos gráficos, este debe ser descriptivo 
-        /// por si mismo sin necesidad del tipo de atribruto. Por ejemplo, un nombre de atributo correcto es "Talla 10", en vez de "10".
+        /// Como el nombre del atributo se usa para diferenciar productos específicos entre sí en los documentos gráficos, este debe ser descriptivo 
+        /// por si mismo sin necesidad del tipo de atributo. Por ejemplo, un nombre de atributo correcto es "Talla 10", en vez de "10", otro 
+        /// atributo correcto sería "Rayas Rojas", en vez de "Rojas". 
         /// </summary>
         /// <MaxLength>50</MaxLength>
         [MaxLength(50)]
-        public string Nombre { get; set; } = null!; // Obligatorio y único.
+        public string Nombre { get; set; } = null!; // Obligatorio y único. Se exige que el atributo sea autodescriptivo y único para simplificar la manera en la que se guardan los atributos en la base de datos al evitar agregar una estructura compleja de datos en la columna atributos. Al tener una estructura de lista simple de atributos, permite realizar una edición manual de estos valores más cómoda. Además, al exigir unicidad, se puede relacionar directamente un atributo con su tipo y se permite que los atributos se usen directamente en las descripciones autogeneradas de los productos específicos sin necesidad de adjuntarles el tipo ni generar lógicas adicionales. En algunas aplicaciones es necesario extraer el valor más puntual sin la palabra diferenciadora, por ejemplo extraer "Rojas" de "Rayas Rojas" del atributo de tipo "Color Rayas", en este caso se implementa una lógica para obtener solo las palabras que no están repetidas en el tipo de atributo obteniendo así el valor individual para ser usado por ejemplo en un selector del atributo que tenga por título "Color Rayas" y valores "Rojas", "Verdes" y "Azules".
 
         public TipoAtributoProducto? Tipo { get; set; } // Obligatorio. Siempre un atributo debe tener un tipo, incluso si este es de tipo "Sin Tipo".
         public int TipoID { get; set; }

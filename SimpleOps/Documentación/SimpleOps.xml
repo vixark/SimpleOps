@@ -116,9 +116,9 @@
             Función equivalente sin pasar contexto para cuando no se tenga.
             </summary>
         </member>
-        <member name="M:SimpleOps.Datos.Contexto.ObtenerOrdenesCompraPendientes">
+        <member name="M:SimpleOps.Datos.Contexto.ObtenerÓrdenesCompraPendientes">
             <summary>
-            Consulta las ordenes de compra pendientes y actualiza la FechaHoraCreación usando las líneas.
+            Consulta las órdenes de compra pendientes y actualiza la FechaHoraCreación usando las líneas.
             </summary>
         </member>
         <member name="M:SimpleOps.Datos.Contexto.ObtenerPedidosPendientes">
@@ -1150,13 +1150,16 @@
         </member>
         <member name="T:SimpleOps.Modelo.LíneaSolicitudProducto">
             <summary>
-            Línea de Ordenes de Compra (Clientes) o Pedidos (Proveedores).
+            Línea de Órdenes de Compra (Clientes) o Pedidos (Proveedores).
             </summary>
         </member>
         <member name="P:SimpleOps.Modelo.LíneaSolicitudProducto.Estado">
             <summary>
             Pendiente = 0, Cumplida = 1, Anulada = 2. Puede ser anulado o cumplido individualmente sin anular o cumplir la solicitud completa. No se hace autocalculada para poder mantener los datos de la solucitud al momento de la anulación.
             </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.LíneaSolicitudProducto.Personalizaciones">
+            <MaxLength>200</MaxLength>
         </member>
         <member name="P:SimpleOps.Modelo.LíneaSolicitudProducto.Cumplido">
             <summary>
@@ -1224,6 +1227,9 @@
             <summary>
             No se almacena en la base de datos, se ignora en <see cref="M:SimpleOps.Datos.Contexto.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)"/>.
             </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.MovimientoProducto.Personalizaciones">
+            <MaxLength>200</MaxLength>
         </member>
         <member name="P:SimpleOps.Modelo.MovimientoProducto.PrecioBaseReal">
             <summary>
@@ -1473,8 +1479,9 @@
         </member>
         <member name="P:SimpleOps.Modelo.AtributoProducto.Nombre">
             <summary>
-            Cómo el nombre del atributo se usa para diferenciar productos específicos entre sí en los documentos gráficos, este debe ser descriptivo 
-            por si mismo sin necesidad del tipo de atribruto. Por ejemplo, un nombre de atributo correcto es "Talla 10", en vez de "10".
+            Como el nombre del atributo se usa para diferenciar productos específicos entre sí en los documentos gráficos, este debe ser descriptivo 
+            por si mismo sin necesidad del tipo de atributo. Por ejemplo, un nombre de atributo correcto es "Talla 10", en vez de "10", otro 
+            atributo correcto sería "Rayas Rojas", en vez de "Rojas". 
             </summary>
             <MaxLength>50</MaxLength>
         </member>
@@ -1599,7 +1606,7 @@
         </member>
         <member name="P:SimpleOps.Modelo.Cliente.PrioridadPropia">
             <summary>
-            Desconocida = 0, Ninguna = 1, MuyBaja = 10, Baja = 20, Media = 30, Alta = 40, MuyAlta = 50. Si es desconocida se usan las reglas en opciones. Al programar la asignación de los productos en inventario a las ordenes de compra pendientes se prefieren los clientes de mayor prioridad.
+            Desconocida = 0, Ninguna = 1, MuyBaja = 10, Baja = 20, Media = 30, Alta = 40, MuyAlta = 50. Si es desconocida se usan las reglas en opciones. Al programar la asignación de los productos en inventario a las órdenes de compra pendientes se prefieren los clientes de mayor prioridad.
             </summary>
         </member>
         <member name="P:SimpleOps.Modelo.Cliente.FormaEntregaPropia">
@@ -2164,6 +2171,9 @@
             </summary>
             <MaxLength>500</MaxLength>
         </member>
+        <member name="P:SimpleOps.Modelo.Producto.Personalizaciones">
+            <MaxLength>2000</MaxLength>
+        </member>
         <member name="P:SimpleOps.Modelo.Producto.Cantidad">
             <summary>
             Cantidad en inventario.
@@ -2181,7 +2191,7 @@
         </member>
         <member name="P:SimpleOps.Modelo.Producto.CantidadReservada">
             <summary>
-            Cantidad reservada por ordenes de compra activas.
+            Cantidad reservada por órdenes de compra activas.
             </summary>
         </member>
         <member name="P:SimpleOps.Modelo.Producto.CostoUnitario">
@@ -2385,7 +2395,7 @@
         </member>
         <member name="P:SimpleOps.Modelo.Producto.CantidadDisponible">
             <summary>
-            Cantidad disponible en inventario para ordenes de compra nuevas.
+            Cantidad disponible en inventario para órdenes de compra nuevas.
             </summary>
         </member>
         <member name="P:SimpleOps.Modelo.Producto.CostoTotal">
@@ -3767,34 +3777,10 @@
             no se puede pasar con ref.
             </summary>
         </member>
-        <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
+        <member name="T:Vixark.TuplaSerializable`2">
             <summary>
-            GeneratedInternalTypeHelper
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateInstance(System.Type,System.Globalization.CultureInfo)">
-            <summary>
-            CreateInstance
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.GetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Globalization.CultureInfo)">
-            <summary>
-            GetPropertyValue
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.SetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Globalization.CultureInfo)">
-            <summary>
-            SetPropertyValue
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateDelegate(System.Type,System.Object,System.String)">
-            <summary>
-            CreateDelegate
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.AddEventHandler(System.Reflection.EventInfo,System.Object,System.Delegate)">
-            <summary>
-            AddEventHandler
+            Clase auxiliar que reemplaza la <see cref="T:System.Tuple`2"/> para propósitos de serialización. Es necesario usarla porque 
+            la serialización exige una clase con constructor sin parámetros. Ver https://stackoverflow.com/a/13739409/8330412.
             </summary>
         </member>
     </members>

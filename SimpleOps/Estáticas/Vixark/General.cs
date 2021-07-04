@@ -183,7 +183,7 @@ namespace Vixark {
                 { "líneasnotascréditoventa", (Género.Femenino, NúmeroSustantivo.Plural) },
                 { "líneasnotasdébitocompra", (Género.Femenino, NúmeroSustantivo.Plural) },
                 { "líneasnotasdébitoventa", (Género.Femenino, NúmeroSustantivo.Plural) },
-                { "líneasordenescompra", (Género.Femenino, NúmeroSustantivo.Plural) },
+                { "líneasórdenescompra", (Género.Femenino, NúmeroSustantivo.Plural) },
                 { "líneaspedidos", (Género.Femenino, NúmeroSustantivo.Plural) },
                 { "líneasremisiones", (Género.Femenino, NúmeroSustantivo.Plural) },
                 { "líneasventas", (Género.Femenino, NúmeroSustantivo.Plural) },
@@ -200,7 +200,7 @@ namespace Vixark {
                 { "notascréditoventa", (Género.Femenino, NúmeroSustantivo.Plural) },
                 { "notasdébitocompra", (Género.Femenino, NúmeroSustantivo.Plural) },
                 { "notasdébitoventa", (Género.Femenino, NúmeroSustantivo.Plural) },
-                { "ordenescompra", (Género.Femenino, NúmeroSustantivo.Plural) },
+                { "órdenescompra", (Género.Femenino, NúmeroSustantivo.Plural) },
                 { "pedidos", (Género.Masculino, NúmeroSustantivo.Plural) },
                 { "preciosclientes", (Género.Masculino, NúmeroSustantivo.Plural) },
                 { "preciosproveedores", (Género.Masculino, NúmeroSustantivo.Plural) },
@@ -1257,7 +1257,7 @@ namespace Vixark {
         } // ObtenerColorFondo>
 
 
-#endif // PermitirCódigoNoSeguro>
+        #endif // PermitirCódigoNoSeguro>
 
 
         #endregion RedimensionarImagen>
@@ -2367,7 +2367,7 @@ namespace Vixark {
         /// <summary>
         /// Convierte un objeto a su representación serializada en JSON y viceversa. Es útil para pasarlo al método HasConversion de una propiedad de tipo especial (como List) en OnModelCreating de un contexto y poder almacenar el objeto en la base de datos.
         /// </summary>
-        public static ValueConverter<T, string> ConvertidorJSON<T>() where T : class // La restricción de clase es para poder usar el método Deserializar que exige esta restricción. En términos generales no debe ser problema porque el caso más común de serialización es de clases. Si fuera necesario implementarlo para estructuras habría que duplicar el código. No se declara con tipo T? porque no es el tipo que espera Entity Framework.
+        public static ValueConverter<T, string> ConvertidorJSON<T>() where T : class // La restricción de clase es para poder usar el método Deserializar que exige esta restricción. En términos generales no debe ser problema porque el caso más común de serialización es de clases. Si fuera necesario implementarlo para estructuras, habría que duplicar el código. No se declara con tipo T? porque no es el tipo que espera Entity Framework.
             => new ValueConverter<T, string>(o => Serializar(o), s => Deserializar<T>(s)!); // Se permitirá que los objetos tipo T sean nulos así esto impida la verificación de nulidad. Esto no es problema porque esta función solo es usada internamente por Entity Framework.
 
 

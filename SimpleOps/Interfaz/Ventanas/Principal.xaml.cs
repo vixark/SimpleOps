@@ -104,11 +104,11 @@ namespace SimpleOps.Interfaz {
             Contexto.CalcularVariablesEstáticas(ctx);
 
             // 4. Enlace de Datos a Interfaz.
-            var ordenesCompraPendientes = ctx.ObtenerOrdenesCompraPendientes();
+            var órdenesCompraPendientes = ctx.ObtenerÓrdenesCompraPendientes();
             var aleatorio = new Random();
-            ordenesCompraPendientes.ForEach(oc => oc.EstadoOrdenCompra = (EstadoOrdenCompra)aleatorio.Next(0, 6));
-            if (ordenesCompraPendientes.Any()) ordenesCompraPendientes.First().EstadoOrdenCompra = EstadoOrdenCompra.PendientePedido;
-            DataContext = ordenesCompraPendientes;
+            órdenesCompraPendientes.ForEach(oc => oc.EstadoOrdenCompra = (EstadoOrdenCompra)aleatorio.Next(0, 6));
+            if (órdenesCompraPendientes.Any()) órdenesCompraPendientes.First().EstadoOrdenCompra = EstadoOrdenCompra.PendientePedido;
+            DataContext = órdenesCompraPendientes;
             // DataContext = ctx.Clientes.Find(aleatorio.Next(1, 100));
 
             // 5. Pruebas.

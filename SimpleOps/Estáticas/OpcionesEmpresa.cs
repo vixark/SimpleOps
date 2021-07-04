@@ -105,7 +105,7 @@ namespace SimpleOps.Singleton {
 
         public string? TeléfonoPrincipal { get; set; } // Línea telefónica principal. Puede ser celular o fijo.
 
-        public string? EmailVentas { get; set; } // Email principal de ventas (para recepción de ordenes de compra de clientes).
+        public string? EmailVentas { get; set; } // Email principal de ventas (para recepción de órdenes de compra de clientes).
 
         public string? SitioWeb { get; set; } 
 

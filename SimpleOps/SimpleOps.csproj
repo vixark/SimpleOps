@@ -36,6 +36,8 @@
     <Compile Remove="Migrations\20210430070919_dos.Designer.cs" />
     <Compile Remove="Migrations\20210528212604_dos.cs" />
     <Compile Remove="Migrations\20210528212604_dos.Designer.cs" />
+    <Compile Remove="Migrations\20210704070728_Dos.cs" />
+    <Compile Remove="Migrations\20210704070728_Dos.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -110,6 +112,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Documentación\" />
     <Folder Include="Plantillas\Imágenes\" />
   </ItemGroup>
 
