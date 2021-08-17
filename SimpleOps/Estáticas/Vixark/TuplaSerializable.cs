@@ -34,9 +34,9 @@ namespace Vixark {
 
     /// <summary>
     /// Clase auxiliar que reemplaza la <see cref="Tuple{T1, T2}"/> para propósitos de serialización. Es necesario usarla porque 
-    /// la serialización exige una clase con constructor sin parámetros. Ver https://stackoverflow.com/a/13739409/8330412.
+    /// la serialización exige una clase con constructor sin parámetros. 
     /// </summary>
-    class TuplaSerializable<T1, T2> {
+    class TuplaSerializable<T1, T2> { // Ver https://stackoverflow.com/a/13739409/8330412.
 
 
         #region Propiedades

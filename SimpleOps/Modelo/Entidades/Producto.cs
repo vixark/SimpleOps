@@ -84,9 +84,37 @@ namespace SimpleOps.Modelo {
         [MaxLength(500)]
         public List<string> Atributos { get; set; } = new List<string>(); // Se consideró la opción de hacer esta lista de tipo AtributoProducto, pero esto implicaría dos escenarios: uno, se perdería la posibilidad de agregar atributos libres o dos, se tendría que agregar una nueva propiedad de lista tipo texto de atributos libres. Para evitar agregar más columnas y complejizar (tal vez inneceseariamente) la tabla producto no se implementó la segunda opción y cómo se quiere permitir los atributos libres, la primera tampoco se consideró. Además, almacenar los atributos con el ID de su valor en la enumeración es peligroso porque un usuario del código poco cuidadoso podría añadir un nuevo elemento a la enumeración AtributosProductos y haría que los valores almacenados en la base de datos apunten a valores de atributos diferentes. También, al tener los atributos almacenados como texto se permite buscar más fácil directamente en la base de datos, por ejemplo se puede buscar Amarillo y se devolverían todos los productos que tengan algún amarillo en sus atributos. Si se usara una lista con enumeraciones esto solo se podría hacer después de cargar todos los productos usando la propiedad Descripción o buscando coincidencias de un ID de enumeración particular (el ID del amarillo), con lo que se perdería la posibilidad de obtener resultados de productos que contengan otros amarillos. Se decidió entonces escribirlos como texto e implementar métodos y funciones auxiliares para mantenerlos estandarizados y no repetidos, ver la región "Métodos y Funciones de Atributos". Si es muy importante tener un atributo tipado directamente en la base de datos, se puede considerar crear una propiedad con tipo enumeración para la propiedad requerida y tenerla en cuenta en el cálculo de la descripción, por ejemplo se podría crear la propiedad Talla con valor de una enumeración TallasProductos o se podría crear una columna Colores con valor una lista de enumeración de tipo ColoresProductos y usar estos valores de estos "atributos especiales tipados" para construir la descripción del producto. Aunque como los atributos no solo afectan la descripción si no que son usados en multitud de lugares como la generación de catálogos, fichas, etc, la mejor manera de implementar columnas nuevas con atributos tipados como Talla sería crear una nueva propiedad AtributosEfectivos() que agrupe los atributos de esta propiedad y los otros atributos tipados con su columna propia. Por el momento esto no se considera necesario para el desarrollo general del código. 
 
+        /// <summary>
+        /// <para>Contiene las personalizaciones que se le pueden aplicar al producto. Una personalización tiene un tipo y una lista de posibles valores,
+        /// por ejemplo, tipo: "Nombre en Placa" y valores: "Jorge", "María" y "Natalia". La ventaja de las personalizaciones es que todas las posibles 
+        /// opciones no generan productos diferentes en la base de datos, se manejan en un solo producto. Una personalización es una característica que 
+        /// hace que el producto físico sea diferente a otros sin considerarlo diferente internamente para el manejo de precios o inventario.</para>
+        /// 
+        /// <para>Son útiles cuando se tiene un producto que tiene una característica que puede tomar una gran cantidad de valores, por ejemplo en el caso 
+        /// de "Nombre en Placa" se podría usar cualquier nombre posible y no sería desable tener que crear un producto nuevo para cada nuevo nombre de 
+        /// placa. También es útil cuando un producto tiene tantas opciones que si se tratara de generar los productos con todas 
+        /// las combinaciones posibles, resultarían miles. Por ejemplo, si se tiene un producto que permite cambiar el color de 3 de sus partes  
+        /// por 20 colores diferentes, resultarían 8000 posibles productos, lo cual no sería deseable para el rendimiento de la aplicaciónni sería 
+        /// información fácil de manejar. En estos casos, como usualmente no se requieren precios diferenciados ni se requiere inventario 
+        /// independiente porque suelen ser productos sobre pedido, es recomendable manejarlos con personalizaciones.</para>
+        /// 
+        /// <para>Si requiere manejar inventarios independientes o precios diferentes para productos que solo varían por una personalización, se 
+        /// recomienda separarlos en productos diferentes mediante un nuevo atributo auxiliar. Por ejemplo, si el color "Dorado" implica un precio mayor, 
+        /// se podría crear un atributo "Tipo Color" con valores "Color Especial" y "Color Estándar" y asignar cada uno a dos productos diferentes que 
+        /// permitirían manejar precios de manera independiente. Para continuar aceptando múltiples colores se podría usar una personalización "Color" con
+        /// valores "Rojo", "Verde", "Azul", etc para el producto con "Color Estándar" y una personalización "Color" con valor "Dorado" para el 
+        /// producto con "Color Especial".</para>
+        /// 
+        /// <para>Si la lista de posibles valores de una personalización es vacía, se considera que esta personalización es un texto libre establecido 
+        /// por el cliente.</para>
+        /// 
+        /// <para>Si no se especifica el tipo de la personalización y se usan valores que corresponden a valores de <see cref="Atributos"/>, el tipo 
+        /// de la personalización será el tipo de atributo de los valores.</para>
+        /// 
+        /// </summary>
         /// <MaxLength>2000</MaxLength>
         [MaxLength(2000)]
-        public List<TuplaSerializable<string, List<string>>> Personalizaciones { get; set; } = new List<TuplaSerializable<string, List<string>>>();
+        public List<TuplaSerializable<string, List<string>>> Personalizaciones { get; set; } = new List<TuplaSerializable<string, List<string>>>(); // En inglés se le llaman opciones (https://www.skuvault.com/blog/product-options-product-variations-understanding-the-difference/), pero en español el término opciones muchas tiendas lo tratan como si fueran los posibles valores para los atributos, entonces para no complicar se usa el término personalizaciones que es mucho más indicativo que opciones sobre su uso.
 
 
         /// <summary>
@@ -849,9 +877,108 @@ namespace SimpleOps.Modelo {
 
 
         /// <summary>
+        /// Agrega una nueva personalización al producto y los valores que esta puede tomar.
+        /// </summary>
+        /// <param name="tipo">Tipo de la personalización.</param>
+        /// <param name="valores">Posibles valores que puede tomar la personalización.</param>
+        /// <param name="reemplazarExistente">Aplicable cuando ya existe una personalización con el <paramref name="tipo"/>. Si es verdadero, los 
+        /// valores reemplazan los valores actuales de la personalización coincidente. Si es falso, se agrega una nueva personalización con el tipo
+        /// repetido. Si se asegura que no habrán personalizaciones existentes con el mismo tipo, se puede usar falso para mejorar el rendimiento.</param>
+        public void AgregarPersonalización(string tipo, List<string> valores, bool reemplazarExistente = true) {
+
+            var agregarNueva = true;
+            TuplaSerializable<string, List<string>>? personalizaciónExistente = null; 
+            if (reemplazarExistente) {
+                personalizaciónExistente = Personalizaciones.Find(t => t.I1.IgualA(tipo));
+                agregarNueva = personalizaciónExistente == null;
+            } else {
+                agregarNueva = true;
+            }
+
+            if (agregarNueva) {
+                Personalizaciones.Add(new TuplaSerializable<string, List<string>>(tipo, valores));
+            } else {
+                personalizaciónExistente!.I2 = valores; // La única manera en que agregarNueva sea falso es con personalizaciónExistente != null, por lo tanto se asegura que nunca es nulo.
+            }         
+
+        } // AgregarPersonalización>
+
+
+        /// <summary>
+        /// Elimina todas las personalizaciones coincidentes con <paramref name="tipo"/>.
+        /// </summary>
+        /// <param name="tipo">Tipo de la personalización a eliminar.</param>
+        /// <param name="eliminarVarias">Aplicable cuando el <paramref name="tipo"/> coincide con varias personalizaciones. Si este valor es verdadero, 
+        /// se eliminan todas las coincidencias. Si es falso, se lanza excepción.</param>
+        /// <returns></returns>
+        public int EliminarPersonalización(string tipo, bool eliminarVarias = false) {
+
+            if (!eliminarVarias && Personalizaciones.FindAll(t => t.I1.IgualA(tipo)).Count > 1) 
+                throw new Exception("Al intentar eliminar la personalización, se encontraron varias personalizaciones con el mismo nombre. " +
+                                    "Si las quieres eliminar todas, establece eliminarVarias en verdadero.");
+            return Personalizaciones.RemoveAll(t => t.I1.IgualA(tipo));
+
+        } // EliminarPersonalización>
+
+
+        public static string? ObtenerTipoPersonalización(List<string> valores) {
+
+            string? tipo = null;        
+            foreach (var valor in valores) {
+
+                var tipoActual = ObtenerTipoAtributo(valor);
+                if (string.IsNullOrEmpty(tipo)) {
+                    tipo = tipoActual;
+                } else {
+
+                    if (tipo != tipoActual) { // Si el tipo obtenido en este elemento es diferente al obtenido anteriormente, se genera un conflicto y se devuelve nulo.
+                        tipo = null;
+                        break;
+                    }
+
+                }
+
+            }
+
+            return tipo;
+
+        } // ObtenerTipoPersonalización>
+
+
+        /// <summary>
+        /// Devuelve un diccionario clasificando por su tipo las personalizaciones disponibles para el producto. Si todos los valores
+        /// de una personalización coinciden con atributos de cierto tipo y el tipo de la personalización en la base de datos es nulo, se usará
+        /// el tipo de los atributos coincidentes. Por ejemplo, si existe la personalización tipo: "" y valores: "Azul", "Rojo" y "Verde", el tipo
+        /// sería "Color". Si no se encuentra el tipo de unos valores o los valores coinciden con diferentes tipos, el tipo será "Personalización ##",
+        /// donde ## es un número consecutivo de las personalizaciones sin tipo asignado ni autocalculado.
+        /// </summary>
+        /// <returns></returns>
+        public Dictionary<string, List<string>> ClasificarPersonalizaciones() {
+
+            var cuentaPersonalizacionesSinTipo = 0;
+            var personalizaciones = new Dictionary<string, List<string>>();
+            foreach (var personalización in Personalizaciones) {
+
+                var tipo = personalización.I1;
+                if (string.IsNullOrEmpty(tipo)) tipo = ObtenerTipoPersonalización(personalización.I2);
+                if (string.IsNullOrEmpty(tipo)) {
+                    cuentaPersonalizacionesSinTipo++;
+                    tipo = $"Personalización {cuentaPersonalizacionesSinTipo}";
+                }
+                personalizaciones.Add(tipo, personalización.I2);
+
+            }
+
+            return personalizaciones;
+
+        } // ClasificarPersonalizaciones>
+
+
+        /// <summary>
         /// Devuelve un diccionario clasificando por su tipo los atributos asignados al producto.
         /// Si se puede asegurar que los atributos no están repetidos, o si están repetidos y no importa para la necesidad actual, al establecer
-        /// permitirRepetidos en verdadero se obtiene un mejor rendimiento.
+        /// permitirRepetidos en verdadero se obtiene un mejor rendimiento. El diccionario devuelto contiene una lista de atributos porque
+        /// es posible que el producto contenga varios atributos del mismo tipo.
         /// </summary>
         /// <param name="permitirRepetidos"></param>
         /// <returns></returns>

@@ -564,9 +564,7 @@ namespace Vixark {
             try {
                 File.Delete(rutaArchivo);
                 return true;
-            #pragma warning disable CA1031 // No capture tipos de excepción generales. Se desactiva porque el objetivo de esta función es precisamente ignorar cualquier excepción que ocurra.
             } catch (Exception) {
-            #pragma warning restore CA1031
                 return false;
             }
 
@@ -633,9 +631,7 @@ namespace Vixark {
             if (archivo == null) return false;
             try {
                 File.Copy(rutaArchivo, Path.Combine(rutaCarpetaDestino, archivo));
-                #pragma warning disable CA1031 // No capture tipos de excepción generales. Se desactiva porque el objetivo de esta función es precisamente ignorar cualquier excepción que ocurra.
             } catch (Exception) {
-                #pragma warning restore CA1031
                 return false;
             }
             return true;
@@ -820,9 +816,7 @@ namespace Vixark {
                         if (proceso.ProcessName == procesoActual.ProcessName // Evita procesos que obviamente no son el mismo porque tienen diferente nombre y excepciones al intentar acceder a proceso.MainModule en algunos de estos procesos.
                             && hashActual == ObtenerHashArchivo(proceso.MainModule.FileName)) Environment.Exit(0);
 
-                    #pragma warning disable CA1031 // No capture tipos de excepción generales. Se acepta porque el proceso se finaliza.
                     } catch (Exception) {
-                    #pragma warning restore CA1031
 
                         MostrarError($"No se pudo acceder al proceso {procesoActual.ProcessName} para verificar si era " +
                                      $"otra instancia de {nombreAplicación}. No se permitirá abrir {nombreAplicación}. " +
@@ -998,9 +992,7 @@ namespace Vixark {
 
                 rectánguloRecorte = ObtenerRecorteImagenAjustada(imagenOriginalBitmap, colorFondo, margenRecorteImagen, toleranciaDiferenciaColor);
 
-            #pragma warning disable CA1031 // No capture tipos de excepción generales. Se permite en este caso porque el código de recorte inteligente puede generar muchas excepciones y si no se puede cortar de esa manera se puede hacer de la manera básica.
-            } catch (Exception ex) { // Si sucede cualquier error en el código anterior se procede a recortar de manera básica la imagen.
-            #pragma warning restore CA1031
+            } catch (Exception ex) { // Si sucede cualquier error en el código anterior, se procede a recortar de manera básica la imagen.
                 MostrarError($"No se pudo recortar inteligentemente la imagen {archivoInicial}, se recortó de manera básica.{DobleLínea}{ex.Message}");
             }
 
@@ -1439,9 +1431,7 @@ namespace Vixark {
         /// se podría hacer otro método con otro nombre. Una solución fácil es usar este método con un string y poner ! después de () 
         /// para informarle al compilador que se asegura que el resultado no será nulo.
         /// </summary>
-        #pragma warning disable CA1308 // Normalizar las cadenas en mayúsculas
         public static string? AMinúscula(this string? texto) => texto?.ToLowerInvariant();
-        #pragma warning restore CA1308 // Normalizar las cadenas en mayúsculas
 
 
         #endregion Encapsulaciones Varias>
@@ -3123,9 +3113,7 @@ namespace Vixark {
                 insertadorMasivo.WriteToServer(tabla);
                 error = "";
 
-            #pragma warning disable CA1031 // No capture tipos de excepción generales. Se acepta porque aún no está completamente controlada la excepción.
             } catch (Exception ex) {
-            #pragma warning restore CA1031
 
                 error = ex.Message;
                 SuspenderEjecuciónEnModoDesarrollo();

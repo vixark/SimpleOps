@@ -246,6 +246,26 @@ namespace SimpleOps {
         } // ConsultasVarias>
 
 
+        public static void PersonalizacionesProductos() {
+
+            var productoBase = new ProductoBase("654") { Descripción = "Silla Tapizada" };
+            var producto1 = new Producto("654-1", productoBase, 
+                new List<string> { "Sin Apoyabrazos", "Altura 43 cm", "Recubierta", "Tela AAA", "Patas Plásticas" });
+            producto1.AgregarPersonalización("Nombre en Pata", new List<string> { "Jesús", "Dora" });
+            producto1.AgregarPersonalización("Nombre en Pata", new List<string> { "Josué", "Diana" }, reemplazarExistente: false);      
+            producto1.AgregarPersonalización("Nombre en Placa", new List<string> { "Pedro", "María", "Natalia" });
+            producto1.AgregarPersonalización("Nombre en Placa", new List<string>()); // Reempaza por personalización sin valores predeterminados.
+            try {
+                producto1.EliminarPersonalización("Nombre en Pata");
+                MostrarError("No se esperaba que no se lanzara excepción.");
+            } catch (Exception) {
+                throw;
+            }
+            producto1.EliminarPersonalización("Nombre en Pata", eliminarVarias: true);
+
+        } // PersonalizacionesProductos>
+
+
         public static void AtributosProductos() {
 
             var productoBase = new ProductoBase("CMS") { Descripción = "Camiseta manga corta con cuello", Físico = false };
@@ -755,6 +775,31 @@ namespace SimpleOps {
             GeneraciónPdf();
 
         } // DocumentosElectrónicos>
+
+
+        public static Cotización ObtenerCotizaciónConPersonalizaciones(TipoCotización tipo) {
+
+            var contacto = new Contacto("pedro@distribucionesabc123.com") { Nombre = "Pedro Martínez", Teléfono = "313 330 33 33" };
+
+            var cliente = new Cliente("Distribuciones ABC 123", new Municipio("Bogotá", "Distrito Capital"), TipoCliente.Distribuidor) {
+                TipoEntidad = TipoEntidad.Empresa, Dirección = "Calle 80-100 68", Teléfono = "4589843", Identificación = "990986892"
+            };
+
+            var productoBase1 = new ProductoBase("654") { Descripción = "Silla Tapizada" };
+            var cotización = new Cotización(cliente, contacto, tipo);
+
+            // var personalizaciones
+            cotización.Líneas = new List<LíneaCotización> {
+                new LíneaCotización(cotización, new Producto("654-1", productoBase1,
+                    new List<string>() {"Sin Apoyabrazos", "Altura 43 cm", "Recubierta", "Tela AAA", "Patas Plásticas"})
+                    { Personalizaciones = new List<TuplaSerializable<string, List<string>>>() { 
+                        new TuplaSerializable<string, List<string>> ("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", new List<string>()) , } },
+                    1200000),
+            };
+
+            return cotización;
+
+        } // ObtenerCotizaciónConPersonalizaciones>
 
 
         public static Cotización ObtenerCotización(TipoCotización tipo) {

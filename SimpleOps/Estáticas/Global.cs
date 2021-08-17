@@ -45,7 +45,7 @@ namespace SimpleOps {
 
 
     /// <summary>
-    /// Métodos, funciones y constantes estáticas de uso global para todo SimpleOps. Se diferencian de Vixark.General porque son propias del funcionamiento de SimpleOps y no de uso general compartido con otros proyectos.
+    /// Métodos, funciones y constantes estáticas de uso global para todo SimpleOps. Se diferencian de Vixark.General porque son propias del funcionamiento de SimpleOps y no son de uso general compartido con otros proyectos.
     /// </summary>
     static class Global {
 
@@ -184,7 +184,7 @@ namespace SimpleOps {
 
         public static List<int> MunicipiosConMensajería = new List<int>(); // Se actualiza al iniciar la aplicación y al realizar cambios en la tabla municipios.
 
-        public static Dictionary<string, string> AtributosProductosYTipos = new Dictionary<string, string>(); // La clave es cada uno de los atributos en la base de datos y el valor es su tipo. Se actualiza al iniciar la aplicación y al realizar cambios en las tablas AtributosProductos o TiposAtributosProductos. Se agregan todos los posibles valores de atributos de producto que serán relacionados con su tipo para filtros u otros usos, por rendimiento en esas aplicaciones se prefiere tener esta variable en caché. Los atributos toman estos valores preferiblemente, pero también pueden tomar valores libres, esto da flexibilidad de manejo al usuario del código y de la aplicación.
+        public static Dictionary<string, string> AtributosProductosYTipos = new Dictionary<string, string>(); // La clave es cada uno de los atributos en la base de datos y el valor es su tipo. Se actualiza al iniciar la aplicación y al realizar cambios en las tablas AtributosProductos o TiposAtributosProductos. Se agregan todos los posibles valores de atributos de producto que serán relacionados con su tipo para filtros u otros usos, por rendimiento en esas aplicaciones se prefiere tener esta variable en caché. Los atributos toman estos valores preferiblemente, pero también pueden tomar valores libres, esto da flexibilidad de manejo al usuario del código y de la aplicación. También es usado para las personalizaciones.
 
         public static SortedDictionary<int, string> ÍndicesYAtributos = new SortedDictionary<int, string>(); // La clave es el ID de cada atributo en la base de datos. Se usa para tener una lista ordenada y poder obtener textos que denoten los rangos de atributos secuenciales, así: Talla 10 a 15. No se usa AtributosProductosYTipos para esto porque según la documentación los diccionarios no garantizan el orden de inserción de los elementos, aunque experimentalmente algunas personas dicen que si se mantiene si solo se realizan inserciones, se prefiere no correr el riesgo. Ver https://stackoverflow.com/questions/2722767/order-preserving-data-structures-in-c-sharp.
 
