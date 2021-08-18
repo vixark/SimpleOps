@@ -322,7 +322,7 @@ namespace SimpleOps {
         public static void ConsolidaciónAtributosProductoBase() {
 
             var b = new ProductoBase("CM");
-            var c = new Cotización(new Cliente("Distribuciones ABC", new Municipio("Bogotá", "Distrito Capital"), TipoCliente.Consumidor));
+            var c = new Cotización(new Cliente("Distribuciones ABC", new Municipio("Bogotá", "Bogotá", "Bogotá, D.C."), TipoCliente.Consumidor));
             c.Líneas.Add(new LíneaCotización(c, new Producto("1", b, new List<string> { "Azul", "Roja", "Talla L", "Extra Suave" }), 82800) { }); // Azul, Roja, Talla L, Extra Suave 82 800.
             c.Líneas.Add(new LíneaCotización(c, new Producto("2", b, new List<string> { "Azul", "Talla XL", "Extra Suave" }), 82800) { }); // Azul, Talla XL, Extra Suave 82 800.
             c.Líneas.Add(new LíneaCotización(c, new Producto("3", b, new List<string> { "Verde", "Talla M", "Extra Suave" }), 82800) { }); // Verde, Talla M, Extra Suave 82 800.
@@ -391,7 +391,7 @@ namespace SimpleOps {
                 MostrarError($"Falló el procedimiento de ATextoConComas(resumir: true) para atributos3Resumidos.");
 
             var b2 = new ProductoBase("CM");
-            var c2 = new Cotización(new Cliente("Distribuciones ABC", new Municipio("Bogotá", "Distrito Capital"), TipoCliente.Consumidor));
+            var c2 = new Cotización(new Cliente("Distribuciones ABC", new Municipio("Bogotá", "Bogotá", "Bogotá, D.C."), TipoCliente.Consumidor));
             c2.Líneas.Add(new LíneaCotización(c, new Producto("1", b2, new List<string> { "Azul", "Talla 12" }), 82800) { });
             c2.Líneas.Add(new LíneaCotización(c, new Producto("2", b2, new List<string> { "Azul", "Talla 12.5" }), 82800) { });
             c2.Líneas.Add(new LíneaCotización(c, new Producto("3", b2, new List<string> { "Azul", "Talla 13" }), 82800) { });
@@ -420,7 +420,7 @@ namespace SimpleOps {
                 MostrarError($"Falló el procedimiento de ObtenerDatos() para dp2.");
 
             var b3 = new ProductoBase("CM");
-            var c3 = new Cotización(new Cliente("Distribuciones ABC", new Municipio("Bogotá", "Distrito Capital"), TipoCliente.Consumidor));
+            var c3 = new Cotización(new Cliente("Distribuciones ABC", new Municipio("Bogotá", "Bogotá", "Bogotá, D.C."), TipoCliente.Consumidor));
             c3.Líneas.Add(new LíneaCotización(c, new Producto("1", b3, new List<string> { "Azul", "Talla 13.5" }), 82800) { });
             c3.Líneas.Add(new LíneaCotización(c, new Producto("2", b3, new List<string> { "Azul", "Talla 16" }), 82800) { }); // Justo para no ser considerado secuencia.
             c3.Líneas.Add(new LíneaCotización(c, new Producto("3", b3, new List<string> { "Verde", "Talla 17" }), 82800) { });
@@ -442,7 +442,7 @@ namespace SimpleOps {
                 MostrarError($"Falló el procedimiento de ObtenerDatos() para dp3.");
 
             var b4 = new ProductoBase("CM");
-            var c4 = new Cotización(new Cliente("Distribuciones ABC", new Municipio("Bogotá", "Distrito Capital"), TipoCliente.Consumidor));
+            var c4 = new Cotización(new Cliente("Distribuciones ABC", new Municipio("Bogotá", "Bogotá", "Bogotá, D.C."), TipoCliente.Consumidor));
             c4.Líneas.Add(new LíneaCotización(c, new Producto("1", b4, new List<string> { "Azul", "Talla 8" }), 82800) { });
             c4.Líneas.Add(new LíneaCotización(c, new Producto("2", b4, new List<string> { "Azul", "Talla 10" }), 82800) { }); 
             c4.Líneas.Add(new LíneaCotización(c, new Producto("3", b4, new List<string> { "Verde", "Talla 11" }), 82800) { });
@@ -781,7 +781,7 @@ namespace SimpleOps {
 
             var contacto = new Contacto("pedro@distribucionesabc123.com") { Nombre = "Pedro Martínez", Teléfono = "313 330 33 33" };
 
-            var cliente = new Cliente("Distribuciones ABC 123", new Municipio("Bogotá", "Distrito Capital"), TipoCliente.Distribuidor) {
+            var cliente = new Cliente("Distribuciones ABC 123", new Municipio("Bogotá", "Bogotá", "Bogotá, D.C."), TipoCliente.Distribuidor) {
                 TipoEntidad = TipoEntidad.Empresa, Dirección = "Calle 80-100 68", Teléfono = "4589843", Identificación = "990986892"
             };
 
@@ -806,7 +806,7 @@ namespace SimpleOps {
 
             var contacto = new Contacto("pedro@distribucionesabc123.com") { Nombre = "Pedro Martínez", Teléfono = "313 330 33 33" };
 
-            var cliente = new Cliente("Distribuciones ABC 123", new Municipio("Bogotá", "Distrito Capital"), TipoCliente.Distribuidor) {
+            var cliente = new Cliente("Distribuciones ABC 123", new Municipio("Bogotá", "Bogotá", "Bogotá, D.C."), TipoCliente.Distribuidor) {
                 TipoEntidad = TipoEntidad.Empresa, Dirección = "Calle 80-100 68", Teléfono = "4589843", Identificación = "990986892"
             };
 
@@ -1117,12 +1117,13 @@ namespace SimpleOps {
                 return false;
             }
 
-            for (int i = 1; i <= 9; i++) {
+            for (int i = 1; i <= 10; i++) {
 
                 if (VentaSimple(out string? mensajeSimple, Empresa.PróximoNúmeroDocumentoElectrónicoPruebas, i, i * 1000, $"Empresa {i}", $"90090090{i}",
                     $"Calle {i} # {i} - {i}", $"{i}{i}{i}{i}{i}{i}{i}", pruebaHabilitación, out Venta? ventaSimple, 
-                    out DocumentoElectrónico<Factura<Cliente, LíneaVenta>, LíneaVenta>? ventaSimpleElectrónica, unoExcluídoIVA: i == 1, 
-                    todosExcluídosIVA: i == 2, unoConINC: i == 3, unoConINCyExcluídoIVA: i == 4, unoExentoIVA: i == 5, clienteIVACero: i == 6)) {
+                    out DocumentoElectrónico<Factura<Cliente, LíneaVenta>, LíneaVenta>? ventaSimpleElectrónica, unoExcluídoIVA: i == 1,
+                    todosExcluídosIVA: i == 2, unoConINC: i == 3, unoConINCyExcluídoIVA: i == 4, unoExentoIVA: i == 5, clienteIVACero: i == 6, 
+                    todosSoloINC: i == 10)) {
 
                     Empresa.PróximoNúmeroDocumentoElectrónicoPruebas++;
                     GuardarOpciones(Empresa);
@@ -1154,7 +1155,7 @@ namespace SimpleOps {
             var ambiente = Empresa.AmbienteFacturaciónElectrónica; Empresa.AmbienteFacturaciónElectrónica = AmbienteFacturaciónElectrónica.Producción;
             var pinAplicación = Empresa.PinAplicación; Empresa.PinAplicación = "12345";
 
-            var cliente = new Cliente("cliente", new Municipio("Bogotá", "Distrito Capital"), TipoCliente.Consumidor) {
+            var cliente = new Cliente("cliente", new Municipio("Bogotá", "Bogotá", "Bogotá, D.C."), TipoCliente.Consumidor) {
                 TipoEntidad = TipoEntidad.Empresa, Dirección = "Calle 80-100", Teléfono = "4589843", Identificación = "990986892"
             };
 
@@ -1226,7 +1227,7 @@ namespace SimpleOps {
 
         public static void CompraGenérica() {
 
-            var proveedor = new Proveedor("proveedor", new Municipio("Bogótá", "Distrito Capital")) 
+            var proveedor = new Proveedor("proveedor", new Municipio("Bogótá", "Bogotá", "Bogotá, D.C.")) 
                 { TipoContribuyente = TipoContribuyente.Autorretenedor, TipoEntidad = TipoEntidad.Empresa, Identificación = "9898989" };
             var compra = new Compra(proveedor);
             compra.Líneas = new List<LíneaCompra> {
@@ -1252,7 +1253,7 @@ namespace SimpleOps {
 
         public static void VentaExentosYExcluídosIVAExcel() {
 
-            var cliente = new Cliente("cliente", new Municipio("Bogotá", "Distrito Capital"), TipoCliente.Consumidor) {
+            var cliente = new Cliente("cliente", new Municipio("Bogotá", "Bogotá", "Bogotá, D.C."), TipoCliente.Consumidor) {
                 TipoEntidad = TipoEntidad.Empresa, Dirección = "Calle 80-100", Teléfono = "4589843", Identificación = "990986892"
             };
             var venta = new Venta(cliente) { DescuentoComercial = 0, DescuentoCondicionado = 40000 };
@@ -1281,7 +1282,7 @@ namespace SimpleOps {
 
         public static void VentaServiciosExcel() {
 
-            var cliente = new Cliente("cliente", new Municipio("Bogotá", "Distrito Capital"), TipoCliente.Consumidor) {
+            var cliente = new Cliente("cliente", new Municipio("Bogotá", "Bogotá", "Bogotá, D.C."), TipoCliente.Consumidor) {
                 TipoEntidad = TipoEntidad.Empresa, Dirección = "Calle 80-100", Teléfono = "4589843", Identificación = "990986892"
             };
             var venta = new Venta(cliente) { DescuentoComercial = 0, DescuentoCondicionado = 40000 };
@@ -1312,7 +1313,7 @@ namespace SimpleOps {
             var tipoContribuyente = Empresa.TipoContribuyente;
             Empresa.TipoContribuyente = TipoContribuyente.Ordinario | TipoContribuyente.ResponsableIVA;
 
-            var cliente = new Cliente("cliente", new Municipio("Bogotá", "Distrito Capital"), TipoCliente.Consumidor) {
+            var cliente = new Cliente("cliente", new Municipio("Bogotá", "Bogotá", "Bogotá, D.C."), TipoCliente.Consumidor) {
                 TipoEntidad = TipoEntidad.Empresa, Dirección = "Calle 80-100", Teléfono = "4589843", Identificación = "990986892",
                 TipoContribuyente = TipoContribuyente.RetenedorIVA       
             };
@@ -1357,7 +1358,7 @@ namespace SimpleOps {
             Empresa.TipoEntidad = TipoEntidad.Empresa; // Para simular retenciones en la fuente como declarante si están activadas como no declarante en opciones.
             Empresa.TipoContribuyente = TipoContribuyente.Ordinario | TipoContribuyente.ResponsableIVA;
             
-            var cliente = new Cliente("cliente", new Municipio("Bogotá", "Distrito Capital"), TipoCliente.Consumidor) { 
+            var cliente = new Cliente("cliente", new Municipio("Bogotá", "Bogotá", "Bogotá, D.C."), TipoCliente.Consumidor) { 
                 TipoEntidad = TipoEntidad.Empresa, Dirección = "Calle 80-100", Teléfono = "4589843", Identificación = "990986892", 
                 TipoContribuyente = TipoContribuyente.RégimenSimple | TipoContribuyente.GranContribuyente, PorcentajeRetenciónICAPropio = 0.01  // Régimen simple es solo para que el TipoContribuyente contenga dos elementos.       
             };
@@ -1413,7 +1414,7 @@ namespace SimpleOps {
             if (Empresa.PrimerNúmeroFacturaAutorizada == null) return Falso(out mensaje, "No se esperaba Empresa.PrimerNúmeroFacturaAutorizada nulo.");
 
             var fracciónCosto = 0.8M;
-            var cliente = new Cliente("OPTICAS GMO COLOMBIA S A S", new Municipio("Bogotá", "Distrito Capital") { ID = 1, Código = "11001" }, 
+            var cliente = new Cliente("OPTICAS GMO COLOMBIA S A S", new Municipio("Bogotá", "Bogotá", "Bogotá, D.C.") { ID = 1, Código = "11001" }, 
                 TipoCliente.Consumidor) { Identificación = "900108281", TipoEntidad = TipoEntidad.Empresa, Dirección = "CR 9 A N0 99 - 07 OF 802", 
                 DíasCrédito = 92, Teléfono = "5555555" };
 
@@ -1451,7 +1452,7 @@ namespace SimpleOps {
                 //    { MuestraGratis = true }, // Desactivado porque saca un error relacionado con el CUFE que solo aparece cuando se establece TipoImpuestoConsumo.BolsasPlásticas: Rechazo FAD06: Valor del CUFE no está calculado correctamente.
                 new LíneaVenta(new Producto("CMSRS", camisetaBase, new List<string> { "Roja", "Talla S" }), 
                     venta, 2, 50990, 40000),
-                new LíneaVenta(new Producto("CMSVL", camisetaBase, new List<string> { "Verde", "Talla L" }) { 
+                new LíneaVenta(new Producto("CMSVL", camisetaBase, new List<string> { "Verde", "Talla L" }) {
                     UnidadEspecífica = Unidad.Docena }, venta, 3, 51990, 42000),
                 new LíneaVenta(new Producto("CMSAXXL", camisetaBase, new List<string> { "Azul", "Talla XXL" }) {
                     PorcentajeIVAPropioEspecífico = 0.16 }, venta, 1, 51990, 42000),
@@ -1467,13 +1468,13 @@ namespace SimpleOps {
         public static bool VentaSimple(out string? mensaje, int númeroFactura, int cantidad, decimal precio, string empresa, string nit, string dirección, 
             string teléfono, bool pruebaHabilitación, out Venta? venta, out DocumentoElectrónico<Factura<Cliente, LíneaVenta>, LíneaVenta>? ventaElectrónica, 
             bool pruebaIntegración = false, bool unoExcluídoIVA = false, bool todosExcluídosIVA = false, bool unoConINC = false, 
-            bool unoConINCyExcluídoIVA = false, bool unoExentoIVA = false, bool clienteIVACero = false) {
+            bool unoConINCyExcluídoIVA = false, bool unoExentoIVA = false, bool clienteIVACero = false, bool todosSoloINC = false) {
 
             ventaElectrónica = null;
             venta = null;
             if (Empresa.PrimerNúmeroFacturaAutorizada == null) return Falso(out mensaje, "No se esperaba Empresa.PrimerNúmeroFacturaAutorizada nulo.");
 
-            var cliente = new Cliente(empresa, new Municipio("Bogotá", "Distrito Capital") { ID = 1, Código = "11001" }, TipoCliente.Consumidor) { 
+            var cliente = new Cliente(empresa, new Municipio("Bogotá", "Bogotá", "Bogotá, D.C.") { ID = 1, Código = "11001" }, TipoCliente.Consumidor) { 
                 Identificación = nit, TipoEntidad = TipoEntidad.Empresa, Dirección = dirección, DíasCrédito = 7, Teléfono = teléfono, 
                 ContactoFacturas = new Contacto($"facturación@{empresa.Reemplazar(" ","")}.com"), PorcentajeIVAPropio = clienteIVACero ? 0 : (double?)null
             };
@@ -1485,26 +1486,41 @@ namespace SimpleOps {
 
             var camisetaBase = new ProductoBase("CMS") { ID = 1, Descripción = "Camiseta Manga Corta", PorcentajeIVAPropio = 0.05 };
 
-            venta.Líneas = new List<LíneaVenta> {
-                new LíneaVenta(new Producto("R1") { DescripciónBase = "Producto 1", ExcluídoIVA = todosExcluídosIVA || unoExcluídoIVA },
-                    venta, cantidad: cantidad, precio: precio, costo: precio * 0.8M),
-                new LíneaVenta(new Producto("R2") { DescripciónBase = "Producto 2", ExcluídoIVA = todosExcluídosIVA },
-                    venta, cantidad: cantidad + 5, precio: precio + 2000, costo: precio * 0.8M),
-                new LíneaVenta(new Producto("R3") { DescripciónBase = "Producto 3", ExcluídoIVA = todosExcluídosIVA,
-                    TipoImpuestoConsumoPropio = unoConINC ? TipoImpuestoConsumo.ServiciosRestaurante : TipoImpuestoConsumo.Desconocido },
-                    venta, cantidad: cantidad + 10, precio: precio + 3000, costo: precio * 0.8M),
-                new LíneaVenta(new Producto("R4") { DescripciónBase = "Producto 4", ExcluídoIVA = todosExcluídosIVA || unoConINCyExcluídoIVA,
-                    TipoImpuestoConsumoPropio = unoConINCyExcluídoIVA ? TipoImpuestoConsumo.ServiciosRestaurante : TipoImpuestoConsumo.Desconocido },
-                    venta, cantidad: cantidad + 15, precio: precio + 4000, costo: precio * 0.8M),
-                new LíneaVenta(new Producto("R5") { DescripciónBase = "Producto 5", PorcentajeIVAPropio = unoExentoIVA ? 0 : (double?)null },
-                    venta, cantidad: cantidad + 5, precio: precio + 2000, costo: precio * 0.8M),
-                new LíneaVenta(new Producto("CMSRS", camisetaBase, new List<string> { "Roja", "Talla S" }) {
-                    DescripciónEspecífica = "Camiseta Roja Talla S en Promoción ¡Extra Económica!" }, venta, cantidad + 2, precio + 1000, precio * 0.8M),
-                new LíneaVenta(new Producto("CMSVL", camisetaBase, new List<string> { "Verde", "Talla L", "Extra Suave" }) 
-                    { UnidadEspecífica = Unidad.Docena}, venta, 1, 12 * (precio + 1400), 12 * (precio * 0.8M)),
-                new LíneaVenta(new Producto("CMSAXXL", camisetaBase, new List<string> { "Azul", "Talla XXL" }) { 
-                    PorcentajeIVAPropioEspecífico = 0.16 }, venta, cantidad, precio + 1300, precio * 0.8M),
-            };
+            if (todosSoloINC) {
+
+                venta.Líneas = new List<LíneaVenta> {
+                    new LíneaVenta(new Producto("R3") { DescripciónBase = "Producto 3", ExcluídoIVA = true,
+                        TipoImpuestoConsumoPropio = TipoImpuestoConsumo.ServiciosRestaurante },
+                        venta, cantidad: cantidad + 10, precio: precio + 3000, costo: precio * 0.8M),
+                    new LíneaVenta(new Producto("R4") { DescripciónBase = "Producto 4", ExcluídoIVA = true,
+                        TipoImpuestoConsumoPropio =  TipoImpuestoConsumo.ServiciosRestaurante },
+                        venta, cantidad: cantidad + 15, precio: precio + 4000, costo: precio * 0.8M),
+                };
+
+            } else {
+
+                venta.Líneas = new List<LíneaVenta> {
+                    new LíneaVenta(new Producto("R1") { DescripciónBase = "Producto 1", ExcluídoIVA = todosExcluídosIVA || unoExcluídoIVA },
+                        venta, cantidad: cantidad, precio: precio, costo: precio * 0.8M),
+                    new LíneaVenta(new Producto("R2") { DescripciónBase = "Producto 2", ExcluídoIVA = todosExcluídosIVA },
+                        venta, cantidad: cantidad + 5, precio: precio + 2000, costo: precio * 0.8M),
+                    new LíneaVenta(new Producto("R3") { DescripciónBase = "Producto 3", ExcluídoIVA = todosExcluídosIVA,
+                        TipoImpuestoConsumoPropio = unoConINC ? TipoImpuestoConsumo.ServiciosRestaurante : TipoImpuestoConsumo.Desconocido },
+                        venta, cantidad: cantidad + 10, precio: precio + 3000, costo: precio * 0.8M),
+                    new LíneaVenta(new Producto("R4") { DescripciónBase = "Producto 4", ExcluídoIVA = todosExcluídosIVA || unoConINCyExcluídoIVA,
+                        TipoImpuestoConsumoPropio = unoConINCyExcluídoIVA ? TipoImpuestoConsumo.ServiciosRestaurante : TipoImpuestoConsumo.Desconocido },
+                        venta, cantidad: cantidad + 15, precio: precio + 4000, costo: precio * 0.8M),
+                    new LíneaVenta(new Producto("R5") { DescripciónBase = "Producto 5", PorcentajeIVAPropio = unoExentoIVA ? 0 : (double?)null },
+                        venta, cantidad: cantidad + 5, precio: precio + 2000, costo: precio * 0.8M),
+                    new LíneaVenta(new Producto("CMSRS", camisetaBase, new List<string> { "Roja", "Talla S" }) {
+                        DescripciónEspecífica = "Camiseta Roja Talla S en Promoción ¡Extra Económica!" }, venta, cantidad + 2, precio + 1000, precio * 0.8M),
+                    new LíneaVenta(new Producto("CMSVL", camisetaBase, new List<string> { "Verde", "Talla L", "Extra Suave" })
+                        { UnidadEspecífica = Unidad.Docena}, venta, 1, 12 * (precio + 1400), 12 * (precio * 0.8M)),
+                    new LíneaVenta(new Producto("CMSAXXL", camisetaBase, new List<string> { "Azul", "Talla XXL" }) {
+                        PorcentajeIVAPropioEspecífico = 0.16 }, venta, cantidad, precio + 1300, precio * 0.8M),
+                };
+
+            }
 
             if (pruebaIntegración) {
 

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SimpleOps.Migrations
 {
-    public partial class uno : Migration
+    public partial class Uno : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -141,6 +141,7 @@ namespace SimpleOps.Migrations
                     FechaHoraCreación = table.Column<string>(nullable: false),
                     FechaHoraActualización = table.Column<string>(nullable: false),
                     Nombre = table.Column<string>(maxLength: 50, nullable: false),
+                    NombreOficial = table.Column<string>(maxLength: 50, nullable: true),
                     Departamento = table.Column<string>(maxLength: 60, nullable: false),
                     Código = table.Column<string>(maxLength: 10, nullable: true),
                     OtroPaís = table.Column<string>(maxLength: 50, nullable: true),

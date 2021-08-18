@@ -1311,6 +1311,10 @@ namespace SimpleOps.Migrations
                         .HasColumnType("TEXT")
                         .HasMaxLength(50);
 
+                    b.Property<string>("NombreOficial")
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(50);
+
                     b.Property<string>("OtroPaís")
                         .HasColumnType("TEXT")
                         .HasMaxLength(50);

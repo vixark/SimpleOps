@@ -1427,12 +1427,19 @@ namespace Vixark {
 
         /// <summary>
         /// Encapsulación de rápido acceso de ToLowerInvariant(). Es útil para omitir la advertencia CA1308 sin saturar el código.
-        /// No se puede crear un método con el mismo nombre para string (sin ?) porque el compilador no lo permite. Si se necesitara 
+        /// No se puede crear un método con el mismo nombre para string (sin ?) porque el compilador no lo permite. Si se necesitara, 
         /// se podría hacer otro método con otro nombre. Una solución fácil es usar este método con un string y poner ! después de () 
         /// para informarle al compilador que se asegura que el resultado no será nulo.
         /// </summary>
         public static string? AMinúscula(this string? texto) => texto?.ToLowerInvariant();
 
+        /// <summary>
+        /// Encapsulación de rápido acceso de ToUpperInvariant(). Es útil para omitir la advertencia CA1308 sin saturar el código.
+        /// No se puede crear un método con el mismo nombre para string (sin ?) porque el compilador no lo permite. Si se necesitara, 
+        /// se podría hacer otro método con otro nombre. Una solución fácil es usar este método con un string y poner ! después de () 
+        /// para informarle al compilador que se asegura que el resultado no será nulo.
+        /// </summary>
+        public static string? AMayúscula(this string? texto) => texto?.ToUpperInvariant();
 
         #endregion Encapsulaciones Varias>
 

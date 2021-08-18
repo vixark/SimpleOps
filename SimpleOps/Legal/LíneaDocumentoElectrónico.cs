@@ -46,9 +46,11 @@ namespace SimpleOps.Legal {
         public decimal Cantidad { get; set; }
 
         /// <summary>
-        /// Si es muestra gratis no es cero.
+        /// Si es muestra gratis, no es cero.
         /// </summary>
         public decimal SubtotalReal { get; set; }
+
+        public decimal SubtotalRealDian { get; set; }
 
         public decimal Impuesto { get; set; }
 
@@ -70,7 +72,7 @@ namespace SimpleOps.Legal {
             if (línea.IVA == null) throw new Exception("No se esperaba que el IVA fuera nulo.");
             if (línea.ImpuestoConsumo == null) throw new Exception("No se esperaba que el impuesto al consumo fuera nulo.");
 
-            (Cantidad, TipoTributo, SubtotalReal) = (línea.Cantidad, tipoTributo, línea.SubtotalBaseReal);
+            (Cantidad, TipoTributo, SubtotalReal, SubtotalRealDian) = (línea.Cantidad, tipoTributo, línea.SubtotalBaseReal, línea.SubtotalBaseRealDian);
             Impuesto = línea.ObtenerValorImpuesto(tipoTributo);
             ModoImpuesto = línea.ObtenerModoImpuesto(tipoTributo);
 

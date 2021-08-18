@@ -370,8 +370,9 @@ namespace SimpleOps.Modelo {
         public bool CalcularTodo(Contexto? ctx = null, bool cargarLíneas = false, bool cargarEntidadEconómica = false, bool cargarProductos = false, 
             bool calcularQR = true) {
 
-            (Subtotal, SubtotalBase, SubtotalBaseReal, SubtotalBaseIVA, SubtotalBaseIVADian, IVA, ImpuestoConsumo, Margen, Costo, APagar, SubtotalFinalConImpuestos, 
-                RetenciónFuente, RetenciónIVA, RetenciónICA, RetencionesExtra, SubtotalFinal) = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); // Reinicio de valores.
+            (Subtotal, SubtotalBase, SubtotalBaseReal, SubtotalBaseIVA, SubtotalBaseIVADian, IVA, ImpuestoConsumo, Margen, Costo, APagar, 
+                SubtotalFinalConImpuestos, RetenciónFuente, RetenciónIVA, RetenciónICA, RetencionesExtra, SubtotalFinal) 
+                = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); // Reinicio de valores.
 
             #region Verificaciones de nulidad de propiedades necesarias
 
@@ -452,10 +453,10 @@ namespace SimpleOps.Modelo {
                 línea.PorcentajeDescuentoCondicionado = (decimal)PorcentajeDescuentoCondicionado!; // Se garantiza que no es nulo porque se asegura que Subtotal no es cero. Igual que el anterior.
                 SubtotalBaseReal += línea.SubtotalBaseReal;
                 SubtotalBase += línea.SubtotalBase;
-                SubtotalBaseIVA += (decimal)línea.SubtotalBaseIVA!; // Si ningún línea.Producto es nulo se asegura que la SubtotalBaseIVA tampoco lo sea.
-                SubtotalBaseIVADian += (decimal)línea.SubtotalBaseIVADian!; // Si ningún línea.Producto es nulo se asegura que la SubtotalBaseIVADian tampoco lo sea.
-                IVA += (decimal)línea.IVA!; // Si EntidadEconómica no es nula se asegura que el IVA tampoco lo sea.
-                ImpuestoConsumo += (decimal)línea.ImpuestoConsumo!; // Si ningún línea.Producto es nulo se asegura que el ImpuestoConsumo tampoco lo sea.
+                SubtotalBaseIVA += (decimal)línea.SubtotalBaseIVA!; // Si ningún línea.Producto es nulo, se asegura que la SubtotalBaseIVA tampoco lo sea.
+                SubtotalBaseIVADian += (decimal)línea.SubtotalBaseIVADian!; // Si ningún línea.Producto es nulo, se asegura que la SubtotalBaseIVADian tampoco lo sea.
+                IVA += (decimal)línea.IVA!; // Si EntidadEconómica no es nula, se asegura que el IVA tampoco lo sea.
+                ImpuestoConsumo += (decimal)línea.ImpuestoConsumo!; // Si ningún línea.Producto es nulo, se asegura que el ImpuestoConsumo tampoco lo sea.
                 Costo += línea.Costo;
                 Margen += línea.Margen;
                 SubtotalFinal += línea.SubtotalFinal;
@@ -513,7 +514,7 @@ namespace SimpleOps.Modelo {
             var textoImpuestoConsumo = ImpuestoConsumo.ATexto(formatoNúmero);
             var impuestoICA = 0; // Por el momento el ICA se toma en 0.
             var textoImpuestoICA = (impuestoICA).ATexto(formatoNúmero);
-            var textoAPagar = (SubtotalFinalConImpuestos - ObtenerAnticipo()).ATexto(formatoNúmero);
+            var textoAPagar = (SubtotalFinalConImpuestos).ATexto(formatoNúmero); // A partir de agosto 2021 el anticipo no se resta al SubtotalFinalConImpuestos para obtener el textoAPagar como se hacía antes.
             if (EntidadEconómica == null) throw new Exception("No se ha cargado la entidad económica.");
             if (this is NotaCréditoVenta && Prefijo == null) Prefijo = PrefijoNotasCréditoPredeterminado; // Es necesario establecer un prefijo obligatorio para las notas crédito por un error que presenta el servidor de la DIAN en 2021 con la aceptación de la numeración de estas si no llevan prefijo.
             if (this is NotaDébitoVenta && Prefijo == null) Prefijo = PrefijoNotasDébitoPredeterminado; // Es necesario establecer un prefijo obligatorio para las notas débito por un error que presenta el servidor de la DIAN en 2021 con la aceptación de la numeración de estas si no llevan prefijo.
@@ -527,7 +528,7 @@ namespace SimpleOps.Modelo {
             #region Cálculo del QR
             // Este es el paso más costoso de Requiere tener el CUDE actualizado.
 
-            if (calcularQR) { // El cálculo del QR es considerablemente más demorado que el resto del procedimiento (se demora 200 ms vs 36 ms) entonces se omite cuando no se ha llamado de manera explícita el CalcularTodo si no qoue se está llamando desde una de las propiedades de cálculo forzado que no sea QR.
+            if (calcularQR) { // El cálculo del QR es considerablemente más demorado que el resto del procedimiento (se demora 200 ms vs 36 ms) entonces se omite cuando no se ha llamado de manera explícita el CalcularTodo si no que se está llamando desde una de las propiedades de cálculo forzado que no sea QR.
 
                 var textoOtrosImpuestos = (ImpuestoConsumo + impuestoICA).ATexto(formatoNúmero);
                 var textoQR = $"NumFac: {Código}{NuevaLínea}FecFac: {textoFechaFactura}{NuevaLínea}HorFac: {textoHoraFactura}{NuevaLínea}" +

@@ -287,7 +287,7 @@
         </member>
         <member name="T:SimpleOps.Global">
             <summary>
-            Métodos, funciones y constantes estáticas de uso global para todo SimpleOps. Se diferencian de Vixark.General porque son propias del funcionamiento de SimpleOps y no de uso general compartido con otros proyectos.
+            Métodos, funciones y constantes estáticas de uso global para todo SimpleOps. Se diferencian de Vixark.General porque son propias del funcionamiento de SimpleOps y no son de uso general compartido con otros proyectos.
             </summary>
         </member>
         <member name="M:SimpleOps.Global.IniciarVariablesConfiguración">
@@ -764,7 +764,7 @@
         </member>
         <member name="P:SimpleOps.Legal.LíneaDocumentoElectrónico`1.SubtotalReal">
             <summary>
-            Si es muestra gratis no es cero.
+            Si es muestra gratis, no es cero.
             </summary>
         </member>
         <member name="T:SimpleOps.Legal.XmlFirmadoConWsuID">
@@ -1287,13 +1287,13 @@
         </member>
         <member name="P:SimpleOps.Modelo.MovimientoProducto.SubtotalBaseIVA">
             <summary>
-            Incluye el valor de los productos que sean muestras gratis sin valor comercial pero no incluye los excluídos de IVA.
+            Incluye el valor de los productos que sean muestras gratis sin valor comercial, pero no incluye los excluídos de IVA.
             Se incluye para ser consistente con la definición de productos excluídos de IVA que son los su valor no suma a la base tributable.
             </summary>
         </member>
         <member name="P:SimpleOps.Modelo.MovimientoProducto.SubtotalBaseIVADian">
             <summary>
-            Incluye el valor de los productos que sean muestras gratis sin valor comercial pero no incluye los excluídos y exentos de IVA.
+            Incluye el valor de los productos que sean muestras gratis sin valor comercial, pero no incluye los excluídos y exentos de IVA.
             Es necesario porque este es el valor que realmente solicita la DIAN cuando pide el subtotal sin impuestos en la factura electrónica.
             </summary>
         </member>
@@ -2004,6 +2004,9 @@
         <member name="P:SimpleOps.Modelo.Municipio.Nombre">
             <MaxLength>50</MaxLength>
         </member>
+        <member name="P:SimpleOps.Modelo.Municipio.NombreOficial">
+            <MaxLength>50</MaxLength>
+        </member>
         <member name="P:SimpleOps.Modelo.Municipio.Departamento">
             <MaxLength>60</MaxLength>
         </member>
@@ -2172,6 +2175,34 @@
             <MaxLength>500</MaxLength>
         </member>
         <member name="P:SimpleOps.Modelo.Producto.Personalizaciones">
+            <summary>
+            <para>Contiene las personalizaciones que se le pueden aplicar al producto. Una personalización tiene un tipo y una lista de posibles valores,
+            por ejemplo, tipo: "Nombre en Placa" y valores: "Jorge", "María" y "Natalia". La ventaja de las personalizaciones es que todas las posibles 
+            opciones no generan productos diferentes en la base de datos, se manejan en un solo producto. Una personalización es una característica que 
+            hace que el producto físico sea diferente a otros sin considerarlo diferente internamente para el manejo de precios o inventario.</para>
+            
+            <para>Son útiles cuando se tiene un producto que tiene una característica que puede tomar una gran cantidad de valores, por ejemplo en el caso 
+            de "Nombre en Placa" se podría usar cualquier nombre posible y no sería desable tener que crear un producto nuevo para cada nuevo nombre de 
+            placa. También es útil cuando un producto tiene tantas opciones que si se tratara de generar los productos con todas 
+            las combinaciones posibles, resultarían miles. Por ejemplo, si se tiene un producto que permite cambiar el color de 3 de sus partes  
+            por 20 colores diferentes, resultarían 8000 posibles productos, lo cual no sería deseable para el rendimiento de la aplicaciónni sería 
+            información fácil de manejar. En estos casos, como usualmente no se requieren precios diferenciados ni se requiere inventario 
+            independiente porque suelen ser productos sobre pedido, es recomendable manejarlos con personalizaciones.</para>
+            
+            <para>Si requiere manejar inventarios independientes o precios diferentes para productos que solo varían por una personalización, se 
+            recomienda separarlos en productos diferentes mediante un nuevo atributo auxiliar. Por ejemplo, si el color "Dorado" implica un precio mayor, 
+            se podría crear un atributo "Tipo Color" con valores "Color Especial" y "Color Estándar" y asignar cada uno a dos productos diferentes que 
+            permitirían manejar precios de manera independiente. Para continuar aceptando múltiples colores se podría usar una personalización "Color" con
+            valores "Rojo", "Verde", "Azul", etc para el producto con "Color Estándar" y una personalización "Color" con valor "Dorado" para el 
+            producto con "Color Especial".</para>
+            
+            <para>Si la lista de posibles valores de una personalización es vacía, se considera que esta personalización es un texto libre establecido 
+            por el cliente.</para>
+            
+            <para>Si no se especifica el tipo de la personalización y se usan valores que corresponden a valores de <see cref="P:SimpleOps.Modelo.Producto.Atributos"/>, el tipo 
+            de la personalización será el tipo de atributo de los valores.</para>
+            
+            </summary>
             <MaxLength>2000</MaxLength>
         </member>
         <member name="P:SimpleOps.Modelo.Producto.Cantidad">
@@ -2445,11 +2476,41 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:SimpleOps.Modelo.Producto.AgregarPersonalización(System.String,System.Collections.Generic.List{System.String},System.Boolean)">
+            <summary>
+            Agrega una nueva personalización al producto y los valores que esta puede tomar.
+            </summary>
+            <param name="tipo">Tipo de la personalización.</param>
+            <param name="valores">Posibles valores que puede tomar la personalización.</param>
+            <param name="reemplazarExistente">Aplicable cuando ya existe una personalización con el <paramref name="tipo"/>. Si es verdadero, los 
+            valores reemplazan los valores actuales de la personalización coincidente. Si es falso, se agrega una nueva personalización con el tipo
+            repetido. Si se asegura que no habrán personalizaciones existentes con el mismo tipo, se puede usar falso para mejorar el rendimiento.</param>
+        </member>
+        <member name="M:SimpleOps.Modelo.Producto.EliminarPersonalización(System.String,System.Boolean)">
+            <summary>
+            Elimina todas las personalizaciones coincidentes con <paramref name="tipo"/>.
+            </summary>
+            <param name="tipo">Tipo de la personalización a eliminar.</param>
+            <param name="eliminarVarias">Aplicable cuando el <paramref name="tipo"/> coincide con varias personalizaciones. Si este valor es verdadero, 
+            se eliminan todas las coincidencias. Si es falso, se lanza excepción.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SimpleOps.Modelo.Producto.ClasificarPersonalizaciones">
+            <summary>
+            Devuelve un diccionario clasificando por su tipo las personalizaciones disponibles para el producto. Si todos los valores
+            de una personalización coinciden con atributos de cierto tipo y el tipo de la personalización en la base de datos es nulo, se usará
+            el tipo de los atributos coincidentes. Por ejemplo, si existe la personalización tipo: "" y valores: "Azul", "Rojo" y "Verde", el tipo
+            sería "Color". Si no se encuentra el tipo de unos valores o los valores coinciden con diferentes tipos, el tipo será "Personalización ##",
+            donde ## es un número consecutivo de las personalizaciones sin tipo asignado ni autocalculado.
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:SimpleOps.Modelo.Producto.ClasificarAtributos(System.Boolean)">
             <summary>
             Devuelve un diccionario clasificando por su tipo los atributos asignados al producto.
             Si se puede asegurar que los atributos no están repetidos, o si están repetidos y no importa para la necesidad actual, al establecer
-            permitirRepetidos en verdadero se obtiene un mejor rendimiento.
+            permitirRepetidos en verdadero se obtiene un mejor rendimiento. El diccionario devuelto contiene una lista de atributos porque
+            es posible que el producto contenga varios atributos del mismo tipo.
             </summary>
             <param name="permitirRepetidos"></param>
             <returns></returns>
@@ -3216,7 +3277,15 @@
         <member name="M:Vixark.General.AMinúscula(System.String)">
             <summary>
             Encapsulación de rápido acceso de ToLowerInvariant(). Es útil para omitir la advertencia CA1308 sin saturar el código.
-            No se puede crear un método con el mismo nombre para string (sin ?) porque el compilador no lo permite. Si se necesitara 
+            No se puede crear un método con el mismo nombre para string (sin ?) porque el compilador no lo permite. Si se necesitara, 
+            se podría hacer otro método con otro nombre. Una solución fácil es usar este método con un string y poner ! después de () 
+            para informarle al compilador que se asegura que el resultado no será nulo.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.AMayúscula(System.String)">
+            <summary>
+            Encapsulación de rápido acceso de ToUpperInvariant(). Es útil para omitir la advertencia CA1308 sin saturar el código.
+            No se puede crear un método con el mismo nombre para string (sin ?) porque el compilador no lo permite. Si se necesitara, 
             se podría hacer otro método con otro nombre. Una solución fácil es usar este método con un string y poner ! después de () 
             para informarle al compilador que se asegura que el resultado no será nulo.
             </summary>
@@ -3780,7 +3849,37 @@
         <member name="T:Vixark.TuplaSerializable`2">
             <summary>
             Clase auxiliar que reemplaza la <see cref="T:System.Tuple`2"/> para propósitos de serialización. Es necesario usarla porque 
-            la serialización exige una clase con constructor sin parámetros. Ver https://stackoverflow.com/a/13739409/8330412.
+            la serialización exige una clase con constructor sin parámetros. 
+            </summary>
+        </member>
+        <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
+            <summary>
+            GeneratedInternalTypeHelper
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateInstance(System.Type,System.Globalization.CultureInfo)">
+            <summary>
+            CreateInstance
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.GetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            GetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.SetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            SetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateDelegate(System.Type,System.Object,System.String)">
+            <summary>
+            CreateDelegate
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.AddEventHandler(System.Reflection.EventInfo,System.Object,System.Delegate)">
+            <summary>
+            AddEventHandler
             </summary>
         </member>
     </members>

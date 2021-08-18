@@ -75,7 +75,7 @@ namespace SimpleOps.Legal {
 
         public const string VersiónUBL = "UBL 2.1"; // Versión base de UBL usada para crear este perfil
 
-        public const string CódigoFacturaEstándar = "10"; // Indicador del tipo de operación. Rechazo: Si contiene un valor distinto a los definidos en el grupo en el numeral 13.1.5.1: 10 Estandar (Valor predeterminado), 09 AIU, 11 Mandatos. SimpleOps no implementa aún AIU ni mandatos. 
+        public const string CódigoFacturaEstándar = "10"; // Indicador del tipo de operación. Rechazo: Si contiene un valor distinto a los definidos en el grupo en el numeral 13.1.5.1: 10 Estandar (Valor predeterminado), 09 AIU, 11 Mandatos. 12 Transporte, 13 Cambiario. SimpleOps no implementa aún ninguno los tipos de operación diferente de estándar. 
 
         public const string CódigoNotaCréditoConFactura = "20";
 
@@ -93,7 +93,7 @@ namespace SimpleOps.Legal {
 
         public const string AgenciaIdentificaciónPaísID = "6";
 
-        public const string NombreYVersiónFacturaElectrónica = "DIAN 2.1"; // Versión del Formato: Indicar versión del documento. A pesar que la documentación dice que se debe usar "DIAN 2.1: Factura Electrónica de Venta" el servicio web responde con error y exige que sea "DIAN 2.1".
+        public const string NombreYVersiónFacturaElectrónica = "DIAN 2.1: Factura Electrónica de Venta"; // Versión del Formato: Indicar versión del documento.
 
         public const string AlgoritmoCufe = "CUFE-SHA384"; // Identificador del esquema de identificación. Algoritmo utilizado para el cáculo del CUFE. Ver lista de valores posibles en el numeral 13.1.2.1.
 
@@ -123,7 +123,7 @@ namespace SimpleOps.Legal {
             {"antioquia","05"},
             {"arauca","81"},
             {"atlántico","08"},
-            {"distrito capital","11"},
+            {"bogotá","11"},
             {"bolívar","13"},
             {"boyacá","15"},
             {"caldas","17"},
@@ -145,7 +145,7 @@ namespace SimpleOps.Legal {
             {"putumayo","86"},
             {"quindío","63"},
             {"risaralda","66"},
-            {"archipiélago de san andrés, providencia y santa catalina","88"},
+            {"san andrés y providencia","88"},
             {"santander","68"},
             {"sucre","70"},
             {"tolima","73"},
@@ -156,13 +156,13 @@ namespace SimpleOps.Legal {
 
 
         public static Dictionary<TipoContribuyente, string> CódigosTiposContribuyentes = new Dictionary<TipoContribuyente, string> { // Tomados de la tabla 13.2.6.1. del 'Anexo técnico de factura electrónica de venta validación previa.pdf' de la DIAN.
-            {TipoContribuyente.Ordinario, "O-99" }, // Código aplicable para el elemento FAJ26. En Ago 2020 se cambió por O-99 porque en el entorno de pruebas estaba sacando error con el anterior que era ZZ.
+            {TipoContribuyente.Ordinario, "R-99-PN" }, // En agosto de 2021 se cambió por R-99-PN según la versión 1.8 de la facturación electrónica. Equivalente a Consumidor Final/No Aplica/Otros. Código aplicable para el elemento FAJ26. En agosto de 2020 se cambió por O-99 porque en el entorno de pruebas estaba sacando error con el anterior que era ZZ.
             {TipoContribuyente.GranContribuyente, "O-13" }, // Código aplicable para el elemento FAJ26.
             {TipoContribuyente.Autorretenedor, "O-15" }, // Código aplicable para el elemento FAJ26.
             {TipoContribuyente.RetenedorIVA, "O-23" }, // Código aplicable para el elemento FAJ26.
             {TipoContribuyente.RégimenSimple, "O-47" }, // Código aplicable para el elemento FAJ26.
-            {TipoContribuyente.ResponsableIVA, "48" }, // Código aplicable para el elemento FAJ27. Se obtiene de la tabla 16.1.6. Modificación del anexo técnico (06-09-2019).
-            {TipoContribuyente.NoResponsableIVA, "49" }, // Código aplicable para el elemento FAJ27. Se obtiene de la tabla 16.1.6. Modificación del anexo técnico (06-09-2019).
+            {TipoContribuyente.ResponsableIVA, "48" }, // En agosto de 2021 la DIAN eliminó la necesidad de la regla FAJ27, entonces este valor no sería necesario, pero se deja porque no sería extraño que lo volvieran a requerir. Código aplicable para el elemento FAJ27. Se obtiene de la tabla 16.1.6. Modificación del anexo técnico (06-09-2019).
+            {TipoContribuyente.NoResponsableIVA, "49" }, // En agosto de 2021 la DIAN eliminó la necesidad de la regla FAJ27, entonces este valor no sería necesario, pero se deja porque no sería extraño que lo volvieran a requerir. Código aplicable para el elemento FAJ27. Se obtiene de la tabla 16.1.6. Modificación del anexo técnico (06-09-2019).
         };
 
 
@@ -447,14 +447,20 @@ namespace SimpleOps.Legal {
         public static string ObtenerResponsabilidadFiscal(TipoContribuyente tipoContribuyente) {
 
             var respuesta = "";
-            foreach (var tipoContribuyenteÚnico in ObtenerValores<TipoContribuyente>()) { 
+            var tiposContribuyentes = ObtenerValores<TipoContribuyente>().ToList();
+            var alMenosUnoNoOrdinario = false;
+            foreach (var tipoContribuyenteÚnico in tiposContribuyentes) { 
 
                 if (tipoContribuyenteÚnico == TipoContribuyente.ResponsableIVA) continue; 
                 if (tipoContribuyenteÚnico == TipoContribuyente.NoResponsableIVA) continue;
-                if (tipoContribuyente.HasFlag(tipoContribuyenteÚnico)) respuesta += $"{CódigosTiposContribuyentes.ObtenerValorObjeto(tipoContribuyenteÚnico)};";
+                if (tipoContribuyente.HasFlag(tipoContribuyenteÚnico)) {
+                    if (tipoContribuyenteÚnico != TipoContribuyente.Ordinario) alMenosUnoNoOrdinario = true;
+                    respuesta += $"{CódigosTiposContribuyentes.ObtenerValorObjeto(tipoContribuyenteÚnico)};";
+                }
 
             }
-            return respuesta.TrimEnd(';');
+            if (alMenosUnoNoOrdinario) respuesta = respuesta.Reemplazar(CódigosTiposContribuyentes[TipoContribuyente.Ordinario], ""); // Si tiene algún tipo de contribuyente que no sea ordinario, no se agrega el código de contribuyente ordinario.
+            return respuesta.Reemplazar(";;",";").Trim(';');
 
         } // ObtenerResponsabilidadFiscal>
 

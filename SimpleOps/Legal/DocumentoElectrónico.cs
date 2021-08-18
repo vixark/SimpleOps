@@ -228,7 +228,7 @@ namespace SimpleOps.Legal {
 
                 return new AddressType { // 1..1 FAJ08.
                     ID = new IDType { Value = Validar(municipio.Código, "5") }, // 1..1 FAJ09.
-                    CityName = new CityNameType { Value = Validar(municipio.Nombre, "1..60", true) }, // 1..1 FAJ10.
+                    CityName = new CityNameType { Value = Validar(municipio.NombreOficialEfectivo, "1..60", true) }, // 1..1 FAJ10.
                     // PostalZone = , // 0..1 FAJ73 T1..10. Código postal. Ver lista de valores posibles en el numeral 13.4.4. Por lo general no se tiene ni se usa.
                     CountrySubentity = new CountrySubentityType { Value = Validar(municipio.Departamento, "1..60", true) }, // 1..1 FAJ11.
                     CountrySubentityCode = new CountrySubentityCodeType { Value = Validar(municipio.CódigoDepartamento, "1..5") }, // 1..1 FAJ12.
@@ -248,14 +248,14 @@ namespace SimpleOps.Legal {
 
 
             static TaxTotalType? obtenerTaxTotal(List<LíneaDocumentoElectrónico<M>> líneas, TipoTributo tipoTributo, out bool éxito, 
-                out string? mensaje) {
+                out string? mensaje, bool tributoTotalMayorACero) {
 
                 éxito = true;
                 mensaje = null;
 
                 var moneda = Generales.Moneda;
-                var totalImpuesto = líneas.Sum(d => d.TipoTributo == tipoTributo ? d.Impuesto : 0);
-                if (totalImpuesto == 0) return null; // Para no agregar impuestos que no están en el total de líneas. Es necesario cuando se usa la función para la línea que no debe agregar elementos para impuestos que no le aplican a la línea actual así este impuesto aplique a otras líneas. En el caso de los impuestos generales no es tan importante porque se hace un prefiltrado previo de los tributos disponibles.
+                var totalImpuesto = líneas.Sum(d => d.TipoTributo == tipoTributo ? d.Impuesto : 0); 
+                if (!tributoTotalMayorACero && totalImpuesto == 0) return null; // En las versiones anteriores a agosto 2021 se tenía esta línea general: if (totalImpuesto == 0) return null; para no agregar ningún impuesto que no estuviera en el total de líneas. Pero con los cambios de agosto 2021 esto no se puede hacer cuando la factura contiene el tipoTributo mayor a cero en otra línea, se debe reportar en esta línea así no lo tenga. Sigue siendo necesario saltarse la adición cuando la factura no tiene ese tributo, porque si se agrega en ceros para todas las líneas, saca error. En la adaptación a la versión 1.8 2021 de la facturación electrónica se encontró que si una factura combinaba productos que tuvieran solo IVA y otros solo INC, sacaba el error 'Rechazo FAS01b: Existe mas de un grupo con informacion de totales para un mismo tributo en la factura.', la solución implementada fue agregar todos los impuestos que estuvieran en toda la factura a cada línea, y si a cierta línea no le aplicaba un impuesto, este simplemente se reportaba con tasa de 0%. En el caso de los impuestos generales (agrupados por tarifa) no es tan importante porque se hace un prefiltrado previo de los tributos disponibles.
 
                 var taxTotalType = new TaxTotalType { 
                     TaxAmount = new TaxAmountType { 
@@ -304,12 +304,16 @@ namespace SimpleOps.Legal {
                     };
 
                     switch (línea.ModoImpuesto) {
-                        case ModoImpuesto.Exento:
+                        case ModoImpuesto.Exento: // Antes de la actualización de agosto de 2021, el código no pasaba por aquí porque salía prematuramente al detectar totalImpuesto = 0. En la actualización de agosto de 2021 el código llega aquí entonces se devuelve crea un objeto taxable amount y un porcentaje de impuesto igual a cero.
+
+                            taxSubtotal.TaxableAmount = new TaxableAmountType { Value = Validar(línea.SubtotalRealDian, "0..15 p (2..6)", 2), currencyID = moneda };
+                            taxSubtotal.TaxCategory.Percent = new PercentType1 { Value = Validar(0, "0..5 p (0..3)", 2) };
                             break;
+
                         case ModoImpuesto.Porcentaje:
 
                             taxSubtotal.TaxableAmount = new TaxableAmountType { 
-                                Value = Validar(línea.SubtotalReal, "0..15 p (2..6)", 2), currencyID = moneda // 1..1 FAS05, FAX05. currencyID: 1..1 FAS06, FAX06. En el caso de que el tributo sea una porcentaje del valor tributable informar la base imponible en valor monetario.
+                                Value = Validar(línea.SubtotalRealDian, "0..15 p (2..6)", 2), currencyID = moneda // 1..1 FAS05, FAX05. currencyID: 1..1 FAS06, FAX06. En el caso de que el tributo sea una porcentaje del valor tributable informar la base imponible en valor monetario.
                             };
                             taxSubtotal.TaxCategory.Percent = new PercentType1 { 
                                 Value = Validar(tarifaImpuestoPorcentual, "0..5 p (0..3)", 2) // 0..1 FAS14, FAX14. Aunque en la tabla 13.3.9 no mencionan el 0 como un valor válido para el INC se permitirá el 0 porque se muestra en el ejemplo de XML.
@@ -318,7 +322,7 @@ namespace SimpleOps.Legal {
 
                         case ModoImpuesto.Unitario:
 
-                            taxSubtotal.TaxableAmount = new TaxableAmountType { Value = Validar(línea.SubtotalReal, "0..15 p (2..6)", 2) }; // 1..1 FAS05, FAX05. currencyID: 1..1 FAS06, FAX06. Según la documentación en el caso que el tributo sea un valor fijo por unidad tributada se debería informar el número de unidades tributadas (línea.Cantidad), pero el servidor de la DIAN lo rechaza con este error: Rechazo FAU04: Base Imponible es distinto a la suma de los valores de las bases imponibles de todas líneas de detalle, se usa entonces el SubtotalReal normal como en el caso de impuestos porcentuales.
+                            taxSubtotal.TaxableAmount = new TaxableAmountType { Value = Validar(línea.SubtotalRealDian, "0..15 p (2..6)", 2) }; // 1..1 FAS05, FAX05. currencyID: 1..1 FAS06, FAX06. Según la documentación en el caso que el tributo sea un valor fijo por unidad tributada se debería informar el número de unidades tributadas (línea.Cantidad), pero el servidor de la DIAN lo rechaza con este error: Rechazo FAU04: Base Imponible es distinto a la suma de los valores de las bases imponibles de todas líneas de detalle, se usa entonces el SubtotalReal normal como en el caso de impuestos porcentuales.
                             taxSubtotal.BaseUnitMeasure = new BaseUnitMeasureType { 
                                 Value = Validar(1, "0..2 p (0..2)", 0), unitCode = ObtenerCódigoUnidad(Unidad.Unidad) // 0..1 FAS09, FAX09. Unidad de medida base para el tributo. Usado en el caso que el tributo sea un valor fijo por unidad tributada. Por ejemplo, el impuesto de consumo a las bolsas o los impuestos a los combustibles. 1..1 FAS10, FAX10. Se asumirá que siempre el impuesto es unitario para establecer el código de la unidad, es complicado establecer el código correcto según todos los tipos posibles de impuestos.
                             }; 
@@ -342,7 +346,7 @@ namespace SimpleOps.Legal {
 
 
             static TaxTotalType[]? obtenerTaxTotales(List<M> líneas, out bool éxito, out string? mensaje, 
-                AgrupaciónTaxTotales agrupaciónTaxTotales) {
+                AgrupaciónTaxTotales agrupaciónTaxTotales, ref List<TipoTributo> tributosTotalesMayoresACero) {
 
                 éxito = true;
                 mensaje = null;
@@ -351,7 +355,7 @@ namespace SimpleOps.Legal {
                 tiposTributo.Insert(0, TipoTributo.IVA); // Se agrega el IVA porque en la línea anterior solo se agregaron los diferentes tipos tributo de consumo. Se agrega al inicio solo por convención.
                 var taxTotales = new List<TaxTotalType>(); // 0..N FAS01, FAX01.
 
-                foreach (var tipoTributo in tiposTributo) { // Se garantiza que cada producto solo tiene un solo impuesto a consumo por lo tanto el valor subtotal de cada producto es igual al valor subtotal del tributo de la línea.
+                foreach (var tipoTributo in tiposTributo) { // Se garantiza que cada producto solo tiene un solo impuesto a consumo, por lo tanto el valor subtotal de cada producto es igual al valor subtotal del tributo de la línea.
 
                     TaxTotalType? taxTotal = null;
                     var éxitoTributo = true;
@@ -361,7 +365,7 @@ namespace SimpleOps.Legal {
                         case AgrupaciónTaxTotales.Línea:
 
                             taxTotal = obtenerTaxTotal(LíneaDocumentoElectrónico<M>.CrearLista(líneas, tipoTributo), tipoTributo, 
-                                out éxitoTributo, out mensajeTributo);
+                                out éxitoTributo, out mensajeTributo, tributosTotalesMayoresACero.Contains(tipoTributo));
                             break;
 
                         case AgrupaciónTaxTotales.Tarifa:
@@ -386,15 +390,19 @@ namespace SimpleOps.Legal {
                                     foreach (var líneaPorTarifa in tarifaYLíneas.Value) { // Suma el subtotal y el impuesto de todos los productos que tengan la misma tarifa, el mismo tipo impuesto y el mismo modo de impuesto.
                                         líneaTarifa.Impuesto += líneaPorTarifa.ObtenerValorImpuesto(tipoTributo);
                                         líneaTarifa.SubtotalReal += líneaPorTarifa.SubtotalBaseReal;
+                                        líneaTarifa.SubtotalRealDian += líneaPorTarifa.SubtotalBaseRealDian;
                                         líneaTarifa.Cantidad += líneaPorTarifa.Cantidad; // Para el cálculo del ImpuestoUnitario. No se usa en el porcentual.
+                                        if (líneaTarifa.Impuesto > 0) tributosTotalesMayoresACero.Agregar(líneaTarifa.TipoTributo, permitirRepetidos: false);
                                     }
+                                    
                                     líneasTarifas.Add(líneaTarifa);
 
                                 }
 
                             }
 
-                            taxTotal = obtenerTaxTotal(líneasTarifas, tipoTributo, out éxitoTributo, out mensajeTributo);
+                            taxTotal = obtenerTaxTotal(líneasTarifas, tipoTributo, out éxitoTributo, out mensajeTributo, 
+                                tributosTotalesMayoresACero.Contains(tipoTributo));
                             break;
 
                         default:
@@ -704,8 +712,8 @@ namespace SimpleOps.Legal {
                     RegistrationName = registrationNameFacturador, // 1..1 FAJ20.
                     CompanyID = companyIDFacturador,
                     TaxLevelCode = new TaxLevelCodeType { 
-                        Value = Validar(ObtenerResponsabilidadFiscal(Empresa.TipoContribuyente), "1..30"), // 1..1 FAJ26. El tamaño la documentación dice 30 único pero ese valor no tiene sentido. Se usará 1..30.
-                        listName = ObtenerResponsabilidadIVA(Empresa.TipoContribuyente), // Supuestamente FAJ27 es un elemento opcional, pero el servidor de la DIAN si lo exige. Se encontró que se debe usar 48 o 49 dependiendo de si es o no responsable de IVA aquí http://facturasyrespuestas.com/2225/inquietud-campo-taxlevelcode. Estos valores se pueden ver en el numeral 16.1.6. Modificación del anexo técnico (06-09-2019) de la documentación.
+                        Value = Validar(ObtenerResponsabilidadFiscal(Empresa.TipoContribuyente), "1..30"), // 1..1 FAJ26. El tamaño la documentación dice 30 único, pero ese valor no tiene sentido. Se usará 1..30.
+                        // listName = ObtenerResponsabilidadIVA(Empresa.TipoContribuyente), // 2021: Esta regla fue eliminada por la DIAN. Supuestamente FAJ27 es un elemento opcional, pero el servidor de la DIAN si lo exige. Se encontró que se debe usar 48 o 49 dependiendo de si es o no responsable de IVA aquí http://facturasyrespuestas.com/2225/inquietud-campo-taxlevelcode. Estos valores se pueden ver en el numeral 16.1.6. Modificación del anexo técnico (06-09-2019) de la documentación.
                     }, 
                     RegistrationAddress = obtenerAddress(new DirecciónCompleta(Empresa.MunicipioFacturación, Empresa.DirecciónFacturación)), // 0..1 FAJ28. Aquí se incluyen automáticamente los elementos FAJ29, FAJ30, FAJ74, FAJ31, FAJ32, FAJ33, FAJ34, FAJ35, FAJ36, FAJ37 y FAJ38.
                     TaxScheme = new TaxSchemeType { // 1..1 FAJ39.
@@ -774,14 +782,16 @@ namespace SimpleOps.Legal {
                 new PartyTaxSchemeType { // 0..1 FAK19.
                     RegistrationName = registrationNameCliente, // 1..1 FAK20. 
                     CompanyID = companyIDCliente, // 1..1 FAK21. Incluye FAK22, FAK23, FAK24 y FAK25.
-                    // TaxLevelCode = // 0..1 FAK26. Incluye FAK27. No siempre se dispone de la información correcta de que tipo de contribuyente es un cliente entonces se omite.
+                    TaxLevelCode = new TaxLevelCodeType {
+                        Value = Validar(ObtenerResponsabilidadFiscal(cliente.TipoContribuyente), "1..30"), // 0..1 FAK26. Incluye FAK27. No siempre se dispone de la información correcta de que tipo de contribuyente es un cliente entonces lo idea sería poderlo omitir, pero desde agosto de 2021 la DIAN está exigiendo este valor así que se tiene que incluir, pero lo más posible es que los usuarios tengan este valor desactualizado y siempre terminen enviando el código R-99-PN de No Aplica/Otros/Ordinario.
+                    }, 
                 }
             };
 
             customerParty.PartyTaxScheme[0].RegistrationAddress = obtenerAddress(cliente.DirecciónCompleta); // 0..1 FAK28. Incluye FAK29, FAK30, FAK58, FAK31, FAK32, FAK33, FAK34, FAK35, FAK36, FAK37 y FAK38.
             customerParty.PartyTaxScheme[0].TaxScheme = new TaxSchemeType { // 1..1 FAK39.
                 ID = new IDType { Value = Validar(códigoImpuestoPredominante, "2..10") }, // Antes era ObtenerCódigoTipoImpuesto(tipoImpuesto). 1..1 FAK40. Dice que para el consumidor final debe informar "ZZ" pero quedan dudas al respecto porque no tiene mucho que ver con los impuestos de la factura, se dejará normal.
-                Name = new NameType1 { Value = Validar(nombreImpuestoPredominante, "3..30") } // Antes eratipoImpuesto.ATexto(). 1..1 FAK41.
+                Name = new NameType1 { Value = Validar(nombreImpuestoPredominante, "3..30") } // Antes era tipoImpuesto.ATexto(). 1..1 FAK41.
             }; // 1..1 FAK39. Incluye FAK40 y FAK41.
 
             customerParty.PartyLegalEntity = new PartyLegalEntityType[1] { // 1..1 FAK42.
@@ -836,8 +846,8 @@ namespace SimpleOps.Legal {
                 var deliveries = new DeliveryType[1];
                 var delivery = new DeliveryType { // 0..1 FAM01.
                     DeliveryAddress = obtenerAddress(venta.DirecciónCompletaEntrega) // 0..1 FAM01. Incluye FAM02, FAM03, FAM04, FAM05, FAM06, FAM68, FAM07, FAM09, FAM10, FAM11, FAM12, FAM13 y FAM14.
-                }; 
-                delivery.ActualDeliveryDate = new ActualDeliveryDateType { Value = venta.FechaHora.AddDays(3) }; // 1..1 FAM02. Aunque normalmente no se dispone de esta información porque la factura se suele generar antes de realizar el envío la DIAN puso este campo obligatorio en la versión del 2020. Se pone entonces un aproximado sumando 3 días después de la facturación sumando además los 3 días hábiles que la DIAN da para aceptación tácita da entre 6 a 8 días calendario para la aceptación tácita después de la fecha de facturación. De todas maneras esto no debería importar mucho porque se espera que lo más normal sean las aceptaciones tácitas y las diferencias que resulten se resuelvan a nivel comercial con notas crédito.
+                };
+                // delivery.ActualDeliveryDate = new ActualDeliveryDateType { Value = venta.FechaHora.AddDays(3) }; // En Agosto 2021 la DIAN eliminó las reglas FAM02a y FAM02b por lo se asume que eliminó esta FAM02 completamente. 1..1 FAM02. Aunque normalmente no se dispone de esta información porque la factura se suele generar antes de realizar el envío la DIAN puso este campo obligatorio en la versión del 2020. Se pone entonces un aproximado sumando 3 días después de la facturación sumando además los 3 días hábiles que la DIAN da para aceptación tácita da entre 6 a 8 días calendario para la aceptación tácita después de la fecha de facturación. De todas maneras esto no debería importar mucho porque se espera que lo más normal sean las aceptaciones tácitas y las diferencias que resulten se resuelvan a nivel comercial con notas crédito.
                 // delivery.ActualDeliveryTime = ; // 0..1 FAM03. Igual que el anterior.
                 // delivery.DeliveryParty = ; // 0..1 FAM15. Incluye FAM16, FAM17, FAM18, FAM19, FAM20, FAM21, FAM69, FAM22, FAM23, FAM24, FAM25, FAM26, FAM27, FAM28, FAM29, FAM30, FAM31, FAM32, FAM33, FAM34, FAM35, FAM36, FAM37, FAM38, FAM39, FAM40, FAM41, FAM70, FAM42, FAM43, FAM44, FAM45, FAM46, FAM47, FAM48, FAM49, FAM50, FAM51, FAM52, FAM53, FAM54, FAM55, FAM56, FAM57, FAM58, FAM59, FAM60, FAM61, FAM62, FAM63, FAM64, FAM65, FAM66 y FAM67. Normalmente en el momento de la facturación no se dispone de la empresa transportadora que se va a usar para el envío. Al ser opcional se omite.
                 deliveries[0] = delivery;
@@ -890,7 +900,7 @@ namespace SimpleOps.Legal {
 
                 descuentoCondicionado = venta.DescuentoCondicionado;
                 document.AllowanceCharge = new AllowanceChargeType[1] { new AllowanceChargeType { // 0..N FAQ01. Según la documentación son descuentos o cargos a nivel de factura que no afectan las bases gravables es decir están hablando de descuentos condicionados o financieros (Leer más en https://www.globalcontable.com/tratamiento-de-los-descuentos-en-la-facturacion-electronica-oficio-dian-20067-de-2019/). Además en la tabla 13.3.7 lo vuelven a aclarar cuando dicen que los 00. Descuento no condicionado es para descuentos a nivel de línea y 01. Descuento condicionado, son los descuentos a pie de factura. Aunque el término a pie de factura se podría interpretar como descuento comercial, la aclaración sobre que los no condicionados se usan a nivel de línea compensa esa poca claridad y refuerza la indicación de la tabla de documentación para que el elemento FAQ01 se debe use solo para descuentos condicionados.
-                    ID = new IDType { Value = "1" }, // 1..1 FAQ02. Solo se agrega un descuento condicionado.
+                    // ID = new IDType { Value = "1" }, // 1..1 FAQ02. Agosto 2021: Esta regla fue eliminada por la DIAN. Solo se agrega un descuento condicionado.
                     ChargeIndicator = new ChargeIndicatorType { Value = false }, // 1..1 FAQ03. Solo se soportarán descuentos, no cargos.
                     AllowanceChargeReasonCode = new AllowanceChargeReasonCodeType { Value = TipoDescuento.Condicionado.AValor(largoForzado: 2) }, // 0..1 FAQ04.
                     AllowanceChargeReason = new AllowanceChargeReasonType[]
@@ -911,8 +921,9 @@ namespace SimpleOps.Legal {
 
             #region Datos Impuestos 
 
-            document.TaxTotal = obtenerTaxTotales(Documento.Líneas, out bool éxitoTaxTotales, out string? mensajeTaxTotales, 
-                AgrupaciónTaxTotales.Tarifa);
+            var tributosTotalesMayoresACero = new List<TipoTributo>();
+            document.TaxTotal = obtenerTaxTotales(Documento.Líneas, out bool éxitoTaxTotales, out string? mensajeTaxTotales, AgrupaciónTaxTotales.Tarifa, 
+                ref tributosTotalesMayoresACero);
             if (!éxitoTaxTotales) return Falso(out mensaje, mensajeTaxTotales);
             // document.WithholdingTaxTotal = new TaxTotalType[1] { obtenerTaxTotal(, TipoTributo.RetenciónRenta) }; // 0..N FAT01. Incluye FAT02, FAT03, FAT04, FAT05, FAT06, FAT07, FAT08, FAT09, FAT10, FAT11, FAT12 y FAT13. Grupo de campos para información relacionada con los tributos retenidos. Se usa para los casos que la empresa sea autorretenedor según la documentación de la DIAN. Sin embargo no se agregará por 4 razones: 1. El público objetivo de SimpleOps es improbable que sea autorretenedor. 2. Aún si alguno lo fuera este elemento no es de utilidad para el cliente pues los valores autorretenidos son importantes solo para la empresa y su declaración de impuestos, el cliente lo único que debe saber es que no debe aplicar retenciones. 3 el elemento es opcional, entonces para la DIAN tampoco es importante. 4. Es extraño lo de la autorretención, se supone que cuando un facturador es autorretenedor esto implica que el cliente no le debe aplicar ninguna retención al pagarle la factura, entonces si para los autorretenedores las retenciones son cero, ¿Qué se supone que se informaría aquí?
            
@@ -936,7 +947,7 @@ namespace SimpleOps.Legal {
                 // ChargeTotalAmount = new ChargeTotalAmountType { Value = 0, currencyID = Opciones.Moneda }; // 0..1 FAU10. currencyID 1..1 FAU11. Suma de todos los cargos aplicados a nivel de la factura. No se soportan cargos. La manera más fácil e intuitiva de generarlos facturando un servicio dentro de la factura.
                 PrepaidAmount = new PrepaidAmountType { Value = Validar(Anticipo, "4..15 p (2..6)", 2), currencyID = moneda }, // 0..1 FAU12. currencyID 1..1 FAU13. Suma de todos los pagos anticipados.
                 PayableAmount = new PayableAmountType { 
-                    Value = Validar(Documento.SubtotalFinalConImpuestos - Anticipo, "0..15 p (2..6)", 2), currencyID = moneda// 1..1 FAU14. El valor a pagar es igual a la suma del valor bruto + tributos - valor del descuento total + valor del cargo total - valor del anticipo total. Moneda: 1..1 FAU15. 
+                    Value = Validar(Documento.SubtotalFinalConImpuestos, "0..15 p (2..6)", 2), currencyID = moneda // 1..1 FAU14. El valor a pagar es igual a la suma del valor bruto + tributos - valor del descuento total + valor del cargo total. Antes del 2021 se restaba el anticipo, pero para agosto de 2021 en adelante este ya no se resta. Moneda: 1..1 FAU15. 
                 } 
             };
 
@@ -1012,7 +1023,7 @@ namespace SimpleOps.Legal {
                     line.AllowanceCharge = new AllowanceChargeType[] { 
                         new AllowanceChargeType { // 0..N FBE01. Este grupo se debe informar a nivel de ítem si el cargo o descuento afecta la base gravable del ítem (Es decir es un descuento comercial).
                             ID = new IDType { Value = "1" }, // FBE02.
-                            ChargeIndicator = new ChargeIndicatorType { Value = false }, // 1..1 FAB03.
+                            ChargeIndicator = new ChargeIndicatorType { Value = false }, // 1..1 FBE03.
                             // AllowanceChargeReason = , // 0..1 FBE04. Por lo general es un descuento comercial. No se saturará la interfaz requiriendo esta información.
                             MultiplierFactorNumeric = new MultiplierFactorNumericType { 
                                 Value = Validar(0, "1..6 p (0..2)", 2) // 1..1 FBE05. Aunque debería ser línea.PorcentajeDescuentoComercial * 100, por simplicidad al informar a la DIAN no se reportará porque este está incluído en el SubtotalBase.
@@ -1029,9 +1040,9 @@ namespace SimpleOps.Legal {
                 }
 
                 if (!Empresa.TipoContribuyente.HasFlag(TipoContribuyente.RégimenSimple)) { // FAX01 no debe ser informado para facturas del régimen simple grupo I ni para ítems cuyo concepto en contratos de AIU no haga parte de la base gravable.
-                   
+
                     line.TaxTotal = obtenerTaxTotales(new List<M> { línea }, out bool éxitoTaxTotalesLínea, out string? mensajeTaxTotalesLínea, 
-                        AgrupaciónTaxTotales.Línea); // 0..N FAX01.
+                        AgrupaciónTaxTotales.Línea, ref tributosTotalesMayoresACero); // 0..N FAX01.
                     if (!éxitoTaxTotalesLínea) return Falso(out mensaje, mensajeTaxTotalesLínea);
 
                 }

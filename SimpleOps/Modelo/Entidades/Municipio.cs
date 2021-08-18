@@ -51,6 +51,10 @@ namespace SimpleOps.Modelo {
         [MaxLength(50)]
         public string Nombre { get; set; } = null!; // Obligatorio. No es la clave principal porque podría ser cambiado y podrían haber varios con el mismo nombre en diferentes departamentos.
 
+        /// <MaxLength>50</MaxLength>
+        [MaxLength(50)]
+        public string? NombreOficial { get; set; } // Es el nombre que se envía a la DIAN en la facturación electrónica, pero internamente no se usa para nada más porque es más práctico usar el nombre común de los municipios. Esto es principalmente para acomodar los nombres oficiales incómodamente largos y poco usados en el uso normal de Bogotá, Distrito Capital, Cartagena De Indias, San José De Cúcuta, San Andrés De Tumaco, San Sebastián De Mariquita y Villa De San Diego De Ubaté. 
+
         /// <MaxLength>60</MaxLength>
         [MaxLength(60)]
         public string Departamento { get; set; } = null!; // Obligatorio en el uso normal. Cuando se carga desde un DTO de integración podría llegar a ser nulo y generar problemas, pero como la integración no es el foco de la aplicación se dejará sin controlar este caso. Aunque se podría pensar en establecer una clave. Es de 60 de largo para cumplir con el caso de 'Archipiélago De San Andrés, Providencia Y Santa Catalina'.
@@ -85,6 +89,9 @@ namespace SimpleOps.Modelo {
 
         public Municipio(string nombre, string departamento) => (Nombre, Departamento) = (nombre, departamento);
 
+        public Municipio(string nombre, string departamento, string nombreOficial) 
+            => (Nombre, Departamento, NombreOficial) = (nombre, departamento, nombreOficial);
+
         public double PorcentajeIVA => PorcentajeIVAPropio ?? Empresa.PorcentajeIVAPredeterminadoEfectivo; // Es solo para fines informativos porque al facturar se debe usar la función Global.ObtenerPorcentajeIVA().
 
         public bool ExentoIVA => PorcentajeIVA == 0; // Es solo para fines informativos porque al facturar se debe usar la función Global.ObtenerPorcentajeIVA().
@@ -101,6 +108,8 @@ namespace SimpleOps.Modelo {
         public string? CódigoPaís => País == "Colombia" ? "CO" : null;
 
         public string? CódigoLenguajePaís => País == "Colombia" ? "es" : null; // Identificador del lenguaje utilizado en el nombre del país. Para español, utilizar el literal "es". Ver lista de valores posibles en el numeral 0, columna ISO639-1. Debe ser "es" para que funcione la facturación electrónica.
+
+        public string? NombreOficialEfectivo => NombreOficial ?? Nombre; // Para los que no tengan nombre oficial, se usa el nombre común.
 
         #endregion Propiedades Autocalculadas>
 

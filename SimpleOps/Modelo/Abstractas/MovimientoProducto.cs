@@ -133,6 +133,11 @@ namespace SimpleOps.Modelo {
         public decimal SubtotalBaseReal => PrecioBaseReal * Cantidad;
 
         /// <summary>
+        /// Es cero si la factura la suma de los tributos es cero. Es una variable auxiliar para facilitar la adaptación a los requerimientos de la DIAN.
+        /// </summary>
+        public decimal SubtotalBaseRealDian => IVA + ImpuestoConsumo > 0 ? SubtotalBaseReal : 0; 
+
+        /// <summary>
         /// Subtotal directo del producto. No tiene en cuenta ningún descuento. Su valor es cero si es muestra gratis.
         /// </summary>
         public decimal Subtotal => MuestraGratis ? 0 : Precio * Cantidad;
@@ -156,13 +161,13 @@ namespace SimpleOps.Modelo {
         public string SubtotalBaseConImpuestosTexto => (SubtotalBase + (IVA ?? 0) + (ImpuestoConsumo ?? 0)).ATextoDinero(agregarMoneda: false);
 
         /// <summary>
-        /// Incluye el valor de los productos que sean muestras gratis sin valor comercial pero no incluye los excluídos de IVA.
+        /// Incluye el valor de los productos que sean muestras gratis sin valor comercial, pero no incluye los excluídos de IVA.
         /// Se incluye para ser consistente con la definición de productos excluídos de IVA que son los su valor no suma a la base tributable.
         /// </summary>
         public decimal? SubtotalBaseIVA => Producto == null ? (decimal?)null : (Producto.ExcluídoIVA ? 0 : SubtotalBaseReal);
 
         /// <summary>
-        /// Incluye el valor de los productos que sean muestras gratis sin valor comercial pero no incluye los excluídos y exentos de IVA.
+        /// Incluye el valor de los productos que sean muestras gratis sin valor comercial, pero no incluye los excluídos y exentos de IVA.
         /// Es necesario porque este es el valor que realmente solicita la DIAN cuando pide el subtotal sin impuestos en la factura electrónica.
         /// </summary>
         public decimal? SubtotalBaseIVADian => Producto == null ? (decimal?)null : (IVA == 0 ? 0 : SubtotalBaseReal); // Es necesario usar IVA == 0 para poder incluir los casos en los que el producto es exento de IVA no por ser en si mismo exento si no porque el cliente o el municipio lo son.

@@ -9,8 +9,8 @@ using SimpleOps.Datos;
 namespace SimpleOps.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20210704100354_uno")]
-    partial class uno
+    [Migration("20210818030019_Uno")]
+    partial class Uno
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -1310,6 +1310,10 @@ namespace SimpleOps.Migrations
 
                     b.Property<string>("Nombre")
                         .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("NombreOficial")
                         .HasColumnType("TEXT")
                         .HasMaxLength(50);
 
