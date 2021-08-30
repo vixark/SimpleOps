@@ -95,6 +95,10 @@ namespace SimpleOps.Legal {
 
         public const string NombreYVersiónFacturaElectrónica = "DIAN 2.1: Factura Electrónica de Venta"; // Versión del Formato: Indicar versión del documento.
 
+        public const string NombreYVersiónNotaCréditoElectrónica = "DIAN 2.1: Nota Crédito de Factura Electrónica de Venta"; 
+
+        public const string NombreYVersiónNotaDébitoElectrónica = "DIAN 2.1: Nota Débito de Factura Electrónica de Venta"; 
+
         public const string AlgoritmoCufe = "CUFE-SHA384"; // Identificador del esquema de identificación. Algoritmo utilizado para el cáculo del CUFE. Ver lista de valores posibles en el numeral 13.1.2.1.
 
         public const string AlgoritmoCude = "CUDE-SHA384"; // Identificador del esquema de identificación. Algoritmo utilizado para el cáculo del CUDE. Ver lista de valores posibles en el numeral 13.1.2.2.

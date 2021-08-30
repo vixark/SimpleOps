@@ -546,7 +546,9 @@ namespace SimpleOps.Legal {
 
             document.UBLVersionID = new UBLVersionIDType { Value = Validar(VersiónUBL, "7..8") }; // 1..1 FAD01.
             document.CustomizationID = new CustomizationIDType { Value = Validar(ObtenerCódigoTipoOperación(venta, notaCrédito, notaDébito, ventaNota), "1..4") }; // 1..1 FAD02. 
-            document.ProfileID = new ProfileIDType { Value = NombreYVersiónFacturaElectrónica }; // 1..1 FAD03. Según la documentación debería tener una longitud de 55 única pero el texto que dice en la documentación "Dian 2.1 Factura Electrónica de Venta" y el texto realmente exigido por el servicio web "Dian 2.1" contradicen esa restricción entonces no se validará su largo.
+            string profileID = Documento switch { Venta _ => NombreYVersiónFacturaElectrónica, NotaCréditoVenta _ => NombreYVersiónNotaCréditoElectrónica,
+                NotaDébitoVenta _ => NombreYVersiónNotaDébitoElectrónica, _ => "" }; // No se lanza excepción porque si esto llega a ocurrir, ya lanza excepción al inicio de este procedimiento.
+            document.ProfileID = new ProfileIDType { Value = profileID }; // 1..1 FAD03. Según la documentación debería tener una longitud de 55 única pero el texto que dice en la documentación "Dian 2.1 Factura Electrónica de Venta" y el texto realmente exigido por el servicio web "Dian 2.1" contradicen esa restricción entonces no se validará su largo.
             document.ProfileExecutionID = new ProfileExecutionIDType { Value = Empresa.AmbienteFacturaciónElectrónica.AValor() }; // 1..1 FAD04.
             document.ID = new IDType { Value = Validar(Documento.Código, "1..20") }; // 1..1 FAD05.
 
@@ -565,7 +567,7 @@ namespace SimpleOps.Legal {
             if (notaCrédito != null) document.CreditNoteTypeCode = new CreditNoteTypeCodeType { Value = TextoTipo }; // 1..1 CAD11. No hay equivalente en la documentación para la nota débito.
 
             document.Note = new NoteType[] { new NoteType { Value = Validar(Documento.Observación, "15..5000", true) } }; // 0..N FAD13.
-            document.DocumentCurrencyCode = new DocumentCurrencyCodeType { Value = Validar(moneda, "3") }; // 1..1 FAD15 (En la documentación se saltan la FAD14)..
+            document.DocumentCurrencyCode = new DocumentCurrencyCodeType { Value = Validar(moneda, "3") }; // 1..1 FAD15 En la documentación se saltan la FAD14...
             document.LineCountNumeric = new LineCountNumericType { Value = Validar(Documento.Líneas.Count, "1..6") }; // 1..1 FAD16.
             // document.InvoicePeriod = new PeriodType { StartDate = , StartTime = , EndDate = , EndTime = }; // 0..1 FAE01. Grupo de campos relativos al Periodo de Facturación: Intervalo de fechas la las que referencia la factura por ejemplo en servicios públicos. Para utilizar en los servicios públicos, contratos de arrendamiento, matriculas en educación, etc.
 

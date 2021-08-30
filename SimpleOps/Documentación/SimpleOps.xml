@@ -1262,6 +1262,11 @@
             Para el cálculo se usa el precio que se le daría al cliente si no fuera una muestra gratis.
             </summary>
         </member>
+        <member name="P:SimpleOps.Modelo.MovimientoProducto.SubtotalBaseRealDian">
+            <summary>
+            Es cero si la factura la suma de los tributos es cero. Es una variable auxiliar para facilitar la adaptación a los requerimientos de la DIAN.
+            </summary>
+        </member>
         <member name="P:SimpleOps.Modelo.MovimientoProducto.Subtotal">
             <summary>
             Subtotal directo del producto. No tiene en cuenta ningún descuento. Su valor es cero si es muestra gratis.
