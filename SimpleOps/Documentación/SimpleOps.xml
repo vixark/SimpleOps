@@ -3049,7 +3049,7 @@
         <member name="M:Vixark.General.ExisteRuta(Vixark.General.TipoElementoRuta,System.String,System.String,System.String@,System.String)">
             <summary>
             Función que permite devolver un mensaje descriptivo sobre la no existencia o la falta de asignación del valor de la ruta de cierto archivo 
-            o carpeta. Si no se va a usar el mensaje obtenido no es necesario usar esta función porque File.Exists() o Directory.Exists() funcionan
+            o carpeta. Si no se va a usar el mensaje obtenido, no es necesario usar esta función porque File.Exists() o Directory.Exists() funcionan
             correctamente si la ruta es nula.
             </summary>
             <param name="tipo">Archivo o carpeta.</param>

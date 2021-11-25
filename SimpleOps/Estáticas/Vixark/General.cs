@@ -678,7 +678,7 @@ namespace Vixark {
 
         /// <summary>
         /// Función que permite devolver un mensaje descriptivo sobre la no existencia o la falta de asignación del valor de la ruta de cierto archivo 
-        /// o carpeta. Si no se va a usar el mensaje obtenido no es necesario usar esta función porque File.Exists() o Directory.Exists() funcionan
+        /// o carpeta. Si no se va a usar el mensaje obtenido, no es necesario usar esta función porque File.Exists() o Directory.Exists() funcionan
         /// correctamente si la ruta es nula.
         /// </summary>
         /// <param name="tipo">Archivo o carpeta.</param>
@@ -696,7 +696,7 @@ namespace Vixark {
 
                 var textoAdicionalYPunto = textoAdicional + (string.IsNullOrEmpty(textoAdicional) ? "" : ".");
                 if (string.IsNullOrEmpty(ruta)) {
-                    return Falso(out mensaje, $"No se ha seleccionado el {tipo.ToString().AMinúscula()} de {nombre}. {textoAdicionalYPunto}");
+                    return Falso(out mensaje, $"No se ha seleccionado {(tipo == TipoElementoRuta.Archivo ? "el" : "la")} {tipo.ToString().AMinúscula()} de {nombre}. {textoAdicionalYPunto}");
                 } else {
                     return Falso(out mensaje, $"No existe el {nombre} en {ruta}. {textoAdicionalYPunto}");
                 }
