@@ -26,7 +26,6 @@ using SimpleOps.Datos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using static SimpleOps.Global;
 using Microsoft.EntityFrameworkCore;
 using System.Windows;
@@ -67,7 +66,7 @@ namespace SimpleOps {
             // LeerYGuardarPersonalizacionesProductos();
             ProductosYProductosBase();
             AtributosProductos();
-            ConsolidaciónAtributosProductoBase();        
+            ConsolidaciónAtributosProductoBase();
 
         } // Ejecutar>
 
@@ -178,7 +177,7 @@ namespace SimpleOps {
             using var ctx6 = new Contexto(TipoContexto.Escritura);
             var primerCliente6 = ctx6.Clientes.First();
             var primerProducto6 = ctx6.Productos.Skip(milisegundoActual).First();
-            var segundoProducto6 = ctx6.Productos.Skip(milisegundoActual + 1).First();      
+            var segundoProducto6 = ctx6.Productos.Skip(milisegundoActual + 1).First();
             ctx6.PreciosClientes.Add(new PrecioCliente(segundoProducto6, primerCliente6, 7000)); // Una operación que no tiene nada que ver con el conflicto.
             ctx6.ReferenciasClientes.Add(new ReferenciaCliente(primerProducto6, primerCliente6, "6-PP-" + milisegundoActual)); // Otra operación que no tiene nada que ver con el conflicto.
             ctx6.PreciosClientes.Add(new PrecioCliente(primerProducto6, primerCliente6, 6000)); // Operación que genera el conflicto de inserción.
@@ -202,7 +201,7 @@ namespace SimpleOps {
             var cliente8 = ctx8.Clientes.Skip(milisegundoActual).First();
             var producto8 = ctx8.Productos.Skip(milisegundoActual).First();
             var cliente82 = ctx8.Clientes.Skip(milisegundoActual + 2).First();
-            var producto82 = ctx8.Productos.Skip(milisegundoActual + 1).First(); 
+            var producto82 = ctx8.Productos.Skip(milisegundoActual + 1).First();
             ctx8.PreciosClientes.Add(new PrecioCliente(producto8, cliente8, 8000)); // Operación que genera el conflicto de inserción.
             ctx8.ReferenciasClientes.Add(new ReferenciaCliente(producto82, cliente8, "8-SS-" + milisegundoActual)); // Una operación que no tiene nada que ver con el conflicto.
             cliente82.Teléfono = "555552"; // Operación que genera el conflicto de actualización. Se puede alternar esta línea con la anterior para probar el funcionamiento según el orden de ocurrencia de los conflictos aunque independiente del orden siempre se genera primero el conflicto de actualización con la excepción DbUpdateConcurrencyException.
@@ -249,10 +248,10 @@ namespace SimpleOps {
         public static void PersonalizacionesProductos() {
 
             var productoBase = new ProductoBase("654") { Descripción = "Silla Tapizada" };
-            var producto1 = new Producto("654-1", productoBase, 
+            var producto1 = new Producto("654-1", productoBase,
                 new List<string> { "Sin Apoyabrazos", "Altura 43 cm", "Recubierta", "Tela AAA", "Patas Plásticas" });
             producto1.AgregarPersonalización("Nombre en Pata", new List<string> { "Jesús", "Dora" });
-            producto1.AgregarPersonalización("Nombre en Pata", new List<string> { "Josué", "Diana" }, reemplazarExistente: false);      
+            producto1.AgregarPersonalización("Nombre en Pata", new List<string> { "Josué", "Diana" }, reemplazarExistente: false);
             producto1.AgregarPersonalización("Nombre en Placa", new List<string> { "Pedro", "María", "Natalia" });
             producto1.AgregarPersonalización("Nombre en Placa", new List<string>()); // Reempaza por personalización sin valores predeterminados.
             try {
@@ -269,8 +268,8 @@ namespace SimpleOps {
         public static void AtributosProductos() {
 
             var productoBase = new ProductoBase("CMS") { Descripción = "Camiseta manga corta con cuello", Físico = false };
-            var producto = new Producto("CMSARM", productoBase, 
-                new List<string> { "Amarilla", "Rojo Oscuro", "Talla M", "Cuello Reforzado" }); 
+            var producto = new Producto("CMSARM", productoBase,
+                new List<string> { "Amarilla", "Rojo Oscuro", "Talla M", "Cuello Reforzado" });
             if (!producto.AgregarAtributo("Azul")) MostrarError("No se esperaba que no se pudiera eliminar el atributo Azul.");
             if (producto.EliminarAtributo("Amarillito")) MostrarError("No se esperaba que se pudiera eliminar el atributo amarillito.");
             if (!producto.AgregarAtributo("talla s")) MostrarError("No se esperaba que no se pudiera agregar el atributo Talla S.");
@@ -288,15 +287,14 @@ namespace SimpleOps {
             producto.Atributos.Add("Talla S"); // Se agrega de esta manera para generar un duplicado de atributo.
             if (producto.ObtenerAtributosNoRepetidos().Count == producto.Atributos.Count)
                 MostrarError("No se esperaba que ObtenerAtributos() tuviera la misma cantidad de elementos que Atributos.");
-            if (producto.AgregarAtributo("Cuello de Tortuga", permitirAtributosLibres: false)) 
+            if (producto.AgregarAtributo("Cuello de Tortuga", permitirAtributosLibres: false))
                 MostrarError("No se esperaba poder agregar el atributo Cuello de Tortuga no permitiendo los atributos libres.");
 
             var clasificaciónAtributosRepetidos = producto.ClasificarAtributos(permitirRepetidos: true);
             var clasificaciónAtributosNoRepetidos = producto.ClasificarAtributos(permitirRepetidos: false);
-            if (clasificaciónAtributosNoRepetidos[TipoAtributoProductoLibre].Count 
-                == clasificaciónAtributosRepetidos[TipoAtributoProductoLibre].Count)
-                    MostrarError("No se esperaba que clasificaciónAtributosNoRepetidos y clasificaciónAtributosRepetidos tuvieran la misma cantidad " +
-                                 "de elementos.");
+            if (clasificaciónAtributosNoRepetidos[TipoAtributoProductoLibre].Count == clasificaciónAtributosRepetidos[TipoAtributoProductoLibre].Count)
+                MostrarError("No se esperaba que clasificaciónAtributosNoRepetidos y clasificaciónAtributosRepetidos tuvieran la misma cantidad " +
+                    "de elementos.");
             if (clasificaciónAtributosNoRepetidos["Talla Alfabética"].Count == clasificaciónAtributosRepetidos["Talla Alfabética"].Count)
                 MostrarError("No se esperaba que clasificaciónANLRepetidos y clasificaciónANLNoRepetidos tuvieran la misma cantidad de elementos.");
 
@@ -308,7 +306,7 @@ namespace SimpleOps {
             var valorA2 = diccPrueba.ObtenerValor("A", ignorarCapitalización: false);
             if (valorA2 != null) MostrarError("No se esperaba encontrar el valor de A sin ignorar la capitalización.");
             if (!diccPrueba.ContieneClave("a", ignorarCapitalización: true)) MostrarError("No se esperaba no encontrar el valor de a.");
-            if (diccPrueba.ContieneClave("A", ignorarCapitalización: false)) 
+            if (diccPrueba.ContieneClave("A", ignorarCapitalización: false))
                 MostrarError("No se esperaba encontrar el valor de A sin ignorar la capitalización.");
             if (diccPrueba.ContieneClave("G", ignorarCapitalización: false)) MostrarError("No se esperaba encontrar el valor de G.");
 
@@ -342,10 +340,10 @@ namespace SimpleOps {
             c.Líneas.Add(new LíneaCotización(c, new Producto("17", b, new List<string> { "Roja", "Verde", "Talla M", "Estándar", "Copa DD" }), 60000) { }); // Roja, Verde, Talla M, Estándar, Copa DD 60 000.
 
             var dp = c.ObtenerDatos(new OpcionesDocumento(), PlantillaDocumento.CatálogoPdf).DatosProductos["CM"];
-            if (dp.Atributos[0] != "Azul, Roja, Verde, Azul+Roja y Roja+Verde") 
+            if (dp.Atributos[0] != "Azul, Roja, Verde, Azul+Roja y Roja+Verde")
                 MostrarError("No coincidió el atributo 0 en DatosProductoBase().");
             if (dp.Atributos[1] != "Copa A a C y DD") MostrarError("No coincidió el atributo 1 en DatosProductoBase().");
-           
+
             var cuenta = 0;
             foreach (var kv in dp.Precios) {
 
@@ -382,7 +380,7 @@ namespace SimpleOps {
 
             var atributos2 = new List<string> { "talla especial   de 40", "tallA especial 40   de 50", "Talla especial de 55" };
             var atributos2Resumidos = atributos2.ATextoConComas(resumir: true);
-            if (atributos2Resumidos != "talla especial de 40, 40 de 50 y de 55") 
+            if (atributos2Resumidos != "talla especial de 40, 40 de 50 y de 55")
                 MostrarError($"Falló el procedimiento de ATextoConComas(resumir: true) para atributos2Resumidos.");
 
             var atributos3 = new List<string> { "talla 8", "talla 9", "" };
@@ -398,7 +396,7 @@ namespace SimpleOps {
             c2.Líneas.Add(new LíneaCotización(c, new Producto("4", b2, new List<string> { "Azul", "Talla 13.5" }), 82800) { });
             c2.Líneas.Add(new LíneaCotización(c, new Producto("5", b2, new List<string> { "Azul", "Talla 14" }), 82800) { });
             c2.Líneas.Add(new LíneaCotización(c, new Producto("6", b2, new List<string> { "Azul", "Talla 16" }), 82800) { }); // Justo para ser considerado secuencia.
-            c2.Líneas.Add(new LíneaCotización(c, new Producto("7", b2, new List<string> { "Verde", "Talla 17" }), 82800) { }); 
+            c2.Líneas.Add(new LíneaCotización(c, new Producto("7", b2, new List<string> { "Verde", "Talla 17" }), 82800) { });
             c2.Líneas.Add(new LíneaCotización(c, new Producto("8", b2, new List<string> { "Azul", "Talla 20" }), 82800) { });
             c2.Líneas.Add(new LíneaCotización(c, new Producto("9", b2, new List<string> { "Azul", "Talla 21" }), 82800) { });
             c2.Líneas.Add(new LíneaCotización(c, new Producto("10", b2, new List<string> { "Azul", "Talla 22" }), 82800) { });
@@ -444,13 +442,13 @@ namespace SimpleOps {
             var b4 = new ProductoBase("CM");
             var c4 = new Cotización(new Cliente("Distribuciones ABC", new Municipio("Bogotá", "Bogotá", "Bogotá, D.C."), TipoCliente.Consumidor));
             c4.Líneas.Add(new LíneaCotización(c, new Producto("1", b4, new List<string> { "Azul", "Talla 8" }), 82800) { });
-            c4.Líneas.Add(new LíneaCotización(c, new Producto("2", b4, new List<string> { "Azul", "Talla 10" }), 82800) { }); 
+            c4.Líneas.Add(new LíneaCotización(c, new Producto("2", b4, new List<string> { "Azul", "Talla 10" }), 82800) { });
             c4.Líneas.Add(new LíneaCotización(c, new Producto("3", b4, new List<string> { "Verde", "Talla 11" }), 82800) { });
             c4.Líneas.Add(new LíneaCotización(c, new Producto("4", b4, new List<string> { "Verde", "Talla 13" }), 82800) { });
             c4.Líneas.Add(new LíneaCotización(c, new Producto("5", b4, new List<string> { "Azul", "Talla 14" }), 82800) { });
             c4.Líneas.Add(new LíneaCotización(c, new Producto("6", b4, new List<string> { "Azul", "Talla 15" }), 82800) { });
             c4.Líneas.Add(new LíneaCotización(c, new Producto("7", b4, new List<string> { "Azul", "Talla 31" }), 82800) { });
-            c4.Líneas.Add(new LíneaCotización(c, new Producto("8", b4, new List<string> { "Azul", "Talla 34" }), 82800) { }); 
+            c4.Líneas.Add(new LíneaCotización(c, new Producto("8", b4, new List<string> { "Azul", "Talla 34" }), 82800) { });
             c4.Líneas.Add(new LíneaCotización(c, new Producto("9", b4, new List<string> { "Azul", "Talla 36" }), 82800) { });
             c4.Líneas.Add(new LíneaCotización(c, new Producto("10", b4, new List<string> { "Azul", "Talla 38" }), 82800) { });
             c4.Líneas.Add(new LíneaCotización(c, new Producto("11", b4, new List<string> { "Azul", "Talla 42" }), 82800) { });
@@ -538,7 +536,7 @@ namespace SimpleOps {
             using var ctx = new Contexto(TipoContexto.LecturaConRastreo); // Se inicia como contexto de LecturaConRastreo para poder realizar las pruebas con y sin AsNoTracking().
             var ventasPorSubtotal = ctx.Ventas.OrderByDescending(v => v.Subtotal).ToList(); // Una consulta cualquiera para que el contexto se inicie.
 
-            #if true
+#if true
 
             // Rendimiento 1 Entidad - Probar cada línea en una ejecución de SimpleOps independiente.
             var clienteCompleto = ctx.Clientes.Skip(milisegundoActual).First(); // 76 milisegundos en promedio.
@@ -600,7 +598,7 @@ namespace SimpleOps {
             //    Ver https://dotnetcultist.com/maximizing-entity-framework-core-query-performance/.
             // Conclusiones>
 
-            #endif
+#endif
 
             var productos = ctx.ObtenerProductos();
             var producto1 = ctx.ObtenerProducto("+");
@@ -662,9 +660,7 @@ namespace SimpleOps {
             var sacóExcepción = false;
             try {
                 camisetaXXL!.PesoUnidadEmpaque = 50;
-                #pragma warning disable CA1031 // No capture tipos de excepción generales.
             } catch (Exception) {
-                #pragma warning restore CA1031 // No capture tipos de excepción generales.
                 sacóExcepción = true;
             }
             if (!sacóExcepción) MostrarError("No se esperaba que la línea camisetaXXL!.PesoUnidadEmpaque = 50; no sacara excepción.");
@@ -687,7 +683,7 @@ namespace SimpleOps {
             var número = Empresa.PróximoNúmeroDocumentoElectrónicoPruebas; // Se almacena en esta variable temporal y después se guardan las opciones para evitar posibles problemas de concurrencia.
             Empresa.PróximoNúmeroDocumentoElectrónicoPruebas++;
             GuardarOpciones(Empresa);
-            VentaSimple(out _, número, 10, 5500, "Empresa Ensayo", "900900900", "Calle 29 47 45", "2889896", 
+            VentaSimple(out _, número, 10, 5500, "Empresa Ensayo", "900900900", "Calle 29 47 45", "2889896",
                 false, out Venta? venta, out DocumentoElectrónico<Factura<Cliente, LíneaVenta>, LíneaVenta>? _, pruebaIntegración: true);
 
             if (venta != null) {
@@ -753,8 +749,8 @@ namespace SimpleOps {
             if (Validar("Desc.", "5..20", forzarCumplimiento: true) != "Desc.") MostrarError("Falló Validar(texto)");
             if (Validar(null, "5..20", forzarCumplimiento: true) != "     ") MostrarError("Falló Validar(texto)");
 
-            if (ObtenerDígitoVerificación("890879814") != "0") MostrarError("Falló ObtenerDígitoVerificación()"); 
-            if (ObtenerDígitoVerificación("860324218") != "1") MostrarError("Falló ObtenerDígitoVerificación()"); 
+            if (ObtenerDígitoVerificación("890879814") != "0") MostrarError("Falló ObtenerDígitoVerificación()");
+            if (ObtenerDígitoVerificación("860324218") != "1") MostrarError("Falló ObtenerDígitoVerificación()");
             if (ObtenerDígitoVerificación("19897562152") != "2") MostrarError("Falló ObtenerDígitoVerificación()");
             if (ObtenerDígitoVerificación("806324218") != "3") MostrarError("Falló ObtenerDígitoVerificación()");
             if (ObtenerDígitoVerificación("860234218") != "3") MostrarError("Falló ObtenerDígitoVerificación()");
@@ -792,7 +788,7 @@ namespace SimpleOps {
             cotización.Líneas = new List<LíneaCotización> {
                 new LíneaCotización(cotización, new Producto("654-1", productoBase1,
                     new List<string>() {"Sin Apoyabrazos", "Altura 43 cm", "Recubierta", "Tela AAA", "Patas Plásticas"})
-                    { Personalizaciones = new List<TuplaSerializable<string, List<string>>>() { 
+                    { Personalizaciones = new List<TuplaSerializable<string, List<string>>>() {
                         new TuplaSerializable<string, List<string>> ("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", new List<string>()) , } },
                     1200000),
             };
@@ -851,7 +847,7 @@ namespace SimpleOps {
             try {
 
                 var datosCotización = Deserializar<Integración.DatosCotización>(File.ReadAllText(rutaJson), Serialización.EnumeraciónEnTexto);
-                if (datosCotización == null) throw new Exception("El objeto datosCotización está vacío.");
+                if (datosCotización == null) throw new ArgumentNullException(nameof(datosCotización), "El objeto datosCotización está vacío.");
                 var mapeador = new Mapper(ConfiguraciónMapeadorCotizaciónIntegraciónInverso);
                 var cotización = mapeador.Map<Cotización>(datosCotización);
                 cotización.EstablecerTipo(tipo); // Siempre se debe establecer el tipo después del mapeo para agregue los valores predeterminados de algunas propiedades si no fueron mapeadas y quedaron nulas.
@@ -860,7 +856,7 @@ namespace SimpleOps {
                     if (l.Producto?.TieneBase == false) l.Producto.Base = null; // Necesario porque el Automaper siempre crea el objeto Base.
                 }
                 return cotización;
-                
+
             } catch (Exception) {
                 throw;
             } finally {
@@ -888,7 +884,7 @@ namespace SimpleOps {
                 var producto = línea.Producto;
                 if (producto == null) continue;
                 if (producto.TieneBase && producto.Base != null) {
-                    cotización.ReferenciasProductosPáginasExtra.Agregar(producto.Base.Referencia, permitirRepetidos: false);         
+                    cotización.ReferenciasProductosPáginasExtra.Agregar(producto.Base.Referencia, permitirRepetidos: false);
                 }
                 cotización.ReferenciasProductosPáginasExtra.Add(producto.Referencia);
 
@@ -916,13 +912,11 @@ namespace SimpleOps {
                 try {
                     CrearPdfCatálogo(ObtenerCotización(rutaJsonCatálogoPrueba, TipoCotización.Catálogo), out string ruta);
                     MostrarÉxito($"Catálogo creado: {ruta}.");
-                #pragma warning disable CA1031 // No capture tipos de excepción generales. Se acepta porque el error se informa al usuario.
-                } catch (Exception ex) {
-                #pragma warning restore CA1031
+                } catch (Exception ex) { // Antes se estaba suprimiendo la alerta CA1031. No capture tipos de excepción generales. Se acepta porque el error se informa al usuario.
                     MostrarError(@$"Ocurrió un error creando el catálogo desde el archivo de prueba '{Equipo.RutaIntegración}\CT-Prueba.json'." +
                                  @$"{DobleLínea}{ex.Message}");
                 }
-  
+
             } else { // Si no existe el archivo de prueba, se generará un catálogo con una prueba genérica.
 
                 MostrarInformación(@$"Para crear un catálogo a partir de un archivo JSON de prueba, créalo en '{Equipo.RutaIntegración}\CT-Prueba.json'." +
@@ -941,11 +935,11 @@ namespace SimpleOps {
             var productoMás = ctx.ObtenerProducto("+");
             if (productoMás != null && productoMás.Personalizaciones.Count == 0) {
                 productoMás.Personalizaciones.Add(new TuplaSerializable<string, List<string>>("", new List<string> { "Amarillo", "Rojo", "Verde" }));
-                productoMás.Personalizaciones.Add(new TuplaSerializable<string, List<string>>("", new List<string> { "Marco Dorado", "Marco Plateado"}));
+                productoMás.Personalizaciones.Add(new TuplaSerializable<string, List<string>>("", new List<string> { "Marco Dorado", "Marco Plateado" }));
                 productoMás.Personalizaciones.Add(new TuplaSerializable<string, List<string>>("Nombre", new List<string> { "Pedro", "José" }));
                 productoMás.Personalizaciones.Add(new TuplaSerializable<string, List<string>>("Lema", new List<string>()));
             }
-                       
+
             var primeraLíneaOC = ctx.LíneasÓrdenesCompra.FirstOrDefault();
             if (primeraLíneaOC != null && primeraLíneaOC.Personalizaciones.Count == 0) {
                 primeraLíneaOC.Personalizaciones.Add("Nombre", "David");
@@ -961,13 +955,11 @@ namespace SimpleOps {
         public static void GenerarCotizaciónIntegración() {
 
             if (ExisteArchivoPruebaIntegración("CZ-Prueba.json", out string rutaJsonCotizaciónPrueba)) {
- 
+
                 try {
                     CrearPdfCotización(ObtenerCotización(rutaJsonCotizaciónPrueba, TipoCotización.Cotización), out string ruta);
                     MostrarÉxito($"Cotización creada: {ruta}.");
-                #pragma warning disable CA1031 // No capture tipos de excepción generales. Se acepta porque el error se informa al usuario.
-                } catch (Exception ex) {
-                #pragma warning restore CA1031
+                } catch (Exception ex) { // Antes se estaba suprimiendo la alerta CA1031. No capture tipos de excepción generales. Se acepta porque el error se informa al usuario.
                     MostrarError(@$"Ocurrió un error creando la cotización desde el archivo de prueba '{Equipo.RutaIntegración}\CZ-Prueba.json'." +
                                  @$"{DobleLínea}{ex.Message}");
                 }
@@ -1003,9 +995,10 @@ namespace SimpleOps {
                 {"Firma", @"<F Atentamente, Vixark F>"},
             };
             var plantillaCompilada = CompilarPlantilla<DatosVenta>(motorRazor, cuerpo, partes);
-            var html = plantillaCompilada.ObtenerHtml(new DatosVenta { Cude = "AFJ451MN", CódigoDocumento = "123", Cliente = new DatosCliente() { Nombre = "Ópticas" }, 
-                Observación = "" });
-            if (html != "<M Encab.  <C <h1>123</h1> <ML Cliente: <h2>Ópticas</h2>  <L  1. 2. 3. 4 L> ML> C> CUFE: AFJ451MN PieP. <F Atentamente, Vixark F> M>") 
+            var html = plantillaCompilada.ObtenerHtml(new DatosVenta {
+                Cude = "AFJ451MN", CódigoDocumento = "123", Cliente = new DatosCliente() { Nombre = "Ópticas" }, Observación = ""
+            });
+            if (html != "<M Encab.  <C <h1>123</h1> <ML Cliente: <h2>Ópticas</h2>  <L  1. 2. 3. 4 L> ML> C> CUFE: AFJ451MN PieP. <F Atentamente, Vixark F> M>")
                 MostrarError("Falló la generación del HTML para la generación del PDF.");
             // Prueba del Motor de Razor para la Generación de HTML>
 
@@ -1019,7 +1012,7 @@ namespace SimpleOps {
         /// </summary>
         public static void Habilitación() {
 
-            if (MostrarDiálogo($"¿Deseas realizar las pruebas para habilitar a tu empresa como facturador electrónico ante la DIAN?{DobleLínea}" + 
+            if (MostrarDiálogo($"¿Deseas realizar las pruebas para habilitar a tu empresa como facturador electrónico ante la DIAN?{DobleLínea}" +
                                "¡Cuidado! Si las pruebas resultan exitosas tu empresa estará obligada a seguir facturando electrónicamente y no " +
                                "podrá seguir facturando de la manera tradicional física. Hazlo solo cuando tengas todo listo para operar facturando " +
                                "electrónicamente. Si actualmente facturas con la solución gratuita de la DIAN o con un operador tecnológico, aún podrás " +
@@ -1033,7 +1026,7 @@ namespace SimpleOps {
                 }
 
             }
-            
+
         } // Habilitación>
 
 
@@ -1044,8 +1037,8 @@ namespace SimpleOps {
                              "facturas realizadas en este modo son legalmente válidas ante la DIAN.");
                 return false;
             }
-                
-            if (!pruebaHabilitación) 
+
+            if (!pruebaHabilitación)
                 MostrarInformación("Se enviarán varios documentos electrónicos a la DIAN. Con esto se verificará que la conexión y configuración esté " +
                                    "correcta. Estos documentos se pueden consultar en el portal de habilitación de la DIAN, pero no suman a los necesarios " +
                                    "para la habilitación de la facturación electrónica. Para habilitar a tu empresa como facturador " +
@@ -1056,8 +1049,8 @@ namespace SimpleOps {
                 return false;
             }
 
-            if (VentaEjemploXml(out string? mensaje, Empresa.PróximoNúmeroDocumentoElectrónicoPruebas, pruebaHabilitación: pruebaHabilitación, 
-                out Venta? venta, out DocumentoElectrónico<Factura<Cliente, LíneaVenta>,LíneaVenta>? ventaElectrónica)) {
+            if (VentaEjemploXml(out string? mensaje, Empresa.PróximoNúmeroDocumentoElectrónicoPruebas, pruebaHabilitación: pruebaHabilitación,
+                out Venta? venta, out DocumentoElectrónico<Factura<Cliente, LíneaVenta>, LíneaVenta>? ventaElectrónica)) {
 
                 Empresa.PróximoNúmeroDocumentoElectrónicoPruebas++;
                 GuardarOpciones(Empresa);
@@ -1076,7 +1069,7 @@ namespace SimpleOps {
 
             if (venta != null) {
 
-                if (NotaCréditoEjemploXml(out string? mensajeNotaCrédito, Empresa.PróximoNúmeroDocumentoElectrónicoPruebas, pruebaHabilitación, venta, 
+                if (NotaCréditoEjemploXml(out string? mensajeNotaCrédito, Empresa.PróximoNúmeroDocumentoElectrónicoPruebas, pruebaHabilitación, venta,
                     out NotaCréditoVenta? notaCrédito,
                     out DocumentoElectrónico<Factura<Cliente, LíneaNotaCréditoVenta>, LíneaNotaCréditoVenta>? notaCréditoElectrónica)) {
 
@@ -1105,10 +1098,10 @@ namespace SimpleOps {
 
                     Empresa.PróximoNúmeroDocumentoElectrónicoPruebas++;
                     GuardarOpciones(Empresa);
-                    MostrarÉxito("¡Éxito del envío de la nota débito electrónica a la DIAN!"); 
+                    MostrarÉxito("¡Éxito del envío de la nota débito electrónica a la DIAN!");
 
                 } else {
-                    MostrarError($"Error en nota débito electrónica.{DobleLínea}{mensajeNotaDébito}"); 
+                    MostrarError($"Error en nota débito electrónica.{DobleLínea}{mensajeNotaDébito}");
                     return false;
                 }
 
@@ -1120,9 +1113,9 @@ namespace SimpleOps {
             for (int i = 1; i <= 10; i++) {
 
                 if (VentaSimple(out string? mensajeSimple, Empresa.PróximoNúmeroDocumentoElectrónicoPruebas, i, i * 1000, $"Empresa {i}", $"90090090{i}",
-                    $"Calle {i} # {i} - {i}", $"{i}{i}{i}{i}{i}{i}{i}", pruebaHabilitación, out Venta? ventaSimple, 
+                    $"Calle {i} # {i} - {i}", $"{i}{i}{i}{i}{i}{i}{i}", pruebaHabilitación, out Venta? ventaSimple,
                     out DocumentoElectrónico<Factura<Cliente, LíneaVenta>, LíneaVenta>? ventaSimpleElectrónica, unoExcluídoIVA: i == 1,
-                    todosExcluídosIVA: i == 2, unoConINC: i == 3, unoConINCyExcluídoIVA: i == 4, unoExentoIVA: i == 5, clienteIVACero: i == 6, 
+                    todosExcluídosIVA: i == 2, unoConINC: i == 3, unoConINCyExcluídoIVA: i == 4, unoExentoIVA: i == 5, clienteIVACero: i == 6,
                     todosSoloINC: i == 10)) {
 
                     Empresa.PróximoNúmeroDocumentoElectrónicoPruebas++;
@@ -1136,7 +1129,7 @@ namespace SimpleOps {
                     }
 
                 } else {
-                    MostrarError($"Error en factura electrónica.{DobleLínea}{mensajeSimple}"); 
+                    MostrarError($"Error en factura electrónica.{DobleLínea}{mensajeSimple}");
                     return false;
                 }
 
@@ -1146,12 +1139,12 @@ namespace SimpleOps {
 
         } // Facturación>
 
-        
+
         public static void Cudes() {
 
             var nit = Empresa.Nit; Empresa.Nit = "700085371";
             var claveTécnicaAplicación = Empresa.ClaveTécnicaAplicación;
-                Empresa.ClaveTécnicaAplicación = "693ff6f2a553c3646a063436fd4dd9ded0311471";
+            Empresa.ClaveTécnicaAplicación = "693ff6f2a553c3646a063436fd4dd9ded0311471";
             var ambiente = Empresa.AmbienteFacturaciónElectrónica; Empresa.AmbienteFacturaciónElectrónica = AmbienteFacturaciónElectrónica.Producción;
             var pinAplicación = Empresa.PinAplicación; Empresa.PinAplicación = "12345";
 
@@ -1162,7 +1155,7 @@ namespace SimpleOps {
             // Prueba CUFE
             cliente.Identificación = "800199436";
             var venta = new Venta(cliente) {
-                FechaHora = new DateTime(2019, 01, 16, 10, 53, 10), SubtotalBase = 1500000, IVA = 285000, ImpuestoConsumo = 0, Número = 129, 
+                FechaHora = new DateTime(2019, 01, 16, 10, 53, 10), SubtotalBase = 1500000, IVA = 285000, ImpuestoConsumo = 0, Número = 129,
                 Prefijo = "323200000", SubtotalFinalConImpuestos = 1785000,
             };
             venta.Líneas.Add(new LíneaVenta(new Producto("Ref"), venta, 1, 1500000, 1500000));
@@ -1227,8 +1220,9 @@ namespace SimpleOps {
 
         public static void CompraGenérica() {
 
-            var proveedor = new Proveedor("proveedor", new Municipio("Bogótá", "Bogotá", "Bogotá, D.C.")) 
-                { TipoContribuyente = TipoContribuyente.Autorretenedor, TipoEntidad = TipoEntidad.Empresa, Identificación = "9898989" };
+            var proveedor = new Proveedor("proveedor", new Municipio("Bogótá", "Bogotá", "Bogotá, D.C.")) {
+                TipoContribuyente = TipoContribuyente.Autorretenedor, TipoEntidad = TipoEntidad.Empresa, Identificación = "9898989"
+            };
             var compra = new Compra(proveedor);
             compra.Líneas = new List<LíneaCompra> {
                 { new LíneaCompra(new Producto("Mouse"), compra, 2, 20000, 0) },
@@ -1237,12 +1231,11 @@ namespace SimpleOps {
 
             if (compra.CalcularTodo()) {
 
-                if (!(Iguales(compra.Subtotal, 340000) && Iguales(compra.SubtotalBase, 340000) && Iguales(compra.SubtotalBaseReal, 340000) &&
+                var mostrarError = !(Iguales(compra.Subtotal, 340000) && Iguales(compra.SubtotalBase, 340000) && Iguales(compra.SubtotalBaseReal, 340000) &&
                     Iguales(compra.SubtotalBaseIVA, 340000) && Iguales(compra.IVA, 64600) && Iguales(compra.ImpuestoConsumo, 0) &&
                     Iguales(compra.RetenciónFuente, 0) && Iguales(compra.RetenciónIVA, 0) && Iguales(compra.RetenciónICA, 0)
-                    && Iguales(compra.SubtotalFinalConImpuestos, 404600) && Iguales(compra.APagar, 404600) && Iguales(compra.SubtotalFinal, 340000))) {
-                        MostrarError("Error en Validación Cálculo FacturaGenéricaEjemploExcel.CalcularTodo().");
-                }
+                    && Iguales(compra.SubtotalFinalConImpuestos, 404600) && Iguales(compra.APagar, 404600) && Iguales(compra.SubtotalFinal, 340000));
+                if (mostrarError) MostrarError("Error en Validación Cálculo FacturaGenéricaEjemploExcel.CalcularTodo().");
 
             } else {
                 MostrarError("Error en FacturaGenéricaEjemploExcel.CalcularTodo().");
@@ -1264,14 +1257,11 @@ namespace SimpleOps {
 
             if (venta.CalcularTodo()) {
 
-                if (!(Iguales(venta.Subtotal, 400000) && Iguales(venta.SubtotalBase, 400000) && Iguales(venta.SubtotalBaseReal, 400000) &&
+                var mostrarError = !(Iguales(venta.Subtotal, 400000) && Iguales(venta.SubtotalBase, 400000) && Iguales(venta.SubtotalBaseReal, 400000) &&
                     Iguales(venta.SubtotalBaseIVA, 100000) && Iguales(venta.IVA, 0) && Iguales(venta.ImpuestoConsumo, 0) &&
                     Iguales(venta.RetenciónFuente, 0) && Iguales(venta.RetenciónIVA, 0) && Iguales(venta.RetenciónICA, 0)
-                    && Iguales(venta.SubtotalFinalConImpuestos, 360000) && Iguales(venta.APagar, 360000) && Iguales(venta.SubtotalFinal, 360000))) {
-
-                    MostrarError("Error en Validación Cálculo FacturaGenéricaEjemploExcel.CalcularTodo().");
-
-                }
+                    && Iguales(venta.SubtotalFinalConImpuestos, 360000) && Iguales(venta.APagar, 360000) && Iguales(venta.SubtotalFinal, 360000));
+                if (mostrarError) MostrarError("Error en Validación Cálculo FacturaGenéricaEjemploExcel.CalcularTodo().");
 
             } else {
                 MostrarError("Error en FacturaGenéricaEjemploExcel.CalcularTodo().");
@@ -1294,12 +1284,11 @@ namespace SimpleOps {
 
             if (venta.CalcularTodo()) {
 
-                if (!(Iguales(venta.Subtotal, 720000) && Iguales(venta.SubtotalBase, 720000) && Iguales(venta.SubtotalBaseReal, 720000) &&
+                var mostrarError = !(Iguales(venta.Subtotal, 720000) && Iguales(venta.SubtotalBase, 720000) && Iguales(venta.SubtotalBaseReal, 720000) &&
                     Iguales(venta.SubtotalBaseIVA, 60000) && Iguales(venta.IVA, 11400) && Iguales(venta.ImpuestoConsumo, 0) &&
                     Iguales(venta.RetenciónFuente, 0) && Iguales(venta.RetenciónIVA, 0) && Iguales(venta.RetenciónICA, 0)
-                    && Iguales(venta.SubtotalFinalConImpuestos, 691400) && Iguales(venta.APagar, 691400) && Iguales(venta.SubtotalFinal, 680000))) {
-                        MostrarError("Error en Validación Cálculo FacturaGenéricaEjemploExcel.CalcularTodo().");
-                }
+                    && Iguales(venta.SubtotalFinalConImpuestos, 691400) && Iguales(venta.APagar, 691400) && Iguales(venta.SubtotalFinal, 680000));
+                if (mostrarError) MostrarError("Error en Validación Cálculo FacturaGenéricaEjemploExcel.CalcularTodo().");
 
             } else {
                 MostrarError("Error en FacturaGenéricaEjemploExcel.CalcularTodo().");
@@ -1315,7 +1304,7 @@ namespace SimpleOps {
 
             var cliente = new Cliente("cliente", new Municipio("Bogotá", "Bogotá", "Bogotá, D.C."), TipoCliente.Consumidor) {
                 TipoEntidad = TipoEntidad.Empresa, Dirección = "Calle 80-100", Teléfono = "4589843", Identificación = "990986892",
-                TipoContribuyente = TipoContribuyente.RetenedorIVA       
+                TipoContribuyente = TipoContribuyente.RetenedorIVA
             };
 
             var venta = new Venta(cliente) { DescuentoComercial = 0, DescuentoCondicionado = 469000 };
@@ -1323,24 +1312,23 @@ namespace SimpleOps {
                 { new LíneaVenta(new Producto("Base para TV"), venta, 2, 300000, 0) },
                 { new LíneaVenta(new Producto("Antena (regalo)"), venta, 10, 10000, 0) { MuestraGratis = true } },
                 { new LíneaVenta(new Producto("TV"), venta, 10, 1400000, 0) },
-                { new LíneaVenta(new Producto("Papa") { ExcluídoIVA = true, 
+                { new LíneaVenta(new Producto("Papa") { ExcluídoIVA = true,
                     ConceptoRetenciónPropio = ConceptoRetención.AgrícolasOPecuariosSinProcesamiento }, venta, 100, 20000, 0) },
-                { new LíneaVenta(new Producto("Carne") { ExcluídoIVA = true, 
+                { new LíneaVenta(new Producto("Carne") { ExcluídoIVA = true,
                     ConceptoRetenciónPropio = ConceptoRetención.AgrícolasOPecuariosSinProcesamiento }, venta, 1000, 7000, 0) },
                 { new LíneaVenta(new Producto("Acarreo") { ConceptoRetenciónPropio = ConceptoRetención.TransporteCarga }, venta, 1, 40000, 0) },
                 { new LíneaVenta(new Producto("Instalación") { ConceptoRetenciónPropio = ConceptoRetención.ServiciosGenerales }, venta, 1, 1300000, 0) },
-                { new LíneaVenta(new Producto("Bolsas") { ExcluídoIVA = true, TipoImpuestoConsumoPropio = TipoImpuestoConsumo.BolsasPlásticas }, 
+                { new LíneaVenta(new Producto("Bolsas") { ExcluídoIVA = true, TipoImpuestoConsumoPropio = TipoImpuestoConsumo.BolsasPlásticas },
                     venta, 100, 100, 0) { MuestraGratis = true } }
             };
 
             if (venta.CalcularTodo()) {
 
-                if (!(Iguales(venta.Subtotal, 24940000) && Iguales(venta.SubtotalBase, 24940000) && Iguales(venta.SubtotalBaseReal, 25050000) &&
+                var mostrarError = !(Iguales(venta.Subtotal, 24940000) && Iguales(venta.SubtotalBase, 24940000) && Iguales(venta.SubtotalBaseReal, 25050000) &&
                     Iguales(venta.SubtotalBaseIVA, 16040000) && Iguales(venta.IVA, 3047600) && Iguales(venta.ImpuestoConsumo, 5000) &&
                     Iguales(venta.RetenciónFuente, 552000) && Iguales(venta.RetenciónIVA, 457140) && Iguales(venta.RetenciónICA, 0)
-                    && Iguales(venta.SubtotalFinalConImpuestos, 27523600) && Iguales(venta.APagar, 26514460) && Iguales(venta.SubtotalFinal, 24471000))) {
-                    MostrarError("Error en Validación Cálculo FacturaGenéricaEjemploExcel.CalcularTodo().");
-                }
+                    && Iguales(venta.SubtotalFinalConImpuestos, 27523600) && Iguales(venta.APagar, 26514460) && Iguales(venta.SubtotalFinal, 24471000));
+                if (mostrarError) MostrarError("Error en Validación Cálculo FacturaGenéricaEjemploExcel.CalcularTodo().");
 
             } else {
                 MostrarError("Error en FacturaGenéricaEjemploExcel.CalcularTodo().");
@@ -1357,9 +1345,9 @@ namespace SimpleOps {
             var tipoContribuyente = Empresa.TipoContribuyente;
             Empresa.TipoEntidad = TipoEntidad.Empresa; // Para simular retenciones en la fuente como declarante si están activadas como no declarante en opciones.
             Empresa.TipoContribuyente = TipoContribuyente.Ordinario | TipoContribuyente.ResponsableIVA;
-            
-            var cliente = new Cliente("cliente", new Municipio("Bogotá", "Bogotá", "Bogotá, D.C."), TipoCliente.Consumidor) { 
-                TipoEntidad = TipoEntidad.Empresa, Dirección = "Calle 80-100", Teléfono = "4589843", Identificación = "990986892", 
+
+            var cliente = new Cliente("cliente", new Municipio("Bogotá", "Bogotá", "Bogotá, D.C."), TipoCliente.Consumidor) {
+                TipoEntidad = TipoEntidad.Empresa, Dirección = "Calle 80-100", Teléfono = "4589843", Identificación = "990986892",
                 TipoContribuyente = TipoContribuyente.RégimenSimple | TipoContribuyente.GranContribuyente, PorcentajeRetenciónICAPropio = 0.01  // Régimen simple es solo para que el TipoContribuyente contenga dos elementos.       
             };
             var venta = new Venta(cliente) { DescuentoComercial = 70800, DescuentoCondicionado = 59000 };
@@ -1370,15 +1358,15 @@ namespace SimpleOps {
                 { new LíneaVenta(new Producto("Antena (regalo)"), venta, 1, 100000, 100000M * fracción) { MuestraGratis = true } },
                 { new LíneaVenta(new Producto("TV"), venta, 1, 1400000, 1400000 * fracción) },
                 { new LíneaVenta(
-                    new Producto("Servicio Salud (exluido)") { ConceptoRetenciónPropio = ConceptoRetención.SaludPorIPS, ExcluídoIVA = true }, 
+                    new Producto("Servicio Salud (exluido)") { ConceptoRetenciónPropio = ConceptoRetención.SaludPorIPS, ExcluídoIVA = true },
                     venta, 1, 20000, 20000 * fracción) },
                 { new LíneaVenta(new Producto("acarreo"), venta, 1, 40000, 40000 * fracción) },
                 { new LíneaVenta(
-                    new Producto("bolsas") { TipoImpuestoConsumoPropio = TipoImpuestoConsumo.BolsasPlásticas, ExcluídoIVA = true }, 
-                    venta, 2, 100, 100 * fracción) { MuestraGratis = true } 
+                    new Producto("bolsas") { TipoImpuestoConsumoPropio = TipoImpuestoConsumo.BolsasPlásticas, ExcluídoIVA = true },
+                    venta, 2, 100, 100 * fracción) { MuestraGratis = true }
                 },
                 { new LíneaVenta(
-                    new Producto("almuerzo") { ExcluídoIVA = true, TipoImpuestoConsumoPropio = TipoImpuestoConsumo.ServiciosRestaurante, 
+                    new Producto("almuerzo") { ExcluídoIVA = true, TipoImpuestoConsumoPropio = TipoImpuestoConsumo.ServiciosRestaurante,
                         ConceptoRetenciónPropio = ConceptoRetención.HotelesYRestaurantes},
                     venta, 5, 35000, 35000 * fracción)
                 },
@@ -1386,14 +1374,13 @@ namespace SimpleOps {
 
             if (venta.CalcularTodo()) {
 
-                if (!(Iguales(venta.Subtotal, 2535000) && Iguales(venta.SubtotalBase, 2464200) && Iguales(venta.SubtotalBaseReal, 2564400) &&
+                var mostrarError = !(Iguales(venta.Subtotal, 2535000) && Iguales(venta.SubtotalBase, 2464200) && Iguales(venta.SubtotalBaseReal, 2564400) &&
                     Iguales(venta.SubtotalBaseIVA, 2374646) && Iguales(venta.IVA, 451183) && Iguales(venta.ImpuestoConsumo, 13709) &&
-                    Iguales(venta.RetenciónFuente, 62820) && Iguales(venta.RetenciónIVA, 67677) && Iguales(venta.RetenciónICA, 24642) 
+                    Iguales(venta.RetenciónFuente, 62820) && Iguales(venta.RetenciónIVA, 67677) && Iguales(venta.RetenciónICA, 24642)
                     && Iguales(venta.SubtotalFinalConImpuestos, 2870092) && Iguales(venta.APagar, 2714952) && Iguales(venta.Margen, 297040) &&
-                    Iguales(venta.SubtotalFinal, 2405200) && Iguales(venta.PorcentajeMargen, 0.1235M, 0.01M) 
-                    && Iguales(venta.PorcentajeGanancia, 0.1409M, 0.01M))) {
-                        MostrarError("Error en Validación Cálculo FacturaGenéricaEjemploExcel.CalcularTodo().");
-                }
+                    Iguales(venta.SubtotalFinal, 2405200) && Iguales(venta.PorcentajeMargen, 0.1235M, 0.01M)
+                    && Iguales(venta.PorcentajeGanancia, 0.1409M, 0.01M));
+                if (mostrarError) MostrarError("Error en Validación Cálculo FacturaGenéricaEjemploExcel.CalcularTodo().");
 
             } else {
                 MostrarError("Error en FacturaGenéricaEjemploExcel.CalcularTodo().");
@@ -1405,7 +1392,7 @@ namespace SimpleOps {
         } // FacturaGenérica1EjemploExcel>
 
 
-        public static bool VentaEjemploXml(out string? mensaje, int númeroFactura, bool pruebaHabilitación, out Venta? venta, 
+        public static bool VentaEjemploXml(out string? mensaje, int númeroFactura, bool pruebaHabilitación, out Venta? venta,
             out DocumentoElectrónico<Factura<Cliente, LíneaVenta>, LíneaVenta>? ventaElectrónica) {
 
             venta = null;
@@ -1414,9 +1401,11 @@ namespace SimpleOps {
             if (Empresa.PrimerNúmeroFacturaAutorizada == null) return Falso(out mensaje, "No se esperaba Empresa.PrimerNúmeroFacturaAutorizada nulo.");
 
             var fracciónCosto = 0.8M;
-            var cliente = new Cliente("OPTICAS GMO COLOMBIA S A S", new Municipio("Bogotá", "Bogotá", "Bogotá, D.C.") { ID = 1, Código = "11001" }, 
-                TipoCliente.Consumidor) { Identificación = "900108281", TipoEntidad = TipoEntidad.Empresa, Dirección = "CR 9 A N0 99 - 07 OF 802", 
-                DíasCrédito = 92, Teléfono = "5555555" };
+            var cliente = new Cliente("OPTICAS GMO COLOMBIA S A S", new Municipio("Bogotá", "Bogotá", "Bogotá, D.C.") { ID = 1, Código = "11001" },
+                TipoCliente.Consumidor) {
+                Identificación = "900108281", TipoEntidad = TipoEntidad.Empresa, Dirección = "CR 9 A N0 99 - 07 OF 802",
+                DíasCrédito = 92, Teléfono = "5555555"
+            };
 
             cliente.ContactoFacturas = new Contacto("dcruz@empresa.org") { Nombre = "Diana Cruz", Teléfono = "31031031089" };
             cliente.Sedes.Add(new Sede("Bodega", cliente, "CARRERA 8 No 20-14/40", cliente.Municipio!));
@@ -1424,7 +1413,7 @@ namespace SimpleOps {
             var informePago = new InformePago(1000, new DateTime(2018, 09, 29), cliente);
             var ordenCompra = new OrdenCompra(cliente, "AFR6591") { FechaHoraCreación = new DateTime(2019, 06, 10), Sede = sede }; // Fecha de emisión: Fecha de emisión de la orden. Número: Prefijo y número del documento orden de compra referenciado. Los campos orden de compra son para información y describen una orden de pedido para esta factura. Referencias no tributarias pero si de interés mercantil. Se utiliza cuando se requiera referenciar una sola orden de pedido a la factura realizada.
             venta = new Venta(cliente, ordenCompra) {
-                FechaHora = AhoraUtcAjustado, Prefijo = Empresa.PrefijoFacturas, Número = (int)Empresa.PrimerNúmeroFacturaAutorizada + númeroFactura, 
+                FechaHora = AhoraUtcAjustado, Prefijo = Empresa.PrefijoFacturas, Número = (int)Empresa.PrimerNúmeroFacturaAutorizada + númeroFactura,
                 InformePago = informePago, DescuentoCondicionado = 2000, DescuentoComercial = 5000, ConsecutivoDianAnual = 50 + númeroFactura, // Número de documento: Número de factura o factura cambiaria. Incluye prefijo + número consecutivo de factura autorizados por la DIAN. No se permiten caracteres adicionales como espacios o guiones. El número consecutivo de factura debe ser igual o superior al valor inicial del rango de numeración otorgado.
                 Observación = "Una nota informativa."
             };
@@ -1443,14 +1432,14 @@ namespace SimpleOps {
                 //new LíneaVenta(new Producto("datos celular") { TipoImpuestoConsumoPropio = TipoImpuestoConsumo.TelefoníaCelularYDatos,
                 //    Descripción = "D. datos" }, venta, cantidad: 2, precio: 60000, costo: 60000 * fracciónCosto), // Desactivado porque saca un error atípico que no tienen otros impuestos al consumo. Posiblemente es un error del servidor de la DIAN.
                 new LíneaVenta(new Producto("ALM") { TipoImpuestoConsumoPropio = TipoImpuestoConsumo.ServiciosRestaurante, ExcluídoIVA = true,
-                    DescripciónBase = "Almuerzo Completo con Carne y Ensalada con Yuca Papa" }, venta, cantidad: 3, precio: 25000, 
+                    DescripciónBase = "Almuerzo Completo con Carne y Ensalada con Yuca Papa" }, venta, cantidad: 3, precio: 25000,
                     costo: 25000 * fracciónCosto),
                 new LíneaVenta(new Producto("CENA") { TipoImpuestoConsumoPropio = TipoImpuestoConsumo.ServiciosRestaurante, ExcluídoIVA = true,
                     DescripciónBase = "Cena Completa con Jugo y Postre" }, venta, cantidad: 3, precio: 15000, costo: 15000 * fracciónCosto),
                 //new LíneaVenta(new Producto("Bolsa IC Bolsas") { TipoImpuestoConsumoPropio = TipoImpuestoConsumo.BolsasPlásticas,
                 //    Descripción = "Bolsa Empaque", ExcluídoIVA = true }, venta, cantidad: 3, precio: 150, costo: 50 * fracciónCosto )
                 //    { MuestraGratis = true }, // Desactivado porque saca un error relacionado con el CUFE que solo aparece cuando se establece TipoImpuestoConsumo.BolsasPlásticas: Rechazo FAD06: Valor del CUFE no está calculado correctamente.
-                new LíneaVenta(new Producto("CMSRS", camisetaBase, new List<string> { "Roja", "Talla S" }), 
+                new LíneaVenta(new Producto("CMSRS", camisetaBase, new List<string> { "Roja", "Talla S" }),
                     venta, 2, 50990, 40000),
                 new LíneaVenta(new Producto("CMSVL", camisetaBase, new List<string> { "Verde", "Talla L" }) {
                     UnidadEspecífica = Unidad.Docena }, venta, 3, 51990, 42000),
@@ -1465,18 +1454,18 @@ namespace SimpleOps {
         } // VentaEjemploXml>
 
 
-        public static bool VentaSimple(out string? mensaje, int númeroFactura, int cantidad, decimal precio, string empresa, string nit, string dirección, 
-            string teléfono, bool pruebaHabilitación, out Venta? venta, out DocumentoElectrónico<Factura<Cliente, LíneaVenta>, LíneaVenta>? ventaElectrónica, 
-            bool pruebaIntegración = false, bool unoExcluídoIVA = false, bool todosExcluídosIVA = false, bool unoConINC = false, 
+        public static bool VentaSimple(out string? mensaje, int númeroFactura, int cantidad, decimal precio, string empresa, string nit, string dirección,
+            string teléfono, bool pruebaHabilitación, out Venta? venta, out DocumentoElectrónico<Factura<Cliente, LíneaVenta>, LíneaVenta>? ventaElectrónica,
+            bool pruebaIntegración = false, bool unoExcluídoIVA = false, bool todosExcluídosIVA = false, bool unoConINC = false,
             bool unoConINCyExcluídoIVA = false, bool unoExentoIVA = false, bool clienteIVACero = false, bool todosSoloINC = false) {
 
             ventaElectrónica = null;
             venta = null;
             if (Empresa.PrimerNúmeroFacturaAutorizada == null) return Falso(out mensaje, "No se esperaba Empresa.PrimerNúmeroFacturaAutorizada nulo.");
 
-            var cliente = new Cliente(empresa, new Municipio("Bogotá", "Bogotá", "Bogotá, D.C.") { ID = 1, Código = "11001" }, TipoCliente.Consumidor) { 
-                Identificación = nit, TipoEntidad = TipoEntidad.Empresa, Dirección = dirección, DíasCrédito = 7, Teléfono = teléfono, 
-                ContactoFacturas = new Contacto($"facturación@{empresa.Reemplazar(" ","")}.com"), PorcentajeIVAPropio = clienteIVACero ? 0 : (double?)null
+            var cliente = new Cliente(empresa, new Municipio("Bogotá", "Bogotá", "Bogotá, D.C.") { ID = 1, Código = "11001" }, TipoCliente.Consumidor) {
+                Identificación = nit, TipoEntidad = TipoEntidad.Empresa, Dirección = dirección, DíasCrédito = 7, Teléfono = teléfono,
+                ContactoFacturas = new Contacto($"facturación@{empresa.Reemplazar(" ", "")}.com"), PorcentajeIVAPropio = clienteIVACero ? 0 : (double?)null
             };
 
             venta = new Venta(cliente, new OrdenCompra(cliente, AhoraUtcAjustado.ATextoYYMMDD())) {
@@ -1526,7 +1515,7 @@ namespace SimpleOps {
 
                 var datos = venta.ObtenerDatosIntegración();
                 if (!ExisteRuta(TipoElementoRuta.Carpeta, Equipo.RutaIntegración, "integración con programas terceros", out string? mensajeExiste))
-                    throw new Exception(mensajeExiste); // No es un código que normalmente vaya a ejecutar un usuario entonces con la excepción basta.
+                    throw new DirectoryNotFoundException(mensajeExiste); // No es un código que normalmente vaya a ejecutar un usuario entonces con la excepción basta.
                 File.WriteAllText(Path.Combine(Equipo.RutaIntegración!, $"{DocumentoIntegración.Venta.ATexto()}{AhoraNombresArchivos}.json"), // Se usa ! porque en la línea anterior saca exepción si RutaIntegración es nula.
                     Serializar(datos, Serialización.EnumeraciónEnTexto));
                 mensaje = "";
@@ -1540,8 +1529,8 @@ namespace SimpleOps {
 
 
         public static bool NotaCréditoEjemploXml(out string? mensaje, int númeroNotaCrédito, bool pruebaHabilitación, Venta venta,
-            out NotaCréditoVenta? notaCrédito, 
-            out DocumentoElectrónico<Factura<Cliente, LíneaNotaCréditoVenta>, LíneaNotaCréditoVenta>? notaCréditoElectrónica, 
+            out NotaCréditoVenta? notaCrédito,
+            out DocumentoElectrónico<Factura<Cliente, LíneaNotaCréditoVenta>, LíneaNotaCréditoVenta>? notaCréditoElectrónica,
             bool pruebaIntegración = false) {
 
             notaCréditoElectrónica = null;
@@ -1550,7 +1539,7 @@ namespace SimpleOps {
             if (venta.Cliente == null) return Falso(out mensaje, "No se esperaba que el cliente de la venta fuera nulo.");
 
             notaCrédito = new NotaCréditoVenta(venta.Cliente, venta) {
-                FechaHora = AhoraUtcAjustado, Número = númeroNotaCrédito, ConsecutivoDianAnual = 50 + númeroNotaCrédito, 
+                FechaHora = AhoraUtcAjustado, Número = númeroNotaCrédito, ConsecutivoDianAnual = 50 + númeroNotaCrédito,
                 Razón = RazónNotaCrédito.DevoluciónParcial, Observación = "Devolución por mala calidad."
             };
             notaCrédito.Líneas = new List<LíneaNotaCréditoVenta> {
@@ -1561,7 +1550,7 @@ namespace SimpleOps {
 
                 var datos = notaCrédito.ObtenerDatosIntegración();
                 if (!ExisteRuta(TipoElementoRuta.Carpeta, Equipo.RutaIntegración, "integración con programas terceros", out string? mensajeExiste))
-                    throw new Exception(mensajeExiste); // No es un código que normalmente vaya a ejecutar un usuario entonces con la excepción basta.
+                    throw new DirectoryNotFoundException(mensajeExiste); // No es un código que normalmente vaya a ejecutar un usuario entonces con la excepción basta.
                 File.WriteAllText(Path.Combine(Equipo.RutaIntegración!, $"{DocumentoIntegración.NotaCrédito.ATexto()}{AhoraNombresArchivos}.json"), // Se usa ! porque en la línea anterior saca exepción si RutaIntegración es nula.
                     Serializar(datos, Serialización.EnumeraciónEnTexto));
                 mensaje = "";

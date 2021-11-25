@@ -24,11 +24,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Microsoft.EntityFrameworkCore;
 using SimpleOps.Modelo;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using static SimpleOps.Global;
 using static Vixark.General;
 using System.Linq;
@@ -183,13 +180,13 @@ namespace SimpleOps.Datos {
 
         protected override void OnConfiguring(DbContextOptionsBuilder opciones) {
 
-            #pragma warning disable CS0162 // Se detectó código inaccesible. Se omite la advertencia porque HabilitarRastreoDeDatosSensibles puede ser modificado por el usuario del código.
-            if (HabilitarRastreoDeDatosSensibles) {         
-                opciones.UseSqlite(@$"Data Source={RutaBaseDatosSQLite}").UseLoggerFactory(FábricaRastreadores).EnableSensitiveDataLogging();      
+#pragma warning disable CS0162 // Se detectó código inaccesible. Se omite la advertencia porque HabilitarRastreoDeDatosSensibles puede ser modificado por el usuario del código.
+            if (HabilitarRastreoDeDatosSensibles) {
+                opciones.UseSqlite(@$"Data Source={RutaBaseDatosSQLite}").UseLoggerFactory(FábricaRastreadores).EnableSensitiveDataLogging();
             } else {
                 opciones.UseSqlite(@$"Data Source={RutaBaseDatosSQLite}").UseLoggerFactory(FábricaRastreadores);
             }
-            #pragma warning restore CS0162
+#pragma warning restore CS0162
 
         } // OnConfiguring>
 
@@ -231,7 +228,7 @@ namespace SimpleOps.Datos {
                 .Metadata.SetValueComparer(ComparadorJSON<Dictionary<string, string>>());
             constructor.Entity<LíneaRemisión>().Property(c => c.Personalizaciones).HasConversion(ConvertidorJSON<Dictionary<string, string>>())
                 .Metadata.SetValueComparer(ComparadorJSON<Dictionary<string, string>>());
-            constructor.Entity<Producto>().Property(c=> c.Personalizaciones).HasConversion(ConvertidorJSON<List<TuplaSerializable<string, List<string>>>>())
+            constructor.Entity<Producto>().Property(c => c.Personalizaciones).HasConversion(ConvertidorJSON<List<TuplaSerializable<string, List<string>>>>())
                 .Metadata.SetValueComparer(ComparadorJSON<List<TuplaSerializable<string, List<string>>>>());
 
             if (UsarSQLite && GuardarFechaReducidaSQLite) {
@@ -256,12 +253,12 @@ namespace SimpleOps.Datos {
 
             }
 
-            #pragma warning disable CS0162 // Se detectó código inaccesible. Se omite la advertencia porque UsarSQLite y GuardarDecimalComoDoubleSQLite pueden ser modificado por el usuario del código.
+#pragma warning disable CS0162 // Se detectó código inaccesible. Se omite la advertencia porque UsarSQLite y GuardarDecimalComoDoubleSQLite pueden ser modificado por el usuario del código.
             if (UsarSQLite && GuardarDecimalComoDoubleSQLite) {
                 constructor.UsarConvertidorGlobal<decimal?, double?>();
                 constructor.UsarConvertidorGlobal<decimal, double>(); // Conversión global intermedia entre double y decimal para forzar que se guarden todos los decimales del modelo como reales en SQLite y permitir OrderBy() y otras operaciones de comparación directamente en la base de datos. Tiene el inconveniente de producir pérdida de precisión en los datos guardados (en comparación con guardarlos como decimal) pues quedan con la precisión de double. Aún así, después de leer los valores de la base de datos se almacenan en las propiedades de las entidades como decimal entonces las operaciones matemáticas se siguen haciendo en decimal y se disminuye la posible pérdida precisión en estas operaciones entonces el efecto no es tan grave. Además, 15 dígitos de precisión de double son más que suficientes para los usos actuales porque podría representar hasta 1 000 000 000 000.00 (1 billón de pesos colombianos) con 2 cifras decimales, cualquier aplicación que requiera manejar valores de dinero superior debería estar usando un servidor de SQL (No SQLite) que no tiene este inconveniente. Ver recomendación en https://docs.microsoft.com/en-us/ef/core/providers/sqlite/limitations.
             } else { _ = 0; } // Solo se usa esta línea para que no saque advertencia de supresión de CS0162 innecesaria.
-            #pragma warning restore CS0162
+#pragma warning restore CS0162
 
             // Conversión de Datos>
 
@@ -384,7 +381,7 @@ namespace SimpleOps.Datos {
 
         public override int SaveChanges() {
 
-            if (TipoContexto != TipoContexto.Escritura) throw new Exception("El contexto actual no permite guardar cambios.");
+            if (TipoContexto != TipoContexto.Escritura) throw new InvalidOperationException("El contexto actual no permite guardar cambios.");
 
             var actualizarMunicipiosConMensajería = false;
 
@@ -783,9 +780,7 @@ namespace SimpleOps.Datos {
                         try {
                             ctx.Add(entidad);
                             cuenta += ctx.GuardarCambios();
-                            #pragma warning disable CA1031 // No capture tipos de excepción generales. Se desactiva porque se necesita el texto de la excepción. No hay mayor problema porque esta excepción es controlada pues el proceso finaliza y se le notifica al usuario el error encontrado.
-                        } catch (Exception ex) {
-                            #pragma warning restore CA1031
+                        } catch (Exception ex) { // Antes se estaba deshabilitando la advertencia CA1031. No capture tipos de excepción generales. Se desactiva porque se necesita el texto de la excepción. No hay mayor problema porque esta excepción es controlada pues el proceso finaliza y se le notifica al usuario el error encontrado.
                             return $"Error en carga individual en tabla {nombreTabla}, fila {cuenta + 1}.{DobleLínea}{ex.Message}";
                         }
                         

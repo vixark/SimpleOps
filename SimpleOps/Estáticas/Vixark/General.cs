@@ -47,7 +47,6 @@ using System.Windows;
 using System.Diagnostics;
 using System.Drawing;
 using QRCoder;
-using System.Configuration;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Drawing.Drawing2D;
@@ -520,7 +519,7 @@ namespace Vixark {
                 if (crearSiNoExiste) {
                     Directory.CreateDirectory(ruta);
                 } else {
-                    throw new Exception($"No existe la carpeta {ruta}");
+                    throw new ArgumentException($"No existe la carpeta {ruta}");
                 }
 
             }
@@ -582,7 +581,7 @@ namespace Vixark {
             DateTime últimaFechaModificación = DateTime.MinValue;
             foreach (var rutaArchivo in Directory.GetFiles(rutaCarpeta)) {
                 var últimaFechaModificaciónArchivo = ObtenerFechaModificaciónUtc(rutaArchivo);
-                if (últimaFechaModificaciónArchivo != null && últimaFechaModificaciónArchivo > últimaFechaModificación) 
+                if (últimaFechaModificaciónArchivo != null && últimaFechaModificaciónArchivo > últimaFechaModificación)
                     últimaFechaModificación = (DateTime)últimaFechaModificaciónArchivo;
             }
             return últimaFechaModificación == DateTime.MinValue ? (DateTime?)null : últimaFechaModificación;
@@ -667,9 +666,9 @@ namespace Vixark {
         public static string ObtenerHashArchivo(string rutaArchivo) {
 
             using var FileCheck = File.OpenRead(rutaArchivo);
-            #pragma warning disable CA5351 // No usar algoritmos criptográficos dañados. Es aceptable porque solo es para identificar el archivo.
+#pragma warning disable CA5351 // No usar algoritmos criptográficos dañados. Es aceptable porque solo es para identificar el archivo.
             using var md5 = new MD5CryptoServiceProvider();
-            #pragma warning restore CA5351
+#pragma warning restore CA5351
             var md5Hash = md5.ComputeHash(FileCheck);
             return BitConverter.ToString(md5Hash).Reemplazar("-", "").AMinúscula()!;
 
@@ -692,14 +691,13 @@ namespace Vixark {
         public static bool ExisteRuta(TipoElementoRuta tipo, string? ruta, string nombre, out string? mensaje, string textoAdicional = "") {
 
             mensaje = "";
-            if ((tipo == TipoElementoRuta.Archivo && !File.Exists(ruta)) || ((tipo == TipoElementoRuta.Carpeta && !Directory.Exists(ruta)))) {
+            if ((tipo == TipoElementoRuta.Archivo && !File.Exists(ruta)) || (tipo == TipoElementoRuta.Carpeta && !Directory.Exists(ruta))) {
 
                 var textoAdicionalYPunto = textoAdicional + (string.IsNullOrEmpty(textoAdicional) ? "" : ".");
-                if (string.IsNullOrEmpty(ruta)) {
-                    return Falso(out mensaje, $"No se ha seleccionado {(tipo == TipoElementoRuta.Archivo ? "el" : "la")} {tipo.ToString().AMinúscula()} de {nombre}. {textoAdicionalYPunto}");
-                } else {
-                    return Falso(out mensaje, $"No existe el {nombre} en {ruta}. {textoAdicionalYPunto}");
-                }
+                return string.IsNullOrEmpty(ruta)
+                    ? Falso(out mensaje, $"No se ha seleccionado {(tipo == TipoElementoRuta.Archivo ? "el" : "la")} {tipo.ToString().AMinúscula()} de "
+                        + $"{nombre}. {textoAdicionalYPunto}")
+                    : Falso(out mensaje, $"No existe el {nombre} en {ruta}. {textoAdicionalYPunto}");
 
             } else {
                 return true;
@@ -726,7 +724,7 @@ namespace Vixark {
             var extensiónArchivo = ObtenerExtensión(nombreArchivo);
             if (extensionesVálidas == null) {
 
-                var rutaArchivo = Path.Combine(rutaCarpeta, nombreArchivo); 
+                var rutaArchivo = Path.Combine(rutaCarpeta, nombreArchivo);
                 if (File.Exists(rutaArchivo)) return rutaArchivo;
 
             } else {
@@ -749,7 +747,7 @@ namespace Vixark {
 
             }
 
-            return null; 
+            return null;
 
         } // ObtenerRutaArchivo>
 
@@ -785,22 +783,19 @@ namespace Vixark {
             } else if (usarBarraInversa) {
                 return @$"{rutaRespuesta}\";
             } else {
-                throw new Exception("caso de barra no considerado en ObtenerRutaCarpetaConBarra()"); // Se lanza excepción para evitar errores silenciosos.
+                throw new ArgumentException("caso de barra no considerado en ObtenerRutaCarpetaConBarra()"); // Se lanza excepción para evitar errores silenciosos.
             }
 
         } // ObtenerRutaCarpetaConBarra>
 
 
-        public static TipoRuta ObtenerTipoRuta(string? ruta) {
-
-            if (string.IsNullOrEmpty(ruta)) return TipoRuta.Vacío;
-            if (Regex.IsMatch(ruta, PatrónRutaUrl)) return TipoRuta.Url;
-            if (Regex.IsMatch(ruta, PatrónRutaLocal)) return TipoRuta.Local;
-            if (ruta.Contiene("/")) return TipoRuta.RelativoUrl;
-            if (ruta.Contiene(@"\")) return TipoRuta.RelativoLocal;
-            return TipoRuta.Elemento;
-
-        } // ObtenerTipoRuta>
+        public static TipoRuta ObtenerTipoRuta(string? ruta)
+            => string.IsNullOrEmpty(ruta) ? TipoRuta.Vacío
+                : Regex.IsMatch(ruta, PatrónRutaUrl) ? TipoRuta.Url
+                : Regex.IsMatch(ruta, PatrónRutaLocal) ? TipoRuta.Local
+                : ruta.Contiene("/") ? TipoRuta.RelativoUrl
+                : ruta.Contiene(@"\") ? TipoRuta.RelativoLocal
+                : TipoRuta.Elemento; // Verificar como funciona este condicional de esta manera la próxima vez que pase el código por aquí.
 
 
         public static void FinalizarSiExisteOtraInstanciaAbierta(string nombreAplicación) {
@@ -845,16 +840,15 @@ namespace Vixark {
         /// <returns></returns>
         public static byte[] ObtenerBytesZip(string ruta) { // Ver https://stackoverflow.com/a/30068762/8330412.
 
-            if (!File.Exists(ruta)) throw new Exception($"No existe el archivo a comprimir {ruta}.");
+            if (!File.Exists(ruta)) throw new ArgumentException($"No existe el archivo a comprimir {ruta}.");
 
-            using var flujoZip = new MemoryStream(); { // Es necesario este bloque para que comprima correctamente.
-
+            using var flujoZip = new MemoryStream();
+            { // Es necesario este bloque para que comprima correctamente.
                 using var zip = new ZipArchive(flujoZip, ZipArchiveMode.Create, true);
                 var xmlEnZip = zip.CreateEntry(Path.GetFileName(ruta), CompressionLevel.Optimal);
                 using var flujoXmlEnZip = xmlEnZip.Open();
                 using var flujoXml = new MemoryStream(File.ReadAllBytes(ruta));
                 flujoXml.CopyTo(flujoXmlEnZip);
-
             }
 
             return flujoZip.ToArray();
@@ -871,7 +865,7 @@ namespace Vixark {
         public static void CrearZip(string ruta, string? rutaZip = null) {
 
             if (rutaZip == null) rutaZip = ObtenerRutaCambiandoExtensión(ruta, "zip");
-            if (File.Exists(rutaZip)) throw new Exception($"Ya existe el archivo .zip {rutaZip}.");
+            if (File.Exists(rutaZip)) throw new NotSupportedException($"Ya existe el archivo .zip {rutaZip}.");
             File.WriteAllBytes(rutaZip, ObtenerBytesZip(ruta));
 
         } // CrearZip>
@@ -916,7 +910,7 @@ namespace Vixark {
                 return extensión switch {
                     var e when e.EstáEn(ExtensionesPng) => "data:image/png;base64," + base64,
                     var e when e.EstáEn(ExtensionesJpg) => "data:image/jpeg;base64," + base64,
-                    _ => throw new Exception(CasoNoConsiderado(extensión))
+                    _ => throw new ArgumentException(CasoNoConsiderado(extensión))
                 };
 
             } else {
@@ -963,13 +957,13 @@ namespace Vixark {
         /// Otra solución sería preprocesar las imágenes con un editor de imágenes para reducir la suciedad.</param>
         /// <param name="margenRecorteImagen">Los pixeles de respiración que se le dejan a la imagen recortada a todos los lados. 
         /// Se sugiere usar un valor mayor a 2 porque con menos queda el recorte muy justo donde va el cambio de color.</param>
-        public static bool RedimensionarImagen(string archivoInicial, string archivoFinal, int anchoNuevo, int altoNuevo, 
+        public static bool RedimensionarImagen(string archivoInicial, string archivoFinal, int anchoNuevo, int altoNuevo,
             bool forzarRedimensionamiento = false, double toleranciaDiferenciaColor = 6, int margenRecorteImagen = 4) {
 
             if (anchoNuevo <= 1 || altoNuevo <= 1 || anchoNuevo > 4000 || altoNuevo > 4000) return false;
 
             var fechaModificaciónArchivoFinal = ObtenerFechaModificaciónUtc(archivoFinal);
-            var fechaModificaciónArchivoInicial = ObtenerFechaModificaciónUtc(archivoInicial); 
+            var fechaModificaciónArchivoInicial = ObtenerFechaModificaciónUtc(archivoInicial);
             if (fechaModificaciónArchivoInicial == null) return false; // Si es nulo, es porque no existe.
             if (!forzarRedimensionamiento && fechaModificaciónArchivoFinal != null && fechaModificaciónArchivoFinal > fechaModificaciónArchivoInicial) // Si no es nulo, es porque sí existe.
                 return true;
@@ -981,14 +975,14 @@ namespace Vixark {
             var altoAnterior = imagenOriginal.Height;
             var rectánguloRecorte = new Rectangle(0, 0, anchoAnterior, altoAnterior); // El valor por defecto es el valor que tomará cuando saque excepción el recortado inteligente o cuando esté deshabilitado PermitirCódigoNoSeguro.
 
-            #if PermitirCódigoNoSeguro // Desactivar eliminando esta variable en Propiedades > Compilación > Símbolos de compilación condicional. Al eliminarla este código se ignora en la compilación, se pierde la funcionalidad de recorte de imágenes inteligente y se puede compilar con la opción 'Permitir código no seguro' desactivada. 
+#if         PermitirCódigoNoSeguro // Desactivar eliminando esta variable en Propiedades > Compilación > Símbolos de compilación condicional. Al eliminarla este código se ignora en la compilación, se pierde la funcionalidad de recorte de imágenes inteligente y se puede compilar con la opción 'Permitir código no seguro' desactivada. 
 
             try {
 
                 var colorFondo = ObtenerColorFondo(imagenOriginalBitmap, toleranciaDiferenciaColor);
                 if (ObtenerDistanciaEntreColores(colorFondo, Color.White) > toleranciaDiferenciaColor &&
                     ObtenerDistanciaEntreColores(colorFondo, Color.Transparent) > toleranciaDiferenciaColor)
-                    throw new Exception("El color de fondo es muy diferente a blanco o transparente.");
+                    throw new ArgumentException("El color de fondo es muy diferente a blanco o transparente.");
 
                 rectánguloRecorte = ObtenerRecorteImagenAjustada(imagenOriginalBitmap, colorFondo, margenRecorteImagen, toleranciaDiferenciaColor);
 
@@ -996,7 +990,7 @@ namespace Vixark {
                 MostrarError($"No se pudo recortar inteligentemente la imagen {archivoInicial}, se recortó de manera básica.{DobleLínea}{ex.Message}");
             }
 
-            #endif
+#endif
 
             double relación = 0;
             int extraEspacioHorizontal = 0;
@@ -1007,14 +1001,14 @@ namespace Vixark {
             if (rectánguloRecorte.Height / (double)rectánguloRecorte.Width > altoNuevo / (double)anchoNuevo) { // Si la relación alto/ancho del recorte es mayor que la de la imagen final, entonces se debe rellenar el recorte a los lados. Se debe usar el alto del recorte y un ancho apropiado.
 
                 relación = (double)altoNuevo / rectánguloRecorte.Height;
-                extraEspacioHorizontal = RedondearAEntero(((anchoNuevo - rectánguloRecorte.Width * relación) / 2));
+                extraEspacioHorizontal = RedondearAEntero((anchoNuevo - rectánguloRecorte.Width * relación) / 2);
                 desfaceHorizontal = RedondearAEntero(rectánguloRecorte.X * relación - extraEspacioHorizontal);
                 desfaceVertical = RedondearAEntero(rectánguloRecorte.Y * relación);
 
             } else { // Si no, es al contrario.
 
                 relación = (double)anchoNuevo / rectánguloRecorte.Width;
-                extraEspacioVertical = RedondearAEntero(((altoNuevo - rectánguloRecorte.Height * relación) / 2));
+                extraEspacioVertical = RedondearAEntero((altoNuevo - rectánguloRecorte.Height * relación) / 2);
                 desfaceHorizontal = RedondearAEntero(rectánguloRecorte.X * relación);
                 desfaceVertical = RedondearAEntero(rectánguloRecorte.Y * relación - extraEspacioVertical);
 
@@ -1044,7 +1038,7 @@ namespace Vixark {
         } // RedimensionarImagen>
 
 
-        #if PermitirCódigoNoSeguro // Desactivar eliminando esta variable en Propiedades > Compilación > Símbolos de compilación condicional. Al eliminarla todo este código se ignora en la compilación y se puede compilar con la opción 'Permitir código no seguro' desactivada. 
+#if     PermitirCódigoNoSeguro // Desactivar eliminando esta variable en Propiedades > Compilación > Símbolos de compilación condicional. Al eliminarla todo este código se ignora en la compilación y se puede compilar con la opción 'Permitir código no seguro' desactivada. 
 
         public static double ObtenerDistanciaEntreColores(Color color1, Color color2) {
 
@@ -1072,24 +1066,24 @@ namespace Vixark {
                 (int)PixelFormat.Format32bppArgb => 4,
                 (int)PixelFormat.Format32bppPArgb => 4,
                 (int)PixelFormat.Format32bppRgb => 4,
-                8207 => throw new Exception("El formato de imagen CMYK id 8207 no está soportado."), // CMYK https://stackoverflow.com/questions/4315335/how-to-identify-cmyk-images-using-c-sharp.
-                _ => throw new Exception("El formato de imagen no está soportado.")
+                8207 => throw new ArgumentException("El formato de imagen CMYK id 8207 no está soportado."), // CMYK https://stackoverflow.com/questions/4315335/how-to-identify-cmyk-images-using-c-sharp.
+                _ => throw new ArgumentException("El formato de imagen no está soportado.")
             };
 
             var bytesPorPixel2 = Image.GetPixelFormatSize(bitmap.PixelFormat) / 8;
-            if (bytesPorPixel != bytesPorPixel2) throw new Exception("Inconsistencia entre los dos métodos para encontrar los bytes por pixel.");
-            return bytesPorPixel;
+            return bytesPorPixel != bytesPorPixel2
+                ? throw new InvalidOperationException("Inconsistencia entre los dos métodos para encontrar los bytes por pixel.") : bytesPorPixel;
 
         } // ObtenerCantidadBytesPorPixel>
 
 
-        private static bool TieneAlfa(Bitmap bitmap) => ((int)bitmap.PixelFormat) switch {
+        private static bool TieneAlfa(Bitmap bitmap) => (int)bitmap.PixelFormat switch {
             (int)PixelFormat.Format24bppRgb => false,
             (int)PixelFormat.Format32bppArgb => true,
             (int)PixelFormat.Format32bppPArgb => true,
             (int)PixelFormat.Format32bppRgb => true,
-            8207 => throw new Exception("El formato de imagen CMYK id 8207 no está soportado."), // CMYK https://stackoverflow.com/questions/4315335/how-to-identify-cmyk-images-using-c-sharp.
-            _ => throw new Exception("El formato de imagen no está soportado."),
+            8207 => throw new ArgumentException("El formato de imagen CMYK id 8207 no está soportado."), // CMYK https://stackoverflow.com/questions/4315335/how-to-identify-cmyk-images-using-c-sharp.
+            _ => throw new ArgumentException("El formato de imagen no está soportado."),
         };
 
 
@@ -1112,7 +1106,7 @@ namespace Vixark {
         private static unsafe bool EsColorDiferenteDeFondo(int anchoPaso, int bytesPorPixel, byte* p, int x, int y, Color colorFondo,
             double toleranciaDiferenciaColor) {
 
-            int índicePunto = (y * anchoPaso) + x * bytesPorPixel;
+            int índicePunto = y * anchoPaso + x * bytesPorPixel;
             var color1 = Color.FromArgb(p[índicePunto + 2], p[índicePunto + 1], p[índicePunto]);
             índicePunto = (y * anchoPaso) + (x + 1) * bytesPorPixel;
             var color2 = Color.FromArgb(p[índicePunto + 2], p[índicePunto + 1], p[índicePunto]);
@@ -1122,7 +1116,7 @@ namespace Vixark {
             var color4 = Color.FromArgb(p[índicePunto + 2], p[índicePunto + 1], p[índicePunto]);
             var colorPromedio = ObtenerColorPromedio(new List<Color> { color1, color2, color3, color4 }); // El color promedio de un cuadro de 2x2 pixeles alrededor del punto actual.
             var distanciaPromedioFondo = ObtenerDistanciaEntreColores(colorPromedio, colorFondo);
-            return (distanciaPromedioFondo > toleranciaDiferenciaColor);
+            return distanciaPromedioFondo > toleranciaDiferenciaColor;
 
         } // EsColorDiferenteDeFondo>
 
@@ -1228,13 +1222,15 @@ namespace Vixark {
 
                 if (distancia12 != 0 || distancia23 != 0 | distancia34 != 0 | distancia41 != 0) {  // Tiene esquinas de colores diferentes. Se debe usar un promedio.
 
+#pragma warning disable IDE0045 // Convertir el siguiente código en un condicional de una línea lo haría muy poco legible.
                     if (distancia12 > toleranciaDiferenciaColor || distancia23 > toleranciaDiferenciaColor | distancia34 > toleranciaDiferenciaColor
                         | distancia41 > toleranciaDiferenciaColor) { // Tiene esquinas de colores muy diferentes, se debe lanzar excepción.
-                        throw new Exception("No se pudo obtener el color promedio del fondo porque los pixeles esquineros difieren mucho en color: " +
+                        throw new ArgumentException("No se pudo obtener el color promedio del fondo porque los pixeles esquineros difieren mucho en color: " +
                             distancia12 + " " + distancia23 + " " + distancia34 + " " + distancia41);
                     } else {
                         colorFondo = ObtenerColorPromedio(new List<Color> { color1, color2, color3, color4 });
                     }
+#pragma warning restore IDE0045
 
                 } else {
                     colorFondo = color1;
@@ -1249,7 +1245,7 @@ namespace Vixark {
         } // ObtenerColorFondo>
 
 
-        #endif // PermitirCódigoNoSeguro>
+#endif  // PermitirCódigoNoSeguro>
 
 
         #endregion RedimensionarImagen>
@@ -1281,7 +1277,7 @@ namespace Vixark {
         /// <summary>
         /// Función muy rápida de conversión de texto a entero. No realiza verificaciones de errores.
         /// </summary>
-        public static int AEntero(this char carácter) => (carácter - '0');
+        public static int AEntero(this char carácter) => carácter - '0';
 
         public static string ASíONo(this bool booleano) => booleano ? "Sí" : "No";
 
@@ -1452,7 +1448,7 @@ namespace Vixark {
 
         public static bool EmpiezaPorNúmero(this string? texto) => texto != null && texto.Length > 0 && char.IsNumber(texto[0]);
 
-        public static List<string> APalabras(this string? texto) 
+        public static List<string> APalabras(this string? texto)
             => texto == null ? new List<string>() : texto.Split(" ", StringSplitOptions.RemoveEmptyEntries).ToList();
 
         /// <summary>
@@ -1494,7 +1490,7 @@ namespace Vixark {
                             case NúmeroSustantivo.Plural:
                                 return PalabrasPluralesFemeninas[palabraMasculina];
                             default:
-                                throw new Exception(CasoNoConsiderado(número));
+                                throw new ArgumentException(CasoNoConsiderado(número));
                         }
 
                     case Género.Masculino:
@@ -1506,11 +1502,11 @@ namespace Vixark {
                             case NúmeroSustantivo.Plural:
                                 return PalabrasPluralesMasculinas[palabraMasculina];
                             default:
-                                throw new Exception(CasoNoConsiderado(número));
+                                throw new ArgumentException(CasoNoConsiderado(número));
                         }
 
                     default:
-                        throw new Exception(CasoNoConsiderado(género));
+                        throw new ArgumentException(CasoNoConsiderado(género));
                 }
 
             } else {
@@ -1568,8 +1564,8 @@ namespace Vixark {
         /// el texto coincidido del grupo <paramref name="númeroGrupo"/>. 
         /// Si el <paramref name="númeroGrupo"/> es 0 se devuelve el texto completo coincidido.
         /// </summary>
-        public static string? Extraer(string? texto, string? patrón, int númeroGrupo = 0, int númeroCoincidencia = 0, 
-            bool excepciónSiNoCoincidencias = true) 
+        public static string? Extraer(string? texto, string? patrón, int númeroGrupo = 0, int númeroCoincidencia = 0,
+            bool excepciónSiNoCoincidencias = true)
                 => Extraer(texto, patrón, out _, out _, númeroGrupo, númeroCoincidencia, excepciónSiNoCoincidencias);
 
 
@@ -1597,7 +1593,7 @@ namespace Vixark {
         /// <param name="excepciónSiNoCoincidencias"></param>
         /// <returns></returns>
         public static string? Extraer(string? texto, string? patrón, out int cantidadCoincidencias, out int cantidadGrupos,
-             int númeroGrupo = 0, int númeroCoincidencia = 0, bool excepciónSiNoCoincidencias = true) { 
+             int númeroGrupo = 0, int númeroCoincidencia = 0, bool excepciónSiNoCoincidencias = true) {
 
             cantidadCoincidencias = 0;
             cantidadGrupos = 0;
@@ -1608,15 +1604,14 @@ namespace Vixark {
             var coincidencias = regex.Matches(texto);
             cantidadCoincidencias = coincidencias.Count;
             if (cantidadCoincidencias == 0) {
-                if (excepciónSiNoCoincidencias) throw new Exception("Expresión regular sin coincidencias. Arregla la expresión regular, propaga el " +
-                                                                    "error o evita esta excepción con excepciónSiNoCoincidencias = false.");
-                return null;
+                return excepciónSiNoCoincidencias ? throw new ArgumentException("Expresión regular sin coincidencias. Arregla la expresión regular," +
+                    " propaga el error o evita esta excepción con excepciónSiNoCoincidencias = false.") : (string?)null;
             }
 
             cantidadGrupos = coincidencias[númeroCoincidencia].Groups.Count;
-            if (cantidadGrupos == 0) throw new Exception("No se esperaba que hubieran coincidencias y no hayan grupos coincididos.");
 
-            return coincidencias[númeroCoincidencia].Groups[númeroGrupo].Value;
+            return cantidadGrupos == 0 ? throw new ArgumentException("No se esperaba que hubieran coincidencias y no hayan grupos coincididos.")
+                : coincidencias[númeroCoincidencia].Groups[númeroGrupo].Value;
 
         } // Extraer>
 
@@ -1632,7 +1627,7 @@ namespace Vixark {
         /// <param name="errorEnNoCoincidenciaDePatrón"></param>
         /// <param name="devolverValorSiNoHayCoincidencia"></param>
         /// <returns></returns>
-        public static string ExtraerConPatrónObsoleta(string texto, string patrón, int númeroGrupo, out int cantidadGrupos, 
+        public static string ExtraerConPatrónObsoleta(string texto, string patrón, int númeroGrupo, out int cantidadGrupos,
             bool errorEnNoCoincidenciaDePatrón = true, bool devolverValorSiNoHayCoincidencia = false) { // Se deben migrar los procedimientos que usen esta función a las nuevas ExtraerConPatrón.
 
             cantidadGrupos = 0;
@@ -1650,7 +1645,7 @@ namespace Vixark {
                     } else {
 
                         if (errorEnNoCoincidenciaDePatrón)
-                            throw new Exception("Expresión regular sin coincidencias. Alternativas de solución: Arreglar expresión regular, " +
+                            throw new ArgumentException("Expresión regular sin coincidencias. Alternativas de solución: Arreglar expresión regular, " +
                                 "propagar error o ignorar con errorEnNoCoincidenciaDePatrón = false.");
                         if (!devolverValorSiNoHayCoincidencia) return "";
 
@@ -1766,25 +1761,14 @@ namespace Vixark {
         /// <summary>
         /// Si el objeto es decimal usa ATextoDinero. Si no lo es usa el ToString propio del objeto.
         /// </summary>
-        public static string? ATextoDinero(this object objeto) {
-
-            string? txt;
-            if (objeto is decimal) {
-                txt = ((decimal?)objeto)?.ATextoDinero();
-            } else {
-                txt = objeto?.ToString();
-            }
-            return txt;
-
-        } // ATextoDinero>
-
+        public static string? ATextoDinero(this object objeto) => objeto is decimal ? ((decimal?)objeto)?.ATextoDinero() : (objeto?.ToString());
 
         public static string AleatorizarTexto(string texto) {
 
             var carácteres = texto.ToList();
             var respuesta = "";
             foreach (var c in carácteres) {
-                respuesta += Convert.ToChar(Convert.ToInt32(c) + ((AhoraUtc(-5).Month - 6) + AhoraUtc(-5).Day / 5)).ToString();
+                respuesta += Convert.ToChar(Convert.ToInt32(c) + (AhoraUtc(-5).Month - 6) + AhoraUtc(-5).Day / 5).ToString();
             }
             return respuesta;
 
@@ -1827,7 +1811,7 @@ namespace Vixark {
         public static List<string> ALíneas(this string? texto, bool eliminarLíneasVacías = false) {
 
             if (texto == null) return new List<string>();
-            return texto.Split(new[] { "\r\n", "\r", "\n" }, eliminarLíneasVacías ? StringSplitOptions.RemoveEmptyEntries 
+            return texto.Split(new[] { "\r\n", "\r", "\n" }, eliminarLíneasVacías ? StringSplitOptions.RemoveEmptyEntries
                 : StringSplitOptions.None).ToList(); // Ver https://stackoverflow.com/questions/1508203/best-way-to-split-string-into-lines.
 
         } // ALíneas>
@@ -1918,7 +1902,7 @@ namespace Vixark {
             if (ExtensionesHtml.Contains(extensiónArchivo)) tipoArchivoInformación = TipoArchivoInformación.Html;
             if (ExtensionesTextoPlano.Contains(extensiónArchivo)) tipoArchivoInformación = TipoArchivoInformación.Plano;
             if (tipoArchivoInformación == TipoArchivoInformación.Desconocido)
-                throw new Exception("Se encontró una inconsistencia entre los vectores ExtensionesHtmlYTextoPlano, ExtensionesHtml y ExtensionesTextoPlano."); // Si lanza esta excepción se debe a que se han agregado extensiones a ExtensionesHtmlYTextoPlano que no están en ExtensionesHtml ni ExtensionesTextoPlano.
+                throw new ArgumentException("Se encontró una inconsistencia entre los vectores ExtensionesHtmlYTextoPlano, ExtensionesHtml y ExtensionesTextoPlano."); // Si lanza esta excepción se debe a que se han agregado extensiones a ExtensionesHtmlYTextoPlano que no están en ExtensionesHtml ni ExtensionesTextoPlano.
             return tipoArchivoInformación;
 
         } // ObtenerTipoArchivoInformación>
@@ -1992,7 +1976,7 @@ namespace Vixark {
                     corregirBarraIncorrectaEnRutaRelativa(ref archivoFragmento, ref tipoRutaFragmento, tipoRutaCarpetaFragmentos);
 
                     string? rutaFragmento = tipoRutaFragmento switch {
-                        TipoRuta.Vacío => throw new Exception("No se esperaba que tipoRutaArchivo fuera vacío."),
+                        TipoRuta.Vacío => throw new ArgumentException("No se esperaba que tipoRutaArchivo fuera vacío."),
                         TipoRuta.Local => archivoFragmento,
                         TipoRuta.Url => null, // Solo se soporta la compilación de archivos localmente. Si hay un HTML enlazado a servidor, no se procesa, este lo procesaría directamente el navegador.        
                         TipoRuta.RelativoUrl => null, // Solo se soporta la compilación de archivos localmente. Si hay un HTML enlazado a servidor, no se procesa, este lo procesaría directamente el navegador.        
@@ -2015,7 +1999,7 @@ namespace Vixark {
                                 if (variable != null && valor != null) {
                                     variables.Agregar($"{{{variable.AMinúscula()}}}", valor);
                                 } else {
-                                    throw new Exception("No se esperaba que no se pudiera coincidir variable o valor en el <object>");
+                                    throw new ArgumentException("No se esperaba que no se pudiera coincidir variable o valor en el <object>");
                                 }
 
                             }
@@ -2038,7 +2022,7 @@ namespace Vixark {
                     }
 
                 } else {
-                    throw new Exception("No se esperaba que no coincidiera el patrón de <object>"); // Nunca debería pasar porque al entrar a esta función ya se identificó que la línea es para insertar un fragmento entonces siempre debería coincidir el patrón para extraer el archivo del fragmento.
+                    throw new ArgumentException("No se esperaba que no coincidiera el patrón de <object>"); // Nunca debería pasar porque al entrar a esta función ya se identificó que la línea es para insertar un fragmento entonces siempre debería coincidir el patrón para extraer el archivo del fragmento.
                 }
 
                 return líneasFragmento;
@@ -2048,7 +2032,7 @@ namespace Vixark {
 
             switch (tipo) {
                 case TipoArchivoInformación.Desconocido:
-                    throw new Exception("No se puede convertir a HTML un archivo de tipo desconocido.");
+                    throw new ArgumentException("No se puede convertir a HTML un archivo de tipo desconocido.");
                 case TipoArchivoInformación.Html:
 
                     foreach (var línea in líneas) {
@@ -2097,7 +2081,7 @@ namespace Vixark {
 
                             var tipoRutaImagen = ObtenerTipoRuta(línea);
                             corregirBarraIncorrectaEnRutaRelativa(ref línea, ref tipoRutaImagen, tipoRutaCarpetaImágenes);
-                            if (líneas[i] != línea) líneas[i] = línea; // Si línea fue modificada se escribe este valor en la líneas[i] porque esta no se puede pasar como ref al método CorregirBarraIncorrectaEnRutaRelativa().
+                            if (líneas[i] != línea) líneas[i] = línea; // Si línea fue modificada, se escribe este valor en la líneas[i] porque esta no se puede pasar como ref al método CorregirBarraIncorrectaEnRutaRelativa().
 
                             switch (tipoRutaImagen) {
                                 case TipoRuta.Url:
@@ -2114,7 +2098,7 @@ namespace Vixark {
                                     idsLíneasImágenes.Add(i);
                                     continue;
                                 case TipoRuta.Vacío:
-                                    throw new Exception("No se esperaba que tipoRutaImagen fuera vacía.");
+                                    throw new ArgumentException("No se esperaba que tipoRutaImagen fuera vacía.");
                             }
 
                         }
@@ -2222,13 +2206,13 @@ namespace Vixark {
                             listaActual = "ul";
                         }
 
-                        if (idsLíneasÍtemLista.Contains(i)) líneasRespuesta.Add($@"<li>{(Regex.Replace(línea, PatrónViñetas, "")).TrimStart()}</li>");
+                        if (idsLíneasÍtemLista.Contains(i)) líneasRespuesta.Add($@"<li>{Regex.Replace(línea, PatrónViñetas, "").TrimStart()}</li>");
 
                         if (idsLíneasFinLista.Contains(i)) {
 
                             if (listaActual == "ol") líneasRespuesta.Add("</ol>");
                             if (listaActual == "ul") líneasRespuesta.Add("</ul>");
-                            if (listaActual == null) throw new Exception("No se esperaba que listaActual fuera vacía.");
+                            if (listaActual == null) throw new ArgumentException("No se esperaba que listaActual fuera vacía.");
                             continue; // Ya agregó el ítem y el cierre de lista, ya puede pasar a la siguiente línea.
 
                         } else {
@@ -2252,11 +2236,11 @@ namespace Vixark {
                             continue;
                         } else {
 
-                            var tieneBloqueAtrás = (idsLíneasTítulos.Contains(i - 1) || idsLíneasParrafos.Contains(i - 1) ||
-                                idsLíneasTítulosForzados.Contains(i - 1) || idsLíneasParrafosForzados.Contains(i - 1) || idsLíneasFinLista.Contains(i - 1));
-                            var tieneBloqueAdelante = (idsLíneasParrafos.Contains(i + 1) || idsLíneasTítulos.Contains(i + 1) ||
+                            var tieneBloqueAtrás = idsLíneasTítulos.Contains(i - 1) || idsLíneasParrafos.Contains(i - 1) ||
+                                idsLíneasTítulosForzados.Contains(i - 1) || idsLíneasParrafosForzados.Contains(i - 1) || idsLíneasFinLista.Contains(i - 1);
+                            var tieneBloqueAdelante = idsLíneasParrafos.Contains(i + 1) || idsLíneasTítulos.Contains(i + 1) ||
                                 idsLíneasInicioListaNumérica.Contains(i + 1) || idsLíneasInicioLista.Contains(i + 1) ||
-                                idsLíneasTítulosForzados.Contains(i + 1) || idsLíneasParrafosForzados.Contains(i + 1));
+                                idsLíneasTítulosForzados.Contains(i + 1) || idsLíneasParrafosForzados.Contains(i + 1);
 
                             if (tieneBloqueAdelante || tieneBloqueAtrás) { // Estos elementos 'bloque' generan sus propios saltos de línea, entonces si una línea tiene al menos uno de estos arriba o abajo, no es necesario añadir un salto de línea.
 
@@ -2282,6 +2266,8 @@ namespace Vixark {
                     #endregion Escritura del HTML>
                     break;
 
+                default:
+                    throw new ArgumentException(CasoNoConsiderado(tipo));
             }
 
             return líneasRespuesta;
@@ -2358,7 +2344,7 @@ namespace Vixark {
         /// Deserializalización que permite establecer uno o varios tipos de <paramref name="serialización"/> enlazándolos con el operador |.
         /// </summary>
         public static T? Deserializar<T>(string json, Serialización serialización) where T : class // Se implementa solo para clases porque es el escenario más común. Si se necesitara para estructuras habría que duplicar la función.
-            => (string.IsNullOrEmpty(json)) ? default : JsonSerializer.Deserialize<T>(json, ObtenerOpcionesSerialización(serialización));
+            => string.IsNullOrEmpty(json) ? default : JsonSerializer.Deserialize<T>(json, ObtenerOpcionesSerialización(serialización));
 
 
         /// <summary>
@@ -2467,9 +2453,9 @@ namespace Vixark {
         } // Agregar>
 
 
-        public static Dictionary<K, List<string>> Agregar<K>(this Dictionary<K, List<string>>? diccionario, K clave, string valor, 
+        public static Dictionary<K, List<string>> Agregar<K>(this Dictionary<K, List<string>>? diccionario, K clave, string valor,
             bool permitirRepetidos = true, bool ignorarCapitalización = true) where K : notnull // No se obliga el parámetro ignorarCapitalización porque esta función, al tener la misma cantidad de parámetros que la genérica, es preferida cuando se usa desde un objeto de tipo Dictionary<string, List<V>>.
-                => ignorarCapitalización ? diccionario.Agregar(clave, valor, permitirRepetidos, sonIguales: FSonIgualesTextosIgnorandoCapitalización) 
+                => ignorarCapitalización ? diccionario.Agregar(clave, valor, permitirRepetidos, sonIguales: FSonIgualesTextosIgnorandoCapitalización)
                        : diccionario.Agregar(clave, valor, permitirRepetidos, sonIguales: null);
 
 
@@ -2496,19 +2482,11 @@ namespace Vixark {
         /// <see cref="ObtenerValor{K, V}(Dictionary{K, V}, K, bool)"/>.
         /// <paramref name="ignorarCapitalización"/> solo aplica para diccionarios con clave (<typeparamref name="K"/>) de tipo texto.
         /// </summary>
-        public static V? ObtenerValorObjeto<K, V>(this Dictionary<K, V> diccionario, K clave, bool ignorarCapitalización = true) where V : class 
-            where K : notnull { // Aunque se podría implementar usando un atributo [return: MaybeNull] con el que se indica que el resultado de la función tal vez pueda ser nulo y el tipo devuelto hacerlo V en vez de V?, esto trae un inconveniente porque no se podría devolver nulo cuando no encuentre un ítem, solo se podría devolver default, el cual es nulo para objetos pero es cero para números y esto podría traer comportamientos no deseados porque indicaría que el elemento encontrado fue cero y no nulo. Leer más en https://stackoverflow.com/questions/54593923/nullable-reference-types-with-generic-return-type.
-
-            if ((clave is string claveTexto && diccionario is Dictionary<string,V> diccionarioClaveTexto)) 
-                return ObtenerValorObjeto(diccionarioClaveTexto, claveTexto, ignorarCapitalización);
-
-            if (diccionario.ContainsKey(clave)) {
-                return diccionario[clave];
-            } else {
-                return null;
-            }
-
-        } // ObtenerValorObjeto>
+        public static V? ObtenerValorObjeto<K, V>(this Dictionary<K, V> diccionario, K clave, bool ignorarCapitalización = true) where V : class
+            where K : notnull
+                => clave is string claveTexto && diccionario is Dictionary<string, V> diccionarioClaveTexto
+                    ? ObtenerValorObjeto(diccionarioClaveTexto, claveTexto, ignorarCapitalización)
+                    : diccionario.ContainsKey(clave) ? diccionario[clave] : null; // Aunque se podría implementar usando un atributo [return: MaybeNull] con el que se indica que el resultado de la función tal vez pueda ser nulo y el tipo devuelto hacerlo V en vez de V?, esto trae un inconveniente porque no se podría devolver nulo cuando no encuentre un ítem, solo se podría devolver default, el cual es nulo para objetos pero es cero para números y esto podría traer comportamientos no deseados porque indicaría que el elemento encontrado fue cero y no nulo. Leer más en https://stackoverflow.com/questions/54593923/nullable-reference-types-with-generic-return-type.
 
 
         /// <summary>
@@ -2528,18 +2506,11 @@ namespace Vixark {
         /// <see cref="ObtenerValorObjeto{K, V}(Dictionary{K, V}, K, bool)"/>.
         /// <paramref name="ignorarCapitalización"/> solo aplica para diccionarios con clave (<typeparamref name="K"/>) de tipo texto.
         /// </summary>
-        public static V? ObtenerValor<K, V>(this Dictionary<K, V> diccionario, K clave, bool ignorarCapitalización = true) where V : struct where K : notnull {
-
-            if ((clave is string claveTexto && diccionario is Dictionary<string, V> diccionarioClaveTexto))
-                return ObtenerValor(diccionarioClaveTexto, claveTexto, ignorarCapitalización: ignorarCapitalización);
-
-            if (diccionario.ContainsKey(clave)) {
-                return diccionario[clave];
-            } else {
-                return null;
-            }
-
-        } // ObtenerValor>
+        public static V? ObtenerValor<K, V>(this Dictionary<K, V> diccionario, K clave, bool ignorarCapitalización = true)
+            where V : struct where K : notnull =>
+                clave is string claveTexto && diccionario is Dictionary<string, V> diccionarioClaveTexto
+                    ? ObtenerValor(diccionarioClaveTexto, claveTexto, ignorarCapitalización: ignorarCapitalización)
+                    : diccionario.ContainsKey(clave) ? (V?)diccionario[clave] : null;
 
 
         /// <summary>
@@ -2555,7 +2526,7 @@ namespace Vixark {
         /// <summary>
         /// Al pasar la clave con cualquier capitalización, obtiene la clave en un diccionario con la capitalización que está en él.
         /// </summary>
-        public static string? ObtenerClaveCapitalizaciónCorrecta<V>(this Dictionary<string, V> diccionario, string clave) 
+        public static string? ObtenerClaveCapitalizaciónCorrecta<V>(this Dictionary<string, V> diccionario, string clave)
             => diccionario.FirstOrDefault(kv => kv.Key.IgualA(clave, ignorarCapitalización: true)).Key;
 
 
@@ -2568,7 +2539,7 @@ namespace Vixark {
         } // ObtenerValorCapitalizaciónCorrecta>
 
 
-        public static bool ContieneClave<V>(this Dictionary<string, V> diccionario, string clave, bool ignorarCapitalización = true) 
+        public static bool ContieneClave<V>(this Dictionary<string, V> diccionario, string clave, bool ignorarCapitalización = true)
             => !diccionario.FirstOrDefault(kv => kv.Key.IgualA(clave, ignorarCapitalización)).Value.EsValorPredeterminado();
 
 
@@ -2589,7 +2560,7 @@ namespace Vixark {
             => lista.ObtenerÍndice(valor, ignorarCapitalización) != -1;
 
 
-        public static List<T> CombinarListas<T>(List<T> lista1, List<T> lista2, List<T>? lista3 = null, List<T>? lista4 = null, List<T>? lista5 = null, 
+        public static List<T> CombinarListas<T>(List<T> lista1, List<T> lista2, List<T>? lista3 = null, List<T>? lista4 = null, List<T>? lista5 = null,
             List<T>? lista6 = null, List<T>? lista7 = null, List<T>? lista8 = null, List<T>? lista9 = null, List<T>? lista10 = null) {
 
             var lista = new List<T>(lista1);
@@ -2658,7 +2629,7 @@ namespace Vixark {
         public static string? ATextoConComas<T>(this List<T> lista, ConectorCoordinante conector = ConectorCoordinante.Y, bool resumir = false) {
 
             if (resumir) {
-                
+
                 var resumenLíneas = ResumirLíneasTexto(lista);
                 var palabrasComunes = resumenLíneas.Item1;
                 var listaResumida = resumenLíneas.Item2;
@@ -2669,7 +2640,7 @@ namespace Vixark {
             }
 
         } // ATextoConComas>
-            
+
 
         /// <summary>
         /// Analiza las representaciones de texto de los elementos de la lista, busca las palabras comunes por las que inician todos los elementos y
@@ -2682,7 +2653,7 @@ namespace Vixark {
             if (lista.Count == 0) return ("", new List<string>());
 
             // 1. Iniciación listaTexto.
-            var listaTexto = new List<string>(); 
+            var listaTexto = new List<string>();
             foreach (var línea in lista) {
 
                 var textoLínea = línea?.ToString().LimpiarEspacios();
@@ -2699,7 +2670,7 @@ namespace Vixark {
             var palabrasComunes = lista[0]!.ToString().APalabras(); // Inicia con todas las palabras del primer elemento como candidatas a ser palabras comunes.
             foreach (var línea in listaTexto) {
 
-                var palabras = línea.ToString().APalabras();         
+                var palabras = línea.ToString().APalabras();
                 if (palabras.Count == 0) { // Si alguna línea es vacía, no hay palabras comunes.
                     palabrasComunes = new List<string>();
                     break;
@@ -2715,7 +2686,7 @@ namespace Vixark {
                     }
 
                 }
-                if (índicePrimeraNoComún != int.MaxValue) 
+                if (índicePrimeraNoComún != int.MaxValue)
                     palabrasComunes.RemoveRange(índicePrimeraNoComún, palabrasComunes.Count - índicePrimeraNoComún); // Se eliminan todas las palabras desde la no común encontrada en adelante.
 
             }
@@ -2737,12 +2708,12 @@ namespace Vixark {
 
 
         public static string? ATextoLíneasHtml<T>(this List<T> lista, bool finalizarLíneasConPunto = true)
-            => lista.Count == 0 ? null : 
+            => lista.Count == 0 ? null :
                $"{lista.ATexto(multilínea: true, conector: ConectorCoordinante.Ninguno, separador: $"{(finalizarLíneasConPunto ? "." : "")}<br />")}" +
                $"{(finalizarLíneasConPunto ? "." : "")}";
 
 
-        public static string? ATextoListaHtml<T>(this List<T> lista, string etiquetaLista = "ul", bool finalizarLíneasConPunto = true) 
+        public static string? ATextoListaHtml<T>(this List<T> lista, string etiquetaLista = "ul", bool finalizarLíneasConPunto = true)
             => lista.Count == 0 ? null : $"<{etiquetaLista}><li>" +
                $"{lista.ATexto(multilínea: true, conector: ConectorCoordinante.Ninguno, separador: $"{(finalizarLíneasConPunto ? "." : "")}</li><li>")}" +
                $"{(finalizarLíneasConPunto ? "." : "")}</li></{etiquetaLista}>";
@@ -2802,7 +2773,7 @@ namespace Vixark {
             foreach (var enumeración in ObtenerValores<T>()) {
                 if (enumeración.ATexto().IgualA(texto, ignorarCapitalización)) return enumeración;
             }
-            throw new Exception($"No encontrado el texto {texto} en alguno los atributos 'Display' de los valores de la enumeración {typeof(T).Name}"); // Lanza excepción porque en las enumeraciones no se manejan como nullables y no se puede asegurar para este método genérico que la enumeración tenga un valor por defecto. Para devolver un valor por defecto se debe usar la otra función con el parámetro valorSiVacío. No se puede usar parámetro opcional porque a las enumeraciones no suelen aceptar nulos.
+            throw new ArgumentException($"No encontrado el texto {texto} en alguno los atributos 'Display' de los valores de la enumeración {typeof(T).Name}"); // Lanza excepción porque en las enumeraciones no se manejan como nullables y no se puede asegurar para este método genérico que la enumeración tenga un valor por defecto. Para devolver un valor por defecto se debe usar la otra función con el parámetro valorSiVacío. No se puede usar parámetro opcional porque a las enumeraciones no suelen aceptar nulos.
 
         } // ObtenerEnumeraciónDeTexto>
 
@@ -2979,7 +2950,7 @@ namespace Vixark {
         public static Expression<Func<T, bool>> ObtenerExpresión<T>(Predicado<T> predicado, ConectorLógico conector) {
 
             var expresiones = predicado.Lista;
-            if (expresiones.Count == 0) throw new Exception("El predicado no tiene expresiones.");
+            if (expresiones.Count == 0) throw new ArgumentException("El predicado no tiene expresiones.");
             if (expresiones.Count == 1) return expresiones[0];
 
             var expresiónDelParámetro = expresiones.FirstOrDefault()?.Parameters.FirstOrDefault();
@@ -3022,8 +2993,7 @@ namespace Vixark {
         public static IQueryable<T> Where<T>(this IQueryable<T> consulta, Predicado<T> predicado, ConectorLógico conector) {
 
             var expresiones = predicado.Lista;
-            if (expresiones.Count == 0) return consulta;
-            return consulta.Where(ObtenerExpresión(predicado, conector));
+            return expresiones.Count == 0 ? consulta : consulta.Where(ObtenerExpresión(predicado, conector));
 
         } // Where>
 
@@ -3052,7 +3022,7 @@ namespace Vixark {
 
         } // Predicado>
 
-        
+
         #endregion Where con Or>
 
 
@@ -3350,14 +3320,14 @@ namespace Vixark {
         public static MessageBoxResult MostrarError(string? mensaje) => MostrarDiálogo(mensaje, "Error", MessageBoxButton.OK, MessageBoxImage.Error); // Por estandarización de la interfaz de los diálogos no se permite la personalización del título de estos diálogos. Si se necesita un diálogo con título especial usar MostrarDiálogo.
 
 
-        public static MessageBoxResult MostrarInformación(string? mensaje) 
+        public static MessageBoxResult MostrarInformación(string? mensaje)
             => MostrarDiálogo(mensaje, "Información", MessageBoxButton.OK, MessageBoxImage.Information); // Por estandarización de la interfaz de los diálogos no se permite la personalización del título de estos diálogos. Si se necesita un diálogo con título especial usar MostrarDiálogo.
 
 
         public static MessageBoxResult MostrarÉxito(string? mensaje) => MostrarDiálogo(mensaje, "Éxito", MessageBoxButton.OK, MessageBoxImage.Information); // Por estandarización de la interfaz de los diálogos no se permite la personalización del título de estos diálogos. Si se necesita un diálogo con título especial usar MostrarDiálogo.
 
 
-        public static MessageBoxResult MostrarAdvertencia(string? mensaje) 
+        public static MessageBoxResult MostrarAdvertencia(string? mensaje)
             => MostrarDiálogo(mensaje, "Advertencia", MessageBoxButton.OK, MessageBoxImage.Warning); // Por estandarización de la interfaz de los diálogos no se permite la personalización del título de estos diálogos. Si se necesita un diálogo con título especial usar MostrarDiálogo.
 
 
@@ -3370,9 +3340,9 @@ namespace Vixark {
 
         public static void SuspenderEjecuciónEnModoDesarrollo() {
 
-            #if DEBUG
-                Debugger.Break(); 
-            #endif
+#if     DEBUG
+            Debugger.Break();
+#endif
 
         } // SuspenderEjecuciónEnModoDesarrollo>
 
@@ -3380,7 +3350,7 @@ namespace Vixark {
         #endregion Depuración>
 
 
-        
+
     } // Vixark>
 
 

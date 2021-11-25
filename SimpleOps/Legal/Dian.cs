@@ -295,7 +295,8 @@ namespace SimpleOps.Legal {
             => venta != null ? CódigoFacturaEstándar :
                    (notaCrédito != null ? (ventaNota != null && ventaNota.Cude != null ? CódigoNotaCréditoConFactura : CódigoNotaCréditoSinFactura) :
                         (notaDébito != null ? (ventaNota != null && ventaNota.Cude != null ? CódigoNotaDébitoConFactura : CódigoNotaDébitoSinFactura) : 
-                            throw new Exception("Todos los documentos son nulos")));
+                            throw new ArgumentNullException($"{nameof(venta)},{nameof(notaCrédito)},{nameof(notaDébito)},{nameof(ventaNota)}", 
+                                "Todos los documentos son nulos")));
 
 
         /// <summary>
@@ -351,9 +352,9 @@ namespace SimpleOps.Legal {
                     if (elemento0.NoContiene(".")) { // Analiza el caso especial de decimales opcionales.
 
                         if (partesRestricción[1].EmpiezaPor("0") || partesRestricción[1].EmpiezaPor("(0")) {
-                            partesElemento = new string[] { elemento0, "" }; // Si la segunda parte de la restricción empieza por 0 puede ser válido que el elemento no tenga punto entonces se crea un vector con el primer elemento el elemento en sí y el segundo elemento (que correspondería a la parte decimal) en vacío.
+                            partesElemento = new string[] { elemento0, "" }; // Si la segunda parte de la restricción empieza por 0, puede ser válido que el elemento no tenga punto entonces se crea un vector con el primer elemento el elemento en sí y el segundo elemento (que correspondería a la parte decimal) en vacío.
                         } else {
-                            return false; // Si la segunda parte de la restricción no empieza por 0 es inválido que el elemento no tenga punto.
+                            return false; // Si la segunda parte de la restricción no empieza por 0, es inválido que el elemento no tenga punto.
                         }
 
                     }
@@ -396,7 +397,7 @@ namespace SimpleOps.Legal {
 
             }
 
-            if (!válido) throw new Exception($"El elemento {texto} no cumple con la restricción {restricción}.");
+            if (!válido) throw new ArgumentException($"El elemento {texto} no cumple con la restricción {restricción}.");
             return texto;
 
         } // Validar>
@@ -410,7 +411,7 @@ namespace SimpleOps.Legal {
             var númeroTexto = número.ATexto($"0.{new string('0', posicionesDecimalesForzadas)}");
             var númeroDecimalesForzados = númeroTexto.ADecimal(); // El mismo número decimal pero con las posiciones decimales forzadas.
             if (!EsVálido(númeroDecimalesForzados.ATexto(), restricción, out _, out _)) 
-                throw new Exception($"El elemento {número} no cumple con la restricción {restricción}.");
+                throw new ArgumentException($"El elemento {número} no cumple con la restricción {restricción}.");
             return númeroDecimalesForzados;
 
         } // Validar>
@@ -425,7 +426,7 @@ namespace SimpleOps.Legal {
         public static long Validar(long número, string restricción) {
 
             if (!EsVálido(número.ATexto(), restricción, out _, out _)) 
-                throw new Exception($"El elemento {número} no cumple con la restricción {restricción}.");
+                throw new ArgumentException($"El elemento {número} no cumple con la restricción {restricción}.");
             return número;
 
         } // Validar>
@@ -444,7 +445,7 @@ namespace SimpleOps.Legal {
                 "8" => coID2TypeSchemeID.Item42,
                 "9" => coID2TypeSchemeID.Item50,
                 "10" => coID2TypeSchemeID.Item91,
-                _ => throw new Exception(CasoNoConsiderado(dígitoVerificaciónNit)),
+                _ => throw new ArgumentException(CasoNoConsiderado(dígitoVerificaciónNit)),
             };
 
  
@@ -476,7 +477,7 @@ namespace SimpleOps.Legal {
             } else if (tipoContribuyente.HasFlag(TipoContribuyente.NoResponsableIVA)) {
                 return CódigosTiposContribuyentes.ObtenerValorObjeto(TipoContribuyente.NoResponsableIVA)!; // Se asegura que el valor NoResponsableIVA si existe en el diccionario.
             } else {
-                throw new Exception("No se esperaba que el tipo de contribuyente no especificara si es o no responsable de IVA.");
+                throw new ArgumentException("No se esperaba que el tipo de contribuyente no especificara si es o no responsable de IVA.");
             }
 
         } // ObtenerResponsabilidadIVA>
@@ -496,8 +497,7 @@ namespace SimpleOps.Legal {
                 var solicitud = (HttpWebRequest)WebRequest.Create(new Uri($"https://{BaseUrl}/WcfDianCustomerServices.svc"));
                 solicitud.Method = "POST";
                 solicitud.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
-                solicitud.ContentType 
-                    = $@"application/soap+xml;charset=UTF-8;action=""http://wcf.dian.colombia/IWcfDianCustomerServices/{operación}""";
+                solicitud.ContentType = $@"application/soap+xml;charset=UTF-8;action=""http://wcf.dian.colombia/IWcfDianCustomerServices/{operación}""";
                 solicitud.ContentLength = sobre.Length;
                 solicitud.KeepAlive = true;
                 solicitud.Host = BaseUrl;
@@ -508,7 +508,7 @@ namespace SimpleOps.Legal {
                 }
 
                 respuestaXml = ObtenerXml((HttpWebResponse)solicitud.GetResponse());
-                
+
             } catch (WebException excepciónWeb) {
 
                 if (excepciónWeb.Status == WebExceptionStatus.NameResolutionFailure) 
@@ -540,10 +540,8 @@ namespace SimpleOps.Legal {
                                             $"Estado: {respuesta.StatusCode}."),
                 };
 
-            #pragma warning disable CA1031 // No capture tipos de excepción generales. Se desactiva porque se necesita el texto de la excepción. No hay mayor problema porque es común que sucedan errores con el servicio web de la DIAN y esto es controlado con el flujo del programa a continuación.
             } catch (Exception ex) {
-            #pragma warning restore CA1031
-                return Falso(out mensaje, $"Sucedió un error desconocido.{DobleLínea}{ex.Message}");
+                return Falso(out mensaje, $"Sucedió un error desconocido.{DobleLínea}{ex.Message}"); // Antes se estaba suprimiendo la alerta CA1031. No capture tipos de excepción generales. Se desactiva porque se necesita el texto de la excepción. No hay mayor problema porque es común que sucedan errores con el servicio web de la DIAN y esto es controlado con el flujo del programa a continuación.
             }
 
             return true;
@@ -656,11 +654,11 @@ namespace SimpleOps.Legal {
                             $@"<soap:Header xmlns:wsa=""http://www.w3.org/2005/08/addressing"">{wsaTo}</soap:Header>" +
                         @"</soap:Envelope>");
 
-            var xmlFirmado = new XmlFirmadoConWsuID(xml) { SigningKey = certificado.PrivateKey };
-           
             var referencia = new Reference { Uri = $"#ID-{id}" };
             var transformaciónC14N = new XmlDsigExcC14NTransform(includeComments: false, inclusiveNamespacesPrefixList: "wsa soap wcf");
             referencia.AddTransform(transformaciónC14N);
+
+            var xmlFirmado = new XmlFirmadoConWsuID(xml) { SigningKey = certificado.PrivateKey };
             xmlFirmado.AddReference(referencia);
 
             var informaciónClave = new KeyInfo();

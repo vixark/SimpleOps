@@ -28,7 +28,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Media;
 using static Vixark.General;
@@ -110,7 +109,7 @@ namespace SimpleOps {
 
         public const string ArchivoLogoEmpresaImpresión = "LogoEmpresaImpresión.png"; // El nombre del archivo del logo 2 y 3 se forman agregando 2 y 3 antes de la extensión de este nombre.
 
-        public const string ArchivoLogoExcelImpresión = "LogoExcelImpresión.png"; 
+        public const string ArchivoLogoExcelImpresión = "LogoExcelImpresión.png";
 
         public const string ArchivoCertificadoEmpresa = "Certificado.png";
 
@@ -148,7 +147,7 @@ namespace SimpleOps {
 
         private static bool _ModoDesarrolloPlantillas = false;
         public static bool ModoDesarrolloPlantillas { // Se usa verdadero para permitir que los cambios que se hagan a los archivos CSHTML en la carpeta Plantillas sean copiados a la ruta de la aplicación y para habilitar algunas líneas de código que facilitan el desarrollo de estas plantillas. En producción se deben usar directamente los archivos en la ruta de la aplicación porque no se tienen los de desarrollo. Se usa cómo una variable de estado porque al ser algo más relacionado con el desarrollo y no la operación normal de parte de un usuario no vale la pena generar cadenas de parámetros para llevar este valor de una manera más segura (sin problemas de estado) hasta las funciones que lo usan.
-            
+
             get => _ModoDesarrolloPlantillas;
 
             set {
@@ -321,7 +320,7 @@ namespace SimpleOps {
         public enum TamañoLetra { XS, S, M, L, XL }
 
         public enum TipoImpuesto { IVA, INC, [Display(Name = "IVA e INC")] IVAeINC, [Display(Name = "No aplica")] NoAplica }; // Tomados de la tabla 13.2.6.2. del 'Anexo técnico de factura electrónica de venta validación previa.pdf' de la DIAN.
-        
+
         public enum FormaPago { Contado = 1, Crédito = 2 } // Tomados del numeral 13.3.4.1 de la documentación de la DIAN para la facturación electrónica.
 
         public enum TipoFacturaVenta { Venta = 1, Exportación = 2, ContingenciaFacturador = 3, ContingenciaDian = 4 };
@@ -399,7 +398,8 @@ namespace SimpleOps {
         } // Otro es cuando el banco de la empresa no está en esta enumeración, no se podría usar para realizar pagos. Ninguno es para indicar que cierta entidad económica no tiene banco. Desconocido es para indicar que cierta entidad económica sí tiene banco pero aún no se conoce cuál es.
 
 
-        [Flags] public enum TipoContribuyente { // No cambiar los nombres de las enumeración ni de los elementos porque estos se usan en los archivos de opciones JSON. Tomados de la tabla 13.2.6.1. del 'Anexo técnico de factura electrónica de venta validación previa.pdf' de la DIAN. Se usa en el primer elemento 'Ordinario' en vez de 'No aplica' y 'Retenedor IVA' en vez de 'Agente de Retención de IVA' porque se entienden más que como están en la tabla de la DIAN. Si se agregaran nuevos elementos que no constituyen una responsabilidad fiscal según la tabla 13.2.6.1. (como los de las responsabilidades de IVA) se deben omitir en Dian.ObtenerResponsabilidadFiscal().
+        [Flags]
+        public enum TipoContribuyente { // No cambiar los nombres de las enumeración ni de los elementos porque estos se usan en los archivos de opciones JSON. Tomados de la tabla 13.2.6.1. del 'Anexo técnico de factura electrónica de venta validación previa.pdf' de la DIAN. Se usa en el primer elemento 'Ordinario' en vez de 'No aplica' y 'Retenedor IVA' en vez de 'Agente de Retención de IVA' porque se entienden más que como están en la tabla de la DIAN. Si se agregaran nuevos elementos que no constituyen una responsabilidad fiscal según la tabla 13.2.6.1. (como los de las responsabilidades de IVA) se deben omitir en Dian.ObtenerResponsabilidadFiscal().
             [Display(Name = "Ordinario")] Ordinario = 1, [Display(Name = "Gran Contribuyente")] GranContribuyente = 2, Autorretenedor = 4, // Ordinario es el que le aplica a una empresa que no se ha acogido a uno de los otros régimenes como Simple o Gran Contribuyente.
             [Display(Name = "Retenedor de IVA")] RetenedorIVA = 8, [Display(Name = "Régimen Simple")] RégimenSimple = 16,
             [Display(Name = "Responsable de IVA")] ResponsableIVA = 32, [Display(Name = "No Responsable de IVA")] NoResponsableIVA = 64 // Se complementa esta enumeración con las responsabilidades de IVA para forzar a realizar un manejo integrado en esta enumeración de todas las responsabilidades actuales y futuras. Tomadas de la tabla 'Modificación del anexo técnico (06-09-2019)' de la documentación de la DIAN para la facturación electrónica. ResponsableIVA es el equivalente al antiguo régimen común y NoResponsableIVA al antiguo régimen simplificado.
@@ -468,23 +468,23 @@ namespace SimpleOps {
 
 
         public enum RazónNotaCrédito { // Tomados del numeral 13.2.4. de la documentación de la DIAN para la facturación electrónica. AjustePrecio se supondrá que es para corrección de errores (hacia abajo) en el precio de algún producto y Descuento para descuentos acordados.
-            [Display(Name = "Devolución Parcial")] DevoluciónParcial = 1, [Display(Name = "Anulación Factura")] AnulaciónFactura = 2, 
-            [Display(Name = "Descuento")] Descuento = 3, [Display(Name = "Ajuste Precio")] AjustePrecio = 4, [Display(Name = "Otra")] Otra = 5 
+            [Display(Name = "Devolución Parcial")] DevoluciónParcial = 1, [Display(Name = "Anulación Factura")] AnulaciónFactura = 2,
+            [Display(Name = "Descuento")] Descuento = 3, [Display(Name = "Ajuste Precio")] AjustePrecio = 4, [Display(Name = "Otra")] Otra = 5
         }
 
 
         public enum PlantillaDocumento { // Las plantillas ListaProductos son auxiliares de uso interno dentro de otras plantillas. Existen 3 posibles lugares donde se podría presentar la información de los documentos: 1. PDF: Usualmente se envía por email y es la forma más común de compartir documentos. 2. Web: Se presentarían los documentos directamente en el sitio web. Estas plantillas se pueden realizar con tecnologías modernas de desarrollo web pues estarían diseñadas para presentarse en navegadores que lo más normal es que estén actualizados. 3. Email: El documento es directamente el contenido del email. Aunque se podrían usar las plantillas web para esto, es posible que los clientes de correo no soporten las tecnologías de desarrollo web más modernas, entonces se permite especificar un diseño HTML distinto para estos casos. Si no se desea mantener dos versiones de HTML diferentes (Web e Email), se puede desarrollar solo la versión Web, pero desarrollándola con tecnologías web compatibles con los clientes de correo.
             VentaPdf, ProformaPdf, NotaCréditoPdf, NotaDébitoPdf, CotizaciónPdf, PedidoPdf, ComprobanteEgresoPdf, CobroPdf, RemisiónPdf, CatálogoPdf,
             MarcoPdf, FichaInformativaPdf, ListaProductosPdf,
-            VentaWeb, ProformaWeb, NotaCréditoWeb, NotaDébitoWeb, CotizaciónWeb, PedidoWeb, ComprobanteEgresoWeb, CobroWeb, RemisiónWeb, CatálogoWeb, 
+            VentaWeb, ProformaWeb, NotaCréditoWeb, NotaDébitoWeb, CotizaciónWeb, PedidoWeb, ComprobanteEgresoWeb, CobroWeb, RemisiónWeb, CatálogoWeb,
             MarcoWeb, FichaInformativaWeb, ListaProductosWeb,
-            VentaEmail, ProformaEmail, NotaCréditoEmail, NotaDébitoEmail, CotizaciónEmail, PedidoEmail, ComprobanteEgresoEmail, CobroEmail, RemisiónEmail, CatálogoEmail, 
+            VentaEmail, ProformaEmail, NotaCréditoEmail, NotaDébitoEmail, CotizaciónEmail, PedidoEmail, ComprobanteEgresoEmail, CobroEmail, RemisiónEmail, CatálogoEmail,
             MarcoEmail, FichaInformativaEmail, ListaProductosEmail
         }
 
 
         public enum DocumentoIntegración {
-            [Display(Name = "VT-")] Venta, [Display(Name = "NC-")] NotaCrédito, [Display(Name = "ND-")] NotaDébito, [Display(Name = "CZ-")] Cotización, 
+            [Display(Name = "VT-")] Venta, [Display(Name = "NC-")] NotaCrédito, [Display(Name = "ND-")] NotaDébito, [Display(Name = "CZ-")] Cotización,
             [Display(Name = "PD-")] Pedido, [Display(Name = "CE-")] ComprobanteEgreso, [Display(Name = "CB-")] Cobro, [Display(Name = "RS-")] Remisión,
             [Display(Name = "CT-")] Catálogo, [Display(Name = "FI-")] FichasInformativas, [Display(Name = "FP-")] FacturaProforma // El documento de integración de fichas informativas se escribe en plural porque por lo general trae información para realizar fichas de varios productos.
         }
@@ -522,9 +522,9 @@ namespace SimpleOps {
 
         public static decimal? ObtenerSubtotal(decimal? precio, int cantidad) => precio == null ? null : precio * cantidad;
 
-        public static decimal? ObtenerPorcentajeMargen(decimal venta, decimal costo) => venta == 0 ? (decimal?)null : (venta - costo) / (venta);
+        public static decimal? ObtenerPorcentajeMargen(decimal venta, decimal costo) => venta == 0 ? (decimal?)null : (venta - costo) / venta;
 
-        public static decimal? ObtenerPorcentajeGanancia(decimal venta, decimal costo) => costo == 0 ? (decimal?)null : (venta - costo) / (costo); // Término de https://es.wikipedia.org/wiki/Margen_de_beneficio y https://es.wikipedia.org/wiki/Margen_de_ganancia.
+        public static decimal? ObtenerPorcentajeGanancia(decimal venta, decimal costo) => costo == 0 ? (decimal?)null : (venta - costo) / costo; // Término de https://es.wikipedia.org/wiki/Margen_de_beneficio y https://es.wikipedia.org/wiki/Margen_de_ganancia.
 
         public static decimal? ObtenerPorcentajeImpuesto(decimal? venta, decimal? impuesto)
             => impuesto == null || venta == null || venta == 0 ? null : impuesto / venta;
@@ -554,28 +554,28 @@ namespace SimpleOps {
 
         public static string ObtenerRutaCotizacionesDeHoy() => ObtenerRutaDocumentosDeHoy(ObtenerRutaCotizaciones());
 
-        public static string ObtenerRutaDocumentosDeHoy(string rutaBase) => ObtenerRutaCarpeta(ObtenerRutaCarpeta(rutaBase, 
+        public static string ObtenerRutaDocumentosDeHoy(string rutaBase) => ObtenerRutaCarpeta(ObtenerRutaCarpeta(rutaBase,
             AhoraUtcAjustado.Year.ATexto(), crearSiNoExiste: true), MesDíaActualNombresArchivos, crearSiNoExiste: true);
 
         public static string ObtenerRutaCopiasSeguridad() => ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaCopiasSeguridad, crearSiNoExiste: true);
 
         public static string ObtenerRutaOpciones() => ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaOpciones, crearSiNoExiste: true);
 
-        public static string ObtenerRutaImágenesPlantillas() => ObtenerRutaCarpeta(ObtenerRutaPlantillas(forzarRutaAplicación: true, 
+        public static string ObtenerRutaImágenesPlantillas() => ObtenerRutaCarpeta(ObtenerRutaPlantillas(forzarRutaAplicación: true,
             forzarRutaDesarrollo: false), CarpetaImágenesPlantillas, crearSiNoExiste: true); // No es necesario modificarlas desde el Visual Studio, entonces se manejan directamente en la ruta de la aplicación. Las plantillas si se manejan en ambos lugares porque si se requiere trabajar en ellas y se deben agregar al repositorio y también se requieren tener las propias por fuera del repositorio en la ruta de la aplicación.
 
-        public static string ObtenerRutaProductos() 
+        public static string ObtenerRutaProductos()
             => Equipo.RutaProductos ?? ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaProductos, crearSiNoExiste: true);
 
         public static string ObtenerRutaProductosDesarrollo() => ObtenerRutaCarpeta(RutaDesarrollo, CarpetaProductos, crearSiNoExiste: false);
 
-        public static string ObtenerRutaImágenesProductos() 
+        public static string ObtenerRutaImágenesProductos()
             => ObtenerRutaCarpeta(ObtenerRutaProductos(), CarpetaProductosImágenes, crearSiNoExiste: true);
 
-        public static string? ObtenerRutaImagenProductoNoDisponible() 
+        public static string? ObtenerRutaImagenProductoNoDisponible()
             => ObtenerRutaArchivo(ArchivoImagenProductoNoDisponible, ObtenerRutaImágenesProductos(), ExtensionesImágenes);
 
-        public static string ObtenerRutaInformaciónProductos() 
+        public static string ObtenerRutaInformaciónProductos()
             => ObtenerRutaCarpeta(ObtenerRutaProductos(), CarpetaProductosInformación, crearSiNoExiste: true);
 
         public static string ObtenerRutaInformaciónImágenesProductos()
@@ -587,7 +587,7 @@ namespace SimpleOps {
         public static string ObtenerRutaInformaciónFragmentosProductos()
             => ObtenerRutaCarpeta(ObtenerRutaInformaciónProductos(), CarpetaProductosInformaciónFragmentos, crearSiNoExiste: true);
 
-        public static string ObtenerRutaPlantillasAplicación() 
+        public static string ObtenerRutaPlantillasAplicación()
             => Equipo.RutaPlantillasDocumentos ?? ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaPlantillas, crearSiNoExiste: true);
 
         public static double? ObtenerPorcentajeIVAVenta(Cliente? cliente, Producto? producto) => (producto == null || cliente == null)
@@ -604,7 +604,7 @@ namespace SimpleOps {
 
         public static decimal ObtenerTarifaImpuestoPorcentual(decimal valorImpuesto, decimal subtotal) => Math.Round(100 * valorImpuesto / subtotal, 0);
 
-        public static bool EsPáginaExtra(string nombreArchivoPlantilla) 
+        public static bool EsPáginaExtra(string nombreArchivoPlantilla)
             => nombreArchivoPlantilla.FinalizaCon("Extra.cshtml") || nombreArchivoPlantilla.FinalizaCon("ExtraPropia.cshtml");
 
         /// <summary>
@@ -625,19 +625,14 @@ namespace SimpleOps {
         public static void IniciarVariablesGlobales() =>
             OpcionesConversiónPdf.SetFontProvider(new iText.Html2pdf.Resolver.Font.DefaultFontProvider(true, true, true)); // Necesario para poder usar la fuente Calibri, se podría tardar algunos segundos. Si llega a ser un problema de rendimiento revisar las opciones en SimpleOps.xlsx > Tareas > Rendimiento Generación de PDF.
 
-        public static bool UsarRutaPlantillasDesarrollo(bool forzarRutaAplicación = false, bool forzarRutaDesarrollo = false) 
+        public static bool UsarRutaPlantillasDesarrollo(bool forzarRutaAplicación = false, bool forzarRutaDesarrollo = false)
             => forzarRutaDesarrollo || (!forzarRutaAplicación && ModoDesarrolloPlantillas);
 
 
-        public static string ObtenerRutaPlantillas(bool forzarRutaAplicación = false, bool forzarRutaDesarrollo = false) {
-
-            if (UsarRutaPlantillasDesarrollo(forzarRutaAplicación, forzarRutaDesarrollo)) { // Para facilitar el desarrollo se devuelve directamente la ruta de la plantilla de desarrollo cuando no se esté forzando que la tome de la ruta de la aplicación (típicamente solo al iniciar cuando ReemplazarPlantillasDocumentos es verdadero).
-                return ObtenerRutaCarpeta(RutaDesarrollo, CarpetaPlantillasDesarrollo, crearSiNoExiste: false);
-            } else {
-                return ObtenerRutaPlantillasAplicación();
-            }
-
-        } // ObtenerRutaCarpetaPlantillas>
+        public static string ObtenerRutaPlantillas(bool forzarRutaAplicación = false, bool forzarRutaDesarrollo = false)
+            => UsarRutaPlantillasDesarrollo(forzarRutaAplicación, forzarRutaDesarrollo) // Para facilitar el desarrollo se devuelve directamente la ruta de la plantilla de desarrollo cuando no se esté forzando que la tome de la ruta de la aplicación (típicamente solo al iniciar cuando ReemplazarPlantillasDocumentos es verdadero).
+                ? ObtenerRutaCarpeta(RutaDesarrollo, CarpetaPlantillasDesarrollo, crearSiNoExiste: false)
+                : ObtenerRutaPlantillasAplicación();
 
 
         public static string ObtenerRutaPlantilla(PlantillaDocumento plantilla, bool forzarRutaAplicación = false, bool forzarRutaDesarrollo = false,
@@ -704,13 +699,8 @@ namespace SimpleOps {
                 }
 
             } else {
-
-                if (municipio.OtroPaís != null) {
-                    formaEntrega = FormaEntrega.TransportadoraInternacional;
-                } else {
-                    formaEntrega = MunicipiosConMensajería.Contains(municipio.ID) ? FormaEntrega.Mensajería : FormaEntrega.Transportadora;
-                }
-
+                formaEntrega = municipio.OtroPaís != null ? FormaEntrega.TransportadoraInternacional
+                    : MunicipiosConMensajería.Contains(municipio.ID) ? FormaEntrega.Mensajería : FormaEntrega.Transportadora;
             }
             return formaEntrega;
 
@@ -722,7 +712,7 @@ namespace SimpleOps {
                 OpcionesEmpresa _ => Path.Combine(ObtenerRutaOpciones(), "Empresa.json"),
                 OpcionesGenerales _ => Path.Combine(ObtenerRutaOpciones(), "Generales.json"),
                 OpcionesEquipo _ => Path.Combine(ObtenerRutaOpciones(), "Equipo.json"),
-                _ => throw new Exception(CasoNoConsiderado(typeof(T).ToString()))
+                _ => throw new ArgumentException(CasoNoConsiderado(typeof(T).ToString()))
             };
 
 
@@ -736,7 +726,7 @@ namespace SimpleOps {
 
         public static TipoTributo ObtenerTipoTributo(TipoImpuestoConsumo tipoImpuestoConsumo)
             => tipoImpuestoConsumo switch {
-                TipoImpuestoConsumo.Desconocido => throw new Exception("No se esperaba TipoImpuestoConsumo desconocido."),
+                TipoImpuestoConsumo.Desconocido => throw new ArgumentException("No se esperaba TipoImpuestoConsumo desconocido."),
                 TipoImpuestoConsumo.General => TipoTributo.INC,
                 TipoImpuestoConsumo.VehículosLujo => TipoTributo.INC,
                 TipoImpuestoConsumo.Aeronaves => TipoTributo.INC,
@@ -823,7 +813,7 @@ namespace SimpleOps {
             var suma = 0;
 
             for (var i = 0; i < largoNit; i++) {
-                suma += (nit[i].AEntero() * primos[largoNit - i - 1]);
+                suma += nit[i].AEntero() * primos[largoNit - i - 1];
             }
 
             int residuo = suma % 11; // Módulo el restante después de una división entera, por ejemplo 13 % 3 da 4,33.. con 4 como parte entera. El módulo se obtiene de 13 - 4 * 3 = 1.
@@ -848,9 +838,9 @@ namespace SimpleOps {
 
             foreach (var plantilla in ObtenerValores<PlantillaDocumento>()) {
 
-                var rutasPáginasDesarrollo = ObtenerRutasPáginasPlantilla(plantilla, omitirPrimera: false, forzarRutaDesarrollo: true, 
+                var rutasPáginasDesarrollo = ObtenerRutasPáginasPlantilla(plantilla, omitirPrimera: false, forzarRutaDesarrollo: true,
                     cantidadPáginasExtra: 1);
-                var rutasPáginasAplicación = ObtenerRutasPáginasPlantilla(plantilla, omitirPrimera: false, forzarRutaAplicación: true, 
+                var rutasPáginasAplicación = ObtenerRutasPáginasPlantilla(plantilla, omitirPrimera: false, forzarRutaAplicación: true,
                     cantidadPáginasExtra: 1);
                 var páginasAplicación = rutasPáginasAplicación.Select(kv => Path.GetFileName(kv.Value).AMinúscula()).ToList();
 
@@ -860,8 +850,8 @@ namespace SimpleOps {
                     var númeroPáginaDesarrollo = kv.Key;
                     var páginaExtra = EsPáginaExtra(rutaPáginaDesarrollo);
                     var páginaDesarrollo = Path.GetFileName(rutaPáginaDesarrollo).AMinúscula()?.Reemplazar("propia.cshtml", ".cshtml");
-                    if (sobreescribir || !páginasAplicación.Contains(páginaDesarrollo)) 
-                        File.Copy(rutaPáginaDesarrollo, ObtenerRutaPlantilla(plantilla, forzarRutaAplicación: true, 
+                    if (sobreescribir || !páginasAplicación.Contains(páginaDesarrollo))
+                        File.Copy(rutaPáginaDesarrollo, ObtenerRutaPlantilla(plantilla, forzarRutaAplicación: true,
                             númeroPágina: páginaExtra ? 1 : númeroPáginaDesarrollo, extra: páginaExtra), overwrite: sobreescribir);
 
                 }
@@ -888,13 +878,13 @@ namespace SimpleOps {
             var carpetaImágenesProductosDesarrollo = ObtenerRutaCarpeta(carpetaProductosDesarrollo, CarpetaProductosImágenes, crearSiNoExiste: false);
             var carpetaImágenesProductos = ObtenerRutaCarpeta(carpetaProductos, CarpetaProductosImágenes, crearSiNoExiste: true);
 
-            var carpetaInformaciónProductosDesarrollo 
+            var carpetaInformaciónProductosDesarrollo
                 = ObtenerRutaCarpeta(carpetaProductosDesarrollo, CarpetaProductosInformación, crearSiNoExiste: false);
             var carpetaInformaciónProductos = ObtenerRutaCarpeta(carpetaProductos, CarpetaProductosInformación, crearSiNoExiste: true);
 
-            var carpetaInformaciónImágenesProductosDesarrollo 
+            var carpetaInformaciónImágenesProductosDesarrollo
                 = ObtenerRutaCarpeta(carpetaInformaciónProductosDesarrollo, CarpetaProductosInformaciónImágenes, crearSiNoExiste: false);
-            var carpetaInformaciónImágenesProductos 
+            var carpetaInformaciónImágenesProductos
                 = ObtenerRutaCarpeta(carpetaInformaciónProductos, CarpetaProductosInformaciónImágenes, crearSiNoExiste: true);
 
             var carpetaInformaciónFragmentosProductosDesarrollo
@@ -909,7 +899,7 @@ namespace SimpleOps {
             CopiarArchivos(carpetaInformaciónFragmentosProductosDesarrollo, carpetaInformaciónFragmentosProductos, sobreescribir: false);
 
             CopiarPlantillasARutaAplicación(sobreescribir: false);
-                
+
             ObtenerRutaCarpeta(Equipo.RutaAplicación, CarpetaDatos, crearSiNoExiste: true); // Se ejecuta para crear la carpeta de Datos si no existe.
             if (!string.IsNullOrEmpty(Equipo.RutaIntegración)) ObtenerRutaCarpeta(Equipo.RutaIntegración, "", crearSiNoExiste: true); // Se ejecuta para crear la carpetas de integración con terceros si no existen. Al pasar una carpeta vacía usa la rutaPadre. Si no se ha establecido la RutaIntegración puede ser que el usuario no va a usar la integración de terceros entonces no es necesario crear esta carpeta. 
 
@@ -950,7 +940,7 @@ namespace SimpleOps {
                     }
 
                 } else {
-                    throw new Exception($"No se encontró la base de datos vacía en {rutaBaseDatosVacíaDesarrollo}");
+                    throw new InvalidOperationException($"No se encontró la base de datos vacía en {rutaBaseDatosVacíaDesarrollo}");
                 }
 
             }
@@ -971,9 +961,7 @@ namespace SimpleOps {
 
                 try {
                     opciones = Deserializar<T>(File.ReadAllText(rutaJson), serialización) ?? opciones;
-                #pragma warning disable CA1031 // No capture tipos de excepción generales. Cualquier tipo de excepción se tratará de la misma manera: haciendo una copia del archivo con error y borrándolo.
-                } catch (Exception ex) {
-                #pragma warning restore CA1031
+                } catch (Exception ex) { // Antes se estaba suprimiendo la alerta CA1031. No capture tipos de excepción generales. Cualquier tipo de excepción se tratará de la misma manera: haciendo una copia del archivo con error y borrándolo.
 
                     var rutaCopia = ObtenerRutaAgregandoTexto(rutaJson, $" - Copia con Error en {AhoraUtcAjustado.ATexto(FormatoFecha)}");
                     File.Copy(rutaJson, rutaCopia);
@@ -998,9 +986,7 @@ namespace SimpleOps {
             var rutaJson = ObtenerRutaOpciones(opciones);
             try {
                 File.WriteAllText(rutaJson, Serializar(opciones, serialización));
-            #pragma warning disable CA1031 // No capture tipos de excepción generales. Cualquier tipo de excepción se tratará de la misma manera: Informando al usuario y omitiendo el guardado.
-            } catch (Exception) {
-            #pragma warning restore CA1031
+            } catch (Exception) { // Antes se estaba suprimiendo la alerta CA1031. No capture tipos de excepción generales. Cualquier tipo de excepción se tratará de la misma manera: Informando al usuario y omitiendo el guardado.
                 MostrarError($"No se pudo guardar las opciones en {rutaJson}.");
             }
 
@@ -1032,7 +1018,7 @@ namespace SimpleOps {
                 null => inverso ? Visibility.Visible : Visibility.Collapsed,
                 string texto => (inverso && string.IsNullOrEmpty(texto)
                     || (!inverso && !string.IsNullOrEmpty(texto))) ? Visibility.Visible : Visibility.Collapsed,
-                _ => throw new Exception(CasoNoConsiderado(value?.ToString())),
+                _ => throw new ArgumentException(CasoNoConsiderado(value?.ToString())),
             };
             if (forzarOculto) respuesta = Visibility.Collapsed;
             return respuesta;

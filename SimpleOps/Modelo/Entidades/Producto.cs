@@ -571,7 +571,7 @@ namespace SimpleOps.Modelo {
 
         public TipoProducto TipoProducto
             => ConceptoRetención switch {
-                ConceptoRetención.Desconocido => throw new Exception("No se esperaba ConceptoRetención = Desconocido."),
+                ConceptoRetención.Desconocido => throw new ArgumentException("No se esperaba ConceptoRetención = Desconocido."),
                 ConceptoRetención.Generales => TipoProducto.Producto,
                 ConceptoRetención.TarjetaDébitoOCrédito => TipoProducto.Producto, // No permite establecer si es producto o servicio entonces se deja producto.
                 ConceptoRetención.AgrícolasOPecuariosSinProcesamiento => TipoProducto.Producto,
@@ -654,7 +654,7 @@ namespace SimpleOps.Modelo {
             if (Base == null) {
 
                 if (TieneBase) {
-                    return OperacionesEspecialesDatos ? false : throw new Exception("No se esperaba que TieneBase fuera verdadero y Base nulo.");
+                    return OperacionesEspecialesDatos ? false : throw new ArgumentException("No se esperaba que TieneBase fuera verdadero y Base nulo.");
                 } else {
                     return false;
                 }
@@ -664,18 +664,18 @@ namespace SimpleOps.Modelo {
                 if (TieneBase) {
 
                     if (!Empresa.HabilitarProductosBase) 
-                        throw new Exception("No se esperaba que la base de datos contenga productos con productos base y que HabilitarProductosBase sea " +
+                        throw new ArgumentException("No se esperaba que la base de datos contenga productos con productos base y que HabilitarProductosBase sea " +
                             "falso. Habilita los productos base o modifica la base de datos para que no contenga productos base.");
 
                     return (!escritura) ? true : 
-                        throw new Exception("No se permite modificar el valor de una propiedad del producto base desde el producto específico. " +
+                        throw new ArgumentException("No se permite modificar el valor de una propiedad del producto base desde el producto específico. " +
                             "Esto es para evitar que se pueda cambiar por error el valor de una propiedad del producto base (aplicable para todos los " +
                             "productos que compartan ese producto base) desde un producto específico. Si quieres modificar el valor de la propiedad en " +
                             "el producto base, usa Producto.Base.Propiedad = NuevoValorPropiedad. Si quieres modificar el valor de la propiedad para el " +
                             "producto específico, usa Producto.PropiedadEspecífica = NuevoValorPropiedad."); // Esta excepción es necesaria para evitar que el usuario del código escriba código que no tenga en cuenta la posibilidad de que un producto tenga producto base y cambie por error la propiedad en el producto base al estar asignando el valor de esta en el producto específico. Se hace con excepción y no con private set en la propiedad de enlace porque el set público se necesita para los casos en los que no se usen productos base. En estos casos la propiedad es correctamente asignada a la propiedad específica del producto. Esto permite que se realice una implementación personalizada simple y transparente para una empresa que no use productos base sin introducir lógica innecesaria en el código para verificar la existencia o no de producto base para cada producto. Para el caso de empresas que si usen producto base, esta excepción obliga a escribir código que sea claro en su intención de modificar la propiedad del producto base o la propiedad del producto específico.
 
                 } else {
-                    return OperacionesEspecialesDatos ? false : throw new Exception("No se esperaba que TieneBase fuera falso y Base no nulo.");
+                    return OperacionesEspecialesDatos ? false : throw new ArgumentException("No se esperaba que TieneBase fuera falso y Base no nulo.");
                 }
 
             }
@@ -914,7 +914,7 @@ namespace SimpleOps.Modelo {
         public int EliminarPersonalización(string tipo, bool eliminarVarias = false) {
 
             if (!eliminarVarias && Personalizaciones.FindAll(t => t.I1.IgualA(tipo)).Count > 1) 
-                throw new Exception("Al intentar eliminar la personalización, se encontraron varias personalizaciones con el mismo nombre. " +
+                throw new InvalidOperationException("Al intentar eliminar la personalización, se encontraron varias personalizaciones con el mismo nombre. " +
                                     "Si las quieres eliminar todas, establece eliminarVarias en verdadero.");
             return Personalizaciones.RemoveAll(t => t.I1.IgualA(tipo));
 
@@ -923,7 +923,7 @@ namespace SimpleOps.Modelo {
 
         public static string? ObtenerTipoPersonalización(List<string> valores) {
 
-            string? tipo = null;        
+            string? tipo = null;
             foreach (var valor in valores) {
 
                 var tipoActual = ObtenerTipoAtributo(valor);
