@@ -1865,7 +1865,7 @@ namespace Vixark {
         /// <param name="rutaCarpetaFragmentos"></param>
         /// <returns></returns>
         public static string? ConvertirAHtml(string? rutaArchivo, string? rutaCarpetaImágenes = null, string? rutaCarpetaFragmentos = null,
-            bool codificarImágenes = false, int máximoLargoTítulos = 100)
+            bool codificarImágenes = false, int máximoLargoTítulos = 100) 
                 => ConvertirALíneasHtml(rutaArchivo, rutaCarpetaImágenes, rutaCarpetaFragmentos, codificarImágenes, máximoLargoTítulos).ATextoEnLíneas();
 
 

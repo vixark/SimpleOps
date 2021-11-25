@@ -47,9 +47,7 @@ namespace SimpleOps.DocumentosGráficos {
 
         public string? OrdenCompraNúmero { get; set; }
 
-        #pragma warning disable CA2227 // Las propiedades de colección deben ser de solo lectura. Se acepta porque es necesario asignarla en el método CopiarA().
-        public List<DatosLíneaProducto> Líneas { get; set; } = null!; // Nunca es nulo (podría ser lista vacía), solo es para que no saque advertencia.
-        #pragma warning restore CA2227
+        public List<DatosLíneaProducto> Líneas { get; set; } = null!; // Nunca es nulo (podría ser lista vacía), solo es para que no saque advertencia. Antes tenía #pragma warning disable CA2227 Las propiedades de colección deben ser de solo lectura. Se acepta porque es necesario asignarla en el método CopiarA().
 
         public OpcionesColumnas Columnas { get; set; } = new OpcionesColumnas();
 

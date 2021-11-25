@@ -54,8 +54,7 @@ namespace SimpleOps.DocumentosGráficos {
 
         public string? DescripciónBase { get; set; }
 
-        #pragma warning disable CA2227 // Las propiedades de colección deben ser de solo lectura. Se permite para poder crear los diccionarios Características, Atributos y Precios al crear el objeto.
-        public List<string> Características { get; set; } = new List<string>();
+        public List<string> Características { get; set; } = new List<string>(); // Antes tenía #pragma warning disable CA2227: Las propiedades de colección deben ser de solo lectura. Se permite para poder crear los diccionarios Características, Atributos y Precios al crear el objeto.
 
         /// <summary>
         /// Si es un producto base, estos atributos son los que están en productos que no difieren en precio. Si difieren en precio, estos atributos
@@ -70,7 +69,7 @@ namespace SimpleOps.DocumentosGráficos {
         /// el producto.
         /// </summary>    
         public Dictionary<List<string>, decimal?> Precios { get; set; } = new Dictionary<List<string>, decimal?>(); // Se permite que sea nulo el decimal para los casos especiales en los que se requiera especificar que no se conoce el precio de un producto, pero al este objeto ser usado principalmente en páginas extra de catálogo y de cotizaciones, lo más normal es que el precio siempre sea un decimal no nulo.
-        #pragma warning restore CA2227
+
 
         public string? InformaciónHtml { get; set; }
 

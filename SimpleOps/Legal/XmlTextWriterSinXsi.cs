@@ -45,7 +45,9 @@ namespace SimpleOps.Legal {
 
         private bool Saltar = false;
 
+        #pragma warning disable IDE0044 // Agregar modificador de solo lectura. Se suprime porque esta clase es derivada de otra que no se controla, entonces se prefiere no hacer cambios que puedan dañar el funcionamiento.
         private bool EliminarDeRaíz = false;
+        #pragma warning restore IDE0044 
 
         #endregion Variables y Campos>
 
