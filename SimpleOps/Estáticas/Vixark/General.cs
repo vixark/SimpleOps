@@ -789,13 +789,16 @@ namespace Vixark {
         } // ObtenerRutaCarpetaConBarra>
 
 
-        public static TipoRuta ObtenerTipoRuta(string? ruta)
-            => string.IsNullOrEmpty(ruta) ? TipoRuta.Vacío
-                : Regex.IsMatch(ruta, PatrónRutaUrl) ? TipoRuta.Url
-                : Regex.IsMatch(ruta, PatrónRutaLocal) ? TipoRuta.Local
-                : ruta.Contiene("/") ? TipoRuta.RelativoUrl
-                : ruta.Contiene(@"\") ? TipoRuta.RelativoLocal
-                : TipoRuta.Elemento; // Verificar como funciona este condicional de esta manera la próxima vez que pase el código por aquí.
+        public static TipoRuta ObtenerTipoRuta(string? ruta) {
+
+            if (string.IsNullOrEmpty(ruta)) return TipoRuta.Vacío;
+            if (Regex.IsMatch(ruta, PatrónRutaUrl)) return TipoRuta.Url;
+            if (Regex.IsMatch(ruta, PatrónRutaLocal)) return TipoRuta.Local;
+            if (ruta.Contiene("/")) return TipoRuta.RelativoUrl;
+            if (ruta.Contiene(@"\")) return TipoRuta.RelativoLocal;
+            return TipoRuta.Elemento;
+
+        } // ObtenerTipoRuta>
 
 
         public static void FinalizarSiExisteOtraInstanciaAbierta(string nombreAplicación) {
@@ -2482,11 +2485,16 @@ namespace Vixark {
         /// <see cref="ObtenerValor{K, V}(Dictionary{K, V}, K, bool)"/>.
         /// <paramref name="ignorarCapitalización"/> solo aplica para diccionarios con clave (<typeparamref name="K"/>) de tipo texto.
         /// </summary>
-        public static V? ObtenerValorObjeto<K, V>(this Dictionary<K, V> diccionario, K clave, bool ignorarCapitalización = true) where V : class
-            where K : notnull
-                => clave is string claveTexto && diccionario is Dictionary<string, V> diccionarioClaveTexto
-                    ? ObtenerValorObjeto(diccionarioClaveTexto, claveTexto, ignorarCapitalización)
-                    : diccionario.ContainsKey(clave) ? diccionario[clave] : null; // Aunque se podría implementar usando un atributo [return: MaybeNull] con el que se indica que el resultado de la función tal vez pueda ser nulo y el tipo devuelto hacerlo V en vez de V?, esto trae un inconveniente porque no se podría devolver nulo cuando no encuentre un ítem, solo se podría devolver default, el cual es nulo para objetos pero es cero para números y esto podría traer comportamientos no deseados porque indicaría que el elemento encontrado fue cero y no nulo. Leer más en https://stackoverflow.com/questions/54593923/nullable-reference-types-with-generic-return-type.
+        public static V? ObtenerValorObjeto<K, V>(this Dictionary<K, V> diccionario, K clave, bool ignorarCapitalización = true) where V : class 
+            where K : notnull { // Aunque se podría implementar usando un atributo [return: MaybeNull] con el que se indica que el resultado de la función tal vez pueda ser nulo y el tipo devuelto hacerlo V en vez de V?, esto trae un inconveniente porque no se podría devolver nulo cuando no encuentre un ítem, solo se podría devolver default, el cual es nulo para objetos pero es cero para números y esto podría traer comportamientos no deseados porque indicaría que el elemento encontrado fue cero y no nulo. Leer más en https://stackoverflow.com/questions/54593923/nullable-reference-types-with-generic-return-type.
+
+            if (clave is string claveTexto && diccionario is Dictionary<string, V> diccionarioClaveTexto) {
+                return ObtenerValorObjeto(diccionarioClaveTexto, claveTexto, ignorarCapitalización);
+            } else {
+                return diccionario.ContainsKey(clave) ? diccionario[clave] : null;
+            }
+
+        } // ObtenerValorObjeto>
 
 
         /// <summary>
@@ -2507,10 +2515,15 @@ namespace Vixark {
         /// <paramref name="ignorarCapitalización"/> solo aplica para diccionarios con clave (<typeparamref name="K"/>) de tipo texto.
         /// </summary>
         public static V? ObtenerValor<K, V>(this Dictionary<K, V> diccionario, K clave, bool ignorarCapitalización = true)
-            where V : struct where K : notnull =>
-                clave is string claveTexto && diccionario is Dictionary<string, V> diccionarioClaveTexto
-                    ? ObtenerValor(diccionarioClaveTexto, claveTexto, ignorarCapitalización: ignorarCapitalización)
-                    : diccionario.ContainsKey(clave) ? (V?)diccionario[clave] : null;
+            where V : struct where K : notnull {
+
+            if (clave is string claveTexto && diccionario is Dictionary<string, V> diccionarioClaveTexto) {
+                return ObtenerValor(diccionarioClaveTexto, claveTexto, ignorarCapitalización: ignorarCapitalización);
+            } else {
+                return diccionario.ContainsKey(clave) ? (V?)diccionario[clave] : null;
+            }
+
+        } // ObtenerValor>
 
 
         /// <summary>

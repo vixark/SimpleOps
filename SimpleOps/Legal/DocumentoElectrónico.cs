@@ -29,7 +29,7 @@ using System.Text;
 using System.Windows;
 using System.Xml;
 using System.Xml.Serialization;
-using Dian.Factura; // Si se encuentra error aquí se debe agregar la referencia a Dian.dll (generado con Dian.sln) que se encuentra en \SimpleOps\. Esta librería se maneja independiente para evitar disminuir el rendimiento de Visual Studio con las clases enormes y autogeneradas que contiene.
+using Dian.Factura; // Si se encuentra error aquí, se debe agregar la referencia a Dian.dll (generado con Dian.sln) que se encuentra en \SimpleOps\. Esta librería se maneja independiente para evitar disminuir el rendimiento de Visual Studio con las clases enormes y autogeneradas que contiene.
 using static SimpleOps.Legal.Dian;
 using static SimpleOps.Global;
 using static Vixark.General;
