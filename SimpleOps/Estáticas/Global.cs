@@ -1003,24 +1003,26 @@ namespace SimpleOps {
 
 
         public static bool CrearPdfYRespuestaElectrónica<D, M>(D? documento, DocumentoElectrónico<Factura<Cliente, M>, M>? documentoElectrónico, 
-            out string? mensaje, out string? rutaPdf, out string? rutaZip) where D : Factura<Cliente, M> where M : MovimientoProducto {
+            out string? mensaje) where D : Factura<Cliente, M> where M : MovimientoProducto {
 
             mensaje = null;
-            rutaPdf = null;
-            rutaZip = null;
+
             var mensajeRespuesta = "documentoElectrónico es nulo.";
 
             if (documentoElectrónico != null && CrearRespuestaElectrónica(out mensajeRespuesta, documentoElectrónico, out string? rutaXml)) {
 
-                if (documento != null && CrearPdfVenta(documento, documentoElectrónico, out rutaPdf)) {
+                if (documento != null && CrearPdfVenta(documento, documentoElectrónico, out string rutaPdf)) {
 
                     if (rutaXml != null && rutaPdf != null && File.Exists(rutaPdf) && File.Exists(rutaXml)) {
 
                         var rutaZipACrear = ObtenerRutaCambiandoExtensión(rutaPdf, "zip");
                         if (CrearZip(new List<string> { rutaPdf, rutaXml }, rutaZipACrear)) {
-                            rutaZip = rutaZipACrear;
+
+                            documentoElectrónico.RutaZip = rutaZipACrear;
+                            documentoElectrónico.RutaPdf = rutaPdf;
                             IntentarBorrar(rutaXml);
                             return true;
+
                         } else {
                             mensaje = "No se pudo crear el archivo ZIP con el PDF de la representación gráfica y el XML de respuesta electrónica.";
                             return false;

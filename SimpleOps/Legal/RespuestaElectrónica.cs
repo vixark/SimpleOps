@@ -54,7 +54,7 @@ namespace SimpleOps.Legal {
         /// </summary>
         public string? Ruta { get; set; }
 
-        public bool IdentarXml = true; // Activar para generar los XMLs con formato identado para facilitar el desarrollo y corrección de errores.
+        public bool IdentarXml = true; // Se va a permitir identar el XML porque este archivo no necesita ser firmado sin espacios como si lo requiere el XML documento electrónico. Todos los sistemas receptores de este archivo deberían estar en capacidad de leerlo pues es un XML bien formado.
 
         public string RutaDocumentosElectrónicosHoy { get; set; } // Se maneja como una propiedad para asegurar que su valor es el mismo durante el tiempo de vida del objeto y evitar casos especiales en los que se inicie el procesamiento antes de media noche, se finalice después y no se pueda realizar porque no encuentre el archivo sin firma. Además, porque también se usa para poder guardar la representación gráfica en PDF en la misma carpeta que el documento electrónico.
 
@@ -221,11 +221,6 @@ namespace SimpleOps.Legal {
             if (IdentarXml) escritorXml.Formatting = Formatting.Indented;
             serializadorXml.Serialize(escritorXml, respuesta, espaciosNombres);
             flujoEscritura.Close();
-
-            if (IdentarXml) 
-                MostrarInformación("El archivo XML ha sido identado para facilitar la verificación de problemas que hayan surgido en su creación. " +
-                    "Sin embargo, se recomienda no identarlo en modo de producción para aumentar su compatibilidad con sistemas de terceros." +
-                    $"{DobleLínea}Ruta:{NuevaLínea}{Ruta}");
 
             #endregion Escritura XML>
 

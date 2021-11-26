@@ -222,15 +222,12 @@ namespace SimpleOps.Integración {
                 var rutaDocumento = documentoElectrónico?.Ruta;
                 if (!File.Exists(rutaDocumento)) throw new Exception($"No se pudo encontrar el archivo XML de la {nombre} electrónica {rutaDocumento}.");
 
-                if (documentoCliente != null && CrearPdfVenta(documentoCliente, documentoElectrónico, out string rutaPdf)) {
-
-                    if (!File.Exists(rutaPdf)) 
-                        throw new Exception($"No se pudo encontrar el PDF con la representación gráfica de la {nombre} electrónica {rutaPdf}.");
-
-                    File.WriteAllText(ObtenerRutaCambiandoExtensión(ruta, "ok"), $"{rutaDocumento}{NuevaLínea}{rutaPdf}");
-
+                if (CrearPdfYRespuestaElectrónica(documentoCliente, documentoElectrónico, out string? mensajeRtaYPdf)) {
+                    File.WriteAllText(ObtenerRutaCambiandoExtensión(ruta, "ok"), 
+                        $"{documentoElectrónico?.RutaZip}{NuevaLínea}{documentoElectrónico?.RutaPdf}");
                 } else {
-                    throw new Exception($"No se pudo crear el PDF con la representación gráfica de la {nombre} electrónica {rutaDocumento}.");
+                    throw new Exception($"No se pudo crear el ZIP con la respuesta y la representación gráfica de la {nombre} electrónica "
+                        + $"{rutaDocumento}.{DobleLínea}{mensajeRtaYPdf}");
                 }
 
             } else {

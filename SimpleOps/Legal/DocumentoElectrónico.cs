@@ -76,6 +76,16 @@ namespace SimpleOps.Legal {
 
         public string? RutaSinFirmar { get; set; }
 
+        /// <summary>
+        /// Ruta del ZIP con la respuesta electrónica y el PDF con la representación gráfica.
+        /// </summary>
+        public string? RutaZip { get; set; }
+
+        /// <summary>
+        /// Ruta del PDF con la representación gráfica.
+        /// </summary>
+        public string? RutaPdf { get; set; }
+
         public bool IdentarXml = false; // Activar para generar los XMLs con formato identado para facilitar la comparación con XMLs de muestra. Se debe desactivar en producción.
 
         public RespuestaDian? RespuestaDian { get; set; }

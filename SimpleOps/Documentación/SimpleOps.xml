@@ -740,6 +740,16 @@
             Ruta del XML del documento electrónico firmado.
             </summary>
         </member>
+        <member name="P:SimpleOps.Legal.DocumentoElectrónico`2.RutaZip">
+            <summary>
+            Ruta del ZIP con la respuesta electrónica y el PDF con la representación gráfica.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Legal.DocumentoElectrónico`2.RutaPdf">
+            <summary>
+            Ruta del PDF con la representación gráfica.
+            </summary>
+        </member>
         <member name="M:SimpleOps.Legal.DocumentoElectrónico`2.Crear(System.String@)">
             <summary>
             Devuelve verdadero si se creo exitosamente.
@@ -1070,7 +1080,7 @@
         </member>
         <member name="P:SimpleOps.Modelo.Factura`2.Código">
             <summary>
-            Garantiza un código único para todos cada entidad heredada de factura que tengan el mismo número: Venta, Nota Crédito, Nota Débito, etc.
+            Garantiza un código único para las entidades heredadas de factura que tengan el mismo número: Venta, Nota Crédito, Nota Débito, etc.
             Es útil para la creación de archivos con sus códigos en la misma carpeta y evitar colisiones por nombre de archivo igual cuando sean 
             entidades diferentes.
             </summary>
