@@ -666,9 +666,9 @@ namespace Vixark {
         public static string ObtenerHashArchivo(string rutaArchivo) {
 
             using var FileCheck = File.OpenRead(rutaArchivo);
-#pragma warning disable CA5351 // No usar algoritmos criptográficos dañados. Es aceptable porque solo es para identificar el archivo.
+            #pragma warning disable CA5351 // No usar algoritmos criptográficos dañados. Es aceptable porque solo es para identificar el archivo.
             using var md5 = new MD5CryptoServiceProvider();
-#pragma warning restore CA5351
+            #pragma warning restore CA5351
             var md5Hash = md5.ComputeHash(FileCheck);
             return BitConverter.ToString(md5Hash).Reemplazar("-", "").AMinúscula()!;
 
@@ -1345,6 +1345,8 @@ namespace Vixark {
         public static string ATexto(this TimeSpan intervalo, string formato) => intervalo.ToString(formato, CultureInfo.InvariantCulture);
 
         public static string ATexto(this byte[] bytes) => BitConverter.ToString(bytes).AMinúscula()!; // Se asegura que nunca es nulo porque así el vector sea vacío devuelve una cadena vacía no nula.
+
+        public static string? Base64ATexto(string? base64) => base64 == null ? null : Encoding.UTF8.GetString(Convert.FromBase64String(base64));
 
         public static string ATexto(this bool booleano) => booleano ? "true" : "false";
 

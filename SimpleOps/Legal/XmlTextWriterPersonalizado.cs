@@ -28,6 +28,7 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
+using static Vixark.General;
 
 
 
@@ -36,9 +37,9 @@ namespace SimpleOps.Legal {
 
 
     /// <summary>
-    /// XmlTextWriter personalizado que omite la escritura de los atributos con nombre en AtributosAOmitir.
+    /// XmlTextWriter personalizado que omite la escritura de los atributos con nombre en AtributosAOmitir y escribe como CDATA cualquier texto que empiece por &lt;.
     /// </summary>
-    class XmlTextWriterSinXsi : XmlTextWriter { // Ver https://stackoverflow.com/questions/7656557/remove-xsitype-from-generated-xml-when-serializing.
+    class XmlTextWriterPersonalizado : XmlTextWriter { // Ver https://stackoverflow.com/questions/7656557/remove-xsitype-from-generated-xml-when-serializing.
 
 
         #region Variables y Campos
@@ -47,18 +48,18 @@ namespace SimpleOps.Legal {
 
         #pragma warning disable IDE0044 // Agregar modificador de solo lectura. Se suprime porque esta clase es derivada de otra que no se controla, entonces se prefiere no hacer cambios que puedan dañar el funcionamiento.
         private bool EliminarDeRaíz = false;
-        #pragma warning restore IDE0044 
+        #pragma warning restore IDE0044
 
         #endregion Variables y Campos>
 
 
         #region Constructores
 
-        public XmlTextWriterSinXsi(TextWriter w) : base(w) { }
+        public XmlTextWriterPersonalizado(TextWriter w) : base(w) { }
 
-        public XmlTextWriterSinXsi(Stream w, Encoding encoding) : base(w, encoding) { }
+        public XmlTextWriterPersonalizado(Stream w, Encoding encoding) : base(w, encoding) { }
 
-        public XmlTextWriterSinXsi(string filename, Encoding encoding) : base(filename, encoding) { }
+        public XmlTextWriterPersonalizado(string filename, Encoding encoding) : base(filename, encoding) { }
 
         #endregion Constructores>
 
@@ -83,7 +84,12 @@ namespace SimpleOps.Legal {
         public override void WriteString(string text) {
 
             if (Saltar) return;
-            base.WriteString(text);
+
+            if (text.StartsWith('<')) {
+                WriteCData(text);
+            } else {
+                base.WriteString(text);
+            }
 
         } // WriteString>
 

@@ -62,6 +62,14 @@ namespace SimpleOps.Legal {
 
         public string? ClaveSeguimiento { get; set; }
 
+        public string? RespuestaAplicación { get; set; } // ApplicationResponse.
+
+        public string? CódigoRespuesta { get; set; } // ResponseCode y ValidationResultCode.
+
+        public DateTime? FechaRespuesta { get; set; } // IssueDate y ValidationDate.
+
+        public DateTime? HoraRespuesta { get; set; } // IssueTime y ValidationTime.
+
         #endregion Propiedades>
 
 
@@ -131,6 +139,14 @@ namespace SimpleOps.Legal {
                 ClaveDocumento = xmlDocumentKey;
                 NombreArchivo = xmlFileName;
                 válida = isValid == "true";
+                RespuestaAplicación = Base64ATexto(resultado["b:XmlBase64Bytes"]?.InnerText);
+                var xmlRespuestaAplicación = new XmlDocument();
+                xmlRespuestaAplicación.LoadXml(RespuestaAplicación);
+                CódigoRespuesta = xmlRespuestaAplicación.DocumentElement["cac:DocumentResponse"]?["cac:Response"]?["cbc:ResponseCode"]?.InnerText;
+                var fechaRespuestaStr = xmlRespuestaAplicación.DocumentElement["cbc:IssueDate"]?.InnerText;
+                FechaRespuesta = fechaRespuestaStr == null ? (DateTime?)null : DateTime.Parse(fechaRespuestaStr);
+                var horaRespuestaStr = xmlRespuestaAplicación.DocumentElement["cbc:IssueTime"]?.InnerText;
+                HoraRespuesta = horaRespuestaStr == null ? (DateTime?)null : DateTime.Parse(horaRespuestaStr);
 
             }
 

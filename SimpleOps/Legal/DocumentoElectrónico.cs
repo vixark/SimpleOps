@@ -78,6 +78,8 @@ namespace SimpleOps.Legal {
 
         public bool IdentarXml = false; // Activar para generar los XMLs con formato identado para facilitar la comparación con XMLs de muestra. Se debe desactivar en producción.
 
+        public RespuestaDian? RespuestaDian { get; set; }
+
         #endregion Propiedades>
 
 
@@ -1121,7 +1123,7 @@ namespace SimpleOps.Legal {
             };
 
             using var flujoEscritura = new StreamWriter(RutaSinFirmar);
-            using var escritorXml = new XmlTextWriterSinXsi(flujoEscritura); // Para omitir los atributos automáticamente añadidos con nombre ExtensionContentFirmaType y ExtensionContentDianType.           
+            using var escritorXml = new XmlTextWriterPersonalizado(flujoEscritura); // Para omitir los atributos automáticamente añadidos con nombre ExtensionContentFirmaType y ExtensionContentDianType.           
             if (IdentarXml) escritorXml.Formatting = Formatting.Indented;
             serializadorXml.Serialize(escritorXml, document, espaciosNombres);
             flujoEscritura.Close();

@@ -707,10 +707,20 @@ namespace SimpleOps.Legal {
             if (respuestaXml == null) return Falso(out mensaje, $"Error en respuesta de la DIAN.{DobleLínea}El XML está vacío.");
             var respuestaDian = new RespuestaDian(respuestaXml, pruebaHabilitación ? Operación.SendTestSetAsync : Operación.SendBillSync);
             if (!respuestaDian.Éxito) return Falso(out mensaje, $"Error en respuesta de la DIAN.{DobleLínea}{respuestaDian.MensajeError}");
+            documentoElectrónico.RespuestaDian = respuestaDian;
 
             return true;
 
         } // CrearYEnviarDocumentoElectrónico>
+
+
+        public static bool CrearRespuestaElectrónica<M>(out string? mensaje, DocumentoElectrónico<Factura<Cliente, M>, M> documentoElectrónico) 
+            where M : MovimientoProducto {
+
+            var respuestaElectrónica = new RespuestaElectrónica<Factura<Cliente, M>, M>(documentoElectrónico);  
+            return respuestaElectrónica.Crear(out mensaje);
+
+        } // CrearRespuestaElectrónica>
 
 
         #endregion Métodos y Funciones>

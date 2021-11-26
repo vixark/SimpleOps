@@ -1056,6 +1056,12 @@ namespace SimpleOps {
                 GuardarOpciones(Empresa);
                 MostrarÉxito("¡Éxito del envío de la factura electrónica completa a la DIAN!"); // Éxito. Se puede continuar con los procedimientos posteriores como grabar en la base de datos, hacer cambios en la interfaz y demás. La factura se considera realizada así puedan fallar los siguientes procedimientos de representación gráfica y email al cliente.
 
+                if (ventaElectrónica != null && CrearRespuestaElectrónica(out _, ventaElectrónica)) {
+                    // Si se creó la respuesta electrónica exitosamente, se puede enviar el email al cliente.
+                } else {
+                    MostrarError("No se pudo crear la respuesta electrónica de la factura electrónica.");
+                }
+
                 if (venta != null && CrearPdfVenta(venta, ventaElectrónica, out _)) {
                     // Si se creó la representación gráfica exitosamente, se puede enviar el email al cliente.
                 } else {
