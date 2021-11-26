@@ -239,10 +239,27 @@ namespace SimpleOps.Modelo {
         #region Propiedades Autocalculadas
 
         /// <summary>
-        /// Código alfanumérico que incluye el prefijo y el número de la factura. Si no hay prefijo es una representación en texto del número.
+        /// Garantiza un código único para las entidades heredadas de factura que tengan el mismo número: Venta, Nota Crédito, Nota Débito, etc.
+        /// Es útil para la creación de archivos con sus códigos en la misma carpeta y evitar colisiones por nombre de archivo igual cuando sean 
+        /// entidades diferentes.
         /// </summary>
-        public string Código => Prefijo + Número.ATexto();
+        public string Código => PrefijoForzado + Número.ATexto(); // Es necesario establecer un prefijo obligatorio para las notas débito y crédito por un error que presenta el servidor de la DIAN en 2021 con la aceptación de la numeración de estas si no llevan prefijo. No hay claridad sobre los prefijos de notas crédito sobre si se deben solicitar, si pueden ser únicos o si se pueden omitir. Ante la ausencia de información se usarán los que se usan en los XMLs de ejemplo NC. En febrero de 2021 aparentemente se presentó un cambio en la validación de las notas crédito en la DIAN que causaba que números válidos de notas crédito fueran rechazadas por supuestamente ya haber sido procesadas anteriormente. Este error presuntamente es causado por la colisión en los servidores de la DIAN de la numeración de las notas crédito y las facturas. Esto se pudo comprobar al realizar una nota crédito con un número muy grande que fue correctamente aceptada por el servidor de la DIAN. Para solucionar el problema sin generar posibles conflictos adicionales ni soluciones atípicas (como incrementar en un número muy grande la numeración de todas las notas crédito) se aplicará siempre de manera obligatoria este prefijo a todas las notas crédito que no tengan asignado otro prefijo.
 
+        /// <summary>
+        /// Código alfanumérico que incluye el prefijo y el número de la factura. Si no hay prefijo, es una representación en texto del número.
+        /// </summary>
+        public string CódigoNoÚnico => Prefijo + Número.ATexto(); 
+
+        public string PrefijoForzado {
+            get {
+                if (Prefijo != null) return Prefijo;
+                if (this is Venta) return PrefijoFacturasPredeterminado;
+                if (this is NotaCréditoVenta) return PrefijoNotasCréditoPredeterminado;
+                if (this is NotaDébitoVenta) return PrefijoNotasDébitoPredeterminado;
+                throw new NotImplementedException($"No se ha considerado el caso de {GetType()} en PrefijoForzado.");
+            }
+        }  
+        
         public decimal? PorcentajeDescuentoCondicionado => Subtotal == 0 ? (decimal?)null : DescuentoCondicionado / Subtotal;
 
         public decimal? PorcentajeDescuentoComercial => Subtotal == 0 ? (decimal?)null : DescuentoComercial / Subtotal;
@@ -516,8 +533,7 @@ namespace SimpleOps.Modelo {
             var textoImpuestoICA = (impuestoICA).ATexto(formatoNúmero);
             var textoAPagar = (SubtotalFinalConImpuestos).ATexto(formatoNúmero); // A partir de agosto 2021 el anticipo no se resta al SubtotalFinalConImpuestos para obtener el textoAPagar como se hacía antes.
             if (EntidadEconómica == null) throw new Exception("No se ha cargado la entidad económica.");
-            if (this is NotaCréditoVenta && Prefijo == null) Prefijo = PrefijoNotasCréditoPredeterminado; // Es necesario establecer un prefijo obligatorio para las notas crédito por un error que presenta el servidor de la DIAN en 2021 con la aceptación de la numeración de estas si no llevan prefijo.
-            if (this is NotaDébitoVenta && Prefijo == null) Prefijo = PrefijoNotasDébitoPredeterminado; // Es necesario establecer un prefijo obligatorio para las notas débito por un error que presenta el servidor de la DIAN en 2021 con la aceptación de la numeración de estas si no llevan prefijo.
+
             var textoCude = $"{Código}{textoFechaFactura}{textoHoraFactura}{textoSubtotalBase}01{textoIVA}04{textoImpuestoConsumo}03{textoImpuestoICA}" + 
                             $"{textoAPagar}{Empresa.Nit}{EntidadEconómica.Identificación}{ObtenerClaveParaCude()}" + 
                             $"{Empresa.AmbienteFacturaciónElectrónica.AValor()}";

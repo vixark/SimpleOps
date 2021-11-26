@@ -84,6 +84,7 @@ namespace SimpleOps.Legal {
         public bool Crear(out string? mensaje) {
 
             mensaje = null;
+
             if (DocumentoElectrónico == null) return Falso(out mensaje, "El documento electrónico está vacío.");
             if (DocumentoElectrónico.RespuestaDian == null) return Falso(out mensaje, "La respuesta de la DIAN está vacía.");
             if (DocumentoElectrónico.RespuestaDian.FechaRespuesta == null || DocumentoElectrónico.RespuestaDian.HoraRespuesta == null) 
@@ -235,11 +236,7 @@ namespace SimpleOps.Legal {
 
         public string ObtenerRuta() {
 
-            if (Empresa.Nit == null) throw new Exception("El nit de la empresa es nulo.");
-            if (DocumentoElectrónico.Documento.ConsecutivoDianAnual == null) throw new Exception("El consecutivo de la DIAN anual es nulo.");
-            var nombreArchivo = $"R{Empresa.Nit.PadLeft(10, '0')}000{AhoraUtcAjustado.ATexto("yy")}" +
-                $"{((int)DocumentoElectrónico.Documento.ConsecutivoDianAnual).ATexto().PadLeft(8, '0')}{".xml"}";
-
+            var nombreArchivo = $"{DocumentoElectrónico.Documento.Código}.xml"; // Para la respuesta electrónica se usa el código de la factura para que todos los archivos relacionados con la factura tengan el mismo nombre.
             return Path.Combine(RutaDocumentosElectrónicosHoy, nombreArchivo);
 
         } // ObtenerRuta>

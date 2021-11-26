@@ -219,7 +219,7 @@ namespace SimpleOps.Legal {
 
             #region Funciones Locales - El código que se muestra en comentarios es el de su primera aparición.
 
-            string obtenerCódigoSeguridad() => ObtenerSHA384($"{Empresa.IdentificadorAplicación}{Empresa.PinAplicación}{Documento.Código}");  // También llamada Huella, aunque antes era única para la aplicación ya no lo es porque depende también del número del documento.
+            string obtenerCódigoSeguridad() => ObtenerSHA384($"{Empresa.IdentificadorAplicación}{Empresa.PinAplicación}{Documento.Código}"); // También llamada Huella, aunque antes era única para la aplicación, ya no lo es porque depende también del número del documento.
 
 
             static AddressType? obtenerAddress(DirecciónCompleta? direcciónCompleta) {
@@ -1156,12 +1156,7 @@ namespace SimpleOps.Legal {
         
         public string ObtenerRuta(bool firmado) {
 
-            if (Empresa.Nit == null) throw new Exception("El nit de la empresa es nulo.");
-            if (Documento.ConsecutivoDianAnual == null) throw new Exception("El consecutivo de la DIAN anual es nulo.");
-            var prefijo = TipoFirma.ATexto();
-            var nombreArchivo = $"{prefijo}{Empresa.Nit.PadLeft(10, '0')}000{AhoraUtcAjustado.ATexto("yy")}" +
-                $"{((int)Documento.ConsecutivoDianAnual).ATexto().PadLeft(8, '0')}{(firmado ? "" : "-sf")}{".xml"}";
-
+            var nombreArchivo = $"{Documento.Código}-D{(firmado ? "" : "-SF")}.xml"; // Antes se usaba una fórmula más compleja para este nombre, pero este archivo del documento electrónico ya no se comparte con nadie entonces no hay problema con el nombre. De todas maneras se deja el código por si lo vuelven a cambiar: if (Empresa.Nit == null) throw new Exception("El nit de la empresa es nulo."); if (Documento.ConsecutivoDianAnual == null) throw new Exception("El consecutivo de la DIAN anual es nulo.");  var nombreArchivo = $"{prefijo}{Empresa.Nit.PadLeft(10, '0')}000{AhoraUtcAjustado.ATexto("yy")}" + $"{((int)Documento.ConsecutivoDianAnual).ATexto().PadLeft(8, '0')}{(firmado ? "" : "-sf")}{".xml"}";
             return Path.Combine(RutaDocumentosElectrónicosHoy, nombreArchivo);
 
         } // ObtenerRuta>

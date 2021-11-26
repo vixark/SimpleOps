@@ -196,10 +196,8 @@ namespace SimpleOps.Integración {
                 } else {
                     throw new Exception(CasoNoConsiderado(documentoIntegración));
                 }
-
-            #pragma warning disable CA1031 // No capture tipos de excepción generales. Se acepta porque el error se reporta mediante el archivo .error a la aplicación tercera.
-            } catch (Exception ex) {
-            #pragma warning restore CA1031
+            
+            } catch (Exception ex) { // Antes se estaba deshabilitando #pragma warning disable CA1031. No capture tipos de excepción generales. Se acepta porque el error se reporta mediante el archivo .error a la aplicación tercera.
 
                 try {
                     File.WriteAllText(ObtenerRutaCambiandoExtensión(ruta, "error"), ex.Message);

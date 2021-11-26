@@ -110,7 +110,6 @@ namespace SimpleOps.Modelo {
             var mapeador = new Mapper(ConfiguraciónMapeadorNotaCréditoVenta);
             var datos = mapeador.Map<DatosVenta>(this);
             datos.NombreDocumento = "Nota Crédito";
-            if (datos.CódigoDocumento.EmpiezaPorNúmero()) datos.PrefijoNombreArchivo = Legal.Dian.PrefijoNotasCréditoPredeterminado; // Solo se agrega el prefijo cuando inicia por número y puede haber riesgo de colisión con otros documentos.
             CompletarDatosVenta(opcionesDocumento, datos, Líneas);
             return datos;
 

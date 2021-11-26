@@ -36,6 +36,9 @@ using SimpleOps.Singleton;
 using AutoMapper;
 using SimpleOps.DocumentosGráficos;
 using static SimpleOps.Configuración;
+using SimpleOps.Legal;
+using static SimpleOps.Legal.Dian;
+using static SimpleOps.DocumentosGráficos.DocumentosGráficos;
 
 
 
@@ -120,6 +123,12 @@ namespace SimpleOps {
         public static string TextoPruebas = AleatorizarTexto("Nlulyhkv'jvu'ZptwslVwz'o{{wA66zptwslvwz5ul{"); // Texto auxiliar aleatorio para algunas pruebas.
 
         public const string TipoAtributoProductoLibre = "Libre"; // Se usa en algunos diccionarios, principalmente de manera interna. Si se agrega un tipo de atributo a la tabla TiposAtributosProductos con este nombre tanto los atributos clasificados con ese tipo como atributos libres que no están en la tabla AtributosProductos tendrán tipo de atributo el valor de TipoAtributoProductoLibre.
+
+        public const string PrefijoFacturasPredeterminado = ""; // Al menos uno de los documentos puede estar sin prefijo para evitar colisiones en los nombres de archivos, entonces se elije que sea la factura. Se permite para darle la flexibilidad al usuario final que sus facturas no lleven prefijo. En el caso de los otros documentos no se le está quitando flexibilidad al usuario porque la DIAN exige prefijos para las notas crédito y débito.
+
+        public const string PrefijoNotasDébitoPredeterminado = "ND"; 
+
+        public const string PrefijoNotasCréditoPredeterminado = "NC";
 
         #endregion
 
@@ -991,6 +1000,48 @@ namespace SimpleOps {
             }
 
         } // GuardarOpciones>
+
+
+        public static bool CrearPdfYRespuestaElectrónica<D, M>(D? documento, DocumentoElectrónico<Factura<Cliente, M>, M>? documentoElectrónico, 
+            out string? mensaje, out string? rutaPdf, out string? rutaZip) where D : Factura<Cliente, M> where M : MovimientoProducto {
+
+            mensaje = null;
+            rutaPdf = null;
+            rutaZip = null;
+            var mensajeRespuesta = "documentoElectrónico es nulo.";
+
+            if (documentoElectrónico != null && CrearRespuestaElectrónica(out mensajeRespuesta, documentoElectrónico, out string? rutaXml)) {
+
+                if (documento != null && CrearPdfVenta(documento, documentoElectrónico, out rutaPdf)) {
+
+                    if (rutaXml != null && rutaPdf != null && File.Exists(rutaPdf) && File.Exists(rutaXml)) {
+
+                        var rutaZipACrear = ObtenerRutaCambiandoExtensión(rutaPdf, "zip");
+                        if (CrearZip(new List<string> { rutaPdf, rutaXml }, rutaZipACrear)) {
+                            rutaZip = rutaZipACrear;
+                            IntentarBorrar(rutaXml);
+                            return true;
+                        } else {
+                            mensaje = "No se pudo crear el archivo ZIP con el PDF de la representación gráfica y el XML de respuesta electrónica.";
+                            return false;
+                        }
+
+                    } else {
+                        mensaje = "No existe el archivo PDF de la representación gráfica o el XML de respuesta electrónica.";
+                        return false;
+                    }
+
+                } else {
+                    mensaje = "No se pudo crear la representación gráfica de la factura electrónica.";
+                    return false;
+                }
+
+            } else {
+                mensaje = $"No se pudo crear la respuesta electrónica de la factura electrónica. {mensajeRespuesta}";
+                return false;
+            }
+
+        } // CrearPdfYRespuestaElectrónica>
 
 
         #endregion Métodos y Funciones>

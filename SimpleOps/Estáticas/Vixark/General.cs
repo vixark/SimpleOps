@@ -556,7 +556,7 @@ namespace Vixark {
 
         /// <summary>
         /// Borra un archivo sin generar excepciones. Devuelve verdadero si fue borrado y falso si no se pudo borrar. Útil en los casos
-        /// que se quiere borrar un archivo pero si por alguna razón este está bloqueado y no se puede borrar se puede dejar sin borrar.
+        /// que se quiere borrar un archivo pero si por alguna razón este está bloqueado y no se puede borrar, se puede dejar sin borrar.
         /// </summary>
         public static bool IntentarBorrar(string rutaArchivo) {
 
@@ -860,7 +860,7 @@ namespace Vixark {
 
 
         /// <summary>
-        /// Crea un archivo ZIP con el archivo en <paramref name="ruta"/>. Si no se especifica una <paramref name="rutaZip"/> se usa el mismo nombre
+        /// Crea un archivo ZIP con el archivo en <paramref name="ruta"/>. Si no se especifica una <paramref name="rutaZip"/>, se usa el mismo nombre
         /// del archivo reemplazando la extensión por .zip.
         /// </summary>
         /// <param name="ruta"></param>
@@ -870,6 +870,26 @@ namespace Vixark {
             if (rutaZip == null) rutaZip = ObtenerRutaCambiandoExtensión(ruta, "zip");
             if (File.Exists(rutaZip)) throw new NotSupportedException($"Ya existe el archivo .zip {rutaZip}.");
             File.WriteAllBytes(rutaZip, ObtenerBytesZip(ruta));
+
+        } // CrearZip>
+
+
+        /// <summary>
+        /// Crea un archivo ZIP con los archivos en <paramref name="rutas"/>.
+        /// </summary>
+        /// <param name="rutas"></param>
+        /// <param name="rutaZip"></param>
+        public static bool CrearZip(List<string> rutas, string rutaZip) {
+        
+            if (File.Exists(rutaZip)) throw new ArgumentException($"El archivo {rutaZip} ya existe.");
+
+            using ZipArchive archive = ZipFile.Open(rutaZip, ZipArchiveMode.Create);
+            foreach (string ruta in rutas) {
+                if (!File.Exists(ruta)) throw new FileNotFoundException($"No existe el archivo {ruta}");
+                archive.CreateEntryFromFile(ruta, Path.GetFileName(ruta));
+            }
+
+            return File.Exists(rutaZip);
 
         } // CrearZip>
 

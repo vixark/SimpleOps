@@ -216,6 +216,17 @@
             <param name="rutaPdf"></param>
             <returns></returns>
         </member>
+        <member name="M:SimpleOps.DocumentosGráficos.DocumentosGráficos.CrearPdfVenta``2(``0,SimpleOps.Legal.DocumentoElectrónico{SimpleOps.Modelo.Factura{SimpleOps.Modelo.Cliente,``1},``1},System.String@)">
+            <summary>
+            Aplica para ventas, notas débito y notas crédito.
+            </summary>
+            <typeparam name="D"></typeparam>
+            <typeparam name="M"></typeparam>
+            <param name="documento"></param>
+            <param name="documentoElectrónico"></param>
+            <param name="rutaPdf"></param>
+            <returns></returns>
+        </member>
         <member name="M:SimpleOps.DocumentosGráficos.DocumentosGráficos.CompletarDatosVenta``1(SimpleOps.DocumentosGráficos.OpcionesDocumento,SimpleOps.DocumentosGráficos.DatosVenta,System.Collections.Generic.List{``0})">
             <summary>
             Procedimiento común para las ventas y las notas crédito de ventas que termina de completar el objeto de datos después de ser mapeado.
@@ -1059,7 +1070,14 @@
         </member>
         <member name="P:SimpleOps.Modelo.Factura`2.Código">
             <summary>
-            Código alfanumérico que incluye el prefijo y el número de la factura. Si no hay prefijo es una representación en texto del número.
+            Garantiza un código único para todos cada entidad heredada de factura que tengan el mismo número: Venta, Nota Crédito, Nota Débito, etc.
+            Es útil para la creación de archivos con sus códigos en la misma carpeta y evitar colisiones por nombre de archivo igual cuando sean 
+            entidades diferentes.
+            </summary>
+        </member>
+        <member name="P:SimpleOps.Modelo.Factura`2.CódigoNoÚnico">
+            <summary>
+            Código alfanumérico que incluye el prefijo y el número de la factura. Si no hay prefijo, es una representación en texto del número.
             </summary>
         </member>
         <member name="P:SimpleOps.Modelo.Factura`2.PorcentajeMargen">
@@ -3007,7 +3025,7 @@
         <member name="M:Vixark.General.IntentarBorrar(System.String)">
             <summary>
             Borra un archivo sin generar excepciones. Devuelve verdadero si fue borrado y falso si no se pudo borrar. Útil en los casos
-            que se quiere borrar un archivo pero si por alguna razón este está bloqueado y no se puede borrar se puede dejar sin borrar.
+            que se quiere borrar un archivo pero si por alguna razón este está bloqueado y no se puede borrar, se puede dejar sin borrar.
             </summary>
         </member>
         <member name="M:Vixark.General.ObtenerÚltimaFechaModificaciónArchivos(System.String)">
@@ -3101,10 +3119,17 @@
         </member>
         <member name="M:Vixark.General.CrearZip(System.String,System.String)">
             <summary>
-            Crea un archivo ZIP con el archivo en <paramref name="ruta"/>. Si no se especifica una <paramref name="rutaZip"/> se usa el mismo nombre
+            Crea un archivo ZIP con el archivo en <paramref name="ruta"/>. Si no se especifica una <paramref name="rutaZip"/>, se usa el mismo nombre
             del archivo reemplazando la extensión por .zip.
             </summary>
             <param name="ruta"></param>
+            <param name="rutaZip"></param>
+        </member>
+        <member name="M:Vixark.General.CrearZip(System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            Crea un archivo ZIP con los archivos en <paramref name="rutas"/>.
+            </summary>
+            <param name="rutas"></param>
             <param name="rutaZip"></param>
         </member>
         <member name="M:Vixark.General.ObtenerRutaImagen(System.String,System.String)">
@@ -3865,6 +3890,36 @@
             <summary>
             Clase auxiliar que reemplaza la <see cref="T:System.Tuple`2"/> para propósitos de serialización. Es necesario usarla porque 
             la serialización exige una clase con constructor sin parámetros. 
+            </summary>
+        </member>
+        <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
+            <summary>
+            GeneratedInternalTypeHelper
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateInstance(System.Type,System.Globalization.CultureInfo)">
+            <summary>
+            CreateInstance
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.GetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            GetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.SetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            SetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateDelegate(System.Type,System.Object,System.String)">
+            <summary>
+            CreateDelegate
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.AddEventHandler(System.Reflection.EventInfo,System.Object,System.Delegate)">
+            <summary>
+            AddEventHandler
             </summary>
         </member>
     </members>

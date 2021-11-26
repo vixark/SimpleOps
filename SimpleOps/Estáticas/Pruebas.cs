@@ -1055,17 +1055,10 @@ namespace SimpleOps {
                 Empresa.PróximoNúmeroDocumentoElectrónicoPruebas++;
                 GuardarOpciones(Empresa);
                 MostrarÉxito("¡Éxito del envío de la factura electrónica completa a la DIAN!"); // Éxito. Se puede continuar con los procedimientos posteriores como grabar en la base de datos, hacer cambios en la interfaz y demás. La factura se considera realizada así puedan fallar los siguientes procedimientos de representación gráfica y email al cliente.
-
-                if (ventaElectrónica != null && CrearRespuestaElectrónica(out _, ventaElectrónica)) {
-                    // Si se creó la respuesta electrónica exitosamente, se puede enviar el email al cliente.
+                if (CrearPdfYRespuestaElectrónica(venta, ventaElectrónica, out string? mensajePdfYRta, out _, out _)) {
+                    // Si se creó la respuesta electrónica y representación gráfica exitosamente, se puede enviar el email con el zip al cliente.
                 } else {
-                    MostrarError("No se pudo crear la respuesta electrónica de la factura electrónica.");
-                }
-
-                if (venta != null && CrearPdfVenta(venta, ventaElectrónica, out _)) {
-                    // Si se creó la representación gráfica exitosamente, se puede enviar el email al cliente.
-                } else {
-                    MostrarError("No se pudo crear la representación gráfica de la factura electrónica.");
+                    MostrarError(mensajePdfYRta); // No se devuelve return false porque la factura electrónica si fue generada.
                 }
 
             } else {
@@ -1082,10 +1075,10 @@ namespace SimpleOps {
                     Empresa.PróximoNúmeroDocumentoElectrónicoPruebas++;
                     GuardarOpciones(Empresa);
                     MostrarÉxito("¡Éxito del envío de la nota crédito electrónica a la DIAN!");
-                    if (notaCrédito != null && CrearPdfVenta(notaCrédito, notaCréditoElectrónica, out _)) {
-                        // Si se creó la representación gráfica exitosamente, se puede enviar el email al cliente.
+                    if (CrearPdfYRespuestaElectrónica(notaCrédito, notaCréditoElectrónica, out string? mensajePdfYRta, out _, out _)) {
+                        // Si se creó la respuesta electrónica y representación gráfica exitosamente, se puede enviar el email con el zip al cliente.
                     } else {
-                        MostrarError("No se pudo crear la representación gráfica de la nota crédito electrónica.");
+                        MostrarError(mensajePdfYRta); // No se devuelve return false porque la factura electrónica si fue generada.
                     }
 
                 } else {

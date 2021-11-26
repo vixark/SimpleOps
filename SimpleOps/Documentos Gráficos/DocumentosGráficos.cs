@@ -184,6 +184,15 @@ namespace SimpleOps.DocumentosGráficos {
         } // CrearPdfCotización>
 
 
+        /// <summary>
+        /// Aplica para ventas, notas débito y notas crédito.
+        /// </summary>
+        /// <typeparam name="D"></typeparam>
+        /// <typeparam name="M"></typeparam>
+        /// <param name="documento"></param>
+        /// <param name="documentoElectrónico"></param>
+        /// <param name="rutaPdf"></param>
+        /// <returns></returns>
         public static bool CrearPdfVenta<D, M>(D documento, DocumentoElectrónico<Factura<Cliente, M>, M>? documentoElectrónico, out string rutaPdf)
             where D : Factura<Cliente, M> where M : MovimientoProducto {
 

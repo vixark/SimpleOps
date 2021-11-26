@@ -117,10 +117,6 @@ namespace SimpleOps.Legal {
 
         public const string CódigoEstándarAdopciónContribuyente = "999"; // Ver la tabla 6.3.5.
 
-        public const string PrefijoNotasDébitoPredeterminado = "ND"; // No hay claridad sobre los prefijos de notas débito sobre si se deben solicitar, si pueden ser únicos o si se pueden omitir. Ante la ausencia de información se usarán los que se usan en los XMLs de ejemplo. 
-
-        public const string PrefijoNotasCréditoPredeterminado = "NC"; // No hay claridad sobre los prefijos de notas crédito sobre si se deben solicitar, si pueden ser únicos o si se pueden omitir. Ante la ausencia de información se usarán los que se usan en los XMLs de ejemplo. En febrero de 2021 aparentemente se presentó un cambio en la validación de las notas crédito en la DIAN que causaba que números válidos de notas crédito fueran rechazadas por supuestamente ya haber sido procesadas anteriormente. Este error presuntamente es causado por la colisión en los servidores de la DIAN de la numeración de las notas crédito y las facturas. Esto se pudo comprobar al realizar una nota crédito con un número muy grande que fue correctamente aceptada por el servidor de la DIAN. Para solucionar el problema sin generar posibles conflictos adicionales ni soluciones atípicas (como incrementar en un número muy grande la numeración de todas las notas crédito) se aplicará siempre de manera obligatoria este prefijo a todas las notas crédito que no tengan asignado otro prefijo.
-
 
         public static Dictionary<string, string> CódigosDepartamentos = new Dictionary<string, string> { // Tomados del 'Anexo técnico de factura electrónica de venta validación previa.pdf' de la DIAN. Departamentos (ISO 3166-2:CO). Se manejan en un diccionario por facilidad y para no tener que crear una nueva tabla en la base de datos o agregarlo a cada municipio. Es inncesario para estos datos tan estáticos. Se agregan en minúscula para facilitar su uso al buscar un departamento que tenga cualquier capitalización.
             {"amazonas","91"},
@@ -714,11 +710,14 @@ namespace SimpleOps.Legal {
         } // CrearYEnviarDocumentoElectrónico>
 
 
-        public static bool CrearRespuestaElectrónica<M>(out string? mensaje, DocumentoElectrónico<Factura<Cliente, M>, M> documentoElectrónico) 
+        public static bool CrearRespuestaElectrónica<M>(out string? mensaje, DocumentoElectrónico<Factura<Cliente, M>, M> documentoElectrónico, 
+            out string? rutaXml) 
             where M : MovimientoProducto {
 
             var respuestaElectrónica = new RespuestaElectrónica<Factura<Cliente, M>, M>(documentoElectrónico);  
-            return respuestaElectrónica.Crear(out mensaje);
+            var resultado = respuestaElectrónica.Crear(out mensaje);
+            rutaXml = respuestaElectrónica.Ruta;
+            return resultado;
 
         } // CrearRespuestaElectrónica>
 
