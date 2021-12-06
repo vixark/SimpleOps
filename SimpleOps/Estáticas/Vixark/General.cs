@@ -53,6 +53,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using ColorMine.ColorSpaces;
 using ColorMine.ColorSpaces.Comparisons;
+using System.Text.Encodings.Web;
 // No puede llevar referencias a otras clases del proyecto en el que se está usando.
 
 
@@ -79,7 +80,7 @@ namespace Vixark {
 
         public enum ConectorLógico { Y = 0, O = 1 }
 
-        [Flags] public enum Serialización { EnumeraciónEnTexto = 1, DiccionarioClaveEnumeración = 2 } // Se puede establecer una o varias serializaciones especiales con el operador |.
+        [Flags] public enum Serialización { EnumeraciónEnTexto = 1, DiccionarioClaveEnumeración = 2, UTF8 = 3 } // Se puede establecer una o varias serializaciones especiales con el operador |.
 
         public enum TipoElementoRuta { Archivo, Carpeta } // Un elemento de una ruta puede ser un archivo o una carpeta.
 
@@ -2324,11 +2325,15 @@ namespace Vixark {
         public static JsonSerializerOptions ObtenerOpcionesSerialización(Serialización serializacionesEspeciales) {
 
             var opcionesSerialización = new JsonSerializerOptions();
+            opcionesSerialización.WriteIndented = true;
             if (serializacionesEspeciales.HasFlag(Serialización.DiccionarioClaveEnumeración)) {
                 opcionesSerialización.Converters.Add(new FábricaConvertidorDiccionarioClaveEnumeración());
             }
             if (serializacionesEspeciales.HasFlag(Serialización.EnumeraciónEnTexto)) {
                 opcionesSerialización.Converters.Add(new JsonStringEnumConverter());
+            }
+            if (serializacionesEspeciales.HasFlag(Serialización.UTF8)) {
+                opcionesSerialización.Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
             }
             return opcionesSerialización;
 
@@ -2431,7 +2436,8 @@ namespace Vixark {
 
         /// <summary>
         /// Agrega a un diccionario de manera limpia. Se crea el diccionario si es nulo y se actualiza el valor si ya existe en la clave. 
-        /// Para que funcione correctamente la creación si es nulo, se debe llamar asignándolo a si mismo así diccionario = diccionario.Agregar(clave, valor).
+        /// Para que funcione correctamente la creación si es nulo, se debe llamar asignándolo a si mismo así 
+        /// diccionario = diccionario.Agregar(clave, valor).
         /// </summary>
         public static Dictionary<K, V> Agregar<K, V>(this Dictionary<K, V>? diccionario, K clave, V valor, bool sobreescribir = true) where K : notnull {
 

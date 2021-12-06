@@ -517,11 +517,11 @@ namespace SimpleOps {
 
         public static string FechaActualNombresArchivos => AhoraUtcAjustado.ATexto(FormatoFecha);
 
-        public static string RutaBaseDatosSQLite => Path.Combine(Path.Combine(Equipo.RutaAplicación, CarpetaDatos), ArchivoBaseDatosSQLite);
+        public static string RutaBaseDatosSQLite => Path.Combine(Equipo.RutaAplicación, CarpetaDatos, ArchivoBaseDatosSQLite);
 
-        public static string RutaBaseDatosVacíaSQLite => Path.Combine(Path.Combine(Equipo.RutaAplicación, CarpetaDatos), ArchivoBaseDatosVacíaSQLite);
+        public static string RutaBaseDatosVacíaSQLite => Path.Combine(Equipo.RutaAplicación, CarpetaDatos, ArchivoBaseDatosVacíaSQLite);
 
-        public static string RutaFirmador => Path.Combine(Path.Combine(Equipo.RutaAplicación, CarpetaLibrerías), "Firmador.exe");
+        public static string RutaFirmador => Path.Combine(Equipo.RutaAplicación, CarpetaLibrerías, "Firmador.exe");
 
         #endregion Variables Autocalculadas>
 
