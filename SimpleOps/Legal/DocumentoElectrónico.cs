@@ -1133,7 +1133,7 @@ namespace SimpleOps.Legal {
             };
 
             using var flujoEscritura = new StreamWriter(RutaSinFirmar);
-            using var escritorXml = new XmlTextWriterPersonalizado(flujoEscritura); // Para omitir los atributos automáticamente añadidos con nombre ExtensionContentFirmaType y ExtensionContentDianType.           
+            using var escritorXml = new XmlTextWriterPersonalizado(flujoEscritura, generarSeccionesCData: false); // Para omitir los atributos automáticamente añadidos con nombre ExtensionContentFirmaType y ExtensionContentDianType.           
             if (IdentarXml) escritorXml.Formatting = Formatting.Indented;
             serializadorXml.Serialize(escritorXml, document, espaciosNombres);
             flujoEscritura.Close();

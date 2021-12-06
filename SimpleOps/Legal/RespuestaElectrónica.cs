@@ -217,7 +217,7 @@ namespace SimpleOps.Legal {
                 "urn:oasis:names:specification:ubl:schema:xsd:AttachedDocument-2");
 
             using var flujoEscritura = new StreamWriter(Ruta);
-            using var escritorXml = new XmlTextWriterPersonalizado(flujoEscritura); // Para escribir automáticamente las valores que sean un XML como CDATA y evitar que se codifique los carácteres < y > como &lt; y &gt;.
+            using var escritorXml = new XmlTextWriterPersonalizado(flujoEscritura, generarSeccionesCData: true); // Para escribir automáticamente las valores que sean un XML como CDATA y evitar que se codifique los carácteres < y > como &lt; y &gt;.
             if (IdentarXml) escritorXml.Formatting = Formatting.Indented;
             serializadorXml.Serialize(escritorXml, respuesta, espaciosNombres);
             flujoEscritura.Close();

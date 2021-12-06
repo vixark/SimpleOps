@@ -50,12 +50,14 @@ namespace SimpleOps.Legal {
         private bool EliminarDeRaíz = false;
         #pragma warning restore IDE0044
 
+        private bool GenerarSeccionesCData { get; set; } = false;
+
         #endregion Variables y Campos>
 
 
         #region Constructores
 
-        public XmlTextWriterPersonalizado(TextWriter w) : base(w) { }
+        public XmlTextWriterPersonalizado(TextWriter w, bool generarSeccionesCData) : base(w) => GenerarSeccionesCData = generarSeccionesCData;
 
         public XmlTextWriterPersonalizado(Stream w, Encoding encoding) : base(w, encoding) { }
 
@@ -70,7 +72,7 @@ namespace SimpleOps.Legal {
         public override void WriteStartAttribute(string prefix, string localName, string ns) {
 
             if (prefix == "xmlns" && localName == "xsi" && EliminarDeRaíz) {
-                Saltar = true; 
+                Saltar = true;
                 return;
             } else if (localName == "type") { // Es equivalente a if (ns == XmlSchema.InstanceNamespace). Pero se prefiere == "type" para ser más explícito que lo que se quiere evitar es ese atributo, por si aparece otro caso que cumpla InstanceNamespace pero no == "type".
                 Saltar = true;
@@ -85,7 +87,7 @@ namespace SimpleOps.Legal {
 
             if (Saltar) return;
 
-            if (text.StartsWith('<')) {
+            if (text.StartsWith('<') && GenerarSeccionesCData) {
                 WriteCData(text);
             } else {
                 base.WriteString(text);
