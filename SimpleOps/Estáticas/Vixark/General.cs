@@ -1271,9 +1271,7 @@ namespace Vixark {
 
 #endif  // PermitirCódigoNoSeguro>
 
-
         #endregion RedimensionarImagen>
-
 
         #endregion Imágenes>
 
@@ -1462,6 +1460,28 @@ namespace Vixark {
         /// para informarle al compilador que se asegura que el resultado no será nulo.
         /// </summary>
         public static string? AMayúscula(this string? texto) => texto?.ToUpperInvariant();
+
+
+        public static System.Windows.Media.Color? ObtenerMediaColor(string textoColor) {
+
+            try {
+                return (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(textoColor);
+            } catch {
+                return null;
+            }
+
+        } // ObtenerMediaColor>
+
+
+        public static Color? ObtenerColor(string textoColor) {
+
+            var mediaColor = ObtenerMediaColor(textoColor);
+            if (mediaColor == null) return null;
+            var notNullMediaColor = (System.Windows.Media.Color)mediaColor;
+            return Color.FromArgb(notNullMediaColor.A, notNullMediaColor.R, notNullMediaColor.G, notNullMediaColor.B);
+
+        } // ObtenerColor>
+
 
         #endregion Encapsulaciones Varias>
 

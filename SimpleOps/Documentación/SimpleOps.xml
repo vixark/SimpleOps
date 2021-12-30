@@ -3607,7 +3607,8 @@
         <member name="M:Vixark.General.Agregar``2(System.Collections.Generic.Dictionary{``0,``1},``0,``1,System.Boolean)">
             <summary>
             Agrega a un diccionario de manera limpia. Se crea el diccionario si es nulo y se actualiza el valor si ya existe en la clave. 
-            Para que funcione correctamente la creación si es nulo, se debe llamar asignándolo a si mismo así diccionario = diccionario.Agregar(clave, valor).
+            Para que funcione correctamente la creación si es nulo, se debe llamar asignándolo a si mismo así 
+            diccionario = diccionario.Agregar(clave, valor).
             </summary>
         </member>
         <member name="M:Vixark.General.Agregar``2(System.Collections.Generic.Dictionary{``0,System.Collections.Generic.List{``1}},``0,``1,System.Boolean,System.Func{``1,``1,System.Boolean})">
