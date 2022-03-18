@@ -48,6 +48,8 @@ namespace SimpleOps.Integración {
 
         public List<DatosLíneaProducto> Líneas { get; set; } = null!; // Nunca es nulo (podría ser lista vacía), solo es para que no saque advertencia.
 
+        public string? NúmeroDocumentoRecibido { get; set; }
+
         #endregion Propiedades>
 
 

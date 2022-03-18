@@ -609,7 +609,7 @@ namespace SimpleOps.Legal {
 
             }
 
-            if (ventaNota != null && ventaNota.Cude != null) { // Si la ventaNota es nula o no se tiene el CUDE el CustomizationID será 22 o 32 y por lo tanto la DIAN no obliga a tener este elemento. Se permite que no se tenga en cuenta una ventaNota que no tenga CUDE porque se puede dar el caso de integración con programas terceros que no lleven el registro del CUFE de la factura electrónica en su base de datos, pero si se quiere permitir que se pase un número de factura para escribirlo en la nota crédito. Estas notas créditos quedarían enlazadas a la factura únicamente en la representación gráfica y no en el XML.
+            if (ventaNota != null && ventaNota.Cude != null) { // Si la ventaNota es nula o no se tiene el CUDE, el CustomizationID será 22 o 32 y por lo tanto la DIAN no obliga a tener este elemento. Se permite que no se tenga en cuenta una ventaNota que no tenga CUDE porque se puede dar el caso de integración con programas terceros que no lleven el registro del CUFE de la factura electrónica en su base de datos, pero si se quiere permitir que se pase un número de factura para escribirlo en la nota crédito. Estas notas créditos quedarían enlazadas a la factura únicamente en la representación gráfica y no en el XML.
 
                 document.BillingReference = new BillingReferenceType[] {
                     new BillingReferenceType {
@@ -668,11 +668,13 @@ namespace SimpleOps.Legal {
             #endregion
 
             // document.DespatchDocumentReference = new DocumentReferenceType[] { new DocumentReferenceType { ID = new IDType { Value = }, IssueDate = new IssueDateType { Value = } } }; // 0..N FAG01. ID: 1..1 FAG02 T20, IssueDate: 0..1 FAG03 T10. Grupo de campos para información que describen uno o más documentos de despacho para esta factura. Referencias no tributarias pero si de interés mercantil. Se utiliza cuando se requiera referenciar uno o más documentos de despacho asociado a la factura realizada. En términos generales no es muy útil porque la factura se suele hacer antes de conocer el documento del despacho. En  el caso de estar haciendo una factura desde una remisión si se puede tener esta información porque esta se almacena en el Remisión.DetalleEntrega, pero el tamaño disponible de 20 para esta información es muy limitado e impediría agregar un dato tan simple como Servientrega: 9876543210, entonces se prefiere no usar.
-            // document.ReceiptDocumentReference = new DocumentReferenceType[] { new DocumentReferenceType { ID = new IDType { Value = }, IssueDate = new IssueDateType { Value = } } }; // 0..N FAH01. ID: 1..1 FAH02 T20, IssueDate: 0..1 FAH03 T10. La documentación de la DIAN parece estar incorrecta en estos elementos. Se refieren a recibido. Pero al ser esto algo que se hace en la recepción del producto normalmente no se dispone de estos valores al realizar la factura.
+            if (venta != null) document.ReceiptDocumentReference = new DocumentReferenceType[] { new DocumentReferenceType {
+                ID = new IDType { Value = venta.NúmeroDocumentoRecibido }, IssueDate = new IssueDateType { Value = fechaHora } } }; // 0..N FAH01. ID: 1..1 FAH02 T20, IssueDate: 0..1 FAH03 T10. Normalmente no es importante tener la fecha de emisión de este documento entonces se usa la fecha de la factura.
+
             if (Tipo == TipoDocumentoElectrónico.FacturaContingenciaFacturador) { // Si es una repetición de una factura de contingencia de facturador.
 
                 if (CódigoFacturaContingencia == null || FechaFacturaContingencia == null)
-                    return Falso(out mensaje, "Si la factura es una repetición de una factura de contingencia de facturador se debe indicar su " + 
+                    return Falso(out mensaje, "Si la factura es una repetición de una factura de contingencia de facturador, se debe indicar su " +
                         "número y fecha.");
 
                 document.AdditionalDocumentReference = new DocumentReferenceType[] { // 0..N FAI01. Grupo de campos para información que describen un documento referenciado por la factura. Obligatorio para factura tipo 03 (Contingencia).

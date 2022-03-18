@@ -52,10 +52,10 @@ namespace SimpleOps.Modelo {
         /// Código alfanumérico identificador de la orden de compra. Único para cada cliente.
         /// </summary>
         /// <MaxLength>30</MaxLength>
-        [MaxLength(30)] 
+        [MaxLength(30)]
         public string Número { get; set; } = null!; // Obligatorio. Se nombra número por que es un ID que usualmente es un número así no siempre lo sea.
 
-        public Sede? Sede { get; set; } 
+        public Sede? Sede { get; set; }
         public int? SedeID { get; set; }
 
         public bool EnviadaProforma { get; set; }
@@ -73,7 +73,7 @@ namespace SimpleOps.Modelo {
         public Prioridad Prioridad { get; set; } = Prioridad.Desconocida; // Obligatorio.
 
         /// <summary>
-        /// Si es nulo el pago aún no ha sido confirmado.
+        /// Si es nulo, el pago aún no ha sido confirmado.
         /// </summary>
         public InformePago? InformePago { get; set; }
         public int? InformePagoID { get; set; }

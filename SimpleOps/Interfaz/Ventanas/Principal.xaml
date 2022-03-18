@@ -48,9 +48,9 @@
                         <Button Click="HacerPruebasUnitarias_Clic" Content="Hacer Pruebas Unitarias" />
                         <Label Foreground="{StaticResource BrochaFrente200}">Facturación Electrónica</Label>
                         <Button Click="HacerPruebasInternasFacturación_Clic" Content="Hacer Pruebas Internas" />
+                        <CheckBox IsChecked="{Binding Path=(SimpleOps:Global.ModoDesarrolloPlantillas)}" FontSize="{StaticResource TamañoLetraS}" Foreground="{StaticResource BrochaFrente200}">Desarrollo de Plantillas</CheckBox> <!-- Se puso aquí porque en el lugar inferior donde estaba se podía presionar por error lo que causaba la sustitución de las plantillas en dropbox. -->
                         <Button Click="PruebasHabilitaciónFacturación_Clic" Content="Hacer Pruebas Habilitación" />
                         <Button Click="ObtenerClaveTécnicaProducción_Clic" Content="Obtener Clave Técnica" />
-                        <CheckBox IsChecked="{Binding Path=(SimpleOps:Global.ModoDesarrolloPlantillas)}" FontSize="{StaticResource TamañoLetraS}" Foreground="{StaticResource BrochaFrente200}">Desarrollo de Plantillas</CheckBox>
                     </StackPanel>
                     
                 </StackPanel>

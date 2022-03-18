@@ -280,6 +280,7 @@ namespace SimpleOps.DocumentosGráficos {
             datosVenta.TotalPáginas = ObtenerTotalPáginas(datosVenta, líneas);
             datosVenta.ModoImpresión = opcionesDocumento.ModoImpresión;
             datosVenta.MostrarInformaciónAdicional = opcionesDocumento.MostrarInformaciónAdicional;
+            if (datosVenta.MostrarInformaciónAdicional) datosVenta.Columnas.AnchoNúmeroLínea = OpcionesColumnas.AnchoNúmeroLíneaVisible; // Se considera que mostrar el número de la línea es un requerimiento excesivo innecesario entonces solo se activa cuando MostrarInformaciónAdicional es verdadero.
             datosVenta.LíneasTextoPie = 4;
 
         } // CompletarDatosVenta>

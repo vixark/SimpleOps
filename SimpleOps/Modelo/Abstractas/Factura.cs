@@ -153,6 +153,16 @@ namespace SimpleOps.Modelo {
         public bool MostrarInformaciónAdicional { get; set; } = false;
 
         /// <summary>
+        /// Cada remisión enviada a algunos clientes puede generar un documento de recepción de parte del cliente. Este número lo pueden exigir
+        /// en la factura electrónica en el campo ReceiptDocumentReference. La manera más correcta de implementarlo sería en la tabla remisiones
+        /// y tomar este número de allí, pero por el momento para no complicar el procedimiento de integración se manejará como un valor que
+        /// se proporciona para cada factura (aunque en términos generales podrían ser varios, uno por cada remisión) y no se almacena en la base 
+        /// de datos.
+        /// </summary>
+        [NotMapped]
+        public string? NúmeroDocumentoRecibido { get; set; }
+
+        /// <summary>
         /// Usuario que creó la factura. Se usa principalmente como almacenamiento intermedio entre los archivos de integración o el usuario actual
         /// de SimpleOps y las representaciones gráficas. Al crear un nuevo objeto Factura, se inicia esta variable con Global.UsuarioActual.
         /// </summary>

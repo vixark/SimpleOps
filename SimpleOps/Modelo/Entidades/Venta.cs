@@ -62,12 +62,12 @@ namespace SimpleOps.Modelo {
         public int ClienteID { get; set; }
 
         /// <summary>
-        /// La fecha del pago de la comisión a la venta al representante comercial. Si es nula no se ha pagado.
+        /// La fecha del pago de la comisión a la venta al representante comercial. Si es nula, no se ha pagado.
         /// </summary>
         public DateTime? FechaPagoComisiónEnVenta { get; set; }
 
         /// <summary>
-        /// La fecha del pago de la comisión a al pago del cliente al representante comercial. Si es nula no se ha pagado.
+        /// La fecha del pago de la comisión a al pago del cliente al representante comercial. Si es nula, no se ha pagado.
         /// </summary>
         public DateTime? FechaPagoComisiónEnPago { get; set; }
 
@@ -79,7 +79,7 @@ namespace SimpleOps.Modelo {
         public string? DetalleEntrega { get; set; }
 
         /// <summary>
-        /// Si es verdadero se están vendiendo productos que el cliente tiene en consignación y no del inventario del almacén propio.
+        /// Si es verdadero, se están vendiendo productos que el cliente tiene en consignación y no del inventario del almacén propio.
         /// </summary>
         public bool DeInventarioConsignación { get; set; }
 

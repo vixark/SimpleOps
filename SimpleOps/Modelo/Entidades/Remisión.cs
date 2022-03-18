@@ -62,13 +62,13 @@ namespace SimpleOps.Modelo {
         /// Información de la transportadora y la guía con la que se entregó. 
         /// </summary>
         /// <MaxLength>500</MaxLength>
-        [MaxLength(500)] 
+        [MaxLength(500)]
         public string? DetalleEntrega { get; set; }
 
         /// <summary>
-        /// La venta que facturó la remisión. Si aún no se ha facturado es nula.
+        /// La venta que facturó la remisión. Si aún no se ha facturado, es nula.
         /// </summary>
-        public Venta? Venta { get; set; } 
+        public Venta? Venta { get; set; }
         public int? VentaID { get; set; }
 
         public OrdenCompra? OrdenCompra { get; set; }

@@ -1028,6 +1028,15 @@
             se muestra siempre (para evitar saturar el diseño) para algunos algunos clientes que requieren que la tenga.
             </summary>
         </member>
+        <member name="P:SimpleOps.Modelo.Factura`2.NúmeroDocumentoRecibido">
+            <summary>
+            Cada remisión enviada a algunos clientes puede generar un documento de recepción de parte del cliente. Este número lo pueden exigir
+            en la factura electrónica en el campo ReceiptDocumentReference. La manera más correcta de implementarlo sería en la tabla remisiones
+            y tomar este número de allí, pero por el momento para no complicar el procedimiento de integración se manejará como un valor que
+            se proporciona para cada factura (aunque en términos generales podrían ser varios, uno por cada remisión) y no se almacena en la base 
+            de datos.
+            </summary>
+        </member>
         <member name="P:SimpleOps.Modelo.Factura`2.Usuario">
             <summary>
             Usuario que creó la factura. Se usa principalmente como almacenamiento intermedio entre los archivos de integración o el usuario actual
@@ -2143,7 +2152,7 @@
         </member>
         <member name="P:SimpleOps.Modelo.OrdenCompra.InformePago">
             <summary>
-            Si es nulo el pago aún no ha sido confirmado.
+            Si es nulo, el pago aún no ha sido confirmado.
             </summary>
         </member>
         <member name="T:SimpleOps.Modelo.Pedido">
@@ -2837,7 +2846,7 @@
         </member>
         <member name="P:SimpleOps.Modelo.Remisión.Venta">
             <summary>
-            La venta que facturó la remisión. Si aún no se ha facturado es nula.
+            La venta que facturó la remisión. Si aún no se ha facturado, es nula.
             </summary>
         </member>
         <member name="T:SimpleOps.Modelo.Rol">
@@ -2932,12 +2941,12 @@
         </member>
         <member name="P:SimpleOps.Modelo.Venta.FechaPagoComisiónEnVenta">
             <summary>
-            La fecha del pago de la comisión a la venta al representante comercial. Si es nula no se ha pagado.
+            La fecha del pago de la comisión a la venta al representante comercial. Si es nula, no se ha pagado.
             </summary>
         </member>
         <member name="P:SimpleOps.Modelo.Venta.FechaPagoComisiónEnPago">
             <summary>
-            La fecha del pago de la comisión a al pago del cliente al representante comercial. Si es nula no se ha pagado.
+            La fecha del pago de la comisión a al pago del cliente al representante comercial. Si es nula, no se ha pagado.
             </summary>
         </member>
         <member name="P:SimpleOps.Modelo.Venta.DetalleEntrega">
@@ -2948,7 +2957,7 @@
         </member>
         <member name="P:SimpleOps.Modelo.Venta.DeInventarioConsignación">
             <summary>
-            Si es verdadero se están vendiendo productos que el cliente tiene en consignación y no del inventario del almacén propio.
+            Si es verdadero, se están vendiendo productos que el cliente tiene en consignación y no del inventario del almacén propio.
             </summary>
         </member>
         <member name="P:SimpleOps.Modelo.Venta.DirecciónCompletaEntrega">
@@ -3037,6 +3046,14 @@
             Borra un archivo sin generar excepciones. Devuelve verdadero si fue borrado y falso si no se pudo borrar. Útil en los casos
             que se quiere borrar un archivo pero si por alguna razón este está bloqueado y no se puede borrar, se puede dejar sin borrar.
             </summary>
+        </member>
+        <member name="M:Vixark.General.ObtenerArchivoLibre(System.String,System.Int32)">
+            <summary>
+            Obtiene un archivo que puede estar siendo usado por otro proceso, pero que se espera que pronto sea liberado.
+            </summary>
+            <param name="ruta"></param>
+            <param name="máximosIntentos"></param>
+            <returns></returns>
         </member>
         <member name="M:Vixark.General.ObtenerÚltimaFechaModificaciónArchivos(System.String)">
             <summary>
@@ -3309,6 +3326,18 @@
             <summary>
             Encapsulación de rápido de Replace() usando StringComparison.Ordinal. Es útil para omitir la advertencia CA1307 sin saturar el código.
             </summary>
+        </member>
+        <member name="M:Vixark.General.ReemplazarVarios(System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.Boolean)">
+            <summary>
+            Bajo ciertas circunstancias esta función podría dar mejor rendimiento que foreach (var kv in reemplazos) { if (texto.Contiene(kv.Key)) texto = texto.Reemplazar(kv.Key, kv.Value); }.
+            Se debe probar el rendimiento en cada caso porque cualquiera de los dos puede ser más rápido.
+            Si no se necesita alto rendimiento, ReemplazarVarios() es suficientemente rápida, pero tiene inconvenientes con los carácteres
+            que puede aceptar para los textos a reemplazar, pues estos se usan dentro de una expresión regular.
+            </summary>
+            <param name="texto"></param>
+            <param name="reemplazos"></param>
+            <param name="ignorarCapitalización"></param>
+            <returns></returns>
         </member>
         <member name="M:Vixark.General.AFecha(System.String,System.String)">
             <summary>
@@ -3901,36 +3930,6 @@
             <summary>
             Clase auxiliar que reemplaza la <see cref="T:System.Tuple`2"/> para propósitos de serialización. Es necesario usarla porque 
             la serialización exige una clase con constructor sin parámetros. 
-            </summary>
-        </member>
-        <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
-            <summary>
-            GeneratedInternalTypeHelper
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateInstance(System.Type,System.Globalization.CultureInfo)">
-            <summary>
-            CreateInstance
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.GetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Globalization.CultureInfo)">
-            <summary>
-            GetPropertyValue
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.SetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Globalization.CultureInfo)">
-            <summary>
-            SetPropertyValue
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateDelegate(System.Type,System.Object,System.String)">
-            <summary>
-            CreateDelegate
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.AddEventHandler(System.Reflection.EventInfo,System.Object,System.Delegate)">
-            <summary>
-            AddEventHandler
             </summary>
         </member>
     </members>

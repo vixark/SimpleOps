@@ -39,6 +39,7 @@ Removing or changing the above text is not allowed. *@
     var anchoPrecio = Model.Columnas.AnchoPrecio;
     var anchoUnidad = Model.Columnas.AnchoUnidad;
     var radioFilaNombresColumnas = Model.Columnas.RadioFilaNombresColumnas;
+    var anchoNúmeroLínea = Model.Columnas.AnchoNúmeroLínea;
     var anchoReferencia = Model.Columnas.AnchoReferencia;
     var anchoDescripción = Model.Columnas.AnchoDescripción;
     var margenColumnasExtremos = Model.Columnas.MargenColumnasExtremos;
@@ -70,6 +71,7 @@ Removing or changing the above text is not allowed. *@
 <table class="@(Model.ModoImpresión ? "fgtl" : "fc fc-l230") t16b ncolumnas"> @* Es necesario hacerla como una tabla aparte porque si se hace como una fila dentro de la otra tabla el relleno del color no funciona muy bien. En algunas ocasiones se alcanza a diferenciar una pequeña línea de separación entre las celdas. *@
     <tr>
 
+        @if (anchoNúmeroLínea > 0) { <td class="númlín-tít">#</td> }
         <td class="ref-tít">Referencia</td>
         <td class="desc-tít">Descripción</td>
         @if (anchoCantidad > 0) { <td class="cant-tít">Cantidad</td> }
@@ -86,10 +88,12 @@ Removing or changing the above text is not allowed. *@
 
 <table class="lista-tb">
 
+    @{ var númeroLínea = 1; }
     @foreach (var línea in Model.Líneas) {
 
         <tr>
 
+            @if (anchoNúmeroLínea > 0) { <td class="númlín">@númeroLínea</td> }
             <td class="ref">
 
                 @if (Model.Columnas.EnlaceWebADetalleProducto != null) {
@@ -113,6 +117,7 @@ Removing or changing the above text is not allowed. *@
             @if (anchoTotal > 0) { <td class="total">@línea.SubtotalBaseConImpuestosTexto</td> }
 
         </tr>
+        númeroLínea++;
 
     }
 
@@ -136,6 +141,8 @@ Removing or changing the above text is not allowed. *@
 
 
     /* <Anchos y Márgenes Columnas */
+
+    .númlín, .númlín-tít { width: @APuntos(anchoNúmeroLínea); }
 
     .ref, .ref-tít { width: @APuntos(anchoReferencia); padding-left: @APuntos(margenColumnasExtremos); padding-right: @APuntos(margenDerechoReferencia); }
 
@@ -162,7 +169,7 @@ Removing or changing the above text is not allowed. *@
 
     /* <Alineaciones Textos */
 
-    .desc-tít, .cant-tít, .uni-tít, .cant, .uni { text-align: center; }
+    .desc-tít, .cant-tít, .uni-tít, .cant, .uni, .númlín, .númlín-tít { text-align: center; }
 
     .precio-tít, .subtotal-tít, .iva-tít, .consumo-tít, .total-tít, .precio, .subtotal, .iva, .consumo, .total { text-align: right; }
 

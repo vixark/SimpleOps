@@ -40,6 +40,8 @@ namespace SimpleOps.DocumentosGráficos {
 
         public static int AnchoTotalesFactura { get; set; } = 80; // 80 permite acomodar hasta 99 999 999. Afecta el ancho de las columnas con valores totales (Subtotal, IVA, Consumo y Total) y el ancho de la sección de totales de la factura. Se inicia con el valor predeterminado de 80 solo para mostrar el valor más típico porque su valor se establece al iniciar la aplicación desde Empresa.AnchoTotalesFactura. No se maneja cómo una propiedad del objeto porque no es usual que una empresa necesite cambiar este valor según la factura.
 
+        public static int AnchoNúmeroLíneaVisible { get; set; } = 20;
+
         #endregion Propiedades Estáticas>
 
 
@@ -54,6 +56,8 @@ namespace SimpleOps.DocumentosGráficos {
         public string? EnlaceWebADetalleProducto { get; set; }
 
         public int RadioFilaNombresColumnas { get; set; } = 5;
+
+        public int AnchoNúmeroLínea { get; set; } = 0; // De manera predeterminada no se muestra el número de línea porque se considera que es un número que solo tiende a generar confusión a la persona que lee la factura pues se puede confundir fácilmente con la cantidad. Sin embargo, algunas empresas pueden exigir este número de línea entonces se puede activar para ciertas facturas usando OpcionesDocumento.MostrarInformaciónAdicional = true. Este comportamiento se controla en DocumentosGráficos.CompletarDatosVenta().
 
         public int AnchoReferencia { get; set; } = 90; // 90 es el valor elegido para acomodar una referencia de 10 letras con un pequeño espacio a la derecha.
 
@@ -86,7 +90,7 @@ namespace SimpleOps.DocumentosGráficos {
 
         public int AnchoTotal => MostrarIVAYTotal || MostrarImpuestoConsumoYTotal ? AnchoTotalesFactura : 0; // 80 permite acomodar hasta 99 999 999.
 
-        public int AnchoDescripción => Math.Max(AnchoLista - AnchoReferencia - AnchoCantidad - AnchoUnidad - AnchoPrecio - AnchoSubtotal - AnchoIVA - AnchoConsumo
+        public int AnchoDescripción => Math.Max(AnchoLista - AnchoNúmeroLínea - AnchoReferencia - AnchoCantidad - AnchoUnidad - AnchoPrecio - AnchoSubtotal - AnchoIVA - AnchoConsumo
             - AnchoTotal - MargenColumnasExtremos * 2 - MargenDerechoReferencia - 16, 70); // El 16 es un valor experimental de ajuste fino para lograr que todas las columnas de ambas tablas queden del mismo ancho. Se limita a 70 el ancho mínimo de esta columna porque la fórmula podría dar valores negativos.
 
         #endregion Propiedades Autocalculadas>

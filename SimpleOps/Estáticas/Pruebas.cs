@@ -1446,6 +1446,8 @@ namespace SimpleOps {
             };
 
             venta.Remisiones = new List<Remisión> { new Remisión(1000, cliente) { ID = 123456, FechaHoraCreación = new DateTime(2019, 06, 19) } };
+            venta.MostrarInformaciónAdicional = false;
+            // venta.NúmeroDocumentoRecibido = "RCRP44524";
 
             return CrearYEnviarDocumentoElectrónico(venta, out mensaje, out ventaElectrónica, pruebaHabilitación);
 
