@@ -55,6 +55,10 @@ using ColorMine.ColorSpaces;
 using ColorMine.ColorSpaces.Comparisons;
 using System.Text.Encodings.Web;
 using System.Threading;
+using System.Runtime.InteropServices;
+using System.Windows.Interop;
+using System.Threading.Tasks;
+using System.Net.Http;
 // No puede llevar referencias a otras clases del proyecto en el que se está usando.
 
 
@@ -500,6 +504,29 @@ namespace Vixark {
         } // ObtenerXml>
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="clienteHtml">Se debe proveer un objeto que sea reusado por toda la aplicación para evitar el agotamiento de sockets.</param>
+        /// <param name="url"></param>
+        /// <param name="rutaArchivo"></param>
+        /// <returns></returns>
+        public async static Task<bool> DescargarArchivoAsync(HttpClient clienteHtml, string url, string rutaArchivo) { // Ver https://jonathancrozier.com/blog/how-to-download-files-using-c-sharp.
+
+            try {
+
+                using var stream = await clienteHtml.GetStreamAsync(url);
+                using var fileStream = new FileStream(rutaArchivo, FileMode.Create);
+                await stream.CopyToAsync(fileStream);
+                return true;
+
+            } catch (Exception) {
+                return false;
+            }
+
+        } // DescargarArchivo>
+
+
         #endregion Web>
 
 
@@ -559,10 +586,37 @@ namespace Vixark {
 
 
         /// <summary>
-        /// Borra un archivo sin generar excepciones. Devuelve verdadero si fue borrado y falso si no se pudo borrar. Útil en los casos
-        /// que se quiere borrar un archivo pero si por alguna razón este está bloqueado y no se puede borrar, se puede dejar sin borrar.
+        /// Abre una Url en el navegador predeterminado.
         /// </summary>
-        public static bool IntentarBorrar(string rutaArchivo) {
+        /// <param name="url"></param>
+        /// <returns></returns>
+        public static bool AbrirUrl(string? url) {
+
+            if (url == null) return false;
+            Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+            return true;
+
+        } // AbrirUrl>
+
+
+        /// <summary>
+        /// Abre un directorio en el explorador de Windows.
+        /// </summary>
+        /// <param name="rutaDirectorio"></param>
+        public static bool AbrirDirectorio(string? rutaDirectorio) {
+
+            if (rutaDirectorio == null || !Directory.Exists(rutaDirectorio)) return false;
+            Process.Start(new ProcessStartInfo(rutaDirectorio) { UseShellExecute = true });
+            return true;
+
+        } // AbrirDirectorio>
+
+
+        /// <summary>
+        /// Elimina un archivo sin generar excepciones. Devuelve verdadero si fue borrado y falso si no se pudo borrar. Útil en los casos
+        /// que se quiere eliminar un archivo, pero si por alguna razón está bloqueado y no se puede eliminar, se puede dejar sin eliminar.
+        /// </summary>
+        public static bool IntentarEliminar(string rutaArchivo) {
 
             try {
                 File.Delete(rutaArchivo);
@@ -571,7 +625,7 @@ namespace Vixark {
                 return false;
             }
 
-        } // IntentarBorrar>
+        } // IntentarEliminar>
 
 
         /// <summary>
@@ -1165,6 +1219,27 @@ namespace Vixark {
         } // RedimensionarImagen>
 
 
+        [DllImport("gdi32.dll", EntryPoint = "DeleteObject")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool BorrarObjeto([In] IntPtr hObject);
+
+
+        /// <summary>
+        /// Devuelve un objeto ImageSource para ser presentado en la interface a partir de un bitmap <paramref name="bmp"/>.
+        /// </summary>
+        /// <param name="bmp"></param>
+        /// <returns></returns>
+        public static System.Windows.Media.ImageSource ObtenerImageSource(Bitmap bmp) { // Ver https://stackoverflow.com/a/35274172/8330412. If you get 'dllimport unknown'-, add 'using System.Runtime.InteropServices;'
+
+            var handle = bmp.GetHbitmap();
+            try {
+                return Imaging.CreateBitmapSourceFromHBitmap(handle, IntPtr.Zero, Int32Rect.Empty,
+                    System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
+            } finally { BorrarObjeto(handle); }
+
+        } // ObtenerImageSource>
+
+
 #if     PermitirCódigoNoSeguro // Desactivar eliminando esta variable en Propiedades > Compilación > Símbolos de compilación condicional. Al eliminarla todo este código se ignora en la compilación y se puede compilar con la opción 'Permitir código no seguro' desactivada. 
 
         public static double ObtenerDistanciaEntreColores(Color color1, Color color2) {
@@ -1386,10 +1461,8 @@ namespace Vixark {
         /// <summary>
         /// Encapsulación de acceso rápido para convertir un texto en una enumeración.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="texto"></param>
-        /// <returns></returns>
-        public static T AEnumeración<T>(this string texto) where T : struct, Enum => (T)Enum.Parse(typeof(T), texto);
+        public static T AEnumeración<T>(this string texto, bool ignorarCapitalización = true) where T : struct, Enum
+            => (T)Enum.Parse(typeof(T), texto, ignorarCapitalización);
 
         /// <summary>
         /// Usa Convert.ToDecimal que permite mantener las posiciones decimales del texto en el decimal, así estas sean 00. Por ejemplo, 
@@ -1502,10 +1575,18 @@ namespace Vixark {
 
 
         /// <summary>
-        /// Encapsulación de rápido acceso de Contains() usando StringComparison.Ordinal. Es útil para omitir la advertencia CA1307 sin saturar el código.
+        /// Encapsulación de rápido acceso de Contains(). Es útil para omitir la advertencia CA1307 sin saturar el código y para permitir fácilmente 
+        /// verificar si lo contiene ignorando la capitalización.
         /// </summary>
         public static bool Contiene(this string texto, string textoContenido, bool ignorarCapitalización = true)
             => texto.Contains(textoContenido, ignorarCapitalización ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
+
+
+        /// <summary>
+        /// Encapsulación de rápido acceso de Contains() para IEnumerable para permitir fácilmente comparar ignorando la capitalización.
+        /// </summary>
+        public static bool Contiene(this IEnumerable<string> lista, string texto, bool ignorarCapitalización = true)
+            => lista.Any(x => string.Compare(x, texto, ignorarCapitalización ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal) == 0);
 
 
         /// <summary>

@@ -3017,6 +3017,15 @@
             Obtiene un documento XML de una <paramref name="respuesta"/> web.
             </summary>
         </member>
+        <member name="M:Vixark.General.DescargarArchivoAsync(System.Net.Http.HttpClient,System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="clienteHtml">Se debe proveer un objeto que sea reusado por toda la aplicación para evitar el agotamiento de sockets.</param>
+            <param name="url"></param>
+            <param name="rutaArchivo"></param>
+            <returns></returns>
+        </member>
         <member name="M:Vixark.General.ObtenerRutaCarpeta(System.String,System.String,System.Boolean)">
             <summary>
             Obtiene la ruta de una carpeta y provee la opción de crearla si no existe. Si se quiere verificar la existencia
@@ -3041,10 +3050,23 @@
             </summary>
             <param name="rutaArchivo"></param>
         </member>
-        <member name="M:Vixark.General.IntentarBorrar(System.String)">
+        <member name="M:Vixark.General.AbrirUrl(System.String)">
             <summary>
-            Borra un archivo sin generar excepciones. Devuelve verdadero si fue borrado y falso si no se pudo borrar. Útil en los casos
-            que se quiere borrar un archivo pero si por alguna razón este está bloqueado y no se puede borrar, se puede dejar sin borrar.
+            Abre una Url en el navegador predeterminado.
+            </summary>
+            <param name="url"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Vixark.General.AbrirDirectorio(System.String)">
+            <summary>
+            Abre un directorio en el explorador de Windows.
+            </summary>
+            <param name="rutaDirectorio"></param>
+        </member>
+        <member name="M:Vixark.General.IntentarEliminar(System.String)">
+            <summary>
+            Elimina un archivo sin generar excepciones. Devuelve verdadero si fue borrado y falso si no se pudo borrar. Útil en los casos
+            que se quiere eliminar un archivo, pero si por alguna razón está bloqueado y no se puede eliminar, se puede dejar sin eliminar.
             </summary>
         </member>
         <member name="M:Vixark.General.ObtenerArchivoLibre(System.String,System.Int32)">
@@ -3203,13 +3225,17 @@
             <param name="margenRecorteImagen">Los pixeles de respiración que se le dejan a la imagen recortada a todos los lados. 
             Se sugiere usar un valor mayor a 2 porque con menos queda el recorte muy justo donde va el cambio de color.</param>
         </member>
-        <member name="M:Vixark.General.AEnumeración``1(System.String)">
+        <member name="M:Vixark.General.ObtenerImageSource(System.Drawing.Bitmap)">
+            <summary>
+            Devuelve un objeto ImageSource para ser presentado en la interface a partir de un bitmap <paramref name="bmp"/>.
+            </summary>
+            <param name="bmp"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Vixark.General.AEnumeración``1(System.String,System.Boolean)">
             <summary>
             Encapsulación de acceso rápido para convertir un texto en una enumeración.
             </summary>
-            <typeparam name="T"></typeparam>
-            <param name="texto"></param>
-            <returns></returns>
         </member>
         <member name="M:Vixark.General.ADecimal(System.String)">
             <summary>
@@ -3308,7 +3334,13 @@
         </member>
         <member name="M:Vixark.General.Contiene(System.String,System.String,System.Boolean)">
             <summary>
-            Encapsulación de rápido acceso de Contains() usando StringComparison.Ordinal. Es útil para omitir la advertencia CA1307 sin saturar el código.
+            Encapsulación de rápido acceso de Contains(). Es útil para omitir la advertencia CA1307 sin saturar el código y para permitir fácilmente 
+            verificar si lo contiene ignorando la capitalización.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.Contiene(System.Collections.Generic.IEnumerable{System.String},System.String,System.Boolean)">
+            <summary>
+            Encapsulación de rápido acceso de Contains() para IEnumerable para permitir fácilmente comparar ignorando la capitalización.
             </summary>
         </member>
         <member name="M:Vixark.General.IgualA(System.String,System.String,System.Boolean)">

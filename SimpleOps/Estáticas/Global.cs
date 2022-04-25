@@ -974,7 +974,7 @@ namespace SimpleOps {
 
                     var rutaCopia = ObtenerRutaAgregandoTexto(rutaJson, $" - Copia con Error en {AhoraUtcAjustado.ATexto(FormatoFecha)}");
                     File.Copy(rutaJson, rutaCopia);
-                    IntentarBorrar(rutaJson);
+                    IntentarEliminar(rutaJson);
                     MostrarError($"No se pudo leer el archivo de opciones {rutaJson}.{DobleLínea}{NombreAplicación} iniciará usando los valores " +
                                  $"predeterminados. Si necesitas migrar los valores anteriores los puedes tomar de la copia realizada {rutaCopia}." +
                                  $"{DobleLínea}{ex.Message}.");
@@ -1020,7 +1020,7 @@ namespace SimpleOps {
 
                             documentoElectrónico.RutaZip = rutaZipACrear;
                             documentoElectrónico.RutaPdf = rutaPdf;
-                            IntentarBorrar(rutaXml);
+                            IntentarEliminar(rutaXml);
                             return true;
 
                         } else {

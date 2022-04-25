@@ -33,9 +33,9 @@ using static SimpleOps.Global;
 using SimpleOps.Modelo;
 using System.Xml;
 using static SimpleOps.Legal.Dian;
-
 using System.Collections.ObjectModel;
 using System.Linq;
+
 
 
 namespace SimpleOps.Legal {
