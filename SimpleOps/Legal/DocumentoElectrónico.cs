@@ -1055,13 +1055,10 @@ namespace SimpleOps.Legal {
 
                 }
 
-                if (!Empresa.TipoContribuyente.HasFlag(TipoContribuyente.RégimenSimple)) { // FAX01 no debe ser informado para facturas del régimen simple grupo I ni para ítems cuyo concepto en contratos de AIU no haga parte de la base gravable.
+                line.TaxTotal = obtenerTaxTotales(new List<M> { línea }, out bool éxitoTaxTotalesLínea, out string? mensajeTaxTotalesLínea, 
+                    AgrupaciónTaxTotales.Línea, ref tributosTotalesMayoresACero); // 0..N FAX01. En la documentación dice que FAX01 no debe ser informado para facturas del régimen simple grupo I ni para ítems cuyo concepto en contratos de AIU no haga parte de la base gravable. Por esto se tenía un condicional con (!Empresa.TipoContribuyente.HasFlag(TipoContribuyente.RégimenSimple)) para no agregarlo para empresas del régimen simple, pero cuando se al probarlo con estas empresas sacaba error por falta de este elemento, entonces se agregará siempre y ignorará la documentación.
+                if (!éxitoTaxTotalesLínea) return Falso(out mensaje, mensajeTaxTotalesLínea);
 
-                    line.TaxTotal = obtenerTaxTotales(new List<M> { línea }, out bool éxitoTaxTotalesLínea, out string? mensajeTaxTotalesLínea, 
-                        AgrupaciónTaxTotales.Línea, ref tributosTotalesMayoresACero); // 0..N FAX01.
-                    if (!éxitoTaxTotalesLínea) return Falso(out mensaje, mensajeTaxTotalesLínea);
-
-                }
                 // line.WithholdingTaxTotal = ; // 0..N FAY01. Igual que en FAT01. Incluye FAY02, FAY03, FAY04, FAY05, FAY06, FAY07, FAY08, FAY09, FAY10, FAY11, FAY12 y FAY13.
 
                 line.Item = new ItemType {

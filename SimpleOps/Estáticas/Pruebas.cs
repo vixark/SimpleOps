@@ -1444,7 +1444,7 @@ namespace SimpleOps {
                 new LíneaVenta(new Producto("CMSAXXL", camisetaBase, new List<string> { "Azul", "Talla XXL" }) {
                     PorcentajeIVAPropioEspecífico = 0.16 }, venta, 1, 51990, 42000),
             };
-
+            
             venta.Remisiones = new List<Remisión> { new Remisión(1000, cliente) { ID = 123456, FechaHoraCreación = new DateTime(2019, 06, 19) } };
             venta.MostrarInformaciónAdicional = false;
             // venta.NúmeroDocumentoRecibido = "RCRP44524";
