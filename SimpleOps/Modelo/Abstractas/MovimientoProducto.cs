@@ -48,7 +48,7 @@ namespace SimpleOps.Modelo {
         public Producto? Producto { get; set; } // Obligatorio.
         public int ProductoID { get; set; } // Clave foránea que con CompraID, RemisiónID, VentaID, etc forman la clave principal.
 
-        public int Cantidad { get; set; } // Obligatorio.
+        public int Cantidad { get; set; } // Obligatorio. El elemento FBB04 de la documentación de la DIAN restringe la cantidad a valores enteros. Además, incluso si la DIAN permitiera decimales, se prefiere manejarlo entero para mantener el tamaño de la base de datos lo más pequeño posible. Para el usuario es relativamente fácil crear un producto que se venda por unidades de medida más pequeñas y poder así usar valores enteros.
 
         /// <summary>
         /// Precio real del producto. No es cero si es muestra gratis.
