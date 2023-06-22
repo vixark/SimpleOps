@@ -760,8 +760,12 @@ namespace Vixark {
 
             using var FileCheck = File.OpenRead(rutaArchivo);
             #pragma warning disable CA5351 // No usar algoritmos criptográficos dañados. Es aceptable porque solo es para identificar el archivo.
+            #pragma warning disable IDE0079 // Quitar supresión innecesaria. La siguiente supresión es para .Net 7.
+            #pragma warning disable SYSLIB0021 // No usar algoritmos criptográficos dañados. Es aceptable porque solo es para identificar el archivo.
             using var md5 = new MD5CryptoServiceProvider();
             #pragma warning restore CA5351
+            #pragma warning restore SYSLIB0021
+            #pragma warning restore IDE0079 // Quitar supresión innecesaria
             var md5Hash = md5.ComputeHash(FileCheck);
             return BitConverter.ToString(md5Hash).Reemplazar("-", "").AMinúscula()!;
 
@@ -897,10 +901,11 @@ namespace Vixark {
         public static void FinalizarSiExisteOtraInstanciaAbierta(string nombreAplicación) {
 
             var procesoActual = Process.GetCurrentProcess();
+            if (procesoActual == null || procesoActual.MainModule == null) return;
             var hashActual = ObtenerHashArchivo(procesoActual.MainModule.FileName);
             foreach (var proceso in Process.GetProcesses()) {
 
-                if (proceso.Id != procesoActual.Id) {
+                if (proceso != null && proceso.MainModule != null && proceso.Id != procesoActual.Id) {
 
                     try {
 
@@ -1754,7 +1759,8 @@ namespace Vixark {
                 }
 
             } else {
-                Rastreador.LogError($"Error definiendo género de sustantivo {sustantivo} para palabra masculina {palabraMasculina}");
+                Rastreador.LogError("Error definiendo género de sustantivo {sustantivo} para palabra masculina {palabraMasculina}", 
+                    sustantivo, palabraMasculina); // Verificar si saca el mensaje correcto.
                 return palabraMasculina; // No se genera excepción porque no es un error grave. Se mostrará la palabra masculina en los textos donde no se haya especificado toda la información para obtener la palabra del género correcto.
             }
 
@@ -2575,8 +2581,7 @@ namespace Vixark {
 
         public static JsonSerializerOptions ObtenerOpcionesSerialización(Serialización serializacionesEspeciales) {
 
-            var opcionesSerialización = new JsonSerializerOptions();
-            opcionesSerialización.WriteIndented = true;
+            var opcionesSerialización = new JsonSerializerOptions { WriteIndented = true };
             if (serializacionesEspeciales.HasFlag(Serialización.DiccionarioClaveEnumeración)) {
                 opcionesSerialización.Converters.Add(new FábricaConvertidorDiccionarioClaveEnumeración());
             }
@@ -2725,8 +2730,8 @@ namespace Vixark {
             Func<V, V, bool>? sonIguales = null) where K : notnull {
 
             diccionario ??= new Dictionary<K, List<V>>();
-            if (diccionario.ContainsKey(clave)) {
-                diccionario[clave].Agregar(valor, permitirRepetidos, sonIguales);
+            if (diccionario.TryGetValue(clave, out List<V>? lista)) { // Revisar comportamiento de este cambio realizado con una sugerencia del compilador para mejorar la eficiencia y no buscar dos veces cómo se hacía antes: con ContainsKey y después con el índice en .Agregar.
+                lista.Agregar(valor, permitirRepetidos, sonIguales);
             } else {
                 diccionario.Add(clave, new List<V> { valor });
             }
@@ -2770,7 +2775,7 @@ namespace Vixark {
             if (clave is string claveTexto && diccionario is Dictionary<string, V> diccionarioClaveTexto) {
                 return ObtenerValorObjeto(diccionarioClaveTexto, claveTexto, ignorarCapitalización);
             } else {
-                return diccionario.ContainsKey(clave) ? diccionario[clave] : null;
+                return diccionario.TryGetValue(clave, out V? valor) ? valor : null; // Verificar que funcione correctamente en ambos casos.
             }
 
         } // ObtenerValorObjeto>
@@ -3199,7 +3204,7 @@ namespace Vixark {
             var tiposEntidades = modelo.GetEntityTypes();
             var tipoEntidad = tiposEntidades.First(t => t.ClrType == typeof(T));
             var anotaciónTabla = tipoEntidad.GetAnnotation("Relational:TableName");
-            var nombreTabla = anotaciónTabla.Value.ToString();
+            var nombreTabla = anotaciónTabla?.Value?.ToString();
             return nombreTabla;
 
         } // ObtenerNombreTabla>
@@ -3221,7 +3226,7 @@ namespace Vixark {
             var tiposEntidades = modelo.GetEntityTypes();
             var tipoEntidad = tiposEntidades.First(t => t.ClrType.Name == nombreEntidad);
             var anotaciónTabla = tipoEntidad.GetAnnotation("Relational:TableName");
-            var nombreTabla = anotaciónTabla.Value.ToString();
+            var nombreTabla = anotaciónTabla?.Value?.ToString();
             return nombreTabla;
 
         } // ObtenerNombreTabla>
@@ -3245,9 +3250,8 @@ namespace Vixark {
             if (expresiones.Count == 0) throw new ArgumentException("El predicado no tiene expresiones.");
             if (expresiones.Count == 1) return expresiones[0];
 
-            var expresiónDelParámetro = expresiones.FirstOrDefault()?.Parameters.FirstOrDefault();
-            if (expresiónDelParámetro == null) throw new ArgumentException("El nombre del parámetro es inválido.");
-
+            var expresiónDelParámetro = expresiones.FirstOrDefault()?.Parameters.FirstOrDefault() ?? 
+                throw new ArgumentException("El nombre del parámetro es inválido.");
             var modificador = new ModificadorExpresión(expresiónDelParámetro);
             var expresiónConConector = expresiones.Aggregate<System.Linq.Expressions.Expression>((primeraExpresión, segundaExpresión) => {
 
@@ -3257,8 +3261,8 @@ namespace Vixark {
                     _ => throw new ArgumentException("Los argumentos no pueden ser nulos."),
                 };
 
-                var cuerpo2 = (segundaExpresión as LambdaExpression)?.Body;
-                if (cuerpo2 == null) throw new ArgumentException("Los argumentos no pueden ser nulos.");
+                var cuerpo2 = (segundaExpresión as LambdaExpression)?.Body ?? 
+                    throw new ArgumentException("Los argumentos no pueden ser nulos."); // Probar que funcione bien y borrar este comentario.
                 var expresión2 = modificador.Modificar((cuerpo2 as BinaryExpression)!);
 
                 return conector switch {
@@ -3385,7 +3389,7 @@ namespace Vixark {
             } catch (Exception ex) {
 
                 error = ex.Message;
-                SuspenderEjecuciónEnModoDesarrollo();
+                Suspender();
                 éxito = false; // Un posible error es que las descripciones sean más largas de lo que soportan las columnas. Es preferible que saque error acá porque es algo que se debe controlar.
 
             }
@@ -3409,7 +3413,7 @@ namespace Vixark {
             var propiedades = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             var tiposPropiedadesVálidos = new List<string> { "String", "Estado", "Int32", "Decimal", "FuentePrecio", "TipoPágina", "Byte", "DateTime", "Boolean" };
             var índiceColumnasAñadidas = new List<int>();
-            if (columnasAOmitir == null) columnasAOmitir = new List<string>();
+            columnasAOmitir ??= new List<string>();
 
             var i = 0;
             foreach (var propiedad in propiedades) {
@@ -3519,7 +3523,7 @@ namespace Vixark {
         /// </summary>
         public static bool CopiarA<T>(this object objetoOrigen, ref T? objetoDestino) where T : class, new() {
 
-            if (objetoDestino == null) objetoDestino = new T(); // Si el objetoDestino es null crea un nueva instancia.
+            objetoDestino ??= new T(); // Si el objetoDestino es null crea un nueva instancia.
             return CopiarA(objetoOrigen, objetoDestino);
 
         } // CopiarA>
@@ -3630,13 +3634,13 @@ namespace Vixark {
         #region Depuración
 
 
-        public static void SuspenderEjecuciónEnModoDesarrollo() {
+        public static void Suspender() {
 
-#if     DEBUG
-            Debugger.Break();
-#endif
+            #if DEBUG
+                Debugger.Break();
+            #endif
 
-        } // SuspenderEjecuciónEnModoDesarrollo>
+        } // Suspender>
 
 
         #endregion Depuración>

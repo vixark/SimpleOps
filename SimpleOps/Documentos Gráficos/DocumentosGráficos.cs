@@ -97,7 +97,7 @@ namespace SimpleOps.DocumentosGráficos {
 
                 if (creado) AbrirArchivo(rutaPdf);
                 CopiarPlantillasARutaAplicación(sobreescribir: true); // En el modo desarrollo se intentará mantener sincronizadas las carpetas de plantillas en producción con la última versión de las plantillas en las carpetas de desarrollo. Justo antes del punto de interrupción a continuación es un buen lugar para hacerlo porque después de este, el usuario del código puede suspender la ejecución. Esto reduce el rendimiento, pero es algo que solo se presenta en el modo desarrollo. No es completamente necesario actualizar las plantillas para que funcione en modo desarrollo porque estas son leídas directamente de las carpetas de plantillas de desarrollo, pero si es conveniente para mantener solo una versión de las plantillas en el computador y evitar confusiones.
-                SuspenderEjecuciónEnModoDesarrollo(); // Al estar detenida la ejecución en este punto se pueden editar los archivos de plantillas CSHTML, guardar el archivo de la plantilla, cerrar el último PDF creado si está abierto (sin cerrar el Foxit Reader, dejando otro PDF cualquier abierto, para evitar error de Foxit Reader cuando se abre desde el código) y reanudar ejecución para generar un nuevo PDF con los cambios realizados.
+                Suspender(); // Al estar detenida la ejecución en este punto se pueden editar los archivos de plantillas CSHTML, guardar el archivo de la plantilla, cerrar el último PDF creado si está abierto (sin cerrar el Foxit Reader, dejando otro PDF cualquier abierto, para evitar error de Foxit Reader cuando se abre desde el código) y reanudar ejecución para generar un nuevo PDF con los cambios realizados.
                 goto otraVez;
 
             }
