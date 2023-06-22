@@ -57,7 +57,7 @@ namespace SimpleOps.Singleton {
 
         public static OpcionesEquipo Datos { get { return DatosLazy.Value; } } // Normalmente esta sería la variable que se accede pero se prefiere hacer una variable auxiliar Equipo en Global.cs para tener un acceso más fácil sin necesidad de escribir OpcionesEquipo.Datos.
 
-        private OpcionesEquipo() { }
+        public OpcionesEquipo() { } // Es necesario que sea public en .NET 7 para la serialización.
 
         #endregion Patrón Singleton>
 

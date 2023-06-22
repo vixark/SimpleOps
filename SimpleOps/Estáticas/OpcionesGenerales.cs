@@ -54,7 +54,7 @@ namespace SimpleOps.Singleton {
 
         public static OpcionesGenerales Datos { get { return DatosLazy.Value; } } // Normalmente esta sería la variable que se accede pero se prefiere hacer una variable auxiliar Generales en Global para tener un acceso más fácil sin necesidad de escribir OpcionesGenerales.Datos.
 
-        private OpcionesGenerales() { }
+        public OpcionesGenerales() { } // Es necesario que sea public en .NET 7 para la serialización.
 
         #endregion Patrón Singleton>
 

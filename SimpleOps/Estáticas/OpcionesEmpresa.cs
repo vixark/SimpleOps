@@ -55,7 +55,7 @@ namespace SimpleOps.Singleton {
 
         public static OpcionesEmpresa Datos { get { return DatosLazy.Value; } } // Normalmente esta sería la variable que se accede pero se prefiere hacer una variable auxiliar Empresa en Global.cs para tener un acceso más fácil sin necesidad de escribir OpcionesEmpresa.Datos.
 
-        private OpcionesEmpresa() { }
+        public OpcionesEmpresa() { } // Es necesario que sea public en .NET 7 para la serialización.
 
         #endregion Patrón Singleton>
 
