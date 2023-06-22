@@ -158,7 +158,7 @@ namespace SimpleOps.Datos {
         /// que con NoTracking activado, ver https://github.com/dotnet/efcore/issues/14366.
         /// </summary>
         /// <param name="tipoContexto"></param>
-        public Contexto(TipoContexto tipoContexto) {
+        public Contexto(TipoContexto tipoContexto) { // Para .Net 7 en adelante, poner private solo para la migración y después volver a poner public.
 
             ChangeTracker.QueryTrackingBehavior = tipoContexto switch {
                 TipoContexto.Lectura => QueryTrackingBehavior.NoTracking,
