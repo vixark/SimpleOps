@@ -130,7 +130,7 @@ namespace SimpleOps {
 
         public const string PrefijoNotasCréditoPredeterminado = "NC";
 
-        #endregion
+        #endregion Constantes>
 
 
 
@@ -290,7 +290,7 @@ namespace SimpleOps {
 
 
         #region Enumeraciones 
-        // Si la enumeración se usa en una propiedad de la base de datos se debe declarar byte si es posible y debe llevar los valores numéricos. Si se agregan nuevos elementos se debe agregar el detalle a la documentación de todas las propiedades de entidades de estos tipos de enumeraciones. Se hacen explícitos los valores para tener conciencia de estos y reducir la posibilidad de crear errores con los datos en la base de datos al añadir nuevos elementos. Cualquier nuevo elemento deberá ser añadido al final de la enumeración a no ser que hayan números libres intermedios. El primer elemento casi siempre debe ser Desconocido que es el equivalente en función a nulo. Agregar las enumeraciones que caben en una línea al principio y las múltilínea después.
+        // Si la enumeración se usa en una propiedad de la base de datos, se debe declarar byte si es posible y debe llevar los valores numéricos. Si se agregan nuevos elementos, se debe agregar el detalle a la documentación de todas las propiedades de entidades de estos tipos de enumeraciones. Se hacen explícitos los valores para tener conciencia de estos y reducir la posibilidad de crear errores con los datos en la base de datos al añadir nuevos elementos. Cualquier nuevo elemento deberá ser añadido al final de la enumeración a no ser que hayan números libres intermedios. El primer elemento casi siempre debe ser Desconocido que es el equivalente en función a nulo. Agregar las enumeraciones que caben en una línea al principio y las múltilínea después.
 
         public enum TipoEntidad : byte { Desconocido = 0, Empresa = 1, Persona = 2 } // No cambiar los nombres de las enumeración ni de los elementos porque estos se usan en los archivos de opciones JSON. Identificador de tipo de organización jurídica. Los valores deben ser coincidentes con numeral 13.2.3 de la guía de facturación electrónica de la DIAN. 1 Persona jurídica y asimiladas, 2 Persona natural.
 
@@ -927,7 +927,7 @@ namespace SimpleOps {
 
             }
 
-            if (!File.Exists(RutaBaseDatosSQLite) && UsarSQLite) { // Si la base de datos SQLite no existe y se quiere usar SQLite copiará una base de datos vacía desde la ruta de desarrollo y la llenará con datos básicos comunes a todos los usuarios, principalmente datos de los municipios de Colombia.
+            if (!File.Exists(RutaBaseDatosSQLite) && UsarSQLite) { // Si la base de datos SQLite no existe y se quiere usar SQLite, copiará una base de datos vacía desde la ruta de desarrollo y la llenará con datos básicos comunes a todos los usuarios, principalmente datos de los municipios de Colombia.
 
                 var rutaDatosDesarrollo = ObtenerRutaCarpeta(RutaDesarrollo, CarpetaDatosDesarrollo, crearSiNoExiste: false);
                 var rutaDatosJsonDesarrollo = ObtenerRutaCarpeta(rutaDatosDesarrollo, CarpetaDatosJsonDesarrollo, crearSiNoExiste: false);

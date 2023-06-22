@@ -905,12 +905,12 @@ namespace Vixark {
             var hashActual = ObtenerHashArchivo(procesoActual.MainModule.FileName);
             foreach (var proceso in Process.GetProcesses()) {
 
-                if (proceso != null && proceso.MainModule != null && proceso.Id != procesoActual.Id) {
+                if (proceso != null && proceso.Id != procesoActual.Id) {
 
                     try {
 
-                        if (proceso.ProcessName == procesoActual.ProcessName // Evita procesos que obviamente no son el mismo porque tienen diferente nombre y excepciones al intentar acceder a proceso.MainModule en algunos de estos procesos.
-                            && hashActual == ObtenerHashArchivo(proceso.MainModule.FileName)) Environment.Exit(0);
+                        if (proceso.ProcessName == procesoActual.ProcessName && proceso.MainModule != null && // Evita procesos que obviamente no son el mismo porque tienen diferente nombre y excepciones al intentar acceder a proceso.MainModule en algunos de estos procesos.
+                            hashActual == ObtenerHashArchivo(proceso.MainModule.FileName)) Environment.Exit(0);
 
                     } catch (Exception) {
 

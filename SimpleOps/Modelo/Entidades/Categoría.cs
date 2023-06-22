@@ -69,7 +69,7 @@ namespace SimpleOps.Modelo {
         #endregion Métodos y Funciones>
 
 
-    } // TipoProducto>
+    } // Categoría>
 
 
 
