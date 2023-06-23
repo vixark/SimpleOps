@@ -292,7 +292,7 @@ namespace SimpleOps.Modelo {
 
         public bool? FísicoEspecífico { get; set; }
         /// <summary>
-        /// Si es verdadero el producto existe en el mundo físico. Si es falso no maneja inventario como en el caso de de los servicios y 
+        /// Si es verdadero, el producto existe en el mundo físico. Si es falso, no maneja inventario como en el caso de de los servicios y 
         /// productos virtuales.
         /// </summary>
         [NotMapped]
@@ -303,7 +303,7 @@ namespace SimpleOps.Modelo {
 
         public double? PorcentajeIVAPropioEspecífico { get; set; }
         /// <summary>
-        /// Si es nulo se usan las reglas en Global.ObtenerPorcentajeIVA(). Si es cero es exento de IVA.
+        /// Si es nulo, se usan las reglas en Global.ObtenerPorcentajeIVA(). Si es cero, es exento de IVA.
         /// </summary>
         [NotMapped]
         public double? PorcentajeIVAPropio {
@@ -313,8 +313,8 @@ namespace SimpleOps.Modelo {
 
         public bool? ExcluídoIVAEspecífico { get; set; }
         /// <summary>
-        /// Si es verdadero es excluído de IVA y tiene un tratamiento tributario diferente porque no suma a la base tributable. Si es falso y 
-        /// PorcentajeIVAPropio = 0 (exentos) o PorcentajeIVAPropio > 0 si suma a la base tributable. Si se establece este valor en verdadero se le dará 
+        /// Si es verdadero, es excluído de IVA y tiene un tratamiento tributario diferente porque no suma a la base tributable. Si es falso y 
+        /// PorcentajeIVAPropio = 0 (exentos) o PorcentajeIVAPropio > 0 si suma a la base tributable. Si se establece este valor en verdadero, se le dará 
         /// prioridad sin importar el valor en PorcentajeIVAPropio y el porcentaje de IVA efectivo (PorcentajeIVA) será cero.
         /// </summary>
         [NotMapped]
@@ -326,7 +326,7 @@ namespace SimpleOps.Modelo {
 
         public double? PorcentajeImpuestoConsumoPropioEspecífico { get; set; }
         /// <summary>
-        /// Si es nulo se usa el porcentaje en opciones. Si es cero es exento de cualquier tipo de impuesto al consumo porcentual.
+        /// Si es nulo, se usa el porcentaje en opciones. Si es cero, es exento de cualquier tipo de impuesto al consumo porcentual.
         /// </summary>
         [NotMapped]
         public double? PorcentajeImpuestoConsumoPropio {
@@ -337,7 +337,7 @@ namespace SimpleOps.Modelo {
 
         public decimal? ImpuestoConsumoUnitarioPropioEspecífico { get; set; }
         /// <summary>
-        /// Si es nulo se usa el el valor en opciones. Si es cero es exento de cualquier tipo de impuesto al consumo por unidad.
+        /// Si es nulo, se usa el el valor en opciones. Si es cero, es exento de cualquier tipo de impuesto al consumo por unidad.
         /// </summary>
         [NotMapped]
         public decimal? ImpuestoConsumoUnitarioPropio {
@@ -348,7 +348,7 @@ namespace SimpleOps.Modelo {
 
         public TipoImpuestoConsumo TipoImpuestoConsumoPropioEspecífico { get; set; } = TipoImpuestoConsumo.Desconocido;
         /// <summary>
-        /// Si es desconocido se usa el tipo en opciones. Se usa para relacionarlo con TipoTributo que será enviado a la DIAN en la 
+        /// Si es desconocido, se usa el tipo en opciones. Se usa para relacionarlo con TipoTributo que será enviado a la DIAN en la 
         /// factura electrónica. También se usa para establecer el valor de ImpuestoConsumoUnitario y PorcentajeImpuestoConsumo si el tipo
         /// se encuentra en los diccionarios en opciones <see cref="Singleton.OpcionesGenerales.PorcentajesImpuestosConsumo"/> o 
         /// <see cref="Singleton.OpcionesGenerales.ValoresUnitariosImpuestosConsumo" />.

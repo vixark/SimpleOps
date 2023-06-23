@@ -57,7 +57,7 @@ namespace SimpleOps.Modelo {
         public string? SubtipoCliente { get; set; }
 
         /// <summary>
-        /// Si se especifica y existen dos PrecioLista con el mismo (TipoCliente, SubtipoCliente, Producto) se elegirá el que tenga el mínimo MáximoDíasCrédito que sea mayor a DíasCrédito del cliente.
+        /// Si se especifica y existen dos PrecioLista con el mismo (TipoCliente, SubtipoCliente, Producto), se elegirá el que tenga el mínimo MáximoDíasCrédito que sea mayor a DíasCrédito del cliente.
         /// </summary>
         public int? MáximoDíasCrédito { get; set; }
 

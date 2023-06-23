@@ -158,7 +158,7 @@ namespace SimpleOps.Datos {
         /// que con NoTracking activado, ver https://github.com/dotnet/efcore/issues/14366.
         /// </summary>
         /// <param name="tipoContexto"></param>
-        public Contexto(TipoContexto tipoContexto) { // Para .Net 7 en adelante, poner private solo para la migración y después volver a poner public.
+        internal Contexto(TipoContexto tipoContexto) { // Se debe declarar internal para que la migración no saque error en .NET 7.
 
             ChangeTracker.QueryTrackingBehavior = tipoContexto switch {
                 TipoContexto.Lectura => QueryTrackingBehavior.NoTracking,
@@ -324,7 +324,7 @@ namespace SimpleOps.Datos {
             constructor.Entity<AtributoProducto>().HasIndex(ap => ap.Nombre).IsUnique();
             // Única No Clave Principal>
 
-            // Clave Doble Principal - Ver https://entityframeworkcore.com/knowledge-base/50398457/2-foreign-keys-as-primary-key-using-ef-core-2-0-code-first.
+            // Clave Doble Principal - Ver https://web.archive.org/web/20221006170743/https://entityframeworkcore.com/knowledge-base/50398457/2-foreign-keys-as-primary-key-using-ef-core-2-0-code-first.
             constructor.Entity<PrecioCliente>().HasKey(pe => new { pe.ProductoID, pe.ClienteID });
             constructor.Entity<PrecioProveedor>().HasKey(pe => new { pe.ProductoID, pe.ProveedorID });
             constructor.Entity<ContactoCliente>().HasKey(cc => new { cc.ContactoID, cc.ClienteID });
@@ -1014,6 +1014,13 @@ namespace SimpleOps.Datos {
 
                         error = $"Es posible que una columna de la tabla {nombreTabla} no se encuentre en el archivo 'Cargador Datos.xlsm'. " + 
                                 $"Realiza el procedimiento de 'Consistencia de Cargador Datos.xlsm con Datos.db' e intenta nuevamente." + 
+                                $"{DobleLínea}{ex.Message}";
+                        return false;
+
+                    } else if (ex.Message.Contiene("The JSON array contains a trailing comma at the end")) {
+
+                        error = $"El archivo JSON de {nombreTabla} tiene una coma al final del último elemento. " +
+                                $"Elimínala e intenta nuevamente." +
                                 $"{DobleLínea}{ex.Message}";
                         return false;
 

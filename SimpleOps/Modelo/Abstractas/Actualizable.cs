@@ -44,7 +44,7 @@ namespace SimpleOps.Modelo {
 
         #region Propiedades
   
-        public int ActualizadorID { get; set; } // Para evitar complejizar innecesariamente las relaciones de cada tabla en la base de datos no se hará una propiedad de navegación al usuario actualizador. Estos registros son informativos y además es fácil obtener el usuario a partir del ID cuando se requiera.
+        public int ActualizadorID { get; set; } // Para evitar complejizar innecesariamente las relaciones de cada tabla en la base de datos, no se hará una propiedad de navegación al usuario actualizador. Estos registros son informativos y además es fácil obtener el usuario a partir del ID cuando se requiera.
 
         [ConcurrencyCheck]
         public DateTime FechaHoraActualización { get; set; }

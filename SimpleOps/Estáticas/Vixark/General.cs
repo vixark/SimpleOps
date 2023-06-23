@@ -426,6 +426,8 @@ namespace Vixark {
                 { "tipoatributoproducto", (Género.Masculino, NúmeroSustantivo.Singular) },
                 { "atributosproductos", (Género.Masculino, NúmeroSustantivo.Plural) },
                 { "tiposatributosproductos", (Género.Masculino, NúmeroSustantivo.Plural) },
+                { "activos", (Género.Masculino, NúmeroSustantivo.Plural) },
+                { "precios", (Género.Masculino, NúmeroSustantivo.Plural) },
             };
 
         public static readonly Dictionary<string, string> PalabrasFemeninas = new Dictionary<string, string> { // La clave es en masculino y el valor en femenino, se usa para cambiar los textos de acuerdo al género y número. Al no ser muchas las palabras que lo requieren se usa un diccionario.
