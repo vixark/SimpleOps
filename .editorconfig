@@ -19,7 +19,7 @@ dotnet_diagnostic.IDE0061.severity = none # IDE0061: Para que no exija poner par
 dotnet_diagnostic.IDE0021.severity = none # IDE0021: Para que no exija poner paréntesis en funciones de una sola línea.
 dotnet_diagnostic.IDE0035.severity = none # IDE0035: Advertencia sobre código no accesible. Se quita porque es redundante con CS0162. Parece que no funciona esta supresión, pero aún así la dejo por si después lo corrijen y funciona.
 dotnet_diagnostic.IDE0050.severity = none # IDE0050: Advertencia convertir un tipo anónimo en tupla. Se quita porque no funciona bien, en muchos casos sugiere cambios que generan error de compilación.
-
+dotnet_diagnostic.SYSLIB1045.severity = none # SYSLIB1045: Convert to 'GeneratedRegexAttribute'. Se quita porque sugiere crear clases parciales para poder precomilar expresiones regulares que son mucho más rápidas de evaluar. Es importante saber que existe la opción de expresiones regulares mucho más rápidas, pero no es necesario que me lo recuerde cada vez que use un Regex.IsMatch.
 
 # Tratar advertencias de nullables como errores. Se deben establecer aquí estas reglas porque por alguna razón no funcionan <WarningsAsErrors>nullable</WarningsAsErrors> en el archivo *.csproj. Los códigos se toman de la segunda respuesta aquí https://stackoverflow.com/questions/58194983/how-to-treat-all-c-sharp-8-nullable-reference-warnings-as-errors.
 

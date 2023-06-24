@@ -536,7 +536,7 @@ namespace SimpleOps {
             using var ctx = new Contexto(TipoContexto.LecturaConRastreo); // Se inicia como contexto de LecturaConRastreo para poder realizar las pruebas con y sin AsNoTracking().
             var ventasPorSubtotal = ctx.Ventas.OrderByDescending(v => v.Subtotal).ToList(); // Una consulta cualquiera para que el contexto se inicie.
 
-#if true
+            #if true
 
             // Rendimiento 1 Entidad - Probar cada línea en una ejecución de SimpleOps independiente.
             var clienteCompleto = ctx.Clientes.Skip(milisegundoActual).First(); // 76 milisegundos en promedio.
@@ -598,7 +598,7 @@ namespace SimpleOps {
             //    Ver https://dotnetcultist.com/maximizing-entity-framework-core-query-performance/.
             // Conclusiones>
 
-#endif
+            #endif
 
             var productos = ctx.ObtenerProductos();
             var producto1 = ctx.ObtenerProducto("+");

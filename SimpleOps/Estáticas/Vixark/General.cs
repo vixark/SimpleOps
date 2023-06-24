@@ -1431,7 +1431,7 @@ namespace Vixark {
 
                 if (distancia12 != 0 || distancia23 != 0 | distancia34 != 0 | distancia41 != 0) {  // Tiene esquinas de colores diferentes. Se debe usar un promedio.
 
-#pragma warning disable IDE0045 // Convertir el siguiente código en un condicional de una línea lo haría muy poco legible.
+                    #pragma warning disable IDE0045 // Convertir el siguiente código en un condicional de una línea lo haría muy poco legible.
                     if (distancia12 > toleranciaDiferenciaColor || distancia23 > toleranciaDiferenciaColor | distancia34 > toleranciaDiferenciaColor
                         | distancia41 > toleranciaDiferenciaColor) { // Tiene esquinas de colores muy diferentes, se debe lanzar excepción.
                         throw new ArgumentException("No se pudo obtener el color promedio del fondo porque los pixeles esquineros difieren mucho en color: " +
@@ -1439,7 +1439,7 @@ namespace Vixark {
                     } else {
                         colorFondo = ObtenerColorPromedio(new List<Color> { color1, color2, color3, color4 });
                     }
-#pragma warning restore IDE0045
+                    #pragma warning restore IDE0045
 
                 } else {
                     colorFondo = color1;
@@ -1454,7 +1454,7 @@ namespace Vixark {
         } // ObtenerColorFondo>
 
 
-#endif  // PermitirCódigoNoSeguro>
+        #endif  // PermitirCódigoNoSeguro>
 
         #endregion RedimensionarImagen>
 
@@ -1638,8 +1638,7 @@ namespace Vixark {
         /// <param name="texto"></param>
         /// <param name="formato"></param>
         /// <returns></returns>
-        public static DateTime? AFecha(this string? texto, string formato)
-            => texto == null ? (DateTime?)null : DateTime.ParseExact(texto, formato, CultureInfo.InvariantCulture);
+        public static DateTime AFecha(this string texto, string formato) => DateTime.ParseExact(texto, formato, CultureInfo.InvariantCulture);
 
 
         /// <summary>
@@ -3239,7 +3238,7 @@ namespace Vixark {
 
         /// <summary>
         /// Obtiene una expresión que permite usar el conector lógico O entre las expresiones del <paramref name="predicado"/>. 
-        /// Para que funcione correctamente este predicado debe tener por lo menos 2 expresiones individuales. Si solo tiene 1 
+        /// Para que funcione correctamente este predicado debe tener por lo menos 2 expresiones individuales. Si solo tiene 1, 
         /// se devuelve esa expresión sin cambios.
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -3649,8 +3648,8 @@ namespace Vixark {
 
 
 
-    } // Vixark>
+    } // General>
 
 
 
-} // SimpleOps>
+} // Vixark>

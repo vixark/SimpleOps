@@ -1162,8 +1162,8 @@ namespace SimpleOps.Datos {
         public Producto? ObtenerProducto(string referencia) {
 
             Producto? producto;
-            Producto? obtenerProductoConInclude() => Productos.Include(p => p.Base).Where(p => p.Referencia == referencia).FirstOrDefault();
-            Producto? obtenerProductoSinInclude() => Productos.Where(p => p.Referencia == referencia).FirstOrDefault();
+            Producto? obtenerProductoConInclude() => Productos.Include(p => p.Base).Where(p => p.Referencia == referencia).FirstOrDefault(); // Evaluar rendimiento con FirstOrDefault(p => p.Referencia == referencia) sin el Where.
+            Producto? obtenerProductoSinInclude() => Productos.Where(p => p.Referencia == referencia).FirstOrDefault(); // Evaluar rendimiento con FirstOrDefault(p => p.Referencia == referencia) sin el Where.
 
             if (Empresa.HabilitarProductosBase) {
         
