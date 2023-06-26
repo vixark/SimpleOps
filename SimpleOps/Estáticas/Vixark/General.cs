@@ -428,6 +428,8 @@ namespace Vixark {
                 { "tiposatributosproductos", (Género.Masculino, NúmeroSustantivo.Plural) },
                 { "activos", (Género.Masculino, NúmeroSustantivo.Plural) },
                 { "precios", (Género.Masculino, NúmeroSustantivo.Plural) },
+                { "dividendo", (Género.Masculino, NúmeroSustantivo.Singular) },
+                { "dividendos", (Género.Masculino, NúmeroSustantivo.Plural) },
             };
 
         public static readonly Dictionary<string, string> PalabrasFemeninas = new Dictionary<string, string> { // La clave es en masculino y el valor en femenino, se usa para cambiar los textos de acuerdo al género y número. Al no ser muchas las palabras que lo requieren se usa un diccionario.
@@ -2609,7 +2611,7 @@ namespace Vixark {
         /// método original tiene parámetros opcionales y por esto no es aceptado en HasConversion.
         /// Función para clases. Para estructuras usar <see cref="DeserializarEstructura{T}(string)"/>.
         /// </summary>
-        public static T? Deserializar<T>(string? json) where T : class => string.IsNullOrEmpty(json) ? default : JsonSerializer.Deserialize<T>(json);
+        public static T? Deserializar<T>(string? json) where T : class => string.IsNullOrEmpty(json) ? default : JsonSerializer.Deserialize<T>(json); // Si saca error aquí al migrar a .NET 7, ver implementación realizada en la aplicación Simulación de Mercados.
 
 
         /// <summary>

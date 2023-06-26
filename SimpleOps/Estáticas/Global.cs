@@ -149,7 +149,7 @@ namespace SimpleOps {
         #region Estados
         // Variables que pueden cambiar durante la ejecución.
 
-        public static bool OperacionesEspecialesDatos = true; // Se establece en falso al iniciar el SimpleOps y habilita la generación de excepciones al asignar datos inválidos al modelo. Es verdadero durante migraciones de Entity Framework y durante la carga inicial de datos para evitar hacer algunas verificaciones y lanzar errores.
+        public static bool OperacionesEspecialesDatos = true; // Se establece en falso al iniciar y así se habilita la generación de excepciones al asignar datos inválidos al modelo. Es verdadero durante migraciones de Entity Framework y durante la carga inicial de datos para evitar que haga algunas verificaciones y que lance errores.
 
         public static Usuario UsuarioActual = new Usuario("David", "david@simpleops.net") { ID = 1 }; // Temporalmente mientras se implementa se usará usuario 1. Al implementar usuarios lo debería obtener de la base de datos.
 

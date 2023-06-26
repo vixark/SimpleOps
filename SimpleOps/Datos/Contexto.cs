@@ -754,7 +754,9 @@ namespace SimpleOps.Datos {
 
 
         /// <summary>
-        /// Carga a la base de datos los datos en archivos JSON en la carpeta <paramref name="rutaJsons"/>. Solo sirve para la carga inicial. Se deben cargar todos juntos en una sola tanda y con la base de datos vacía para asegurar que los IDs quedarán iguales que en los JSON y que las relaciones queden correctas.
+        /// Carga a la base de datos los datos en archivos JSON en la carpeta <paramref name="rutaJsons"/>. Solo sirve para la carga inicial. 
+        /// Se deben cargar todos juntos en una sola tanda y con la base de datos vacía para asegurar que los IDs quedarán iguales que en los JSON 
+        /// y que las relaciones queden correctas.
         /// </summary>
         /// <param name="rutaJsons"></param>
         /// <param name="error"></param>

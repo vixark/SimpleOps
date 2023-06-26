@@ -100,7 +100,9 @@
         </member>
         <member name="M:SimpleOps.Datos.Contexto.CargarDatosIniciales(System.String,System.String@)">
             <summary>
-            Carga a la base de datos los datos en archivos JSON en la carpeta <paramref name="rutaJsons"/>. Solo sirve para la carga inicial. Se deben cargar todos juntos en una sola tanda y con la base de datos vacía para asegurar que los IDs quedarán iguales que en los JSON y que las relaciones queden correctas.
+            Carga a la base de datos los datos en archivos JSON en la carpeta <paramref name="rutaJsons"/>. Solo sirve para la carga inicial. 
+            Se deben cargar todos juntos en una sola tanda y con la base de datos vacía para asegurar que los IDs quedarán iguales que en los JSON 
+            y que las relaciones queden correctas.
             </summary>
             <param name="rutaJsons"></param>
             <param name="error"></param>
@@ -2180,7 +2182,7 @@
         </member>
         <member name="P:SimpleOps.Modelo.PrecioLista.MáximoDíasCrédito">
             <summary>
-            Si se especifica y existen dos PrecioLista con el mismo (TipoCliente, SubtipoCliente, Producto) se elegirá el que tenga el mínimo MáximoDíasCrédito que sea mayor a DíasCrédito del cliente.
+            Si se especifica y existen dos PrecioLista con el mismo (TipoCliente, SubtipoCliente, Producto), se elegirá el que tenga el mínimo MáximoDíasCrédito que sea mayor a DíasCrédito del cliente.
             </summary>
         </member>
         <member name="P:SimpleOps.Modelo.PrecioLista.TieneRepresentanteComercial">
@@ -2345,35 +2347,35 @@
         </member>
         <member name="P:SimpleOps.Modelo.Producto.Físico">
             <summary>
-            Si es verdadero el producto existe en el mundo físico. Si es falso no maneja inventario como en el caso de de los servicios y 
+            Si es verdadero, el producto existe en el mundo físico. Si es falso, no maneja inventario como en el caso de de los servicios y 
             productos virtuales.
             </summary>
         </member>
         <member name="P:SimpleOps.Modelo.Producto.PorcentajeIVAPropio">
             <summary>
-            Si es nulo se usan las reglas en Global.ObtenerPorcentajeIVA(). Si es cero es exento de IVA.
+            Si es nulo, se usan las reglas en Global.ObtenerPorcentajeIVA(). Si es cero, es exento de IVA.
             </summary>
         </member>
         <member name="P:SimpleOps.Modelo.Producto.ExcluídoIVA">
             <summary>
-            Si es verdadero es excluído de IVA y tiene un tratamiento tributario diferente porque no suma a la base tributable. Si es falso y 
-            PorcentajeIVAPropio = 0 (exentos) o PorcentajeIVAPropio > 0 si suma a la base tributable. Si se establece este valor en verdadero se le dará 
+            Si es verdadero, es excluído de IVA y tiene un tratamiento tributario diferente porque no suma a la base tributable. Si es falso y 
+            PorcentajeIVAPropio = 0 (exentos) o PorcentajeIVAPropio > 0 si suma a la base tributable. Si se establece este valor en verdadero, se le dará 
             prioridad sin importar el valor en PorcentajeIVAPropio y el porcentaje de IVA efectivo (PorcentajeIVA) será cero.
             </summary>
         </member>
         <member name="P:SimpleOps.Modelo.Producto.PorcentajeImpuestoConsumoPropio">
             <summary>
-            Si es nulo se usa el porcentaje en opciones. Si es cero es exento de cualquier tipo de impuesto al consumo porcentual.
+            Si es nulo, se usa el porcentaje en opciones. Si es cero, es exento de cualquier tipo de impuesto al consumo porcentual.
             </summary>
         </member>
         <member name="P:SimpleOps.Modelo.Producto.ImpuestoConsumoUnitarioPropio">
             <summary>
-            Si es nulo se usa el el valor en opciones. Si es cero es exento de cualquier tipo de impuesto al consumo por unidad.
+            Si es nulo, se usa el el valor en opciones. Si es cero, es exento de cualquier tipo de impuesto al consumo por unidad.
             </summary>
         </member>
         <member name="P:SimpleOps.Modelo.Producto.TipoImpuestoConsumoPropio">
             <summary>
-            Si es desconocido se usa el tipo en opciones. Se usa para relacionarlo con TipoTributo que será enviado a la DIAN en la 
+            Si es desconocido, se usa el tipo en opciones. Se usa para relacionarlo con TipoTributo que será enviado a la DIAN en la 
             factura electrónica. También se usa para establecer el valor de ImpuestoConsumoUnitario y PorcentajeImpuestoConsumo si el tipo
             se encuentra en los diccionarios en opciones <see cref="P:SimpleOps.Singleton.OpcionesGenerales.PorcentajesImpuestosConsumo"/> o 
             <see cref="P:SimpleOps.Singleton.OpcionesGenerales.ValoresUnitariosImpuestosConsumo" />.
@@ -3860,7 +3862,7 @@
         <member name="M:Vixark.General.ObtenerExpresión``1(Vixark.General.Predicado{``0},Vixark.General.ConectorLógico)">
             <summary>
             Obtiene una expresión que permite usar el conector lógico O entre las expresiones del <paramref name="predicado"/>. 
-            Para que funcione correctamente este predicado debe tener por lo menos 2 expresiones individuales. Si solo tiene 1 
+            Para que funcione correctamente este predicado debe tener por lo menos 2 expresiones individuales. Si solo tiene 1, 
             se devuelve esa expresión sin cambios.
             </summary>
             <typeparam name="T"></typeparam>
