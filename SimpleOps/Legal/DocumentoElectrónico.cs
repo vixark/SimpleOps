@@ -1115,11 +1115,11 @@ namespace SimpleOps.Legal {
             espaciosNombres.Add("xades", "http://uri.etsi.org/01903/v1.3.2#");
             espaciosNombres.Add("xades141", "http://uri.etsi.org/01903/v1.4.1#");
             espaciosNombres.Add("xsi", "http://www.w3.org/2001/XMLSchema-instance");
-            if (venta != null) espaciosNombres.Add("schemaLocation", "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2     " + 
+            if (venta != null) espaciosNombres.Add("schemaLocation", "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2 " + 
                 "http://docs.oasis-open.org/ubl/os-UBL-2.1/xsd/maindoc/UBL-Invoice-2.1.xsd");
-            if (notaCrédito != null) espaciosNombres.Add("schemaLocation", "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2    " +
+            if (notaCrédito != null) espaciosNombres.Add("schemaLocation", "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2 " +
                 "http://docs.oasis-open.org/ubl/os-UBL-2.1/xsd/maindoc/UBL-CreditNote-2.1.xsd");
-            if (notaDébito != null) espaciosNombres.Add("schemaLocation", "urn:oasis:names:specification:ubl:schema:xsd:DebitNote-2    " +
+            if (notaDébito != null) espaciosNombres.Add("schemaLocation", "urn:oasis:names:specification:ubl:schema:xsd:DebitNote-2 " +
                 "http://docs.oasis-open.org/ubl/os-UBL-2.1/xsd/maindoc/UBL-DebitNote-2.1.xsd");
 
             XmlSerializer? serializadorXml = Documento switch { // Se usa dynamic porque es manera más fácil de incorporar las 3 clases InvoiceType, CreditNoteType y DebitNoteType sin tener que modificar en exceso las clases en Dian.sln > Factura.cs y poder soportar de mejor manera posibles cambios futuros. Para el desarrollo cambiar el tipo de este objeto y en los otros 3 'switch's a al tipo que se esté implementando y ver en que puntos del código saca error. En esos puntos se debe asegurar que nunca entre la ejecución para el tipo de documento actual.        
