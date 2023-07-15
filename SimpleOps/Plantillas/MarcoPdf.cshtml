@@ -202,7 +202,7 @@
 <style>
 
 
-    /* <General */
+    @* <General *@
 
     @("@page { margin: 0px; }")
 
@@ -219,7 +219,7 @@
     /* General> */
 
 
-    /* <Colores - Este código puede ser copiado y reemplazado por un bloque con los colores personalizados. */
+    @* <Colores - Este código puede ser copiado y reemplazado por un bloque con los colores personalizados. *@
 
     a { color: @(Model.ModoImpresión ? "#191919" : "#1355A5"); } /* Usualmente es el mismo fc-s50, pero podría ser cambiado por otro si se desea. */
 
@@ -314,7 +314,7 @@
     /* Colores> */
 
 
-    /* <Tamaño Fuentes y Negrita */
+    @* <Tamaño Fuentes y Negrita *@
 
     .t53n { font-size: 53px; font-weight: normal; }
 
@@ -359,7 +359,7 @@
     /* Tamaño Fuentes y Negrita> */
 
 
-    /* <Alineaciones */
+    @* <Alineaciones *@
 
     .tder { text-align: right; }
 
@@ -374,7 +374,7 @@
     /* Alineaciones> */
 
 
-    /* <Cabeza */
+    @* <Cabeza *@
 
     .tb-cabeza {
         height: @APuntos(Model.AltoCabeza); width: @APuntos(Model.AnchoContenido);
@@ -392,7 +392,7 @@
     /* Cabeza> */
 
 
-    /* <Cuerpo */
+    @* <Cuerpo *@
 
     .cuerpo {
         margin-right: @APuntos(Model.MargenHorizontal); margin-left: @APuntos(Model.MargenHorizontal);
@@ -402,7 +402,7 @@
     /* Cuerpo> */
 
 
-    /* <Pie */
+    @* <Pie *@
 
     .pie {
         position: absolute; bottom: 0px; left: 0px;
