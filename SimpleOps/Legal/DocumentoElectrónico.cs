@@ -1115,12 +1115,26 @@ namespace SimpleOps.Legal {
             espaciosNombres.Add("xades", "http://uri.etsi.org/01903/v1.3.2#");
             espaciosNombres.Add("xades141", "http://uri.etsi.org/01903/v1.4.1#");
             espaciosNombres.Add("xsi", "http://www.w3.org/2001/XMLSchema-instance");
-            if (venta != null) espaciosNombres.Add("schemaLocation", "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2 " + 
-                "http://docs.oasis-open.org/ubl/os-UBL-2.1/xsd/maindoc/UBL-Invoice-2.1.xsd");
-            if (notaCrédito != null) espaciosNombres.Add("schemaLocation", "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2 " +
-                "http://docs.oasis-open.org/ubl/os-UBL-2.1/xsd/maindoc/UBL-CreditNote-2.1.xsd");
-            if (notaDébito != null) espaciosNombres.Add("schemaLocation", "urn:oasis:names:specification:ubl:schema:xsd:DebitNote-2 " +
-                "http://docs.oasis-open.org/ubl/os-UBL-2.1/xsd/maindoc/UBL-DebitNote-2.1.xsd");
+
+            var agregarSchemaLocationCompleto = false; // Cuando es verdadero se genera el elemento schemaLocation igual a la factura de ejemplo de la DIAN. Sin embargo, algunos sistemas de aceptación de facturas electrónicas rechazan los XML debido al espacio entre los elementos Invoice-2 y la URL siguiente. La solución a este problema es poner únicamente la URL usando agregarSchemaLocationCompleto = false. Esta solución se implementa por el momento para todas las facturas electrónicas porque se considera que de todas maneras se está proveyendo la información requerida pues estos 'SchemaLocation's no requieren el nombre inicial para distinguirlos pues la URL es específica para cada uno y esta URL contiene solo el esquema en cuestión. De todas maneras se vigilará que no ocurra un rechazo de parte de alguna empresa por falta de esta información completa y si sucede, se deberá implementar una excepción que aplique únicamente para las empresas con errores en sus sistema de recepción de facturas usando agregarSchemaLocationCompleto = false para ellos y agregarSchemaLocationCompleto = true para el resto de empresas con sistemas de recepción de facturas electrónicas correctos. 
+            if (agregarSchemaLocationCompleto) {
+
+                if (venta != null) espaciosNombres.Add("schemaLocation", "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2 " +
+                    "http://docs.oasis-open.org/ubl/os-UBL-2.1/xsd/maindoc/UBL-Invoice-2.1.xsd");
+                if (notaCrédito != null) espaciosNombres.Add("schemaLocation", "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2 " +
+                    "http://docs.oasis-open.org/ubl/os-UBL-2.1/xsd/maindoc/UBL-CreditNote-2.1.xsd");
+                if (notaDébito != null) espaciosNombres.Add("schemaLocation", "urn:oasis:names:specification:ubl:schema:xsd:DebitNote-2 " +
+                    "http://docs.oasis-open.org/ubl/os-UBL-2.1/xsd/maindoc/UBL-DebitNote-2.1.xsd");
+
+            } else {
+
+                if (venta != null) espaciosNombres.Add("schemaLocation", "http://docs.oasis-open.org/ubl/os-UBL-2.1/xsd/maindoc/UBL-Invoice-2.1.xsd");
+                if (notaCrédito != null)
+                    espaciosNombres.Add("schemaLocation", "http://docs.oasis-open.org/ubl/os-UBL-2.1/xsd/maindoc/UBL-CreditNote-2.1.xsd");
+                if (notaDébito != null)
+                    espaciosNombres.Add("schemaLocation", "http://docs.oasis-open.org/ubl/os-UBL-2.1/xsd/maindoc/UBL-DebitNote-2.1.xsd");
+
+            }
 
             XmlSerializer? serializadorXml = Documento switch { // Se usa dynamic porque es manera más fácil de incorporar las 3 clases InvoiceType, CreditNoteType y DebitNoteType sin tener que modificar en exceso las clases en Dian.sln > Factura.cs y poder soportar de mejor manera posibles cambios futuros. Para el desarrollo cambiar el tipo de este objeto y en los otros 3 'switch's a al tipo que se esté implementando y ver en que puntos del código saca error. En esos puntos se debe asegurar que nunca entre la ejecución para el tipo de documento actual.        
                 Venta _ => new XmlSerializer(typeof(InvoiceType), new Type[] { typeof(ExtensionContentDianType), typeof(ExtensionContentFirmaType) }), 
