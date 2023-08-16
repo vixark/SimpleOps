@@ -912,19 +912,26 @@ namespace SimpleOps.Legal {
             }
 
             var descuentoCondicionado = 0M;
+            var esCargo = false;
+            var cambioDeSignoDescuentoCondicionado = 1;
+
             if (venta != null && venta.PorcentajeDescuentoCondicionado != null) {
 
                 descuentoCondicionado = venta.DescuentoCondicionado;
+                esCargo = descuentoCondicionado < 0;
+                cambioDeSignoDescuentoCondicionado = esCargo ? -1 : 1;
+
                 document.AllowanceCharge = new AllowanceChargeType[1] { new AllowanceChargeType { // 0..N FAQ01. Según la documentación son descuentos o cargos a nivel de factura que no afectan las bases gravables es decir están hablando de descuentos condicionados o financieros (Leer más en https://www.globalcontable.com/tratamiento-de-los-descuentos-en-la-facturacion-electronica-oficio-dian-20067-de-2019/). Además en la tabla 13.3.7 lo vuelven a aclarar cuando dicen que los 00. Descuento no condicionado es para descuentos a nivel de línea y 01. Descuento condicionado, son los descuentos a pie de factura. Aunque el término a pie de factura se podría interpretar como descuento comercial, la aclaración sobre que los no condicionados se usan a nivel de línea compensa esa poca claridad y refuerza la indicación de la tabla de documentación para que el elemento FAQ01 se debe use solo para descuentos condicionados.
                     // ID = new IDType { Value = "1" }, // 1..1 FAQ02. Agosto 2021: Esta regla fue eliminada por la DIAN. Solo se agrega un descuento condicionado.
-                    ChargeIndicator = new ChargeIndicatorType { Value = false }, // 1..1 FAQ03. Solo se soportarán descuentos, no cargos.
+                    ChargeIndicator = new ChargeIndicatorType { Value = esCargo }, // 1..1 FAQ03.
                     AllowanceChargeReasonCode = new AllowanceChargeReasonCodeType { Value = TipoDescuento.Condicionado.AValor(largoForzado: 2) }, // 0..1 FAQ04.
                     AllowanceChargeReason = new AllowanceChargeReasonType[]
                         { new AllowanceChargeReasonType { Value = Validar(TipoDescuento.Condicionado.ATexto(), "10..5000", true) } }, // 1..1 FAQ05.
                     MultiplierFactorNumeric = new MultiplierFactorNumericType { 
-                        Value = Validar((decimal)venta.PorcentajeDescuentoCondicionado * 100, "1..6 p (0..2)", 2) // 1..1 FAQ06. 
+                        Value = Validar((decimal)venta.PorcentajeDescuentoCondicionado * 100 * cambioDeSignoDescuentoCondicionado, "1..6 p (0..2)", 2) // 1..1 FAQ06. 
                     }, 
-                    Amount = new AmountType2 { Value = Validar(descuentoCondicionado, "4..15 p (2..6)", 2), currencyID = moneda }, // 1..1 FAQ07. currencyID: 1..1 FAQ08.
+                    Amount = new AmountType2 { Value = Validar(descuentoCondicionado * cambioDeSignoDescuentoCondicionado, "4..15 p (2..6)", 2), 
+                        currencyID = moneda }, // 1..1 FAQ07. currencyID: 1..1 FAQ08.
                     BaseAmount = new BaseAmountType { Value = Validar(venta.SubtotalBase, "4..15 p (2..6)", 2), currencyID = moneda } // 1..1 FAQ09. currencyID: 1..1 FAQ10. Valor base para calcular el descuento o el cargo.
                 }};
 
@@ -958,9 +965,10 @@ namespace SimpleOps.Legal {
                     Value = Validar(Documento.SubtotalBase + Documento.IVA + Documento.ImpuestoConsumo, "4..15 p (2..6)", 2), currencyID = moneda // 1..1 FAU06. Moneda: 1..1 FAU07. Total de valor bruto más tributos.
                 },
                 AllowanceTotalAmount = new AllowanceTotalAmountType { 
-                    Value = Validar(Documento.DescuentoCondicionado, "4..15 p (2..6)", 2), currencyID = moneda // 0..1 FAU08. currencyID 1..1 FAU09. Suma de todos los descuentos aplicados a nivel de la factura (son los de AllowanceCharge, es decir los condicionados).
+                    Value = Validar(esCargo ? 0 : Documento.DescuentoCondicionado, "4..15 p (2..6)", 2), currencyID = moneda // 0..1 FAU08. currencyID 1..1 FAU09. Suma de todos los descuentos aplicados a nivel de la factura (son los de AllowanceCharge, es decir los condicionados).
                 }, 
-                // ChargeTotalAmount = new ChargeTotalAmountType { Value = 0, currencyID = Opciones.Moneda }; // 0..1 FAU10. currencyID 1..1 FAU11. Suma de todos los cargos aplicados a nivel de la factura. No se soportan cargos. La manera más fácil e intuitiva de generarlos facturando un servicio dentro de la factura.
+                ChargeTotalAmount = new ChargeTotalAmountType { 
+                    Value = Validar(esCargo ? -Documento.DescuentoCondicionado : 0, "4..15 p (2..6)", 2), currencyID = moneda }, // 0..1 FAU10. currencyID 1..1 FAU11. Suma de todos los cargos aplicados a nivel de la factura.
                 PrepaidAmount = new PrepaidAmountType { Value = Validar(Anticipo, "4..15 p (2..6)", 2), currencyID = moneda }, // 0..1 FAU12. currencyID 1..1 FAU13. Suma de todos los pagos anticipados.
                 PayableAmount = new PayableAmountType { 
                     Value = Validar(Documento.SubtotalFinalConImpuestos, "0..15 p (2..6)", 2), currencyID = moneda // 1..1 FAU14. El valor a pagar es igual a la suma del valor bruto + tributos - valor del descuento total + valor del cargo total. Antes del 2021 se restaba el anticipo, pero para agosto de 2021 en adelante este ya no se resta. Moneda: 1..1 FAU15. 
