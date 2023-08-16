@@ -50,6 +50,10 @@ namespace SimpleOps.Integración {
 
         public string? NúmeroDocumentoRecibido { get; set; }
 
+        public decimal DescuentoCondicionado { get; set; }
+
+        public decimal DescuentoComercial { get; set; }
+
         #endregion Propiedades>
 
 
