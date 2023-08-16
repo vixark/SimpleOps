@@ -659,6 +659,8 @@
         "Raz\u00F3n": "Otra",<br />
         "VentaPrefijo": null,<br />
         "VentaN\u00FAmero": null,<br />
+        "DescuentoCondicionado": 1500,<br />
+        "DescuentoComercial": 0,<br />
         "L\u00EDneas": [<br />
         &nbsp;&nbsp;&nbsp;&nbsp;{<br />
         &nbsp;&nbsp;&nbsp;&nbsp;"Cantidad": 10,<br />
@@ -730,6 +732,16 @@
             </li>
             <li>
                 <b>VentaN\u00FAmero:</b> Número de la factura a la que se le aplicará la nota crédito. Para facturas se deja en null.
+            </li>
+            <li>
+                <b>DescuentoCondicionado:</b> No afecta la base gravable para el IVA ni retenciones. Es un descuento que depende que se de cierta 
+                condición para ser aplicado y hasta que no se de esa condición hay incertidumbre de su aplicación, por lo tanto los impuestos y 
+                retenciones son aplicados sin tenerlo en cuenta.
+            </li>
+            <li>
+                <b>DescuentoComercial:</b> Afecta la base gravable para el IVA y retenciones. Es un descuento del que se tiene certeza que se va 
+                aplicar en el momento de la facturación sin depender de ninguna condición futura, por lo tanto los impuestos y retenciones son aplicados 
+                teniéndolo en cuenta. Se aplica descontando el precio de cada producto.
             </li>
             <li>
                 <b>ProductoUnidadEspec\u00EDfica:</b> Principalmente puede ser Par o Unidad.
