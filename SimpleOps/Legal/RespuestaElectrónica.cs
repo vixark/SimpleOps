@@ -99,7 +99,7 @@ namespace SimpleOps.Legal {
             var tipoImpuesto = documento.IVA > 0 ? (documento.ImpuestoConsumo > 0 ? TipoImpuesto.IVAeINC : TipoImpuesto.IVA)
                 : (documento.ImpuestoConsumo > 0 ? TipoImpuesto.INC : TipoImpuesto.NoAplica);
 
-            var registrationNameCliente = new RegistrationNameType { Value = Validar(cliente.Nombre, "5..450", true) }; 
+            var registrationNameCliente = new RegistrationNameType { Value = Validar(cliente.NombreLegalEfectivo, "5..450", true) }; 
 
             var registrationNameFacturador = new RegistrationNameType { Value = Validar(Empresa.RazónSocial, "5..450", true) };
 

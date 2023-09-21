@@ -939,7 +939,7 @@
         </member>
         <member name="P:SimpleOps.Modelo.EntidadEconómica.DígitoVerificaciónNit">
             <summary>
-            Si es persona natural o si no tiene identificación devuelve nulo.
+            Si no tiene identificación, devuelve nulo.
             </summary>
             <returns></returns>
         </member>

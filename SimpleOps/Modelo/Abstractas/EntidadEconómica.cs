@@ -176,14 +176,14 @@ namespace SimpleOps.Modelo {
 
 
         /// <summary>
-        /// Si es persona natural o si no tiene identificación devuelve nulo.
+        /// Si no tiene identificación, devuelve nulo.
         /// </summary>
         /// <returns></returns>
         public string? DígitoVerificaciónNit
             => TipoEntidad switch {
                 TipoEntidad.Desconocido => null,
                 TipoEntidad.Empresa => ObtenerDígitoVerificación(Identificación),
-                TipoEntidad.Persona => null,
+                TipoEntidad.Persona => ObtenerDígitoVerificación(Identificación), // Aunque algunas personas naturales pueden no tener RUT y por lo tanto no tener dígito de verificación, no pasa nada si se agrega este dígito de verificación a la factura electrónica. Se prefiere agregarlo para todas las personas naturales para cubrir el caso de las personas con RUT.
             };
 
 
@@ -200,17 +200,17 @@ namespace SimpleOps.Modelo {
 
         public string? NitLegalEfectivo
             => TipoEntidad switch {
-                TipoEntidad.Desconocido => "2222222222", // Para efectos de la Dian se asumirá que un desconocido es una persona natural.
+                TipoEntidad.Desconocido => "2222222222", // Una persona anónima.
                 TipoEntidad.Empresa => Identificación, 
-                TipoEntidad.Persona => "2222222222", // Según el elemento FAK03-2 de la tabla Invoice del archivo de documentación de facturación electrónica de la DIAN cuando es pesona natural se usa un pseudo NIT con 10 números dos.
+                TipoEntidad.Persona => Identificación, // Aunque según el elemento FAK03-2 de la tabla Invoice del archivo de documentación de facturación electrónica de la DIAN cuando es pesona natural se debería usar un pseudo NIT con 10 números dos, esto claramente no tiene sentido porque es normal que se requiera que la factura electrónica quede con el número de documento de la persona natural. Si se quiere hacer un documento a una persona natural anónima, usar TipoEntidad.Desconocido.
             };
 
 
-        public string? NombreLegalEfectivo
+        public string NombreLegalEfectivo
             => TipoEntidad switch {
                 TipoEntidad.Desconocido => "adquiriente final", // Para efectos de la Dian se asumirá que un desconocido es una persona natural.
-                TipoEntidad.Empresa => Identificación, 
-                TipoEntidad.Persona => "adquiriente final", // Según el elemento FAK20 de la tabla Invoice del archivo de documentación de facturación electrónica de la DIAN cuando es pesona natural se reporta "adquiriente final".
+                TipoEntidad.Empresa => Nombre, 
+                TipoEntidad.Persona => Nombre, // Aunque según el elemento FAK20 de la tabla Invoice del archivo de documentación de facturación electrónica de la DIAN cuando es pesona natural se debería reportar "adquiriente final", esto claramente no tiene sentido porque es normal que se requiera que la factura electrónica quede con el nombre de la persona natural. Si se quiere hacer un documento a una persona natural anónima, usar TipoEntidad.Desconocido.
             };
 
 

@@ -633,10 +633,10 @@ namespace SimpleOps.Modelo {
 
             if (tipoContribuyenteVendedor.HasFlag(TipoContribuyente.Autorretenedor)) return new ReglasImpuesto((decimal)(porcentajeForzado ?? 0), mínimoForzado ?? 0);
 
-            var tipoDeclarante = tipoEntidadVendedor switch { // Se usará la clasificación entre Empresa y Persona para diferenciar entre Declarante y No Declarante. No hay claridad completa sobre si esto es o no correcto, sobretodo en el caso de personas, pero es una aceptable aproximación. Esto es necesario porque la información más fácilmente disponible de las entidades económicas es el tipo de entidad.
-                TipoEntidad.Desconocido => TipoDeclarante.Desconocido,
+            var tipoDeclarante = tipoEntidadVendedor switch {
+                TipoEntidad.Desconocido => TipoDeclarante.Declarante, // Leer próximo comentario.
                 TipoEntidad.Empresa => TipoDeclarante.Declarante,
-                TipoEntidad.Persona => TipoDeclarante.NoDeclarante,
+                TipoEntidad.Persona => TipoDeclarante.Declarante, // Las personas naturales pueden ser declarantes o no declarantes, se usa por defecto Declarante. Siendo estrictos, se debería saber si la persona natural a la que se le está vendiendo es o no declarante, pero esta información normalmente no está disponible.
             };
 
             var mínimo = 0M;

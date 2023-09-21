@@ -838,8 +838,8 @@ namespace SimpleOps.Legal {
                 customerParty.Person = new PersonType[1] { // 0..1 FAK56.
                     new PersonType {
                         // ID = new IDType { Value = } // 0..1 FAK56-1.
-                        FirstName = new FirstNameType { Value = NombreUsuarioFinal }, // 1..1 FAK56-2.
-                        FamilyName = new FamilyNameType { Value = ApellidoUsuarioFinal }, // 0..1 FAK56-3.
+                        FirstName = new FirstNameType { Value = cliente.Nombre }, // 1..1 FAK56-2.
+                        FamilyName = new FamilyNameType { Value = " " }, // 0..1 FAK56-3. No hay manera fácil de separar los apellidos del nombre con la información que se tiene en la base de datos, entonces se pone el nombre completo con apellidos en FirstName y en FamilyName se usa un espacio en blanco.
                         MiddleName = new MiddleNameType { Value = cliente.Nombre }, // 0..1 FAK56-4. Aunque dice Middle Name en la documentación dice poner Nombre del adquiriente entonces se pondrá el nombre completo con apellidos.
                         ResidenceAddress = obtenerAddress(cliente.DirecciónCompleta), // 0..1 FAK56-5, Incluye todos los otros FAK56 sin código.
                     }
