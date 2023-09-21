@@ -121,7 +121,7 @@ namespace SimpleOps.Singleton {
 
         public Dictionary<Banco, string> CuentasBancarias { get; set; } = new Dictionary<Banco, string>(); // Su uso principal es evitar agregar la cuenta en la tabla MovimientosBancarios. Solo se agregaría la cuenta en estas tablas en caso que no sea la cuenta bancaria principal para ese banco. Aplica para empresas que tengan más de una cuenta bancaria en el mismo banco.
 
-        public Banco BancoPreferido { get; set; } = Banco.Ninguno; // Si no es Banco.Ninguno este banco se usará por defecto para registrar todas las acciones que requieran un banco de la empresa (carga de movimientos bancarios, registro de pagos, etc). Para realizar acciones sobre los otros bancos la interfaz de usuario provee medios para cambiar temporalmente el banco sobre el que se realizará la acción y hacer un banco como el nuevo preferido. Este banco preferido debe estar en el diccionario CuentasBancarias.
+        public Banco BancoPreferido { get; set; } = Banco.Ninguno; // Si no es Banco.Ninguno, este banco se usará por defecto para registrar todas las acciones que requieran un banco de la empresa (carga de movimientos bancarios, registro de pagos, etc). Para realizar acciones sobre los otros bancos, la interfaz de usuario provee medios para cambiar temporalmente el banco sobre el que se realizará la acción y hacer un banco como el nuevo preferido. Este banco preferido debe estar en el diccionario CuentasBancarias.
 
         public string? NombreComercial { get; set; } // Se usa para informarlo a la DIAN al hacer la factura electrónica y para usarlo en representación gráfica de las facturas. Si es nulo se omite en la factura electrónica y en la representación gráfica se usa la razón social.
 
