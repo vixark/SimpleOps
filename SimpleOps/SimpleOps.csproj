@@ -45,14 +45,14 @@
     <None Remove="Interfaz\Imágenes\Datos.png" />
     <None Remove="Interfaz\Imágenes\Indicadores.png" />
     <None Remove="Interfaz\Imágenes\Opciones.png" />
-  </ItemGroup>
+   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="ColorMinePortable" Version="2.0.1" />
     <PackageReference Include="itext7" Version="7.1.14" />
     <PackageReference Include="itext7.pdfhtml" Version="3.0.3" />
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="7.0.0">
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="8.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

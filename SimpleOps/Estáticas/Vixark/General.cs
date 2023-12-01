@@ -444,6 +444,10 @@ namespace Vixark {
             { "del", "de los" }, { "el", "los" }, { "está", "están" }, { "bloqueado", "bloqueados" }
         };
 
+        public static readonly char[] CarácteresFinalRuta = new[] { ' ', '/', '\\' };
+
+        public static readonly string[] LíneasVacías = new[] { "\r\n", "\r", "\n" };
+
         public static NumberFormatInfo FormatoPesosColombianos = null!; // Se inicia en IniciarVariablesGenerales.
 
 
@@ -878,7 +882,7 @@ namespace Vixark {
                 usarBarra = !barraInversaPorDefecto;
             }
 
-            var rutaRespuesta = rutaCarpeta?.TrimEnd(new[] { ' ', '/', '\\' });
+            var rutaRespuesta = rutaCarpeta?.TrimEnd(CarácteresFinalRuta);
             if (usarBarra) {
                 return $"{rutaRespuesta}/";
             } else if (usarBarraInversa) {
@@ -969,7 +973,7 @@ namespace Vixark {
         /// <param name="rutaZip"></param>
         public static void CrearZip(string ruta, string? rutaZip = null) {
 
-            if (rutaZip == null) rutaZip = ObtenerRutaCambiandoExtensión(ruta, "zip");
+            rutaZip ??= ObtenerRutaCambiandoExtensión(ruta, "zip");
             if (File.Exists(rutaZip)) throw new NotSupportedException($"Ya existe el archivo .zip {rutaZip}.");
             File.WriteAllBytes(rutaZip, ObtenerBytesZip(ruta));
 
@@ -1486,6 +1490,14 @@ namespace Vixark {
         /// </summary>
         public static int AEntero(this char carácter) => carácter - '0';
 
+        /// <summary>
+        /// Reemplazo de Any() para evitar la advertencia CA1860 en listas.
+        /// </summary>
+        /// <typeparam name="V"></typeparam>
+        /// <param name="lista"></param>
+        /// <returns></returns>
+        public static bool Alguno<V>(this List<V> lista) => lista.Count != 0;
+
         public static string ASíONo(this bool booleano) => booleano ? "Sí" : "No";
 
         /// <summary>
@@ -1724,23 +1736,25 @@ namespace Vixark {
 
             if (sustantivo == null) return null;
 
-            if (ClasificaciónSustantivos.ContainsKey(sustantivo) && PalabrasFemeninas.ContainsKey(palabraMasculina)
-                && PalabrasPluralesFemeninas.ContainsKey(palabraMasculina) && PalabrasPluralesMasculinas.ContainsKey(palabraMasculina)) {
+            if (ClasificaciónSustantivos.TryGetValue(sustantivo, out (Género, NúmeroSustantivo) clasificación) 
+                && PalabrasFemeninas.TryGetValue(palabraMasculina, out string? palabraFemenina) 
+                && PalabrasPluralesFemeninas.TryGetValue(palabraMasculina, out string? palabraPluralFemenina) 
+                && PalabrasPluralesMasculinas.TryGetValue(palabraMasculina, out string? palabraPluralMasculina)) {
 
-                var género = ClasificaciónSustantivos[sustantivo].Item1;
-                var número = ClasificaciónSustantivos[sustantivo].Item2;
+                var género = clasificación.Item1;
+                var número = clasificación.Item2;
                 switch (género) {
                     case Género.Desconocido:
                     case Género.Otro:
-                        return $"{palabraMasculina}/{PalabrasFemeninas[palabraMasculina]}";
+                        return $"{palabraMasculina}/{palabraFemenina}";
                     case Género.Femenino:
 
                         switch (número) {
                             case NúmeroSustantivo.Desconocido:
                             case NúmeroSustantivo.Singular:
-                                return PalabrasFemeninas[palabraMasculina];
+                                return palabraFemenina;
                             case NúmeroSustantivo.Plural:
-                                return PalabrasPluralesFemeninas[palabraMasculina];
+                                return palabraPluralFemenina;
                             default:
                                 throw new ArgumentException(CasoNoConsiderado(número));
                         }
@@ -1752,7 +1766,7 @@ namespace Vixark {
                             case NúmeroSustantivo.Singular:
                                 return palabraMasculina;
                             case NúmeroSustantivo.Plural:
-                                return PalabrasPluralesMasculinas[palabraMasculina];
+                                return palabraPluralMasculina;
                             default:
                                 throw new ArgumentException(CasoNoConsiderado(número));
                         }
@@ -2064,7 +2078,7 @@ namespace Vixark {
         public static List<string> ALíneas(this string? texto, bool eliminarLíneasVacías = false) {
 
             if (texto == null) return new List<string>();
-            return texto.Split(new[] { "\r\n", "\r", "\n" }, eliminarLíneasVacías ? StringSplitOptions.RemoveEmptyEntries
+            return texto.Split(LíneasVacías, eliminarLíneasVacías ? StringSplitOptions.RemoveEmptyEntries
                 : StringSplitOptions.None).ToList(); // Ver https://stackoverflow.com/questions/1508203/best-way-to-split-string-into-lines.
 
         } // ALíneas>
@@ -2701,16 +2715,14 @@ namespace Vixark {
         public static Dictionary<K, V> Agregar<K, V>(this Dictionary<K, V>? diccionario, K clave, V valor, bool sobreescribir = true) where K : notnull {
 
             diccionario ??= new Dictionary<K, V>();
-            if (diccionario.ContainsKey(clave)) {
+            if (!diccionario.TryAdd(clave, valor)) {
 
                 if (sobreescribir) {
                     diccionario[clave] = valor; // Por rendimiento de manera predeterminada se sobreescribe. No hay claridad del rendimiento genérico de la función Equals.
                 } else {
                     if (!Equals(diccionario[clave], valor)) diccionario[clave] = valor; // Se evita sobreescribir si no es necesario.
                 }
-
-            } else {
-                diccionario.Add(clave, valor);
+                
             }
             return diccionario;
 
@@ -2756,11 +2768,7 @@ namespace Vixark {
         public static Dictionary<K, decimal> AgregarSumando<K>(this Dictionary<K, decimal>? diccionario, K clave, decimal valor) where K : notnull {
 
             diccionario ??= new Dictionary<K, decimal>();
-            if (diccionario.ContainsKey(clave)) {
-                diccionario[clave] += valor;
-            } else {
-                diccionario.Add(clave, valor);
-            }
+            if (!diccionario.TryAdd(clave, valor)) diccionario[clave] += valor;
             return diccionario;
 
         } // AgregarSumando>
@@ -2807,7 +2815,7 @@ namespace Vixark {
             if (clave is string claveTexto && diccionario is Dictionary<string, V> diccionarioClaveTexto) {
                 return ObtenerValor(diccionarioClaveTexto, claveTexto, ignorarCapitalización: ignorarCapitalización);
             } else {
-                return diccionario.ContainsKey(clave) ? (V?)diccionario[clave] : null;
+                return diccionario.TryGetValue(clave, out V valor) ? (V?)valor : null; // Probar TryGetValue.
             }
 
         } // ObtenerValor>

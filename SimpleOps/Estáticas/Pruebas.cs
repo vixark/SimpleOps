@@ -846,8 +846,8 @@ namespace SimpleOps {
             OperacionesEspecialesDatos = true; // Necesario para evitar el mensaje de error al escribir Cliente.ContactoFacturas.Email en el mapeo inverso hacia el objeto venta.
             try {
 
-                var datosCotización = Deserializar<Integración.DatosCotización>(File.ReadAllText(rutaJson), Serialización.EnumeraciónEnTexto);
-                if (datosCotización == null) throw new ArgumentNullException(nameof(datosCotización), "El objeto datosCotización está vacío.");
+                var datosCotización = Deserializar<Integración.DatosCotización>(File.ReadAllText(rutaJson), Serialización.EnumeraciónEnTexto) 
+                    ?? throw new ArgumentNullException(nameof(rutaJson), $"El objeto datosCotización creado a partir de la ruta {rutaJson} está vacío.");
                 var mapeador = new Mapper(ConfiguraciónMapeadorCotizaciónIntegraciónInverso);
                 var cotización = mapeador.Map<Cotización>(datosCotización);
                 cotización.EstablecerTipo(tipo); // Siempre se debe establecer el tipo después del mapeo para agregue los valores predeterminados de algunas propiedades si no fueron mapeadas y quedaron nulas.
@@ -1410,10 +1410,10 @@ namespace SimpleOps {
             var cliente = new Cliente("OPTICAS GMO COLOMBIA S A S", new Municipio("Bogotá", "Bogotá", "Bogotá, D.C.") { ID = 1, Código = "11001" },
                 TipoCliente.Consumidor) {
                 Identificación = "900108281", TipoEntidad = TipoEntidad.Empresa, Dirección = "CR 9 A N0 99 - 07 OF 802",
-                DíasCrédito = 92, Teléfono = "5555555"
+                DíasCrédito = 92, Teléfono = "5555555",
+                ContactoFacturas = new Contacto("dcruz@empresa.org") { Nombre = "Diana Cruz", Teléfono = "31031031089" }
             };
 
-            cliente.ContactoFacturas = new Contacto("dcruz@empresa.org") { Nombre = "Diana Cruz", Teléfono = "31031031089" };
             cliente.Sedes.Add(new Sede("Bodega", cliente, "CARRERA 8 No 20-14/40", cliente.Municipio!));
             var sede = cliente.Sedes.First();
             var informePago = new InformePago(1000, new DateTime(2018, 09, 29), cliente);

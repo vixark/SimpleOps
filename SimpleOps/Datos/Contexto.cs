@@ -555,7 +555,7 @@ namespace SimpleOps.Datos {
                     if (ePendientesInsertar == null) {
                         ePendientesInsertar = ChangeTracker.Entries().Where(e => e.State == EntityState.Added).ToList(); // Se hace la consulta aquí para evitar reducir el rendimiento de todas las otras solicitudes a GuardarCambios que no lo necesitan.
                         ePendientesInsertar.ForEach(e => e.State = EntityState.Unchanged); // Todas las entradas pendientes por insertar se marcan Unchanged y se va marcando una a una Added para insertar individualmente las entidades y detectar y controlar las generadoras del conflicto.
-                        hayInserciones = ePendientesInsertar.Any();
+                        hayInserciones = ePendientesInsertar.Alguno();
                     }
 
                     if (hayInserciones == true) {
@@ -581,7 +581,7 @@ namespace SimpleOps.Datos {
 
                     if (enConflictoInserción && hayInserciones == true) {
                         ePendientesInsertar!.Remove(eInsertar!); // Si hayInserciones = true, se garantiza que ePendientesInsertar y eInsertar no son nulos.
-                        éxitoInserción = !ePendientesInsertar.Any(); // Se establece como exitosa la inserción cuando ya no quedan más pendientes por insertar.
+                        éxitoInserción = !ePendientesInsertar.Alguno(); // Se establece como exitosa la inserción cuando ya no quedan más pendientes por insertar.
                     } else {
                         éxitoInserción = true;
                     }
@@ -601,7 +601,13 @@ namespace SimpleOps.Datos {
                             }
 
                         } else {
-                            enConflictoInserción = hayInserciones == null ? true : throw ex; // Se activa enConflictoInserción si se verifica que se trata de una excepción de fallo de restricción de claves únicas y aún no se ha verificado si hay inserciones por realizar. El relanzamiento de la excepción se produce posiblemente en un caso especial en el se entra en conflicto por la modificación de las claves de una entidad a las mismas claves que otro usuario hace poco insertó, aunque a la versión actual Entity Framework impide estas operaciones se deja el lanzamiento de la excepción por si se filtra algún caso que lo genere.  
+
+                            if (hayInserciones == null) {
+                                enConflictoInserción = true; // Se activa enConflictoInserción si se verifica que se trata de una excepción de fallo de restricción de claves únicas y aún no se ha verificado si hay inserciones por realizar. 
+                            } else {
+                                throw; // Es necesario hacer esto con un condicional completo porque si se hace con condicional de una línea de tipo ?:, no permite poner la palabra clave throw sola y se debe hacer throw ex que saca otro error. El relanzamiento de la excepción se produce posiblemente en un caso especial en el se entra en conflicto por la modificación de las claves de una entidad a las mismas claves que otro usuario hace poco insertó, aunque a la versión actual Entity Framework impide estas operaciones se deja el lanzamiento de la excepción por si se filtra algún caso que lo genere. 
+                            }  
+
                         }
                                 
                     } else {
@@ -686,7 +692,7 @@ namespace SimpleOps.Datos {
         public ResultadoBloqueo VerificarYBloquear(BloqueoVarias bloqueoVarias, bool mostrarError = true) {
 
             var bloqueosExistentes = ObtenerBloqueos(bloqueoVarias);
-            if (bloqueosExistentes.Any()) {
+            if (bloqueosExistentes.Alguno()) {
                 if (mostrarError) MostrarErrorBloqueosExistentes(bloqueosExistentes, ObtenerNombreTabla(bloqueoVarias.NombreEntidad, this));
                 return new ResultadoBloqueo(false, bloqueosExistentes);
             } else {
@@ -710,7 +716,7 @@ namespace SimpleOps.Datos {
             }
             var bloqueosExistentes = ObtenerBloqueos(predicado, ConectorLógico.O).ToList();
 
-            if (bloqueosExistentes.Any()) {
+            if (bloqueosExistentes.Alguno()) {
 
                 if (mostrarError) {
                     MostrarErrorBloqueosExistentes(bloqueosExistentes, bloqueosVarias.Select(db => db.NombreEntidad).Distinct()
