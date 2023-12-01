@@ -2733,7 +2733,7 @@ namespace Vixark {
             Func<V, V, bool>? sonIguales = null) where K : notnull {
 
             diccionario ??= new Dictionary<K, List<V>>();
-            if (diccionario.TryGetValue(clave, out List<V>? lista)) { // Revisar comportamiento de este cambio realizado con una sugerencia del compilador para mejorar la eficiencia y no buscar dos veces cómo se hacía antes: con ContainsKey y después con el índice en .Agregar.
+            if (diccionario.TryGetValue(clave, out List<V>? lista)) { // Cambio realizado con una sugerencia del compilador para mejorar la eficiencia y no buscar dos veces cómo se hacía antes: con ContainsKey y después con el índice en .Agregar.
                 lista.Agregar(valor, permitirRepetidos, sonIguales);
             } else {
                 diccionario.Add(clave, new List<V> { valor });
