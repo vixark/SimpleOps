@@ -1062,8 +1062,16 @@ namespace SimpleOps {
                 }
 
             } else {
-                MostrarError($"Error en factura electrónica.{DobleLínea}{mensaje}"); // Error. Se aborta la operación, no se debe grabar en la base de datos y se debe mantener la interfaz inalterada para que se realicen las correcciones necesarias.
+
+                if (mensaje != null && mensaje.Contains("FAD06")) {
+                    MostrarError($"Error FAD06 en factura electrónica.{DobleLínea}Este error indica un error en el cálculo del CUFE. Cómo estás haciendo una " +
+                        $"factura de prueba que ya se ha probado que funciona bien anteriormente, lo más probable es que tu clave técnica esté incorrecta. " +
+                        $"Verifica que estés usando la clave técnica para el entorno de facturación correcto (pruebas o producción).");
+                } else {
+                    MostrarError($"Error en factura electrónica.{DobleLínea}{mensaje}"); // Error. Se aborta la operación, no se debe grabar en la base de datos y se debe mantener la interfaz inalterada para que se realicen las correcciones necesarias.
+                }
                 return false;
+
             }
 
             if (venta != null) {
