@@ -31,7 +31,7 @@ Removing or changing the above text is not allowed. *@
 
 
     #region Generales
-    // Copiar y pegar en todas las páginas.
+    // Al modificar algo, copiar y pegar en todas las páginas.
 
     static string APuntos(double número) => $"{número.ToString().Replace(",", ".")}px";
 
@@ -55,14 +55,18 @@ Removing or changing the above text is not allowed. *@
                             @if (alinearTextoAIzquierda) {
                                 <div class="t32n fc-l255" style="white-space: nowrap; margin-left: 45px;">@título</div>
                             } else {
-                                @if (usarImagen) { <img style="height: 61px; margin-left: 23px;" src="@imagenBase64" /> }                       
+                                @if (usarImagen) {
+                                    <img style="height: 61px; margin-left: 23px;" src="@imagenBase64" />
+                                }
                             }
                         </td>
 
                         <td>
                             @if (alinearTextoAIzquierda) {
-                                @if (usarImagen) { <img style="height: 61px; margin-right: 45px;" src="@imagenBase64" /> }
-                            } else { 
+                                @if (usarImagen) {
+                                    <img style="height: 61px; margin-right: 45px;" src="@imagenBase64" />
+                                }
+                            } else {
                                 <div class="t32n fc-l255" style="white-space: nowrap; margin-right: 45px;">@título</div>
                             }
                         </td>
@@ -106,7 +110,9 @@ Removing or changing the above text is not allowed. *@
 
         <tr>
             <td height="@(alto)px">
-                @if (alto > 100) { <span style="font-size: 1px; color: white;">@Model.TextoPruebaColor</span> }
+                @if (alto > 100) {
+                    <span style="font-size: 1px; color: white;">@Model.TextoPruebaColor</span>
+                }
             </td>
         </tr>
 
@@ -122,7 +128,7 @@ Removing or changing the above text is not allowed. *@
 
 
     void TablaPrecios(Dictionary<string, decimal?> precios, string? claseAdicionalTabla = null, string? claseAdicionalContenedorPrecios = null,
-        int? ancho = null) {
+        int? ancho = null, string? textoAdicionalPrecio = null) {
 
         <div class="cnprecios @claseAdicionalContenedorPrecios">
             <table class="tprecios @claseAdicionalTabla" @(ancho != null ? @$"style='width:{ancho}px'" : "")>
@@ -132,7 +138,7 @@ Removing or changing the above text is not allowed. *@
                     var infoPrecio = kv.Key;
                     <tr class="fprecio">
                         <td class="iprecio" style="display: inline-block">@(infoPrecio + (string.IsNullOrEmpty(infoPrecio) ? "" : ":"))</td>
-                        <td class="precio" style="display: inline-block">@ATexto(precio)</td>
+                        <td class="precio" style="display: inline-block">@(ATexto(precio) + textoAdicionalPrecio)</td>
                     </tr>
 
                 }
@@ -182,9 +188,15 @@ Removing or changing the above text is not allowed. *@
 
     void ReferenciaYDescripción(string? referencia, string? título, string? descripción, string? claseReferencia = null, bool centrarReferencia = false) {
 
-        if (!string.IsNullOrEmpty(referencia)) { <div class="bi-c @claseReferencia @(centrarReferencia ? "dctr" : "")">@referencia</div> }
-        if (!string.IsNullOrEmpty(título)) { <div class="tít tít-bref">@título</div> }
-        if (!string.IsNullOrEmpty(descripción)) { <div class="desc">@descripción</div> }
+        if (!string.IsNullOrEmpty(referencia)) {
+            <div class="bi-c @claseReferencia @(centrarReferencia ? "dctr" : "")">@referencia</div>
+        }
+        if (!string.IsNullOrEmpty(título)) {
+            <div class="tít tít-bref">@título</div>
+        }
+        if (!string.IsNullOrEmpty(descripción)) {
+            <div class="desc">@descripción</div>
+        }
 
     } // ReferenciaYDescripción>
 
@@ -193,10 +205,10 @@ Removing or changing the above text is not allowed. *@
         int margenDer = 0, int margenSup = 0) {
 
         var imagenBase64 = referencia != null && Model.ImágenesProductosBase64.ContainsKey(referencia) ?
-            Model.ImágenesProductosBase64[referencia] : "data:null";
+        Model.ImágenesProductosBase64[referencia] : "data:null";
 
         var estilo = ancho != null || margenDer != 0 || margenSup != 0 ?
-            @$"style='width:{ancho}px; margin-right:{margenDer}px; margin-top:{margenSup}px;'" : "";
+        @$"style='width:{ancho}px; margin-right:{margenDer}px; margin-top:{margenSup}px;'" : "";
         if (agregarContenedor) {
             <div class="@claseContenedor">
                 <img class="@claseImagen" @estilo src="@imagenBase64" />
@@ -210,11 +222,11 @@ Removing or changing the above text is not allowed. *@
 
     void ProductoGeneral(string? referenciaImagen, string? referenciaTítulo, string? título, string? descripción, Dictionary<string, decimal?> precios,
         double ancho, double alto, double margenIzq, double margenSup, int anchoImagen, int margenDerImagen, int? anchoInfoPrecio = null,
-        int margenSupImagen = 0, bool agotado = false, bool ocultarPrecio = false, string? claseAdicionalTablaPrecios = null, 
-        string? claseReferencia = null) {
+        int margenSupImagen = 0, bool agotado = false, bool ocultarPrecio = false, string? claseAdicionalTablaPrecios = null,
+        string? claseReferencia = null, string? textoAdicionalPrecio = null) {
 
-        var largoInfoYPrecio 
-            = precios.Count == 0 ? 7 : precios.Max(kv => kv.Key.Length + (kv.Value == null ? 0 : (decimal)kv.Value!).ToString().Length + 7);
+        var largoInfoYPrecio
+        = precios.Count == 0 ? 7 : precios.Max(kv => kv.Key.Length + (kv.Value == null ? 0 : (decimal)kv.Value!).ToString().Length + 7);
         if (anchoInfoPrecio == null) anchoInfoPrecio = (int)(6.4286 * largoInfoYPrecio);
 
         <div style="width: @APuntos(ancho); height: @APuntos(alto); margin-left: @APuntos(margenIzq); margin-top: @APuntos(margenSup);">
@@ -222,7 +234,9 @@ Removing or changing the above text is not allowed. *@
                 <tr>
 
                     <td class="vtop">
-                        @{ Imagen(referenciaImagen, "", ancho: anchoImagen, margenDer: margenDerImagen, margenSup: margenSupImagen); }
+                        @{
+                            Imagen(referenciaImagen, "", ancho: anchoImagen, margenDer: margenDerImagen, margenSup: margenSupImagen);
+                        }
                     </td>
 
                     <td class="vtop">
@@ -230,7 +244,9 @@ Removing or changing the above text is not allowed. *@
                         <div style="position: relative; height: @APuntos(alto); width: @APuntos(ancho - anchoImagen - margenDerImagen);">
 
                             <div>
-                                @{ ReferenciaYDescripción(referenciaTítulo, título, descripción, claseReferencia); }
+                                @{
+                                    ReferenciaYDescripción(referenciaTítulo, título, descripción, claseReferencia);
+                                }
                                 @if (agotado) {
                                     <span class="t-alerta">Agotado</span>
                                 }
@@ -239,7 +255,8 @@ Removing or changing the above text is not allowed. *@
                             <div style="position: absolute; left: 0px; bottom: 0px;">
                                 <div style="float:right">
                                     @if (!ocultarPrecio && !agotado) {
-                                        TablaPrecios(precios, ancho: anchoInfoPrecio, claseAdicionalTabla: claseAdicionalTablaPrecios);
+                                        TablaPrecios(precios, ancho: anchoInfoPrecio, claseAdicionalTabla: claseAdicionalTablaPrecios,
+                                        textoAdicionalPrecio: textoAdicionalPrecio);
                                     }
                                 </div>
                             </div>
