@@ -33,9 +33,13 @@ Removing or changing the above text is not allowed. *@
     #region Generales
     // Al modificar algo, copiar y pegar en todas las páginas.
 
-    static string APuntos(double número) => $"{número.ToString().Replace(",", ".")}px";
 
-    string ATexto(decimal? precio) => precio == null ? "?" : ((decimal)precio).ToString("### ### ### ##0") + " $"; // Los espacios son espacios delgados tomados de https://www.compart.com/en/unicode/U+2009.
+    static string APuntos(double número) 
+        => $"{número.ToString().Replace(",", ".")}px";
+
+
+    string ATexto(decimal? precio) 
+        => precio == null ? "?" : ((decimal)precio).ToString("### ### ### ##0") + " $"; // Los espacios son espacios delgados tomados de https://www.compart.com/en/unicode/U+2009.
 
 
     void Encabezado(string? título, string? imagenBase64, int espaciadoInferior = 28, bool alinearTextoAIzquierda = true) {
@@ -99,8 +103,7 @@ Removing or changing the above text is not allowed. *@
     void LogoNorma(string? imagenBase64, int desfaceHorizontal = 0, int desfaceVertical = 0) {
 
         <div style="position: relative">
-            <img style="width: 19px; position: absolute; top: @APuntos(-62 + desfaceVertical); left: @APuntos(191 + desfaceHorizontal);"
-                 src="@imagenBase64" />
+            <img style="width: 19px; position: absolute; top: @APuntos(-62 + desfaceVertical); left: @APuntos(191 + desfaceHorizontal);" src="@imagenBase64" />
         </div>
 
     } // LogoNorma>
@@ -128,10 +131,10 @@ Removing or changing the above text is not allowed. *@
 
 
     void TablaPrecios(Dictionary<string, decimal?> precios, string? claseAdicionalTabla = null, string? claseAdicionalContenedorPrecios = null,
-        int? ancho = null, string? textoAdicionalPrecio = null) {
+        int? ancho = null, string? textoAdicionalPrecio = null, bool centrar = false) {
 
         <div class="cnprecios @claseAdicionalContenedorPrecios">
-            <table class="tprecios @claseAdicionalTabla" @(ancho != null ? @$"style='width:{ancho}px'" : "")>
+            <table class="tprecios @claseAdicionalTabla" @(ancho != null ? @$"style='width:{ancho}px;{(centrar ? " text-align: center!important;" : "")}'" : "")>
                 @foreach (var kv in precios) {
 
                     var precio = kv.Value;
@@ -202,13 +205,13 @@ Removing or changing the above text is not allowed. *@
 
 
     void Imagen(string? referencia, string claseImagen, bool agregarContenedor = false, string? claseContenedor = null, int? ancho = null,
-        int margenDer = 0, int margenSup = 0) {
+        int margenDer = 0, int margenSup = 0, int margenInf = 0) {
 
         var imagenBase64 = referencia != null && Model.ImágenesProductosBase64.ContainsKey(referencia) ?
         Model.ImágenesProductosBase64[referencia] : "data:null";
 
         var estilo = ancho != null || margenDer != 0 || margenSup != 0 ?
-        @$"style='width:{ancho}px; margin-right:{margenDer}px; margin-top:{margenSup}px;'" : "";
+            @$"style='width:{ancho}px; margin-right:{margenDer}px; margin-top:{margenSup}px; margin-bottom:{margenInf}px'" : "";
         if (agregarContenedor) {
             <div class="@claseContenedor">
                 <img class="@claseImagen" @estilo src="@imagenBase64" />
@@ -225,18 +228,15 @@ Removing or changing the above text is not allowed. *@
         int margenSupImagen = 0, bool agotado = false, bool ocultarPrecio = false, string? claseAdicionalTablaPrecios = null,
         string? claseReferencia = null, string? textoAdicionalPrecio = null) {
 
-        var largoInfoYPrecio
-        = precios.Count == 0 ? 7 : precios.Max(kv => kv.Key.Length + (kv.Value == null ? 0 : (decimal)kv.Value!).ToString().Length + 7);
-        if (anchoInfoPrecio == null) anchoInfoPrecio = (int)(6.4286 * largoInfoYPrecio);
+        int? largoInfoYPrecio;
+        (largoInfoYPrecio, anchoInfoPrecio) = DimensiónInfoPrecioPrecio(precios, anchoInfoPrecio);
 
         <div style="width: @APuntos(ancho); height: @APuntos(alto); margin-left: @APuntos(margenIzq); margin-top: @APuntos(margenSup);">
             <table>
                 <tr>
 
                     <td class="vtop">
-                        @{
-                            Imagen(referenciaImagen, "", ancho: anchoImagen, margenDer: margenDerImagen, margenSup: margenSupImagen);
-                        }
+                        @{ Imagen(referenciaImagen, "", ancho: anchoImagen, margenDer: margenDerImagen, margenSup: margenSupImagen); }
                     </td>
 
                     <td class="vtop">
@@ -244,9 +244,7 @@ Removing or changing the above text is not allowed. *@
                         <div style="position: relative; height: @APuntos(alto); width: @APuntos(ancho - anchoImagen - margenDerImagen);">
 
                             <div>
-                                @{
-                                    ReferenciaYDescripción(referenciaTítulo, título, descripción, claseReferencia);
-                                }
+                                @{ ReferenciaYDescripción(referenciaTítulo, título, descripción, claseReferencia); }
                                 @if (agotado) {
                                     <span class="t-alerta">Agotado</span>
                                 }
@@ -270,6 +268,55 @@ Removing or changing the above text is not allowed. *@
         </div>
 
     } // ProductoGeneral>
+
+
+    (int?, int?) DimensiónInfoPrecioPrecio(Dictionary<string, decimal?> precios, int? anchoInfoPrecio = null) {
+
+        var largoInfoYPrecio = precios.Count == 0 ? 7 : precios.Max(kv => kv.Key.Length + (kv.Value == null ? 0 : (decimal)kv.Value!).ToString().Length + 7);
+        if (anchoInfoPrecio == null) anchoInfoPrecio = (int)(6.4286 * largoInfoYPrecio);
+        return (largoInfoYPrecio, anchoInfoPrecio);
+
+    } // DimensiónInfoPrecioPrecio>
+
+
+    void ProductoGeneralVertical(string? referenciaImagen, string? referenciaTítulo, string? título, string? descripción, Dictionary<string, decimal?> precios,
+        double ancho, double alto, double margenIzq, double margenSup, int anchoImagen, int margenDerImagen, int? anchoInfoPrecio = null,
+        int margenSupImagen = 13, bool agotado = false, bool ocultarPrecio = false, string? claseAdicionalTablaPrecios = null,
+        string? claseReferencia = null, string? textoAdicionalPrecio = null, int margenInfImagen = 13) {
+
+        int? largoInfoYPrecio;
+        (largoInfoYPrecio, anchoInfoPrecio) = DimensiónInfoPrecioPrecio(precios, anchoInfoPrecio);
+
+        <div style="height: @APuntos(alto); margin-left: @APuntos(margenIzq); margin-top: @APuntos(margenSup);">
+            <table style="width: @APuntos(ancho);">
+
+                <tr>
+                    <td class="vtop tctr">
+                        @{ ReferenciaYDescripción(referenciaTítulo, título, descripción, claseReferencia); }
+                        @if (agotado) { <span class="t-alerta">Agotado</span> }
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="vtop tctr">
+                        @{ Imagen(referenciaImagen, "", ancho: anchoImagen, margenDer: margenDerImagen, margenSup: margenSupImagen, margenInf: margenInfImagen); }
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="vtop tctr">
+                        @if (!ocultarPrecio && !agotado) {
+                            TablaPrecios(precios, ancho: (int?)ancho, claseAdicionalTabla: claseAdicionalTablaPrecios,
+                                textoAdicionalPrecio: textoAdicionalPrecio, centrar: true);
+                        }
+                    </td>
+
+                </tr>
+
+            </table>
+        </div>
+
+    } // ProductoGeneralVertical>
 
 
     public string ObtenerTipoCelda(bool primeraFila, bool últimaFila, bool primeraColumna, bool últimaColumna) { // Las celdas tienen este orden: a1-b1-c1/a2-b2-c2/a3-b3-c3. Los bordes de a4-b4-c4 son bordes para cuadriculas de 1 fila x 2 columnas en adelante.

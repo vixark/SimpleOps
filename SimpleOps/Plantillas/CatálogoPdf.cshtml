@@ -108,6 +108,14 @@ Removing or changing the above text is not allowed. *@
         width: 384px;
     }
 
+    .celda3c { /* Ancho de celda de tres columnas del mismo ancho. */
+        width: 256px;
+    }
+
+    .celda4c { /* Ancho de celda de cuatro columnas del mismo ancho. */
+        width: 190.5px; /* Se elige este valor para que el separador entre el segundo y el tercer producto quede alineado con el separador superior de una tabla con 2 columnas de productos. Esta pequeña inconsistencia es causada por el ancho de los bordes. */
+    }
+
     .celdas {
         margin-right: 22px;
         margin-left: 22px;
@@ -205,7 +213,7 @@ Removing or changing the above text is not allowed. *@
         font-size: 16px;
         font-weight: bold;
     }
-
+    
     .a1 { /* Los bordes de a1-b1-c1/a2-b2-c2/a3-b3-c3 son los bordes aplicables para cuadrículas de 2x2 en adelante (en 2x2 se usan solo a y c). */
         border-style: none solid solid none;
     }
@@ -269,5 +277,6 @@ Removing or changing the above text is not allowed. *@
     .d4 { /* Una única fila y una única columna. No hay bordes. */
         border-style: none none none none;
     }
+    
 
 </style>
