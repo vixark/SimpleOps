@@ -140,13 +140,24 @@ namespace SimpleOps.Legal {
                 NombreArchivo = xmlFileName;
                 válida = isValid == "true";
                 RespuestaAplicación = Base64ATexto(resultado["b:XmlBase64Bytes"]?.InnerText);
-                var xmlRespuestaAplicación = new XmlDocument();
-                xmlRespuestaAplicación.LoadXml(RespuestaAplicación);
-                CódigoRespuesta = xmlRespuestaAplicación.DocumentElement["cac:DocumentResponse"]?["cac:Response"]?["cbc:ResponseCode"]?.InnerText;
-                var fechaRespuestaStr = xmlRespuestaAplicación.DocumentElement["cbc:IssueDate"]?.InnerText;
-                FechaRespuesta = fechaRespuestaStr == null ? (DateTime?)null : DateTime.Parse(fechaRespuestaStr);
-                var horaRespuestaStr = xmlRespuestaAplicación.DocumentElement["cbc:IssueTime"]?.InnerText;
-                HoraRespuesta = horaRespuestaStr == null ? (DateTime?)null : DateTime.Parse(horaRespuestaStr);
+
+                if (!string.IsNullOrEmpty(RespuestaAplicación)) {
+
+                    var xmlRespuestaAplicación = new XmlDocument();
+                    xmlRespuestaAplicación.LoadXml(RespuestaAplicación);
+                    CódigoRespuesta = xmlRespuestaAplicación.DocumentElement["cac:DocumentResponse"]?["cac:Response"]?["cbc:ResponseCode"]?.InnerText;
+                    var fechaRespuestaStr = xmlRespuestaAplicación.DocumentElement["cbc:IssueDate"]?.InnerText;
+                    FechaRespuesta = fechaRespuestaStr == null ? (DateTime?)null : DateTime.Parse(fechaRespuestaStr);
+                    var horaRespuestaStr = xmlRespuestaAplicación.DocumentElement["cbc:IssueTime"]?.InnerText;
+                    HoraRespuesta = horaRespuestaStr == null ? (DateTime?)null : DateTime.Parse(horaRespuestaStr);
+
+                } else {
+
+                    CódigoRespuesta = "Ninguno";
+                    FechaRespuesta = DateTime.Now;
+                    HoraRespuesta = DateTime.Now;
+
+                }
 
             }
 
@@ -163,6 +174,11 @@ namespace SimpleOps.Legal {
             }
 
             if (Errores.Any(e => e.Tipo == TipoReglaDian.Rechazo)) { Error("Al menos un error es de rechazo."); return; }
+            if (Errores.Count == 0 && !válida) { 
+                Error("La solicitud no fue válida y el servidor de la DIAN no reportó el detalle de los errores. Es posible que se esté intentando hacer " +
+                    "un documento electrónico en el entorno incorrecto (factura real en entorno de pruebas o viceversa)."); 
+                return; 
+            }
             if (!válida) { Error("La solicitud no fue válida."); return; }
 
             Éxito = true;
