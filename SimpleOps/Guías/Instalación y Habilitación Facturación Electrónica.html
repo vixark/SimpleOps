@@ -46,7 +46,6 @@
             margin-bottom: 50px;
             margin-top: 50px;
         }
-
     </style>
 
     <h1>Instalación de SimpleOps y Habilitación de la Facturación Electrónica</h1>
@@ -196,15 +195,16 @@
         a facturar electrónicamente.
     </p>
 
-
     <p>
         <b>SimpleOps</b> se encuentra en desarrollo, por lo tanto aún no cuenta con instalador y la mejor
         manera de ejecutarlo es directamente desde el código fuente. Para ejecutar el código necesitarás
         <a href="https://visualstudio.microsoft.com/es/vs/community/">Visual Studio</a>. Si ya tienes instalado Visual Studio, actualízalo
-        a la última versión (busca y abre Visual Studio Installer en Windows). Además, recuerda que la 
-        <a href="https://github.com/vixark/SimpleOps#licencia">licencia</a> de SimpleOps es 
-        <a href="https://es.wikipedia.org/wiki/GNU_Affero_General_Public_License">AGPL</a>, lo que implica que el usuario <b>siempre</b> debe 
-        recibir una copia del código. Instalarlo de esta manera automáticamente garantiza el cumplimiento de esta obligación.
+        a la última versión (busca y abre Visual Studio Installer en Windows). Además, recuerda que la
+        <a href="https://github.com/vixark/SimpleOps#licencia">licencia</a> de SimpleOps es
+        <a href="https://es.wikipedia.org/wiki/GNU_Affero_General_Public_License">AGPL</a>, lo que implica que el usuario <b>siempre</b> debe
+        recibir una copia del código y de tus cambios realizados a él. Instalarlo de esta manera automáticamente garantiza el cumplimiento de esta obligación. 
+        Alternativamente, podrías instalar SimpleOps como ejecutable en el equipo del usuario para no tener que instalarle Visual Studio, 
+        pero recordando entregarle el código actualizado de SimpleOps y tus cambios en un archivo aparte.
     </p>
 
     <p>
@@ -296,8 +296,8 @@
         Para los valores <b>[Texto]</b> usa dobles comillas ("") y para los <b>[Número]</b> ninguna comilla y punto como separador de decimales.
         Los textos debes preprocesarlos con <a href="https://www.freeformatter.com/json-escape.html">esta utilidad</a>.
         En esa utilidad ingresa el texto en el cuadro, haz clic en <i>ESCAPE</i>,
-        copia el texto del cuadro <i>Escaped string</i> y pégalo en el archivo <i>Equipo.json</i>. 
-        Por ejemplo, el texto <i>D:\Programas\SimpleOps\Firma Electrónica</i> se convierte en <i>D:\\Programas\\SimpleOps\\Firma Electr\u00F3nica</i>, 
+        copia el texto del cuadro <i>Escaped string</i> y pégalo en el archivo <i>Equipo.json</i>.
+        Por ejemplo, el texto <i>D:\Programas\SimpleOps\Firma Electrónica</i> se convierte en <i>D:\\Programas\\SimpleOps\\Firma Electr\u00F3nica</i>,
         que es el texto que se debe usar.
     </p>
 
@@ -336,9 +336,9 @@
     <p>
         <b>SimpleOps</b> necesitará toda la información de tu empresa para poder generar facturas válidas ante la DIAN. Para hacerlo necesitarás agregar
         varios datos de tu empresa al archivo <i>Empresa.json</i>. Abre el archivo <i>[RutaSimpleOps]\Opciones\Empresa.json</i> y edítalo
-        siguiendo las mismas recomendaciones de la edición de <i>Equipo.json</i>. Para los valores <b>[Fecha]</b> usa el 
-        formato "YYYY-MM-DDT00:00:00Z" (con dobles comillas) y para los <b>[Booleano]</b> usa true para verdadero o false para falso (sin comillas). 
-        Si un texto tiene tildes o eñes, debes preprocesarlo con <a href="https://www.freeformatter.com/json-escape.html">esta utilidad</a>, si no las 
+        siguiendo las mismas recomendaciones de la edición de <i>Equipo.json</i>. Para los valores <b>[Fecha]</b> usa el
+        formato "YYYY-MM-DDT00:00:00Z" (con dobles comillas) y para los <b>[Booleano]</b> usa true para verdadero o false para falso (sin comillas).
+        Si un texto tiene tildes o eñes, debes preprocesarlo con <a href="https://www.freeformatter.com/json-escape.html">esta utilidad</a>, si no las
         tiene, lo puedes ingresar sin preprocesarlo.
     </p>
 
@@ -531,8 +531,8 @@
 
     <h2 id="paso7">7. Pruebas de Habilitación en la DIAN</h2>
     <p>
-        Este procedimiento habilitará a tu empresa cómo facturador electrónico usando <b>SimpleOps</b> en la DIAN y no podrás seguir facturando 
-        de la forma tradicional física. Si actualmente facturas con la solución gratuita de la DIAN o con un operador tecnológico, aún podrás seguir 
+        Este procedimiento habilitará a tu empresa cómo facturador electrónico usando <b>SimpleOps</b> en la DIAN y no podrás seguir facturando
+        de la forma tradicional física. Si actualmente facturas con la solución gratuita de la DIAN o con un operador tecnológico, aún podrás seguir
         facturando de esa forma.
     </p>
 
@@ -603,7 +603,7 @@
         Haz clic en <i>Configuración > Asociar Rangos de Numeración</i>. En <i>Proveedor - Software</i> selecciona
         la opción <i>[NombreDeTuEmpresa] - SimpleOps[NitDeTuEmpresa]</i>, en <i>Prefijo</i> selecciona la opción que contiene el prefijo, número
         de resolución y rango de numeración recién autorizado y haz clic en <i>Agregar</i>. Verifica que la fecha de expiración sea la misma que
-        ingresaste en <i>Empresa - Producción.json</i> > <i>FinAutorizaci\u00F3nFacturaci\u00F3n</i>. Si en la tabla hay un rango de numeración 
+        ingresaste en <i>Empresa - Producción.json</i> > <i>FinAutorizaci\u00F3nFacturaci\u00F3n</i>. Si en la tabla hay un rango de numeración
         anterior que ya no usarás, elimínalo.
     </p>
     <img src="Imágenes/Instalación y Habilitación Facturación Electrónica/AsociaciónPrefijosPortalDIAN.png" />
@@ -635,8 +635,8 @@
     <h2 id="paso10">10. Facturación Electrónica</h2>
     <p>
         La facturación electrónica se puede hacer directamente con <b>SimpleOps</b>
-        funcionando como tu aplicación ERP o mediante el uso de un programa tercero (otro ERP, Excel u otro). <b>Nota:</b> A diciembre de 2021, 
-        <b>SimpleOps</b> aún no tiene interfaz gráfica y no puede ser usado como ERP, entonces la única opción para facturar electrónicamente 
+        funcionando como tu aplicación ERP o mediante el uso de un programa tercero (otro ERP, Excel u otro). <b>Nota:</b> A diciembre de 2021,
+        <b>SimpleOps</b> aún no tiene interfaz gráfica y no puede ser usado como ERP, entonces la única opción para facturar electrónicamente
         es usando un programa tercero.
     </p>
 
@@ -734,14 +734,14 @@
                 <b>VentaN\u00FAmero:</b> Número de la factura a la que se le aplicará la nota crédito. Para facturas se deja en null.
             </li>
             <li>
-                <b>DescuentoCondicionado:</b> No afecta la base gravable para el IVA ni retenciones. Es un descuento que depende que se de cierta 
-                condición para ser aplicado y hasta que no se de esa condición hay incertidumbre de su aplicación, por lo tanto los impuestos y 
+                <b>DescuentoCondicionado:</b> No afecta la base gravable para el IVA ni retenciones. Es un descuento que depende que se de cierta
+                condición para ser aplicado y hasta que no se de esa condición hay incertidumbre de su aplicación, por lo tanto los impuestos y
                 retenciones son aplicados sin tenerlo en cuenta. Se puede usar un valor negativo para generar cargos adicionales sobre la factura que no
                 afecten los impuestos ni las retenciones, por ejemplo propinas.
             </li>
             <li>
-                <b>DescuentoComercial:</b> Afecta la base gravable para el IVA y retenciones. Es un descuento del que se tiene certeza que se va 
-                aplicar en el momento de la facturación sin depender de ninguna condición futura, por lo tanto los impuestos y retenciones son aplicados 
+                <b>DescuentoComercial:</b> Afecta la base gravable para el IVA y retenciones. Es un descuento del que se tiene certeza que se va
+                aplicar en el momento de la facturación sin depender de ninguna condición futura, por lo tanto los impuestos y retenciones son aplicados
                 teniéndolo en cuenta. Se aplica descontando el precio de cada producto.
             </li>
             <li>
