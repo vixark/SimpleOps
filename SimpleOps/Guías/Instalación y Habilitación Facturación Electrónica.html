@@ -51,16 +51,19 @@
     <h1>Instalación de SimpleOps y Habilitación de la Facturación Electrónica</h1>
 
     <p>
-        Para que <b>SimpleOps</b> pueda generar tus facturas electrónicas válidas legalmente es necesario que habilites a tu
+        La facturación electrónica solo está implementada para la DIAN de Colombia. <b>SimpleOps</b> no te servirá para facturar electrónicamente en otro país.
+    </p>
+
+    <p>
+        Para que <b>SimpleOps</b> pueda generar tus facturas electrónicas legalmente válidas, es necesario que habilites a tu
         empresa ante la DIAN cómo facturador electrónico usando <b>SimpleOps</b>, que compres y generes un certificado de firma digital con una entidad
         certificadora y que realices las pruebas de facturación electrónica con <b>SimpleOps</b> en el servidor de la DIAN.
     </p>
 
-    <p>
+    <p> 
         Esta guía fue escrita para empresas (personas jurídicas). Si necesitas facturar electrónicamente como persona natural, aún puedes seguir
-        esta guía, pero ten en cuenta que tendrás que realizar algunos pasos de manera diferente. La facturación electrónica solo está implementada
-        para la DIAN de Colombia. Si estás en otro país, puedes usar <b>SimpleOps</b> como ERP pero deberás desactivar la funcionalidad de facturación
-        electrónica.
+        esta guía, pero ten en cuenta que tendrás que realizar algunos pasos de manera diferente. Por ejemplo, en Empresa.json deberás escribir Persona
+        en TipoEntidad.
     </p>
 
     <h2>Pasos</h2>
@@ -479,7 +482,9 @@
         <li>
             <b>EmailContactoFacturaci\u00F3n [Texto]:</b>
             Email de la persona encargada de la facturación. Se usa para escribirlo en la factura electrónica (XML).
-            No es obligatorio, pero los clientes podrían hacer uso de él.
+            No es obligatorio, pero los clientes podrían hacer uso de él. Si se usa un valor, este correo debe coincidir con el configurado en la 
+            plataforma de la DIAN. Se configura en la plataforma de la DIAN con 
+            <a href="https://felcowiki.thefactoryhka.com.co/index.php/Configuraci%C3%B3n_-_Portal_DFactura_Validaci%C3%B3n_Previa#Configurar_Correo_Recepci.C3.B3n_DIAN">este procedimiento</a>.
         </li>
 
         <li>

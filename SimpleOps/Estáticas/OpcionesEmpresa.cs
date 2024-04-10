@@ -173,7 +173,7 @@ namespace SimpleOps.Singleton {
 
         public string? TeléfonoContactoFacturación { get; set; } // Teléfono de la persona encargada de la facturación. Se usa para escribirlo en la factura electrónica. No es obligatorio, pero los clientes podrían hacer uso de él.
 
-        public string? EmailContactoFacturación { get; set; } // Email de la persona encargada de la facturación. Se usa para escribirlo en la factura electrónica. No es obligatorio, pero los clientes podrían hacer uso de él.
+        public string? EmailContactoFacturación { get; set; } // Email de la persona encargada de la facturación. Se usa para escribirlo en la factura electrónica. No es obligatorio, pero los clientes podrían hacer uso de él. Si se usa un valor, este correo debe coincidir con el configurado en la plataforma de la DIAN. Se configura en la plataforma de la DIAN con este procedimiento: https://felcowiki.thefactoryhka.com.co/index.php/Configuraci%C3%B3n_-_Portal_DFactura_Validaci%C3%B3n_Previa#Configurar_Correo_Recepci.C3.B3n_DIAN.
 
         public decimal ImpuestoConsumoUnitarioPredeterminado { get; set; } = 0; // El valor unitario de impuesto de consumo que se aplica si no se especifica en el producto ni se puede obtener del tipo.
 
