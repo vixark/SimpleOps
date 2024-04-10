@@ -755,13 +755,15 @@ namespace SimpleOps.Legal {
                 },
             };
 
-            supplierParty.Contact = new ContactType { // 0..1 FAJ67. Aunque su uso no es obligatorio se considera apropiado informarlo porque es información que se dispone. Los clientes pueden hacer uso de esta información en la factura electrónica.
-                Name = new NameType1 { Value = Empresa.NombreContactoFacturación }, // 0..1 FAJ68.
-                Telephone = new TelephoneType { Value = Empresa.TeléfonoContactoFacturación }, // 0..1 FAJ69.
-                // Telefax = new TelefaxType { Value = }, // 0..1 FAJ70. El fax ya es obsoleto, no se requiere informar.
-                ElectronicMail = new ElectronicMailType { Value = Empresa.EmailContactoFacturación }, // 0..1 FAJ71.
-                // Note = new NoteType { Value = "" }, // 0..1 FAJ72. No es necesario saturar la interfaz requiriendo notas sobre el contacto.
-            };
+            if (!string.IsNullOrWhiteSpace(Empresa.EmailContactoFacturación)) { // Si EmailContactoFacturación se informa en la factura electrónica, deberá coincidir con el email registrado en la plataforma de la DIAN para la recepción de facturas, ver https://felcowiki.thefactoryhka.com.co/index.php/Configuraci%C3%B3n_-_Portal_DFactura_Validaci%C3%B3n_Previa#Configurar_Correo_Recepci.C3.B3n_DIAN. Entonces para evitar complicar al usuario se omite informar este valor si el usuario deja deja EmailContactoFacturación en blanco o con espacio.
+                supplierParty.Contact = new ContactType { // 0..1 FAJ67. Aunque su uso no es obligatorio se considera apropiado informarlo porque es información que se dispone. Los clientes pueden hacer uso de esta información en la factura electrónica.
+                    Name = new NameType1 { Value = Empresa.NombreContactoFacturación }, // 0..1 FAJ68.
+                    Telephone = new TelephoneType { Value = Empresa.TeléfonoContactoFacturación }, // 0..1 FAJ69.
+                    // Telefax = new TelefaxType { Value = }, // 0..1 FAJ70. El fax ya es obsoleto, no se requiere informar.
+                    ElectronicMail = new ElectronicMailType { Value = Empresa.EmailContactoFacturación }, // 0..1 FAJ71.
+                    // Note = new NoteType { Value = "" }, // 0..1 FAJ72. No es necesario saturar la interfaz requiriendo notas sobre el contacto.
+                };
+            }
 
             accountingSupplierParty.Party = supplierParty;
             document.AccountingSupplierParty = accountingSupplierParty;
