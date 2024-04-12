@@ -137,7 +137,7 @@ Removing or changing the above text is not allowed. *@
 
             @switch (i) {
                 case 1:
-                    @CrearCuerpo(); // Si está en modo CuerpoContinuo el contenido de este cuerpo puede ocupar varias páginas. Si está en modo PáginasIndependientes este cuerpo (VentaPdf.cshtml, CatálogoPdf.cshtml, etc) solo ocupará la página 1.
+                    @CrearCuerpo(); // Si está en modo CuerpoContinuo, el contenido de este cuerpo puede ocupar varias páginas. Si está en modo PáginasIndependientes, este cuerpo (VentaPdf.cshtml, CatálogoPdf.cshtml, etc) solo ocupará la página 1.
                     break;
                 default:
                     @Incluir("Página" + i, Model);

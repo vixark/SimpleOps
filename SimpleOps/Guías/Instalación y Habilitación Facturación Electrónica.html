@@ -60,12 +60,6 @@
         certificadora y que realices las pruebas de facturación electrónica con <b>SimpleOps</b> en el servidor de la DIAN.
     </p>
 
-    <p> 
-        Esta guía fue escrita para empresas (personas jurídicas). Si necesitas facturar electrónicamente como persona natural, aún puedes seguir
-        esta guía, pero ten en cuenta que tendrás que realizar algunos pasos de manera diferente. Por ejemplo, en Empresa.json deberás escribir Persona
-        en TipoEntidad.
-    </p>
-
     <h2>Pasos</h2>
 
     <ul style="list-style-type: decimal;">
@@ -394,6 +388,11 @@
         </li>
 
         <li>
+            <b>TipoEntidad [Texto]:</b>
+            Empresa o Persona.
+        </li>
+
+        <li>
             <b>NombreComercial [Texto]:</b>
             Se usa para informarlo a la DIAN al hacer la factura electrónica y para usarlo en representación gráfica de la factura electrónica.
             Si se deja en <i>null</i>, se omite en la factura electrónica y en la representación gráfica se usa la razón social.
@@ -484,7 +483,7 @@
             Email de la persona encargada de la facturación. Se usa para escribirlo en la factura electrónica (XML).
             No es obligatorio, pero los clientes podrían hacer uso de él. Si se usa un valor, este correo debe coincidir con el configurado en la
             plataforma de la DIAN. Se configura en la plataforma de la DIAN con
-            <a href="https://felcowiki.thefactoryhka.com.co/index.php/Configuraci%C3%B3n_-_Portal_DFactura_Validaci%C3%B3n_Previa">este procedimiento</a> (buscar la sección Configurar Correo Recepción DIAN). 
+            <a href="https://felcowiki.thefactoryhka.com.co/index.php/Configuraci%C3%B3n_-_Portal_DFactura_Validaci%C3%B3n_Previa">este procedimiento</a> (buscar la sección Configurar Correo Recepción DIAN).
             Alternativamente, puedes dejar este valor vacío ("").
         </li>
 
