@@ -647,7 +647,7 @@
 
     <p>
         Para facturar electrónicamente usando un programa tercero necesitarás que ese programa lleve el registro del concecutivo de facturación
-        y que genere un archivo JSON con la información mínima para generar la factura y en <b>SimpleOps</b> debes establecer
+        y que genere un archivo JSON en codificación UTF-8 con la información mínima para generar la factura y en <b>SimpleOps</b> debes establecer
         <i>Estáticas > Configuración.cs > ModoIntegraciónTerceros</i> en <i>true</i>. En este modo <b>SimpleOps</b> supervisa una carpeta del
         computador y si encuentra que un nuevo archivo ha sido añadido, lo procesa, le envía la factura
         electrónica a la DIAN, genera la representación gráfica en PDF y genera un archivo respuesta que puede ser leído por el programa tercero,
@@ -815,6 +815,11 @@
         la factura electrónica (XLM) que acabas de generar. Si quieres verificar si la factura efectivamente fue aceptada por la DIAN, puedes
         entrar a su portal de facturador y hacer clic en <i>Documentos > Enviados</i>. Si la factura eléctrónica aparece allí, habrás configurado
         exitósamente <b>SimpleOps</b> para funcione como facturador electrónico de un programa tercero.
+    </p>
+
+    <p>
+        Para generar notas crédito o notas débito el archivo JSON que debe generar el programa tercero debe tener el mismo formato que el usado para facturas, 
+        pero su nombre de archivo debe iniciar por NC- para notas crédito y ND- para notas débito.
     </p>
 
     <h2 id="paso11">11. Facturación Electrónica usando Excel (Opcional)</h2>
