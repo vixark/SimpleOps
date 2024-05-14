@@ -188,6 +188,17 @@ namespace SimpleOps.Legal {
                 return Falso(out mensaje, "El tipo de documento no es venta ni nota crédito ni nota débito.");
 
             var ventaNota = notaCrédito?.Venta ?? notaDébito?.Venta;
+            if (ventaNota == null) return Falso(out mensaje, "No se proporcionó ningún dato de la venta asociada a la nota.");
+            if (ventaNota?.FechaHora == null) {
+
+                MostrarError("Se debe proporcionar la fecha del mes contable afectado por la nota crédito o debito. " +
+                    "Si se está realizando una nota asociada a una factura, es la fecha de la factura afectada. " +
+                    "Si se está en modo de integración con programas terceros, esto se hace mediante el valor VentaFechaHora en el JSON." 
+                    + DobleLínea + "La nota actual se realizará afectando el mes contable actual. Este error se seguirá mostrando cuando esto suceda, " +
+                    "pero no se impedirá la generación de la nota.");
+                ventaNota!.FechaHora = Documento.FechaHora;
+
+            }
 
             var fechaHora = Documento.FechaHora;
             var tipoImpuesto = Documento.IVA > 0 ? (Documento.ImpuestoConsumo > 0 ? TipoImpuesto.IVAeINC : TipoImpuesto.IVA) 
@@ -581,7 +592,17 @@ namespace SimpleOps.Legal {
             document.Note = new NoteType[] { new NoteType { Value = Validar(Documento.Observación, "15..5000", true) } }; // 0..N FAD13.
             document.DocumentCurrencyCode = new DocumentCurrencyCodeType { Value = Validar(moneda, "3") }; // 1..1 FAD15 En la documentación se saltan la FAD14...
             document.LineCountNumeric = new LineCountNumericType { Value = Validar(Documento.Líneas.Count, "1..6") }; // 1..1 FAD16.
-            // document.InvoicePeriod = new PeriodType { StartDate = , StartTime = , EndDate = , EndTime = }; // 0..1 FAE01. Grupo de campos relativos al Periodo de Facturación: Intervalo de fechas la las que referencia la factura por ejemplo en servicios públicos. Para utilizar en los servicios públicos, contratos de arrendamiento, matriculas en educación, etc.
+
+            if (ventaNota != null && (notaCrédito != null || notaDébito != null)) { // Nunca ventaNota será nula porque se verifica más arriba. Se pone en el condicional solo para que no saque advertencia de la posibilidad que sea nula en las líneas inferiores.
+
+                document.InvoicePeriod = new PeriodType { // 0..1 FAE01. Grupo de campos relativos al periodo contable de la factura afectada con la nota. No se encontró documentación de la DIAN que lo aclarará, pero el experto en este video sugiere que sea el periodo contable mensual de la factura afectada: https://www.youtube.com/watch?v=fRLKZY_VM8I&t=3565s. Es obligatorio poner estas fechas para notas que no tengan como referencia una factura específica. Y en términos generales es el sistema que usa SimpleOps para evitar que el usuario tenga que llevar un control externo de las facturas y sus CUFE.
+                    StartDate = new StartDateType { Value = ventaNota.FechaHora.InicioMes() }, // 1..1 FAB07.
+                    EndDate = new EndDateType { Value = ventaNota.FechaHora.FinMes() } // 1..1 FAB08.
+                };
+
+            } else { // Factura.
+                // document.InvoicePeriod = new PeriodType { StartDate = , StartTime = , EndDate = , EndTime = }; // 0..1 FAE01. Grupo de campos relativos al Periodo de Facturación: Intervalo de fechas la las que referencia la factura por ejemplo en servicios públicos. Para utilizar en los servicios públicos, contratos de arrendamiento, matriculas en educación, etc.
+            }
 
             if (notaCrédito != null || notaDébito != null) {
 
@@ -888,7 +909,7 @@ namespace SimpleOps.Legal {
             var paymentsMeans = new PaymentMeansType[1]; // 1..N FAN01.
             paymentsMeans[0] = new PaymentMeansType { 
                 ID = new IDType { Value = (venta != null || notaDébito != null) ? cliente.FormaPago.AValor() : FormaPago.Contado.AValor() }, // 1..1 FAN02. En el caso de notas crédito no tiene mucho sentido la forma de pago a crédito porque son un descuento, la forma de pago será la de la factura asociada o si no hay comercialmente se acepta descontar el valor en el próximo pago.
-                PaymentMeansCode = new PaymentMeansCodeType { Value = CódigoMedioPagoPorDefinir }, // 1..1 FAN03. En la documentación dice que el tamaño debe ser 1..2 pero CódigoMedioPagoPorDefinir es ZZZ, entonces no se realiza ninguna validación.
+                PaymentMeansCode = new PaymentMeansCodeType { Value = CódigoMedioPagoOtro }, // 1..1 FAN03. En la documentación dice que el tamaño debe ser 1..2 pero CódigoMedioPagoOtro es ZZZ, entonces no se realiza ninguna validación.
                 // PaymentID = new PaymentIDType { Value = } // 0..N no hay claridad a que se refiere y es opcional. El FAN06 PaymentTerms ni está documentado.
             };
             if (venta != null && venta.FechaVencimiento != null) 

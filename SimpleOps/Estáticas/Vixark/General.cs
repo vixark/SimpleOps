@@ -155,20 +155,6 @@ namespace Vixark {
         /// </summary>
         public static string NuevaLínea = null!; // Se inicia en IniciarVariablesGenerales.
 
-        public static DateTime SinMilisegundos(this DateTime fechaHora) => fechaHora.AddTicks(-fechaHora.Ticks % TimeSpan.TicksPerSecond);
-
-        /// <summary>
-        /// Una hora de tipo UTC continua pero ajustada una cantidad de horas constante para acercarlo a la hora local del equipo. 
-        /// En algunas ocasiones, como países con horarios de verano o con múltiples zonas horarias, puede no coincidir con la hora 
-        /// local del equipo pero se usa porque tiene dos ventajas: Es útil para almacenamiento en la base de datos pues permite 
-        /// garantizar que acciones realizadas después siempre queden con fecha posterior a las realizadas antes y en el caso de 
-        /// países sin horario de verano ni zonas horarias se puede usar directamente como hora del equipo. En los otros casos se 
-        /// puede ajustar posteriormente para obtener la hora real.
-        /// </summary>
-        /// <param name="horasAjuste">La cantidad de horas constante que se ajusta UtcNow.</param>
-        /// <returns></returns>
-        public static DateTime AhoraUtc(int horasAjuste) => DateTime.UtcNow.AddHours(horasAjuste);
-
         public static readonly Dictionary<string, (Género, NúmeroSustantivo)> ClasificaciónSustantivos
             = new Dictionary<string, (Género, NúmeroSustantivo)> {
                 { "aplicaciones", (Género.Femenino, NúmeroSustantivo.Plural) },
@@ -1460,11 +1446,166 @@ namespace Vixark {
         } // ObtenerColorFondo>
 
 
-        #endif  // PermitirCódigoNoSeguro>
+#endif  // PermitirCódigoNoSeguro>
 
         #endregion RedimensionarImagen>
 
         #endregion Imágenes>
+
+
+
+        #region Fechas
+
+
+        /// <summary>
+        /// Devuelve la fecha del primer milisegundo del mes.
+        /// </summary>
+        /// <param name="fechaHora"></param>
+        /// <returns></returns>
+        public static DateTime InicioMes(this DateTime fechaHora) => new DateTime(fechaHora.Year, fechaHora.Month, 1);
+
+        /// <summary>
+        /// Devuelve la fecha del último milisegundo del mes.
+        /// </summary>
+        /// <param name="fechaHora"></param>
+        /// <returns></returns>
+        public static DateTime FinMes(this DateTime fechaHora) => fechaHora.AddMonths(1).InicioMes().AddMilliseconds(-1);
+
+        public static DateTime SinMilisegundos(this DateTime fechaHora) => fechaHora.AddTicks(-fechaHora.Ticks % TimeSpan.TicksPerSecond);
+
+        /// <summary>
+        /// Una hora de tipo UTC continua pero ajustada una cantidad de horas constante para acercarlo a la hora local del equipo. 
+        /// En algunas ocasiones, como países con horarios de verano o con múltiples zonas horarias, puede no coincidir con la hora 
+        /// local del equipo pero se usa porque tiene dos ventajas: Es útil para almacenamiento en la base de datos pues permite 
+        /// garantizar que acciones realizadas después siempre queden con fecha posterior a las realizadas antes y en el caso de 
+        /// países sin horario de verano ni zonas horarias se puede usar directamente como hora del equipo. En los otros casos se 
+        /// puede ajustar posteriormente para obtener la hora real.
+        /// </summary>
+        /// <param name="horasAjuste">La cantidad de horas constante que se ajusta UtcNow.</param>
+        /// <returns></returns>
+        public static DateTime AhoraUtc(int horasAjuste) => DateTime.UtcNow.AddHours(horasAjuste);
+
+        /// <summary>
+        /// Encapsulación de acceso rápido para convertir un <paramref name="texto"/> en una fecha dado un <paramref name="formato"/>.
+        /// </summary>
+        /// <param name="texto"></param>
+        /// <param name="formato"></param>
+        /// <returns></returns>
+        public static DateTime AFecha(this string texto, string formato) => DateTime.ParseExact(texto, formato, CultureInfo.InvariantCulture);
+
+        /// <summary>
+        /// Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 
+        /// sin saturar el código.
+        /// </summary>
+        public static string ATexto(this DateTime fechaHora, string formato) => fechaHora.ToString(formato, CultureInfo.InvariantCulture);
+
+        /// <summary>
+        /// Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 
+        /// sin saturar el código.
+        /// </summary>
+        public static string? ATexto(this DateTime? fechaHora, string formato)
+            => fechaHora == null ? null : ((DateTime)fechaHora).ToString(formato, CultureInfo.InvariantCulture);
+
+
+        /// <summary>
+        /// Función muy rápida para convertir un texto en una fecha de formato yyMMdd. Se ejecuta en el 10% del tiempo de ParseExact(). Mejorado usando https://cc.davelozinski.com/c-sharp/fastest-way-to-convert-a-string-to-an-int y https://stackoverflow.com/questions/15702123/faster-alternative-to-datetime-parseexact/59979819#59979819.
+        /// </summary>
+        public static DateTime AFechaYYMMDD(this string s)
+            => new DateTime((s[0] - '0') * 10 + s[1] - '0' + 2000, (s[2] - '0') * 10 + s[3] - '0', (s[4] - '0') * 10 + s[5] - '0');
+
+
+        /// <summary>
+        /// Función muy rápida para convertir un texto en una fecha de formato yyMMddhhmmssf. Se ejecuta en el 15% del tiempo de ParseExact(). Mejorado usando https://cc.davelozinski.com/c-sharp/fastest-way-to-convert-a-string-to-an-int y https://stackoverflow.com/questions/15702123/faster-alternative-to-datetime-parseexact/59979819#59979819.
+        /// </summary>
+        public static DateTime AFechaYYMMDDHHMMSSF(this string s)
+            => new DateTime((s[0] - '0') * 10 + s[1] - '0' + 2000, (s[2] - '0') * 10 + s[3] - '0', (s[4] - '0') * 10 + s[5] - '0'
+                , (s[6] - '0') * 10 + s[7] - '0', (s[8] - '0') * 10 + s[9] - '0', (s[10] - '0') * 10 + s[11] - '0', (s[12] - '0') * 100);
+
+
+        /// <summary>
+        /// Igual AFechaYYMMDD() pero para textos que pueden ser nulos. Es 50% más lenta.
+        /// </summary>
+        public static DateTime? AFechaYYMMDDNulable(this string? s) => s == null ? (DateTime?)null
+            : new DateTime((s[0] - '0') * 10 + s[1] - '0' + 2000, (s[2] - '0') * 10 + s[3] - '0', (s[4] - '0') * 10 + s[5] - '0');
+
+
+        /// <summary>
+        /// Función muy rápida para convertir una fecha en un texto de formato yyMMdd. Se ejecuta en el 40% del tiempo de ToString("yyMMdd"). 
+        /// Tarda 4 veces más que la función inversa AFechaYYMMDD, pero es aceptable por ser un método usado principalmente en escritura la cual es una 
+        /// acción menos frecuente. Mejorado usando https://stackoverflow.com/questions/1176276/how-do-i-improve-the-performance-of-code-using-datetime-tostring/59980493#59980493.
+        /// </summary>
+        public static string ATextoYYMMDD(this DateTime fechaHora) {
+
+            var chars = new char[6];
+            int valor = fechaHora.Year % 100;
+            chars[0] = (char)(valor / 10 + '0');
+            chars[1] = (char)(valor % 10 + '0');
+            valor = fechaHora.Month;
+            chars[2] = (char)(valor / 10 + '0');
+            chars[3] = (char)(valor % 10 + '0');
+            valor = fechaHora.Day;
+            chars[4] = (char)(valor / 10 + '0');
+            chars[5] = (char)(valor % 10 + '0');
+            return new string(chars);
+
+        } // ATextoYYMMDD>
+
+
+        /// <summary>
+        /// Función muy rápida para convertir una fecha en un texto de formato yyMMddhhmmssf. Se ejecuta en el 30% del tiempo de ToString("yyMMddhhmmssf"). 
+        /// Tarda 3 veces más que la función inversa AFechaYYMMDDHHMMSSF, pero es aceptable por ser un método usado principalmente en escritura la cual es 
+        /// una acción menos frecuente. Mejorado usando https://stackoverflow.com/questions/1176276/how-do-i-improve-the-performance-of-code-using-datetime-tostring/59980493#59980493.
+        /// </summary>
+        public static string ATextoYYMMDDHHMMSSF(this DateTime fechaHora) {
+
+            var chars = new char[13];
+            int valor = fechaHora.Year % 100;
+            chars[0] = (char)(valor / 10 + '0');
+            chars[1] = (char)(valor % 10 + '0');
+            valor = fechaHora.Month;
+            chars[2] = (char)(valor / 10 + '0');
+            chars[3] = (char)(valor % 10 + '0');
+            valor = fechaHora.Day;
+            chars[4] = (char)(valor / 10 + '0');
+            chars[5] = (char)(valor % 10 + '0');
+            valor = fechaHora.Hour;
+            chars[6] = (char)(valor / 10 + '0');
+            chars[7] = (char)(valor % 10 + '0');
+            valor = fechaHora.Minute;
+            chars[8] = (char)(valor / 10 + '0');
+            chars[9] = (char)(valor % 10 + '0');
+            valor = fechaHora.Second;
+            chars[10] = (char)(valor / 10 + '0');
+            chars[11] = (char)(valor % 10 + '0');
+            valor = fechaHora.Millisecond;
+            chars[12] = (char)(valor / 100 + '0');
+            return new string(chars);
+
+        } // ATextoYYMMDDHHMMSSF>
+
+
+        /// <summary>
+        /// Función igual a ATextoYYMMDD pero para fechasHoras que pueden ser nulas. Es 10% más lenta.
+        /// </summary>
+        public static string? ATextoYYMMDDNulable(this DateTime? fechaHora) {
+
+            if (fechaHora == null) return null;
+            var chars = new char[6];
+            int valor = ((DateTime)fechaHora).Year % 100;
+            chars[0] = (char)(valor / 10 + '0');
+            chars[1] = (char)(valor % 10 + '0');
+            valor = ((DateTime)fechaHora).Month;
+            chars[2] = (char)(valor / 10 + '0');
+            chars[3] = (char)(valor % 10 + '0');
+            valor = ((DateTime)fechaHora).Day;
+            chars[4] = (char)(valor / 10 + '0');
+            chars[5] = (char)(valor % 10 + '0');
+            return new string(chars);
+
+        } // ATextoYYMMDD>
+
+
+        #endregion Fechas>
 
 
 
@@ -1567,21 +1708,6 @@ namespace Vixark {
         public static string ATexto(this bool booleano) => booleano ? "true" : "false";
 
         /// <summary>
-        /// Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 
-        /// sin saturar el código.
-        /// </summary>
-        public static string ATexto(this DateTime fechaHora, string formato) => fechaHora.ToString(formato, CultureInfo.InvariantCulture);
-
-
-        /// <summary>
-        /// Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 
-        /// sin saturar el código.
-        /// </summary>
-        public static string? ATexto(this DateTime? fechaHora, string formato)
-            => fechaHora == null ? null : ((DateTime)fechaHora).ToString(formato, CultureInfo.InvariantCulture);
-
-
-        /// <summary>
         /// Encapsulación de rápido acceso de StartsWith() usando StringComparison.Ordinal. Es útil para omitir la advertencia CA1307 sin saturar el código.
         /// </summary>
         public static bool EmpiezaPor(this string? texto, string textoInicio, bool ignorarCapitalización = true)
@@ -1644,15 +1770,6 @@ namespace Vixark {
         public static string ReemplazarVarios(this string texto, Dictionary<string, string> reemplazos, bool ignorarCapitalización = true) // Ver https://stackoverflow.com/questions/1321331/replace-multiple-string-elements-in-c-sharp.
             => Regex.Replace(texto, "(" + String.Join("|", reemplazos.Keys.ToArray()) + ")", delegate (Match m) { return reemplazos[m.Value]; },
                 ignorarCapitalización ? RegexOptions.IgnoreCase : RegexOptions.None);
-
-
-        /// <summary>
-        /// Encapsulación de acceso rápido para convertir un <paramref name="texto"/> en una fecha dado un <paramref name="formato"/>.
-        /// </summary>
-        /// <param name="texto"></param>
-        /// <param name="formato"></param>
-        /// <returns></returns>
-        public static DateTime AFecha(this string texto, string formato) => DateTime.ParseExact(texto, formato, CultureInfo.InvariantCulture);
 
 
         /// <summary>
@@ -1925,104 +2042,6 @@ namespace Vixark {
             return texto;
 
         } // ExtraerConPatrónObsoleta>
-
-
-        /// <summary>
-        /// Función muy rápida para convertir un texto en una fecha de formato yyMMdd. Se ejecuta en el 10% del tiempo de ParseExact(). Mejorado usando https://cc.davelozinski.com/c-sharp/fastest-way-to-convert-a-string-to-an-int y https://stackoverflow.com/questions/15702123/faster-alternative-to-datetime-parseexact/59979819#59979819.
-        /// </summary>
-        public static DateTime AFechaYYMMDD(this string s)
-            => new DateTime((s[0] - '0') * 10 + s[1] - '0' + 2000, (s[2] - '0') * 10 + s[3] - '0', (s[4] - '0') * 10 + s[5] - '0');
-
-
-        /// <summary>
-        /// Función muy rápida para convertir un texto en una fecha de formato yyMMddhhmmssf. Se ejecuta en el 15% del tiempo de ParseExact(). Mejorado usando https://cc.davelozinski.com/c-sharp/fastest-way-to-convert-a-string-to-an-int y https://stackoverflow.com/questions/15702123/faster-alternative-to-datetime-parseexact/59979819#59979819.
-        /// </summary>
-        public static DateTime AFechaYYMMDDHHMMSSF(this string s)
-            => new DateTime((s[0] - '0') * 10 + s[1] - '0' + 2000, (s[2] - '0') * 10 + s[3] - '0', (s[4] - '0') * 10 + s[5] - '0'
-                , (s[6] - '0') * 10 + s[7] - '0', (s[8] - '0') * 10 + s[9] - '0', (s[10] - '0') * 10 + s[11] - '0', (s[12] - '0') * 100);
-
-
-        /// <summary>
-        /// Igual AFechaYYMMDD() pero para textos que pueden ser nulos. Es 50% más lenta.
-        /// </summary>
-        public static DateTime? AFechaYYMMDDNulable(this string? s) => s == null ? (DateTime?)null
-            : new DateTime((s[0] - '0') * 10 + s[1] - '0' + 2000, (s[2] - '0') * 10 + s[3] - '0', (s[4] - '0') * 10 + s[5] - '0');
-
-
-        /// <summary>
-        /// Función muy rápida para convertir una fecha en un texto de formato yyMMdd. Se ejecuta en el 40% del tiempo de ToString("yyMMdd"). 
-        /// Tarda 4 veces más que la función inversa AFechaYYMMDD, pero es aceptable por ser un método usado principalmente en escritura la cual es una 
-        /// acción menos frecuente. Mejorado usando https://stackoverflow.com/questions/1176276/how-do-i-improve-the-performance-of-code-using-datetime-tostring/59980493#59980493.
-        /// </summary>
-        public static string ATextoYYMMDD(this DateTime fechaHora) {
-
-            var chars = new char[6];
-            int valor = fechaHora.Year % 100;
-            chars[0] = (char)(valor / 10 + '0');
-            chars[1] = (char)(valor % 10 + '0');
-            valor = fechaHora.Month;
-            chars[2] = (char)(valor / 10 + '0');
-            chars[3] = (char)(valor % 10 + '0');
-            valor = fechaHora.Day;
-            chars[4] = (char)(valor / 10 + '0');
-            chars[5] = (char)(valor % 10 + '0');
-            return new string(chars);
-
-        } // ATextoYYMMDD>
-
-
-        /// <summary>
-        /// Función muy rápida para convertir una fecha en un texto de formato yyMMddhhmmssf. Se ejecuta en el 30% del tiempo de ToString("yyMMddhhmmssf"). 
-        /// Tarda 3 veces más que la función inversa AFechaYYMMDDHHMMSSF, pero es aceptable por ser un método usado principalmente en escritura la cual es 
-        /// una acción menos frecuente. Mejorado usando https://stackoverflow.com/questions/1176276/how-do-i-improve-the-performance-of-code-using-datetime-tostring/59980493#59980493.
-        /// </summary>
-        public static string ATextoYYMMDDHHMMSSF(this DateTime fechaHora) {
-
-            var chars = new char[13];
-            int valor = fechaHora.Year % 100;
-            chars[0] = (char)(valor / 10 + '0');
-            chars[1] = (char)(valor % 10 + '0');
-            valor = fechaHora.Month;
-            chars[2] = (char)(valor / 10 + '0');
-            chars[3] = (char)(valor % 10 + '0');
-            valor = fechaHora.Day;
-            chars[4] = (char)(valor / 10 + '0');
-            chars[5] = (char)(valor % 10 + '0');
-            valor = fechaHora.Hour;
-            chars[6] = (char)(valor / 10 + '0');
-            chars[7] = (char)(valor % 10 + '0');
-            valor = fechaHora.Minute;
-            chars[8] = (char)(valor / 10 + '0');
-            chars[9] = (char)(valor % 10 + '0');
-            valor = fechaHora.Second;
-            chars[10] = (char)(valor / 10 + '0');
-            chars[11] = (char)(valor % 10 + '0');
-            valor = fechaHora.Millisecond;
-            chars[12] = (char)(valor / 100 + '0');
-            return new string(chars);
-
-        } // ATextoYYMMDDHHMMSSF>
-
-
-        /// <summary>
-        /// Función igual a ATextoYYMMDD pero para fechasHoras que pueden ser nulas. Es 10% más lenta.
-        /// </summary>
-        public static string? ATextoYYMMDDNulable(this DateTime? fechaHora) {
-
-            if (fechaHora == null) return null;
-            var chars = new char[6];
-            int valor = ((DateTime)fechaHora).Year % 100;
-            chars[0] = (char)(valor / 10 + '0');
-            chars[1] = (char)(valor % 10 + '0');
-            valor = ((DateTime)fechaHora).Month;
-            chars[2] = (char)(valor / 10 + '0');
-            chars[3] = (char)(valor % 10 + '0');
-            valor = ((DateTime)fechaHora).Day;
-            chars[4] = (char)(valor / 10 + '0');
-            chars[5] = (char)(valor % 10 + '0');
-            return new string(chars);
-
-        } // ATextoYYMMDD>
 
 
         /// <summary>

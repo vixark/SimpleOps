@@ -2088,7 +2088,7 @@
         </member>
         <member name="P:SimpleOps.Modelo.NotaCréditoCompra.Razón">
             <summary>
-            DevoluciónParcial = 1, AnulaciónFactura = 2, Descuento = 3, AjustePrecio = 4, Otra = 5.
+            DevoluciónParcial = 1, AnulaciónFactura = 2, Descuento = 3, AjustePrecio = 4, DescuentoProntoPago = 5, DescuentoVolumen = 6.
             </summary>
         </member>
         <member name="T:SimpleOps.Modelo.NotaCréditoVenta">
@@ -2098,7 +2098,7 @@
         </member>
         <member name="P:SimpleOps.Modelo.NotaCréditoVenta.Razón">
             <summary>
-            DevoluciónParcial = 1, AnulaciónFactura = 2, Descuento = 3, AjustePrecio = 4, Otra = 5.
+            DevoluciónParcial = 1, AnulaciónFactura = 2, Descuento = 3, AjustePrecio = 4, DescuentoProntoPago = 5, DescuentoVolumen = 6.
             </summary>
         </member>
         <member name="P:SimpleOps.Modelo.NotaCréditoVenta.RazónNotaCréditoTexto">

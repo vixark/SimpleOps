@@ -439,7 +439,9 @@ namespace SimpleOps {
             [Display(Name = "ReteRenta")] RetenciónRenta = 6, [Display(Name = "IC")] DepartamentalNominal = 2,
             [Display(Name = "IC Porcentual")] DepartamentalPorcentual = 8, ICA = 3, [Display(Name = "ReteICA")] RetenciónICA = 7,
             [Display(Name = "FtoHorticultura")] Horticultura = 20, Timbre = 21, [Display(Name = "Sobretasa Combustibles")] SobretasaCombustibles = 25,
-            Sordicom = 26, [Display(Name = "IC Datos")] Datos = 30, Otro = 999
+            Sordicom = 26, [Display(Name = "IC Datos")] Datos = 30, [Display(Name = "Licores")] ICL = 32, [Display(Name = "Plásticos")] INPP = 33,
+            [Display(Name = "Bebidas Azucaradas")] IBUA = 34, [Display(Name = "Ultraprocesados")] ICUI = 35, [Display(Name = "Ad Valorem")] ADV = 36,
+            Otro = 999
         }
 
 
@@ -475,12 +477,11 @@ namespace SimpleOps {
             [Display(Name = "BrochaFondo30")] Fondo, [Display(Name = "BrochaFrente200")] Texto, [Display(Name = "BrochaFrente220")] TextoTítulo
         }
 
-
-        public enum RazónNotaCrédito { // Tomados del numeral 13.2.4. de la documentación de la DIAN para la facturación electrónica. AjustePrecio se supondrá que es para corrección de errores (hacia abajo) en el precio de algún producto y Descuento para descuentos acordados.
-            [Display(Name = "Devolución Parcial")] DevoluciónParcial = 1, [Display(Name = "Anulación Factura")] AnulaciónFactura = 2,
-            [Display(Name = "Descuento")] Descuento = 3, [Display(Name = "Ajuste Precio")] AjustePrecio = 4, [Display(Name = "Otra")] Otra = 5
+        public enum RazónNotaCrédito { // Tomados del numeral 13.2.4. de la documentación de la DIAN para la facturación electrónica. AjustePrecio se supondrá que es para corrección de errores (hacia abajo) en el precio de algún producto y Descuento para descuentos acordados. Valores anteriores al anexo 1.9: [Display(Name = "Devolución Parcial")] DevoluciónParcial = 1, [Display(Name = "Anulación Factura")] AnulaciónFactura = 2, [Display(Name = "Descuento")] Descuento = 3, [Display(Name = "Ajuste Precio")] AjustePrecio = 4, [Display(Name = "Otra")] Otra = 5. Antes del anexo 1.9 se usaba Otra de manera predeterminada. Como este valor fue eliminado y no se permite especificar la anulación completa de facturas con notas crédito que no relacionan facturas, ahora se usa el 1 (Devolución Parcial) de manera predeterminada.
+            [Display(Name = "Devolución Parcial")] DevoluciónParcial = 1, [Display(Name = "Anulación Factura")] AnulaciónFactura = 2, // A partir del anexo 1.9 de 2024 no se puede hacer anulación de factura para notas crédito que no referencian una factura.
+            [Display(Name = "Descuento")] Descuento = 3, [Display(Name = "Ajuste Precio")] AjustePrecio = 4, 
+            [Display(Name = "Descuento por Pronto Pago")] DescuentoProntoPago = 5, [Display(Name = "Descuento por Volumen")] DescuentoVolumen = 6
         }
-
 
         public enum PlantillaDocumento { // Las plantillas ListaProductos son auxiliares de uso interno dentro de otras plantillas. Existen 3 posibles lugares donde se podría presentar la información de los documentos: 1. PDF: Usualmente se envía por email y es la forma más común de compartir documentos. 2. Web: Se presentarían los documentos directamente en el sitio web. Estas plantillas se pueden realizar con tecnologías modernas de desarrollo web pues estarían diseñadas para presentarse en navegadores que lo más normal es que estén actualizados. 3. Email: El documento es directamente el contenido del email. Aunque se podrían usar las plantillas web para esto, es posible que los clientes de correo no soporten las tecnologías de desarrollo web más modernas, entonces se permite especificar un diseño HTML distinto para estos casos. Si no se desea mantener dos versiones de HTML diferentes (Web e Email), se puede desarrollar solo la versión Web, pero desarrollándola con tecnologías web compatibles con los clientes de correo.
             VentaPdf, ProformaPdf, NotaCréditoPdf, NotaDébitoPdf, CotizaciónPdf, PedidoPdf, ComprobanteEgresoPdf, CobroPdf, RemisiónPdf, CatálogoPdf,

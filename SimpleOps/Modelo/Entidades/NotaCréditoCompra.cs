@@ -56,9 +56,9 @@ namespace SimpleOps.Modelo {
         public override List<LíneaNotaCréditoCompra> Líneas { get; set; } = new List<LíneaNotaCréditoCompra>();
 
         /// <summary>
-        /// DevoluciónParcial = 1, AnulaciónFactura = 2, Descuento = 3, AjustePrecio = 4, Otra = 5.
+        /// DevoluciónParcial = 1, AnulaciónFactura = 2, Descuento = 3, AjustePrecio = 4, DescuentoProntoPago = 5, DescuentoVolumen = 6.
         /// </summary>
-        public RazónNotaCrédito Razón { get; set; } = RazónNotaCrédito.Otra;
+        public RazónNotaCrédito Razón { get; set; } = RazónNotaCrédito.DevoluciónParcial;
 
         #endregion Propiedades>
 

@@ -107,7 +107,7 @@ namespace SimpleOps.Legal {
 
         public const string CódigoRemisión = "AAJ"; // 13.1.4. Referencia a otros documentos.
 
-        public const string CódigoMedioPagoPorDefinir = "ZZZ"; // Ver la tabla 13.3.4.2.
+        public const string CódigoMedioPagoOtro = "ZZZ"; // Ver la tabla 13.3.4.2.
 
         public const string CódigoPrecioReferencia = "01"; // Ver la tabla 13.3.8.
 

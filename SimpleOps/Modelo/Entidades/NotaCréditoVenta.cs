@@ -60,9 +60,9 @@ namespace SimpleOps.Modelo {
         public override List<LíneaNotaCréditoVenta> Líneas { get; set; } = new List<LíneaNotaCréditoVenta>();
 
         /// <summary>
-        /// DevoluciónParcial = 1, AnulaciónFactura = 2, Descuento = 3, AjustePrecio = 4, Otra = 5.
+        /// DevoluciónParcial = 1, AnulaciónFactura = 2, Descuento = 3, AjustePrecio = 4, DescuentoProntoPago = 5, DescuentoVolumen = 6.
         /// </summary>
-        public RazónNotaCrédito Razón { get; set; } = RazónNotaCrédito.Otra;
+        public RazónNotaCrédito Razón { get; set; } = RazónNotaCrédito.DevoluciónParcial; // A partir de mayo de 2024 se cambió la razón predeterminada de Otra a DevoluciónParcial porque la DIAN eliminó la opción de Otra.
 
         #endregion Propiedades>
 

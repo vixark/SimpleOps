@@ -40,11 +40,13 @@ namespace SimpleOps.Integración {
 
         public string? OrdenCompraNúmero { get; set; }
 
-        public RazónNotaCrédito Razón { get; set; } = RazónNotaCrédito.Otra; // Siempre es Otra para facturas proforma y para facturas de venta. Solo aplica para las notas crédito de venta.
+        public RazónNotaCrédito Razón { get; set; } = RazónNotaCrédito.DevoluciónParcial; // Siempre es DevoluciónParcial para facturas proforma y para facturas de venta. Solo aplica para las notas crédito de venta. A partir de mayo de 2024 se cambió la razón predeterminada de Otra a DevoluciónParcial porque la DIAN eliminó la opción de Otra.
 
         public string? VentaPrefijo { get; set; } // Puede ser nulo para las facturas proforma y para ventas.
 
         public int? VentaNúmero { get; set; } // Puede ser nulo para las facturas proforma y para ventas.
+
+        public DateTime? VentaFechaHora { get; set; } // Puede ser nulo para las facturas proforma y para ventas.
 
         public List<DatosLíneaProducto> Líneas { get; set; } = null!; // Nunca es nulo (podría ser lista vacía), solo es para que no saque advertencia.
 
