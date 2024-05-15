@@ -2997,18 +2997,6 @@
             Un Environment.NewLine. Solo se usa para no tener que importar System.Enviroment cada vez que se vaya a usar sino que baste con importar General. 
             </summary>
         </member>
-        <member name="M:Vixark.General.AhoraUtc(System.Int32)">
-            <summary>
-            Una hora de tipo UTC continua pero ajustada una cantidad de horas constante para acercarlo a la hora local del equipo. 
-            En algunas ocasiones, como países con horarios de verano o con múltiples zonas horarias, puede no coincidir con la hora 
-            local del equipo pero se usa porque tiene dos ventajas: Es útil para almacenamiento en la base de datos pues permite 
-            garantizar que acciones realizadas después siempre queden con fecha posterior a las realizadas antes y en el caso de 
-            países sin horario de verano ni zonas horarias se puede usar directamente como hora del equipo. En los otros casos se 
-            puede ajustar posteriormente para obtener la hora real.
-            </summary>
-            <param name="horasAjuste">La cantidad de horas constante que se ajusta UtcNow.</param>
-            <returns></returns>
-        </member>
         <member name="M:Vixark.General.IniciarVariablesGenerales">
             <summary>
             Inicia algunas variables que no se pueden iniciar en el cuerpo de la clase Vixark porque requieren unos pasos adicionales para establecer su valor.
@@ -3234,6 +3222,86 @@
             <param name="bmp"></param>
             <returns></returns>
         </member>
+        <member name="M:Vixark.General.InicioMes(System.DateTime)">
+            <summary>
+            Devuelve la fecha del primer milisegundo del mes.
+            </summary>
+            <param name="fechaHora"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Vixark.General.FinMes(System.DateTime)">
+            <summary>
+            Devuelve la fecha del último milisegundo del mes.
+            </summary>
+            <param name="fechaHora"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Vixark.General.AhoraUtc(System.Int32)">
+            <summary>
+            Una hora de tipo UTC continua pero ajustada una cantidad de horas constante para acercarlo a la hora local del equipo. 
+            En algunas ocasiones, como países con horarios de verano o con múltiples zonas horarias, puede no coincidir con la hora 
+            local del equipo pero se usa porque tiene dos ventajas: Es útil para almacenamiento en la base de datos pues permite 
+            garantizar que acciones realizadas después siempre queden con fecha posterior a las realizadas antes y en el caso de 
+            países sin horario de verano ni zonas horarias se puede usar directamente como hora del equipo. En los otros casos se 
+            puede ajustar posteriormente para obtener la hora real.
+            </summary>
+            <param name="horasAjuste">La cantidad de horas constante que se ajusta UtcNow.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Vixark.General.AFecha(System.String,System.String)">
+            <summary>
+            Encapsulación de acceso rápido para convertir un <paramref name="texto"/> en una fecha dado un <paramref name="formato"/>.
+            </summary>
+            <param name="texto"></param>
+            <param name="formato"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Vixark.General.ATexto(System.DateTime,System.String)">
+            <summary>
+            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 
+            sin saturar el código.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ATexto(System.Nullable{System.DateTime},System.String)">
+            <summary>
+            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 
+            sin saturar el código.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.AFechaYYMMDD(System.String)">
+            <summary>
+            Función muy rápida para convertir un texto en una fecha de formato yyMMdd. Se ejecuta en el 10% del tiempo de ParseExact(). Mejorado usando https://cc.davelozinski.com/c-sharp/fastest-way-to-convert-a-string-to-an-int y https://stackoverflow.com/questions/15702123/faster-alternative-to-datetime-parseexact/59979819#59979819.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.AFechaYYMMDDHHMMSSF(System.String)">
+            <summary>
+            Función muy rápida para convertir un texto en una fecha de formato yyMMddhhmmssf. Se ejecuta en el 15% del tiempo de ParseExact(). Mejorado usando https://cc.davelozinski.com/c-sharp/fastest-way-to-convert-a-string-to-an-int y https://stackoverflow.com/questions/15702123/faster-alternative-to-datetime-parseexact/59979819#59979819.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.AFechaYYMMDDNulable(System.String)">
+            <summary>
+            Igual AFechaYYMMDD() pero para textos que pueden ser nulos. Es 50% más lenta.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ATextoYYMMDD(System.DateTime)">
+            <summary>
+            Función muy rápida para convertir una fecha en un texto de formato yyMMdd. Se ejecuta en el 40% del tiempo de ToString("yyMMdd"). 
+            Tarda 4 veces más que la función inversa AFechaYYMMDD, pero es aceptable por ser un método usado principalmente en escritura la cual es una 
+            acción menos frecuente. Mejorado usando https://stackoverflow.com/questions/1176276/how-do-i-improve-the-performance-of-code-using-datetime-tostring/59980493#59980493.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ATextoYYMMDDHHMMSSF(System.DateTime)">
+            <summary>
+            Función muy rápida para convertir una fecha en un texto de formato yyMMddhhmmssf. Se ejecuta en el 30% del tiempo de ToString("yyMMddhhmmssf"). 
+            Tarda 3 veces más que la función inversa AFechaYYMMDDHHMMSSF, pero es aceptable por ser un método usado principalmente en escritura la cual es 
+            una acción menos frecuente. Mejorado usando https://stackoverflow.com/questions/1176276/how-do-i-improve-the-performance-of-code-using-datetime-tostring/59980493#59980493.
+            </summary>
+        </member>
+        <member name="M:Vixark.General.ATextoYYMMDDNulable(System.Nullable{System.DateTime})">
+            <summary>
+            Función igual a ATextoYYMMDD pero para fechasHoras que pueden ser nulas. Es 10% más lenta.
+            </summary>
+        </member>
         <member name="M:Vixark.General.AEnumeración``1(System.String,System.Boolean)">
             <summary>
             Encapsulación de acceso rápido para convertir un texto en una enumeración.
@@ -3320,18 +3388,6 @@
             sin saturar el código.
             </summary>
         </member>
-        <member name="M:Vixark.General.ATexto(System.DateTime,System.String)">
-            <summary>
-            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 
-            sin saturar el código.
-            </summary>
-        </member>
-        <member name="M:Vixark.General.ATexto(System.Nullable{System.DateTime},System.String)">
-            <summary>
-            Encapsulación de rápido acceso de ToString() usando CultureInfo.InvariantCulture. Es útil para omitir la advertencia CA1305 
-            sin saturar el código.
-            </summary>
-        </member>
         <member name="M:Vixark.General.EmpiezaPor(System.String,System.String,System.Boolean)">
             <summary>
             Encapsulación de rápido acceso de StartsWith() usando StringComparison.Ordinal. Es útil para omitir la advertencia CA1307 sin saturar el código.
@@ -3379,14 +3435,6 @@
             <param name="texto"></param>
             <param name="reemplazos"></param>
             <param name="ignorarCapitalización"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Vixark.General.AFecha(System.String,System.String)">
-            <summary>
-            Encapsulación de acceso rápido para convertir un <paramref name="texto"/> en una fecha dado un <paramref name="formato"/>.
-            </summary>
-            <param name="texto"></param>
-            <param name="formato"></param>
             <returns></returns>
         </member>
         <member name="M:Vixark.General.ÍndiceDe(System.String,System.String,System.Int32)">
@@ -3490,40 +3538,6 @@
             <param name="errorEnNoCoincidenciaDePatrón"></param>
             <param name="devolverValorSiNoHayCoincidencia"></param>
             <returns></returns>
-        </member>
-        <member name="M:Vixark.General.AFechaYYMMDD(System.String)">
-            <summary>
-            Función muy rápida para convertir un texto en una fecha de formato yyMMdd. Se ejecuta en el 10% del tiempo de ParseExact(). Mejorado usando https://cc.davelozinski.com/c-sharp/fastest-way-to-convert-a-string-to-an-int y https://stackoverflow.com/questions/15702123/faster-alternative-to-datetime-parseexact/59979819#59979819.
-            </summary>
-        </member>
-        <member name="M:Vixark.General.AFechaYYMMDDHHMMSSF(System.String)">
-            <summary>
-            Función muy rápida para convertir un texto en una fecha de formato yyMMddhhmmssf. Se ejecuta en el 15% del tiempo de ParseExact(). Mejorado usando https://cc.davelozinski.com/c-sharp/fastest-way-to-convert-a-string-to-an-int y https://stackoverflow.com/questions/15702123/faster-alternative-to-datetime-parseexact/59979819#59979819.
-            </summary>
-        </member>
-        <member name="M:Vixark.General.AFechaYYMMDDNulable(System.String)">
-            <summary>
-            Igual AFechaYYMMDD() pero para textos que pueden ser nulos. Es 50% más lenta.
-            </summary>
-        </member>
-        <member name="M:Vixark.General.ATextoYYMMDD(System.DateTime)">
-            <summary>
-            Función muy rápida para convertir una fecha en un texto de formato yyMMdd. Se ejecuta en el 40% del tiempo de ToString("yyMMdd"). 
-            Tarda 4 veces más que la función inversa AFechaYYMMDD, pero es aceptable por ser un método usado principalmente en escritura la cual es una 
-            acción menos frecuente. Mejorado usando https://stackoverflow.com/questions/1176276/how-do-i-improve-the-performance-of-code-using-datetime-tostring/59980493#59980493.
-            </summary>
-        </member>
-        <member name="M:Vixark.General.ATextoYYMMDDHHMMSSF(System.DateTime)">
-            <summary>
-            Función muy rápida para convertir una fecha en un texto de formato yyMMddhhmmssf. Se ejecuta en el 30% del tiempo de ToString("yyMMddhhmmssf"). 
-            Tarda 3 veces más que la función inversa AFechaYYMMDDHHMMSSF, pero es aceptable por ser un método usado principalmente en escritura la cual es 
-            una acción menos frecuente. Mejorado usando https://stackoverflow.com/questions/1176276/how-do-i-improve-the-performance-of-code-using-datetime-tostring/59980493#59980493.
-            </summary>
-        </member>
-        <member name="M:Vixark.General.ATextoYYMMDDNulable(System.Nullable{System.DateTime})">
-            <summary>
-            Función igual a ATextoYYMMDD pero para fechasHoras que pueden ser nulas. Es 10% más lenta.
-            </summary>
         </member>
         <member name="M:Vixark.General.ATextoDinero(System.Object)">
             <summary>
