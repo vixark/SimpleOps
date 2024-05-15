@@ -145,7 +145,7 @@ namespace SimpleOps.Integración {
             if (ArchivosProcesados.Contains(nombre)) return; // Cuando se hace copiar y pegar de un archivo a procesar se genera el evento EnCambioArchivo doble. Es un problema conocido de .Net https://stackoverflow.com/questions/1764809/filesystemwatcher-changed-event-is-raised-twice. Con este hashset se evita que se procese una segunda vez.
             ArchivosProcesados.Add(nombre);
 
-            OperacionesEspecialesDatos = true; // Necesario para evitar el mensaje de error al escribir Cliente.ContactoFacturas.Email en el mapeo inverso hacia el objeto venta.
+            OperacionesEspecialesDatos = true; // Es necesario para evitar el mensaje de error al escribir Cliente.ContactoFacturas.Email en el mapeo inverso hacia el objeto venta.
             try {
 
                 var documentoIntegración = ObtenerEnumeraciónDeTexto<DocumentoIntegración>(nombre[0..3]);
