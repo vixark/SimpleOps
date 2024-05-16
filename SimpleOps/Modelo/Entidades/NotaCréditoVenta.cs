@@ -116,10 +116,10 @@ namespace SimpleOps.Modelo {
         } // ObtenerDatos>
 
 
-        public Integración.DatosVenta ObtenerDatosIntegración() {
+        public Integración.DatosNotaCrédito ObtenerDatosIntegración() {
 
             var mapeador = new Mapper(ConfiguraciónMapeadorNotaCréditoVentaIntegración);
-            var datos = mapeador.Map<Integración.DatosVenta>(this);
+            var datos = mapeador.Map<Integración.DatosNotaCrédito>(this);
             return datos;
 
         } // ObtenerDatosIntegración>

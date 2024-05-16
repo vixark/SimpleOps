@@ -28,7 +28,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using static Vixark.General;
 using static SimpleOps.Global;
-
+using SimpleOps.DocumentosGráficos;
+using AutoMapper;
+using System.IO;
+using static SimpleOps.DocumentosGráficos.DocumentosGráficos;
 
 
 namespace SimpleOps.Modelo {
@@ -91,6 +94,27 @@ namespace SimpleOps.Modelo {
         public override decimal ObtenerAnticipo() => 0;
 
         public override string? ObtenerClaveParaCude() => Empresa.PinAplicación;
+
+
+        public DatosVenta ObtenerDatos(OpcionesDocumento opcionesDocumento) {
+
+            var mapeador = new Mapper(ConfiguraciónMapeadorNotaDébitoVenta);
+            var datos = mapeador.Map<DatosVenta>(this);
+            datos.NombreDocumento = "Nota Débito";
+            CompletarDatosVenta(opcionesDocumento, datos, Líneas);
+            return datos;
+
+        } // ObtenerDatos>
+
+
+        public Integración.DatosNotaDébito ObtenerDatosIntegración() {
+
+            var mapeador = new Mapper(ConfiguraciónMapeadorNotaDébitoVentaIntegración);
+            var datos = mapeador.Map<Integración.DatosNotaDébito>(this);
+            return datos;
+
+        } // ObtenerDatosIntegración>
+
 
         #endregion Métodos y Funciones>
 

@@ -164,16 +164,29 @@ namespace SimpleOps.Integración {
 
                 } else if (documentoIntegración == DocumentoIntegración.NotaCrédito) {
 
-                    var datosNotaCrédito = Deserializar<DatosVenta>(File.ReadAllText(ruta), Serialización.EnumeraciónEnTexto);
+                    var datosNotaCrédito = Deserializar<DatosNotaCrédito>(File.ReadAllText(ruta), Serialización.EnumeraciónEnTexto);
                     var mapeador = new Mapper(ConfiguraciónMapeadorNotaCréditoVentaIntegraciónInverso);
                     var notaCréditoVenta = mapeador.Map<NotaCréditoVenta>(datosNotaCrédito);
                     foreach (var l in notaCréditoVenta.Líneas) {
                         l.NotaCréditoVenta = notaCréditoVenta; // Necesario porque después de ser leídas por el Automapper no quedan automáticamente enlazadas.
                         if (l.Producto?.TieneBase == false) l.Producto.Base = null; // Necesario porque el Automaper siempre crea el objeto Base.
                     }
-                    notaCréditoVenta.ConsecutivoDianAnual = notaCréditoVenta.Número;          
+                    notaCréditoVenta.ConsecutivoDianAnual = notaCréditoVenta.Número;
                     ValidarCliente(notaCréditoVenta.Cliente, validarDepartamento: true);
                     ProcesarDocumentoCliente(notaCréditoVenta, ruta, "nota crédito");
+
+                } else if (documentoIntegración == DocumentoIntegración.NotaDébito) {
+
+                    var datosNotaDébito = Deserializar<DatosNotaDébito>(File.ReadAllText(ruta), Serialización.EnumeraciónEnTexto);
+                    var mapeador = new Mapper(ConfiguraciónMapeadorNotaDébitoVentaIntegraciónInverso);
+                    var notaDébitoVenta = mapeador.Map<NotaDébitoVenta>(datosNotaDébito);
+                    foreach (var l in notaDébitoVenta.Líneas) {
+                        l.NotaDébitoVenta = notaDébitoVenta; // Necesario porque después de ser leídas por el Automapper no quedan automáticamente enlazadas.
+                        if (l.Producto?.TieneBase == false) l.Producto.Base = null; // Necesario porque el Automaper siempre crea el objeto Base.
+                    }
+                    notaDébitoVenta.ConsecutivoDianAnual = notaDébitoVenta.Número;
+                    ValidarCliente(notaDébitoVenta.Cliente, validarDepartamento: true);
+                    ProcesarDocumentoCliente(notaDébitoVenta, ruta, "nota débito");
 
                 } else if (documentoIntegración == DocumentoIntegración.Catálogo) {
 

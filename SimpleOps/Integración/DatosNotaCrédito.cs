@@ -33,25 +33,25 @@ namespace SimpleOps.Integración {
 
 
 
-    class DatosVenta : DatosDocumento {
+    class DatosNotaCrédito : DatosDocumento {
 
 
         #region Propiedades
 
-        public string? OrdenCompraNúmero { get; set; }
+        public RazónNotaCrédito Razón { get; set; } = RazónNotaCrédito.DevoluciónParcial; // A partir de mayo de 2024 se cambió la razón predeterminada de Otra a DevoluciónParcial porque la DIAN eliminó la opción de Otra.
+
+        public string VentaPrefijo { get; set; } = "";
+
+        public int VentaNúmero { get; set; }
+
+        public DateTime VentaFechaHora { get; set; }
 
         public List<DatosLíneaProducto> Líneas { get; set; } = null!; // Nunca es nulo (podría ser lista vacía), solo es para que no saque advertencia.
-
-        public string? NúmeroDocumentoRecibido { get; set; }
-
-        public decimal DescuentoCondicionado { get; set; }
-
-        public decimal DescuentoComercial { get; set; }
 
         #endregion Propiedades>
 
 
-    } // DatosVenta>
+    } // DatosNotaCrédito>
 
 
 

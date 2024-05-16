@@ -218,6 +218,7 @@ namespace SimpleOps.DocumentosGráficos {
                     var datos = documento switch {
                         Venta v => v.ObtenerDatos(opciones),
                         NotaCréditoVenta ncv => ncv.ObtenerDatos(opciones),
+                        NotaDébitoVenta ndv => ndv.ObtenerDatos(opciones),
                         _ => throw new Exception(CasoNoConsiderado(typeof(D).Name))
                     };
                     return CrearPdf(datos, plantillaCompilada, documentoElectrónico.RutaDocumentosElectrónicosHoy, out rutaPdfAux,

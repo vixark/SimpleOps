@@ -33,25 +33,25 @@ namespace SimpleOps.Integración {
 
 
 
-    class DatosVenta : DatosDocumento {
+    class DatosNotaDébito : DatosDocumento {
 
 
         #region Propiedades
 
-        public string? OrdenCompraNúmero { get; set; }
+        public RazónNotaDébito Razón { get; set; } = RazónNotaDébito.Otra;
+
+        public string VentaPrefijo { get; set; } = "";
+
+        public int VentaNúmero { get; set; }
+
+        public DateTime VentaFechaHora { get; set; }
 
         public List<DatosLíneaProducto> Líneas { get; set; } = null!; // Nunca es nulo (podría ser lista vacía), solo es para que no saque advertencia.
-
-        public string? NúmeroDocumentoRecibido { get; set; }
-
-        public decimal DescuentoCondicionado { get; set; }
-
-        public decimal DescuentoComercial { get; set; }
 
         #endregion Propiedades>
 
 
-    } // DatosVenta>
+    } // DatosNotaDébito>
 
 
 

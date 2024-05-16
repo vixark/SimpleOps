@@ -237,17 +237,40 @@ namespace SimpleOps {
             });
 
 
+        public static MapperConfiguration ConfiguraciónMapeadorNotaDébitoVenta // Se crean mapeadores propios para las notas débito para evitar complejizar con objetos genéricos estos objetos de AutoMapper.
+            = new MapperConfiguration(c => {
+                c.CreateMap<LíneaNotaDébitoVenta, DatosLíneaProducto>();
+                c.CreateMap<NotaDébitoVenta, DatosVenta>().ForMember(vg => vg.CódigoDocumento, mce => mce.MapFrom(v => v.Código));
+                c.CreateMap<Cliente, DatosCliente>();
+                c.CreateMap<Usuario, DatosUsuario>();
+            });
+
+
         public static MapperConfiguration ConfiguraciónMapeadorNotaCréditoVentaIntegración
             = new MapperConfiguration(c => {
                 c.CreateMap<LíneaNotaCréditoVenta, Integración.DatosLíneaProducto>();
-                c.CreateMap<NotaCréditoVenta, Integración.DatosVenta>();
+                c.CreateMap<NotaCréditoVenta, Integración.DatosNotaCrédito>();
             });
 
 
         public static MapperConfiguration ConfiguraciónMapeadorNotaCréditoVentaIntegraciónInverso
             = new MapperConfiguration(c => {
                 c.CreateMap<LíneaNotaCréditoVenta, Integración.DatosLíneaProducto>().ReverseMap();
-                c.CreateMap<NotaCréditoVenta, Integración.DatosVenta>().ReverseMap();
+                c.CreateMap<NotaCréditoVenta, Integración.DatosNotaCrédito>().ReverseMap();
+            });
+
+
+        public static MapperConfiguration ConfiguraciónMapeadorNotaDébitoVentaIntegración
+            = new MapperConfiguration(c => {
+                c.CreateMap<LíneaNotaDébitoVenta, Integración.DatosLíneaProducto>();
+                c.CreateMap<NotaDébitoVenta, Integración.DatosNotaDébito>();
+            });
+
+
+        public static MapperConfiguration ConfiguraciónMapeadorNotaDébitoVentaIntegraciónInverso
+            = new MapperConfiguration(c => {
+                c.CreateMap<LíneaNotaDébitoVenta, Integración.DatosLíneaProducto>().ReverseMap();
+                c.CreateMap<NotaDébitoVenta, Integración.DatosNotaDébito>().ReverseMap();
             });
 
 
@@ -348,7 +371,7 @@ namespace SimpleOps {
 
         public enum AmbienteFacturaciónElectrónica { Producción = 1, Pruebas = 2 }; // No cambiar los nombres de las enumeración ni de los elementos porque estos se usan en los archivos de opciones JSON. Tomados del numeral 13.1.1 de la documentación de la DIAN para la facturación electrónica: 1 Producción, 2 Pruebas. Se debe mantener el valor de cada enumeración igual al código en la tabla de la DIAN.
 
-        public enum RazónNotaDébito { Intereses = 1, Gastos = 2, AjustePrecio = 3, Otra = 4 } // Tomados del numeral 13.2.5. de la documentación de la DIAN para la facturación electrónica.
+        public enum RazónNotaDébito { Intereses = 1, Gastos = 2, AjustePrecio = 3, Otra = 4 } // Tomados del archivo '13.2.5. Concepto de Corrección para Notas débito cac DiscrepancyResponsecbc ResponseCode.xlsx' de la documentación de la DIAN para la facturación electrónica.
 
 
         public enum FormaEntrega : byte { // Virtual es útil para productos o servicios que se proveen sin necesidad de representación o presencia física. Cada vez que se añada un elemento se deben agregar los elementos necesarios en TipoClienteFormaEntrega.
@@ -477,7 +500,7 @@ namespace SimpleOps {
             [Display(Name = "BrochaFondo30")] Fondo, [Display(Name = "BrochaFrente200")] Texto, [Display(Name = "BrochaFrente220")] TextoTítulo
         }
 
-        public enum RazónNotaCrédito { // Tomados del numeral 13.2.4. de la documentación de la DIAN para la facturación electrónica. AjustePrecio se supondrá que es para corrección de errores (hacia abajo) en el precio de algún producto y Descuento para descuentos acordados. Valores anteriores al anexo 1.9: [Display(Name = "Devolución Parcial")] DevoluciónParcial = 1, [Display(Name = "Anulación Factura")] AnulaciónFactura = 2, [Display(Name = "Descuento")] Descuento = 3, [Display(Name = "Ajuste Precio")] AjustePrecio = 4, [Display(Name = "Otra")] Otra = 5. Antes del anexo 1.9 se usaba Otra de manera predeterminada. Como este valor fue eliminado y no se permite especificar la anulación completa de facturas con notas crédito que no relacionan facturas, ahora se usa el 1 (Devolución Parcial) de manera predeterminada.
+        public enum RazónNotaCrédito { // Tomados del archivo '13.2.4 Concepto de Corrección para Notas crédito cac DiscrepancyResponse cbc ResponseCode.xlsx' de la documentación de la DIAN para la facturación electrónica. AjustePrecio se supondrá que es para corrección de errores (hacia abajo) en el precio de algún producto y Descuento para descuentos acordados. Valores anteriores al anexo 1.9: [Display(Name = "Devolución Parcial")] DevoluciónParcial = 1, [Display(Name = "Anulación Factura")] AnulaciónFactura = 2, [Display(Name = "Descuento")] Descuento = 3, [Display(Name = "Ajuste Precio")] AjustePrecio = 4, [Display(Name = "Otra")] Otra = 5. Antes del anexo 1.9 se usaba Otra de manera predeterminada. Como este valor fue eliminado y no se permite especificar la anulación completa de facturas con notas crédito que no relacionan facturas, ahora se usa el 1 (Devolución Parcial) de manera predeterminada.
             [Display(Name = "Devolución Parcial")] DevoluciónParcial = 1, [Display(Name = "Anulación Factura")] AnulaciónFactura = 2, // A partir del anexo 1.9 de 2024 no se puede hacer anulación de factura para notas crédito que no referencian una factura.
             [Display(Name = "Descuento")] Descuento = 3, [Display(Name = "Ajuste Precio")] AjustePrecio = 4, 
             [Display(Name = "Descuento por Pronto Pago")] DescuentoProntoPago = 5, [Display(Name = "Descuento por Volumen")] DescuentoVolumen = 6
