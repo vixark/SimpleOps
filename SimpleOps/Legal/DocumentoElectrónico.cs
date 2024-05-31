@@ -194,7 +194,7 @@ namespace SimpleOps.Legal {
                 if (ventaNota == null) 
                     return Falso(out mensaje, "No se proporcionó ningún dato de la venta asociada a la nota.");
 
-                if (ventaNota?.FechaHora == null) {
+                if (ventaNota?.FechaHora == null || ventaNota?.FechaHora == DateTime.MinValue) {
 
                     MostrarError("Se debe proporcionar la fecha del mes contable afectado por la nota crédito o debito. " +
                         "Si se está realizando una nota asociada a una factura, es la fecha de la factura afectada. " +

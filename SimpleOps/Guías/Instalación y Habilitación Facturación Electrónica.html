@@ -199,8 +199,8 @@
         a la última versión (busca y abre Visual Studio Installer en Windows). Además, recuerda que la
         <a href="https://github.com/vixark/SimpleOps#licencia">licencia</a> de SimpleOps es
         <a href="https://es.wikipedia.org/wiki/GNU_Affero_General_Public_License">AGPL</a>, lo que implica que el usuario <b>siempre</b> debe
-        recibir una copia del código y de tus cambios realizados a él. Instalarlo de esta manera automáticamente garantiza el cumplimiento de esta obligación. 
-        Alternativamente, podrías instalar SimpleOps como ejecutable en el equipo del usuario para no tener que instalarle Visual Studio, 
+        recibir una copia del código y de tus cambios realizados a él. Instalarlo de esta manera automáticamente garantiza el cumplimiento de esta obligación.
+        Alternativamente, podrías instalar SimpleOps como ejecutable en el equipo del usuario para no tener que instalarle Visual Studio,
         pero recordando entregarle el código actualizado de SimpleOps y tus cambios en un archivo aparte.
     </p>
 
@@ -661,9 +661,6 @@
     <p class="código">
         {<br />
         "OrdenCompraN\u00FAmero": "OC222",<br />
-        "Raz\u00F3n": "Otra",<br />
-        "VentaPrefijo": null,<br />
-        "VentaN\u00FAmero": null,<br />
         "DescuentoCondicionado": 1500,<br />
         "DescuentoComercial": 0,<br />
         "L\u00EDneas": [<br />
@@ -730,13 +727,94 @@
     </p>
 
     <p>
+        A continuación puedes ver un texto de ejemplo con la información necesaria que debe contener un archivo JSON para generar una nota crédito electrónica:
+    </p>
+
+    <p class="código">
+        {<br />
+        "Raz\u00F3n": "Devoluci\u00F3nParcial",<br />
+        "VentaPrefijo": "F",<br />
+        "VentaN\u00FAmero": 1,<br />
+        "VentaFechaHora": "2021-01-26T00:00:00.0000000Z",<br />
+        "L\u00EDneas": [<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;{<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"Cantidad": 10,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"Precio": 70000,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoReferencia": "CMV",<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoAtributos": [],<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoTieneBase": false,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoDescripci\u00F3nEspec\u00EDfica": "Camiseta Verde",<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoUnidadEspec\u00EDfica": "Unidad",<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoPorcentajeIVAPropioEspec\u00EDfico": null,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoExclu\u00EDdoIVAEspec\u00EDfico": false,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoBaseDescripci\u00F3n": null,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoBaseUnidad": "Desconocida",<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoBasePorcentajeIVAPropio": null,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoBaseExclu\u00EDdoIVA": false,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoArchivoInformaci\u00F3nEspec\u00EDfica": null,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoArchivoImagenEspec\u00EDfica": null,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoCaracter\u00EDsticasEspec\u00EDficas": [],<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoBaseArchivoInformaci\u00F3n": null,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoBaseArchivoImagen": null,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoBaseCaracter\u00EDsticas": []<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;},<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;{<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"Cantidad": 2,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"Precio": 55000,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoReferencia": "CMA",<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoAtributos": [],<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoTieneBase": false,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoDescripci\u00F3nEspec\u00EDfica": "Camiseta Azul",<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoUnidadEspec\u00EDfica": "Unidad",<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoPorcentajeIVAPropioEspec\u00EDfico": null,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoExclu\u00EDdoIVAEspec\u00EDfico": false,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoBaseDescripci\u00F3n": null,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoBaseUnidad": "Desconocida",<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoBasePorcentajeIVAPropio": null,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoBaseExclu\u00EDdoIVA": false,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoArchivoInformaci\u00F3nEspec\u00EDfica": null,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoArchivoImagenEspec\u00EDfica": null,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoCaracter\u00EDsticasEspec\u00EDficas": [],<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoBaseArchivoInformaci\u00F3n": null,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoBaseArchivoImagen": null,<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;"ProductoBaseCaracter\u00EDsticas": []<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;}<br />
+        ],<br />
+        "N\u00FAmero": 1,<br />
+        "Prefijo": "NC",<br />
+        "Observaci\u00F3n": "Observaci\u00F3n sobre la nota crédito.",<br />
+        "MostrarInformaci\u00F3nAdicional": false,<br />
+        "FechaHora": "2021-01-26T00:00:00.0000000Z",<br />
+        "ClienteNombre": "Empresa Ensayo",<br />
+        "ClienteTel\u00E9fono": "2202020",<br />
+        "ClienteMunicipioNombre": "Bogot\u00E1, D.C.",<br />
+        "ClienteMunicipioDepartamento": "Bogot\u00E1",<br />
+        "ClienteDirecci\u00F3n": "Calle 20 20 20",<br />
+        "ClienteContactoFacturasEmail": "facturas@empresaensayo.com",<br />
+        "ClienteD\u00EDasCr\u00E9dito": 30,<br />
+        "ClienteMunicipioPorcentajeIVAPropio": null,<br />
+        "ClientePorcentajeIVAPropio": null,<br />
+        "ClienteTipoEntidad": "Empresa",<br />
+        "ClienteIdentificaci\u00F3n": "900900900"<br />
+        }<br />
+    </p>
+
+
+
+    <p>
         La mayoría de los elementos son autoexplicativos, pero algunos requieren explicación adicional:
         <ul>
             <li>
-                <b>VentaPrefijo:</b> Prefijo de la factura a la que se le aplicará la nota crédito. Para facturas se deja en null.
+                <b>Raz\u00F3n:</b> Razón de la nota crédito. Posibles valores: Devoluci\u00F3nParcial (se sugiere usar este), Anulaci\u00F3nFactura, Descuento, AjustePrecio, DescuentoProntoPago y DescuentoVolumen.
             </li>
             <li>
-                <b>VentaN\u00FAmero:</b> Número de la factura a la que se le aplicará la nota crédito. Para facturas se deja en null.
+                <b>VentaPrefijo:</b> Prefijo de la factura a la que se le aplicará la nota crédito.
+            </li>
+            <li>
+                <b>VentaN\u00FAmero:</b> Número de la factura a la que se le aplicará la nota crédito.
+            </li>
+            <li>
+                <b>VentaFechaHora:</b> Fecha de la factura que será afectada por la nota crédito.
             </li>
             <li>
                 <b>DescuentoCondicionado:</b> No afecta la base gravable para el IVA ni retenciones. Es un descuento que depende que se de cierta
@@ -818,7 +896,7 @@
     </p>
 
     <p>
-        Para generar notas crédito o notas débito el archivo JSON que debe generar el programa tercero debe tener el mismo formato que el usado para facturas, 
+        Para generar notas crédito o notas débito el archivo JSON que debe generar el programa tercero debe tener el mismo formato que el usado para facturas,
         pero su nombre de archivo debe iniciar por NC- para notas crédito y ND- para notas débito.
     </p>
 
