@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" href="CSS/Estilos.css">
+</head>
+
+<body>
+
+    <style> /* Temporalmente se copia textual desde Estilos.css para poder que funcione con htmlpreview.github.io. */
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            width: 800px;
+            margin: auto;
+        }
+
+        img {
+            display: block;
+            margin: auto;
+            margin-top: 80px;
+            margin-bottom: 80px;
+            max-width: 800px;
+        }
+
+        h1, h2 {
+            margin-top: 80px;
+            margin-bottom: 30px;
+        }
+
+    </style>
+
+    <h1>Obtención de Certificado de Firma Digital con Camerfirma</h1>
+
+    <p>
+        Esta guía es para generar el certificado de firma digital con la entidad certificadora Camerfirma, quiénes vendían el certificado
+        a 280 000 $ por dos años en el año 2024. A 11 700 $ por mes era un precio razonable y su servicio es bueno. El precio no debería cambiar mucho de
+        año a año, así que si te cotizan un precio considerablemente mayor, te recomiendo consultar con las otras empresas certificadoras como
+        gse.com.co (372 945 $ en 2024), andesscd.com.co (589 050 $ en 2024) o certicamara.com (1 003 884 $ en 2024).
+    </p>
+
+    <p>
+        El procedimiento no debería ser muy diferente con las otras entidades, pero si eliges otra, deberás consultar con ellos
+        cómo generar y obtener el certificado. El costo anual del certificado es lo único que deberás pagar para facturar electrónicamente con
+        <b>SimpleOps</b> y de todas maneras también lo tendrías que pagar si usaras las otras alternativas de facturación electrónica cómo el portal
+        de la DIAN o los proveedores tecnológicos.
+    </p>
+
+    <p>
+        El certificado normalmente tendrá vigencia de dos años, entonces deberás recordar generar un nuevo certificado al menos una semana antes que se venza.
+    </p>
+    
+
+    <p>
+        Comunícate con la lína de Whatsapp de Camerfirma que aparece en su <a href="camerfirma.com.co">sitio web</a> y solicita una cotización de un 
+        certificado de facturación electrónica.
+    </p>
+
+    <p>
+        Después de darle tu información de contacto y aprobar la cotización que te indiquen por Whatsapp, CameFirma te enviará un email donde 
+        te piden información varia, documentación de tu empresa y el comprobante de pago. Ten en cuenta que los datos del titular de la firma 
+        son los datos del representante legal. En la sección "Tipo de Certificado Firma Digital (Persona Juridica):" escribe  factura electrónica 
+        para persona jurídica.
+    </p>
+
+    <p>
+        Pasados 1 o 2 días habiles te enviarán el certificado por email y su clave (que ellos la llaman PIN). Descomprime el archivo y renombra el 
+        archivo del certificado [nombre de tu empresa].p12 a Certificado.pfx. Debes cambiar la extensión del archivo por .pfx. Si no puedes ver 
+        las extensiones en el explorador de Windows, actívalas en Vista > Extensiones de nombre de archivo.
+    </p>
+
+    <p>
+        Si deseas verificar la fecha de vencimiento del certificado comprado, puedes darle doble clic, instalarlo en tu computador para el usuario 
+        actual y después en Inicio de Windows buscar y abrir 'Administrar Certificados de usuario', abrir Personal > Certificados y allí puedes leer 
+        la fecha de expiración. Si deseas puedes eliminarlo de esa lista después de confirmar la fecha de vencimiento.
+    </p>
+
+</body>
+
+</html>
