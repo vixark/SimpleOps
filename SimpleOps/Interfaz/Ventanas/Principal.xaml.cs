@@ -155,11 +155,22 @@ namespace SimpleOps.Interfaz {
         } // ReiniciarBaseDatosSQLite_Clic>
 
 
+        private void ObtenerClaveTécnicaProducción_Clic(object sender, RoutedEventArgs e) {
+
+            var claveTécnica = Legal.Dian.ObtenerClaveTécnicaAmbienteProducción();
+            if (claveTécnica != null && claveTécnica.Contains(", ")) {
+                MostrarInformación($"Existe más de una resolución de facturación disponible. A continuación se muestran las claves técnicas (número antes " +
+                    $"de la coma) para cada resolución (número después de la coma). Asegúrate de usar la correcta en cada equipo. Las claves técnicas " +
+                    $"son:{DobleLínea}{claveTécnica}");
+            } else {
+                MostrarInformación($"La clave técnica es:{DobleLínea}{claveTécnica}");
+            }      
+
+        } // ObtenerClaveTécnicaProducción_Clic>
+
+
         private void PruebasHabilitaciónFacturación_Clic(object sender, RoutedEventArgs e) => Pruebas.Habilitación();
-
-        private void ObtenerClaveTécnicaProducción_Clic(object sender, RoutedEventArgs e) =>
-            MostrarInformación($"La clave técnica es:{DobleLínea}{Legal.Dian.ObtenerClaveTécnicaAmbienteProducción()}");
-
+           
         private void HacerPruebasInternasFacturación_Clic(object sender, RoutedEventArgs e) => Pruebas.Facturación(pruebaHabilitación: false);
 
         private void GenerarCatálogo_Clic(object sender, RoutedEventArgs e) => Pruebas.GeneraciónCatálogoIntegración();

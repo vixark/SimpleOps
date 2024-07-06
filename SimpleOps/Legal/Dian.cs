@@ -37,8 +37,6 @@ using System.IO;
 using System.Xml;
 using System.Linq;
 
-
-
 namespace SimpleOps.Legal {
 
 
@@ -257,7 +255,17 @@ namespace SimpleOps.Legal {
 
                     var nodoGetNumberingRangeResult = respuestaXml?["s:Envelope"]?["s:Body"]?["GetNumberingRangeResponse"]?["GetNumberingRangeResult"];
                     if (nodoGetNumberingRangeResult?["b:OperationCode"]?.InnerText == "100") {
-                        claveTécnica = nodoGetNumberingRangeResult?["b:ResponseList"]?["c:NumberRangeResponse"]?["c:TechnicalKey"].InnerText;
+
+                        if (nodoGetNumberingRangeResult?["b:ResponseList"].ChildNodes.Count == 1) {
+                            claveTécnica = nodoGetNumberingRangeResult?["b:ResponseList"]?["c:NumberRangeResponse"]?["c:TechnicalKey"].InnerText;
+                        } else { // Cuando la empresa tiene más de una resolución de numeración. 
+
+                            foreach (XmlNode? nodo in nodoGetNumberingRangeResult?["b:ResponseList"].ChildNodes!) {
+                                claveTécnica += $"{nodo?["c:TechnicalKey"].InnerText}, {nodo?["c:ResolutionNumber"].InnerText}{DobleLínea}";
+                            }
+
+                        }
+                        
                     } else {
                         MostrarError(mensajeInicial + nodoGetNumberingRangeResult?["b:OperationDescription"]?.InnerText);
                     }
