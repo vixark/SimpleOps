@@ -159,8 +159,8 @@ namespace SimpleOps.Interfaz {
 
             var claveTécnica = Legal.Dian.ObtenerClaveTécnicaAmbienteProducción();
             if (claveTécnica != null && claveTécnica.Contains(", ")) {
-                MostrarInformación($"Existe más de una resolución de facturación disponible. A continuación se muestran las claves técnicas (número antes " +
-                    $"de la coma) para cada resolución (número después de la coma). Asegúrate de usar la correcta en cada equipo. Las claves técnicas " +
+                MostrarInformación($"Existe más de una resolución de facturación o prefijo disponible. A continuación se muestran las claves técnicas " +
+                    $"para cada resolución y prefijo. Asegúrate de usar la correcta en cada equipo. Las claves técnicas " +
                     $"son:{DobleLínea}{claveTécnica}");
             } else {
                 MostrarInformación($"La clave técnica es:{DobleLínea}{claveTécnica}");

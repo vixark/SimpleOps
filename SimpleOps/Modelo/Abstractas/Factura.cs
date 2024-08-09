@@ -420,10 +420,10 @@ namespace SimpleOps.Modelo {
                     _ => throw new Exception(CasoNoConsiderado(factura.GetType().ToString())),
                 };
 
-            if (!Líneas.Any()) {
+            if (Líneas.Count == 0) {
 
                 if (cargarLíneas) {
-                    if (ctx == null) throw new Exception("Si se pasa cargarLíneas en verdadero es obligatorio " +
+                    if (ctx == null) throw new Exception("Si se pasa cargarLíneas en verdadero, es obligatorio " +
                                                          "pasar un objeto ctx de tipo Contexto no nulo.");
                     cargarLíneasYProductos(this, ctx);
                 } else {
@@ -435,7 +435,7 @@ namespace SimpleOps.Modelo {
             if (Líneas.Any(d => d.Producto == null)) {
 
                 if (cargarProductos) {
-                    if (ctx == null) throw new Exception("Si se pasa cargarProductos en verdadero es obligatorio " +
+                    if (ctx == null) throw new Exception("Si se pasa cargarProductos en verdadero, es obligatorio " +
                                                          "pasar un objeto ctx de tipo Contexto no nulo.");
                     cargarLíneasYProductos(this, ctx);
                 } else {
@@ -448,7 +448,7 @@ namespace SimpleOps.Modelo {
 
                 if (cargarEntidadEconómica) {
 
-                    if (ctx == null) throw new Exception("Si se pasa cargarEntidadEconómica en verdadero es obligatorio " +
+                    if (ctx == null) throw new Exception("Si se pasa cargarEntidadEconómica en verdadero, es obligatorio " +
                                                          "pasar un ctx de tipo Contexto no nulo.");
                     _ = this switch {
                         Venta venta => ctx.CargarPropiedad(venta, f => f.Cliente),
@@ -643,7 +643,7 @@ namespace SimpleOps.Modelo {
             var porcentaje = 0D;
 
             var retencionesConcepto = Generales.RetencionesFuente.Where(rf => rf.Concepto == concepto).ToList();
-            if (retencionesConcepto.Any()) {
+            if (retencionesConcepto.Count != 0) {
 
                 if (retencionesConcepto.Count == 1 && retencionesConcepto[0].TipoDeclarante == TipoDeclarante.Desconocido) { // Si no hay distinción entre declarantes y no declarantes.
 

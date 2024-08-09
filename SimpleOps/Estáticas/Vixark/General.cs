@@ -2735,13 +2735,7 @@ namespace Vixark {
 
             diccionario ??= new Dictionary<K, V>();
             if (!diccionario.TryAdd(clave, valor)) {
-
-                if (sobreescribir) {
-                    diccionario[clave] = valor; // Por rendimiento de manera predeterminada se sobreescribe. No hay claridad del rendimiento genérico de la función Equals.
-                } else {
-                    if (!Equals(diccionario[clave], valor)) diccionario[clave] = valor; // Se evita sobreescribir si no es necesario.
-                }
-                
+                if (sobreescribir) diccionario[clave] = valor; // Por rendimiento de manera predeterminada se sobreescribe. No hay claridad del rendimiento genérico de la función Equals que se quería usar como paso anterior, así if (!Equals(diccionario[clave], valor)) diccionario[clave] = valor. 
             }
             return diccionario;
 

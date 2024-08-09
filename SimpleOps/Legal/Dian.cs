@@ -258,10 +258,11 @@ namespace SimpleOps.Legal {
 
                         if (nodoGetNumberingRangeResult?["b:ResponseList"].ChildNodes.Count == 1) {
                             claveTécnica = nodoGetNumberingRangeResult?["b:ResponseList"]?["c:NumberRangeResponse"]?["c:TechnicalKey"].InnerText;
-                        } else { // Cuando la empresa tiene más de una resolución de numeración. 
+                        } else { // Cuando la empresa tiene más de una resolución de numeración o prefijo. 
 
                             foreach (XmlNode? nodo in nodoGetNumberingRangeResult?["b:ResponseList"].ChildNodes!) {
-                                claveTécnica += $"{nodo?["c:TechnicalKey"].InnerText}, {nodo?["c:ResolutionNumber"].InnerText}{DobleLínea}";
+                                claveTécnica += $"Clave Técnica: {nodo?["c:TechnicalKey"].InnerText}, # Resolución: {nodo?["c:ResolutionNumber"].InnerText}, " +
+                                    $"Prefijo: {nodo?["c:Prefix"].InnerText}{DobleLínea}";
                             }
 
                         }
