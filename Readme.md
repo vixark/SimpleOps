@@ -15,7 +15,7 @@ En otras palabras, el usuario de <b>SimpleOps</b> (o de una parte de su código)
 <br/>
 <br/>
 Los requerimientos de la licencia aplican principalmente si eres una empresa de software o programador independiente y le quieres entregar un software o prestar un servicio web
-(por ejemplo de facturación electrónica) a tus clientes que incluya código de <b>SimpleOps</b>. En cambio, si eres una persona o empresa y solo quieres adaptar y usar el código de <b>SimpleOps</b> para la generacíón de las facturas electrónicas a nombre de tu razón social, no tienes que distribuirle el código modificado a los clientes de tu empresa.
+(por ejemplo de facturación electrónica) a tus clientes que incluya código de <b>SimpleOps</b>. En cambio, si eres una persona o empresa y solo quieres adaptar y usar el código de <b>SimpleOps</b> para la generación de las facturas electrónicas a nombre de tu razón social, no tienes que distribuirle el código modificado a los clientes de tu empresa.
 <br/>
 <br/>
 
