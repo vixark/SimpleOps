@@ -10,12 +10,14 @@ Desarrollado con C# 8, .Net Core 3.1, WPF, SQLite 3.30 y EF Core 3.1.
 <br/>
 
 <h3>Licencia</h3>
-<a href="https://github.com/vixark/SimpleOps/blob/master/License.txt">GNU Affero General Public License v3.0</a>. Esta licencia te da permiso de modificar, distribuir y vender <b>SimpleOps</b> y tus modificaciones siempre y cuando le entregues al usuario el código fuente completo de <b>SimpleOps</b> y de tus modificaciones. Si usas una versión modificada de <b>SimpleOps</b> para prestar un servicio web, también deberás entregarle al usuario el código fuente completo de <b>SimpleOps</b> y de tus modificaciones.
-En otras palabras, el usuario de <b>SimpleOps</b> (o de una parte de su código) siempre deberá recibir el código fuente completo de <b>SimpleOps</b> y de las modificaciones que le hayas realizado. Si no se lo entregas, estarás infringiendo la licencia. 
+<a href="https://github.com/vixark/SimpleOps/blob/master/License.txt">GNU Affero General Public License v3.0</a>. Esta licencia te da permiso de modificar, distribuir y vender <b>SimpleOps</b> y tus modificaciones siempre y cuando le entregues al usuario el código fuente completo de <b>SimpleOps</b> y de tus modificaciones, así como del resto del programa que la integre como parte de un todo, bajo los términos de esta misma licencia. Si usas una versión modificada de <b>SimpleOps</b> para prestar un servicio web, también deberás entregarle al las personas que reciban el programa o lo usen a través de un servicio web el código fuente completo de <b>SimpleOps</b>, de tus modificaciones y del programa que use SimpleOps para prestar ese servicio.
+En otras palabras, el usuario de <b>SimpleOps</b> (o de una parte de su código) siempre deberá recibir el código fuente completo de <b>SimpleOps</b> y de las modificaciones que le hayas realizado. Si no se lo entregas, estarás violando la licencia. 
 <br/>
 <br/>
-Los requerimientos de la licencia aplican principalmente si eres una empresa de software o programador independiente y le quieres entregar un software o prestar un servicio web
-(por ejemplo de facturación electrónica) a tus clientes que incluya código de <b>SimpleOps</b>. En cambio, si eres una persona o empresa y solo quieres adaptar y usar el código de <b>SimpleOps</b> para la generación de las facturas electrónicas a nombre de tu razón social, no tienes que distribuirle el código modificado a los clientes de tu empresa.
+Los requerimientos de la licencia aplican si entregas un software o prestas un servicio web equivalente (por ejemplo de facturación electrónica) a otras personas o empresas que incluya código de SimpleOps. En cambio si solo quieres adaptar y usar el código de <b>SimpleOps</b> para la generación de las facturas electrónicas a nombre de tu empresa o nombre personal, no tienes que distribuirle el código modificado a los clientes de tu negocio.
+<br/>
+<br/>
+Este texto es un resumen informal; en caso de duda, tiene prioridad el texto oficial de la licencia GNU AGPL v3.0.
 <br/>
 <br/>
 
