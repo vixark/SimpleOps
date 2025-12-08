@@ -10,7 +10,7 @@ Desarrollado con C# 8, .Net Core 3.1, WPF, SQLite 3.30 y EF Core 3.1.
 <br/>
 
 <h3>Licencia</h3>
-<a href="https://github.com/vixark/SimpleOps/blob/master/License.txt">GNU Affero General Public License v3.0</a>. Esta licencia te da permiso de modificar, distribuir y vender <b>SimpleOps</b> y tus modificaciones siempre y cuando le entregues al usuario el código fuente completo de <b>SimpleOps</b> y de tus modificaciones, así como del resto del programa que lo integre como parte de un todo, bajo los términos de esta misma licencia. 
+<a href="https://github.com/vixark/SimpleOps/blob/master/License.txt">GNU Affero General Public License v3.0</a>. Esta licencia te da permiso de modificar, distribuir o vender <b>SimpleOps</b> y tus modificaciones siempre y cuando le entregues al usuario el código fuente completo de <b>SimpleOps</b> y de tus modificaciones, así como del resto del programa que lo integre como parte de un todo, bajo los términos de esta misma licencia. 
 <br/>
 <br/>
 Si usas una versión (modificada o no) de <b>SimpleOps</b> para prestar un servicio web, también deberás entregarle a las personas que reciban el programa o lo usen a través de un servicio web el código fuente completo de <b>SimpleOps</b>, de tus modificaciones y del programa que use SimpleOps para prestar ese servicio. Si no se lo entregas, estarás violando la licencia. 
