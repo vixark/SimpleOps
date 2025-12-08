@@ -16,7 +16,7 @@ Desarrollado con C# 8, .Net Core 3.1, WPF, SQLite 3.30 y EF Core 3.1.
 Si usas una versión (modificada o no) de <b>SimpleOps</b> para prestar un servicio web, también deberás entregarle a las personas que reciban el programa o lo usen a través de un servicio web el código fuente completo de <b>SimpleOps</b>, de tus modificaciones y del programa que use SimpleOps para prestar ese servicio. Si no se lo entregas, estarás violando la licencia. 
 <br/>
 <br/>
-Los requerimientos de la licencia aplican si entregas un software o prestas un servicio web (por ejemplo de facturación electrónica) a otras personas o empresas que incluya código de SimpleOps. En cambio si solo quieres adaptar y usar el código de <b>SimpleOps</b> para la generación de las facturas electrónicas a nombre de tu empresa o nombre personal, no tienes que distribuirle el código modificado a los clientes de tu negocio.
+Los requerimientos de la licencia aplican si entregas un software o prestas un servicio web a otras personas o empresas que incluya código de SimpleOps o lo use como librería enlazada (por ejemplo, un servicio de facturación electrónica). En cambio, si solo quieres adaptar y usar el código de <b>SimpleOps</b> dentro de tu negocio (por ejemplo, para la generación de las facturas electrónicas a tus clientes a nombre de tu negocio), no tienes que distribuirle el código modificado a los clientes de tu negocio.
 <br/>
 <br/>
 Este texto es un resumen informal; en caso de duda, tiene prioridad el texto oficial de la licencia GNU AGPL v3.0.
