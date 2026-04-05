@@ -1228,7 +1228,8 @@ namespace SimpleOps.Legal {
         /// </summary>
         public bool Firmar() {
 
-            if (!ExisteRuta(TipoElementoRuta.Archivo, Equipo.RutaCertificado, "certificado de firma digital", out string? mensaje)) throw new Exception(mensaje); // Se maneja como excepción porque no debería llegar a este punto sin este archivo.
+            if (!ExisteRuta(TipoElementoRuta.Archivo, Equipo.RutaCertificado, "certificado de firma digital", out string? mensaje)) 
+                throw new Exception(mensaje); // Se maneja como excepción porque no debería llegar a este punto sin este archivo.
 
             var informaciónInicio = new ProcessStartInfo(RutaFirmador) {
                 Arguments = @$"""{Equipo.RutaCertificado}"" {Equipo.ClaveCertificado} ""{ObtenerRuta(firmado: false)}"" ""{Ruta}"" " +
